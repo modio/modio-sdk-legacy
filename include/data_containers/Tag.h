@@ -16,7 +16,6 @@ namespace modworks
     int game;
     int mod;
     int date;
-    int member;
     string tag;
   };
 }

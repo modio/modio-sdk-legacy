@@ -12,9 +12,9 @@ namespace modworks
     if(hasKey(modfile_json, "mod"))
       this->mod = modfile_json["mod"];
 
-    this->member = -1;
+    this->member = NULL;
     if(hasKey(modfile_json, "member"))
-      this->member = modfile_json["member"];
+      this->member = new Member(modfile_json["member"]);
 
     this->datevirus = -1;
     if(hasKey(modfile_json, "datevirus"))

@@ -12,9 +12,9 @@ namespace modworks
     if(hasKey(mod_json, "game"))
       this->game = mod_json["game"];
 
-    this->member = -1;
+    this->member = NULL;
     if(hasKey(mod_json, "member"))
-      this->member = mod_json["member"];
+      this->member = new Member(mod_json["member"]);
 
     this->price = -1;
     if(hasKey(mod_json, "price"))
@@ -75,10 +75,15 @@ namespace modworks
 
   Mod::~Mod()
   {
-    delete logo;
-    delete media;
-    delete modfile;
-    delete ratings;
-    delete tag;
+    if(logo)
+      delete logo;
+    if(media)
+      delete media;
+    if(modfile)
+      delete modfile;
+    if(ratings)
+      delete ratings;
+    if(tag)
+      delete tag;
   }
 }

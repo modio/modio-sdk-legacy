@@ -2,6 +2,7 @@
 #define MODWORKS_MODFILE
 
 #include "dependencies/json/json.hpp"
+#include "data_containers/Member.h"
 #include "Utility.h"
 
 using namespace std;
@@ -15,7 +16,7 @@ namespace modworks
     Modfile(json image_json);
     int id;
     int mod;
-    int member;
+    Member* member;
     int datevirus;
     int virusstatus;
     int viruspositive;

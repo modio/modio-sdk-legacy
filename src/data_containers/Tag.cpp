@@ -16,10 +16,6 @@ namespace modworks
     if(hasKey(tag_json, "date"))
       this->date = tag_json["date"];
 
-    this->member = -1;
-    if(hasKey(tag_json, "member"))
-      this->member = tag_json["member"];
-
     this->tag = "";
     if(hasKey(tag_json, "tag"))
       this->tag = tag_json["tag"];

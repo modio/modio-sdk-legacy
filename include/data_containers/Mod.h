@@ -5,6 +5,7 @@
 #include "dependencies/json/json.hpp"
 #include "wrappers/CurlWrapper.h"
 #include "data_containers/Image.h"
+#include "data_containers/Member.h"
 #include "data_containers/Media.h"
 #include "data_containers/Modfile.h"
 #include "data_containers/Ratings.h"
@@ -23,7 +24,7 @@ namespace modworks
     ~Mod();
     int id;
     int game;
-    int member;
+    Member* member;
     double price;
     int datereg;
     int dateup;
