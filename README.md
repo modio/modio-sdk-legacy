@@ -1,14 +1,11 @@
 # mod.works SDK
-Welcome to the [mod.works](https://mod.works) SDK, built using ???. It's purpose is to allow game developers to support the automatic installation of mods in their games.
+Welcome to [mod.works](https://mod.works) SDK, built using ???. It's purpose is to allow game developers to support the automatic installation of mods in their games. It connects to the [mod.works API](https://docs.mod.works), and [documentation for it's endpoints](https://sdk.mod.works) can be viewed here.
 
-## Documentation
-We use slate for [our documentation](https://sdk.mod.works), you can contribute and edit the documention the repository can be [found here](https://github.com/DBolical/modworksSDKDOCS). You are welcome to contribute.
+## Contributions Welcome
+Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://apps.mod.works) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.
 
-## Web
-Consult our private [Web Repository](https://github.com/DBolical/modworksWEB) for the web frontend built that has basic management and setup functionality built in.
+## Other Repositories
+Our aim with [mod.works](https://mod.works), is to provide an open modding API. You are welcome to view, fork and contribute to our other codebases in use:
 
-## API
-Consult our private [API Repository](https://github.com/DBolical/modworksAPI) for the API developers connect to, to manage their users mod collection. [Documentation](https://docs.mod.works) can be found here [(repo)](ttps://github.com/DBolical/modworksAPIDOCS).
-
-## Design
-Consult our public [Design Repository](https://github.com/DBolical/modworksDESIGN) for the design we apply to our community frontend (the website).
+* [Design](https://design.mod.works) is public and open source, the repository can be [found here](https://github.com/DBolical/modworksDESIGN).
+* [API documentation](https://docs.mod.works) is public and open source, the repository can be [found here](https://github.com/DBolical/modworksAPIDOCS).
