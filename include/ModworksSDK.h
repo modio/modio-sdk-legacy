@@ -1,19 +1,11 @@
-#include "json/json.hpp"
-#include <stdio.h>
-#include <curl/curl.h>
-#include <iostream>
+#include "CurlWrapper.h"
 
-#define SKIP_PEER_VERIFICATION
-#define SKIP_HOSTNAME_VERIFICATION
+class ModworksSDK
+{
+public:
+  string current_user;
+  int game_id;
 
-using namespace std;
-using namespace std;
-using json = nlohmann::json;
-
-string dataToJsonString(char* data, size_t size);
-
-static int my_trace(CURL *handle, curl_infotype type,
-             char *data, size_t size,
-             void *userp);
-
-json getJson(string url);
+  ModworksSDK(int game_id, string current_user);
+  vector<string> getMods();
+};

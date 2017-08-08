@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
 LDFLAGS=-lcurl -pthread -lz
-SOURCES=ModworksSDK.cpp
+SOURCES=ModworksSDK.cpp Utility.cpp CurlWrapper.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBRARY=libmodworks.a
 

@@ -1,10 +1,10 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
 LDFLAGS=-lcurl -pthread -lz
-SOURCES=GetMods.cpp
+SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=GetMods
-LIBRARIES=libmodworks.a
+EXECUTABLE=Example
+LIBRARIES=../src/libmodworks.a
 
 all: $(SOURCES) $(EXECUTABLE)
 

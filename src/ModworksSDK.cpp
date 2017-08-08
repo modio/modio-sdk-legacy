@@ -1,82 +1,24 @@
 #include "ModworksSDK.h"
 
-string response;
-
-struct data
+ModworksSDK::ModworksSDK(int game_id, string current_user)
 {
-  char trace_ascii; /* 1 or 0 */
-};
-
-string dataToJsonString(char* data, size_t size)
-{
-  int brackets = 0;
-  string response;
-  for(int i=0; i<(int)size; i++)
-  {
-    if(data[i]=='{')
-      brackets++;
-
-    if(brackets>0)
-    {
-      response+=data[i];
-    }
-
-    if(data[i]=='}')
-      brackets--;
-  }
-  return response;
+  this->game_id = game_id;
+  this->current_user = current_user;
 }
 
-static int my_trace(CURL *handle, curl_infotype type,
-             char *data, size_t size,
-             void *userp)
+vector<string> ModworksSDK::getMods()
 {
-  (void)handle; /* prevent compiler warning */
+  vector<string> headers;
+  headers.push_back(string("Authorization: Bearer ") + current_user);
 
-  if(type == CURLINFO_DATA_IN)
+  string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods";
+  json j = getJson(url, headers);
+  vector<string> names;
+  
+  for(int i=0;i<(int)j["data"].size();i++)
   {
-    response = dataToJsonString(data, size);
+    names.push_back(j["data"][i]["name"]);
   }
 
-  return 0;
-}
-
-json getJson(string url)
-{
-  CURL *curl;
-  CURLcode res;
-
-  response = "";
-
-  struct data config;
-
-  curl_global_init(CURL_GLOBAL_DEFAULT);
-
-  curl = curl_easy_init();
-  if(curl) {
-    struct curl_slist *chunk = NULL;
-    chunk = curl_slist_append(chunk, "Authorization: Bearer turupawn");
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_trace);
-    curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
-    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-    /* Perform the request, res will get the return code */
-    res = curl_easy_perform(curl);
-    /* Check for errors */
-    if(res != CURLE_OK)
-      fprintf(stderr, "curl_easy_perform() failed: %s\n",
-              curl_easy_strerror(res));
-
-    /* always cleanup */
-    curl_easy_cleanup(curl);
-  }
-
-  curl_global_cleanup();
-
-  json j = json::parse(response);
-
-  return j;
+  return names;
 }
