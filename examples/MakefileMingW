@@ -1,15 +1,15 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
-LDFLAGS=-lcurl -pthread -lz
+LDFLAGS=-pthread
 SOURCES=GetMods.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=GetMods
-LIBRARIES=libmodworks.a
+LIBRARIES=libmodworks.a libcurl.a libcurldll.a
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@
+	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@ -I ../include
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@ -I ../include

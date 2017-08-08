@@ -1,4 +1,4 @@
-#include "../src/ModworksSDK.h"
+#include "ModworksSDK.h"
 
 int main(void)
 {

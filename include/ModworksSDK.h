@@ -3,6 +3,9 @@
 #include <curl/curl.h>
 #include <iostream>
 
+#define SKIP_PEER_VERIFICATION
+#define SKIP_HOSTNAME_VERIFICATION
+
 using namespace std;
 using namespace std;
 using json = nlohmann::json;
