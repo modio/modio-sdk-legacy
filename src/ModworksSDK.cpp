@@ -11,7 +11,7 @@ void orales(json j)
 
 }
 
-void ModworksSDK::getMods(function< void(json) > callback)
+void ModworksSDK::getMods(function< void(vector<Mod*>) > callback)
 {
   vector<string> headers;
   headers.push_back(string("Authorization: Bearer ") + current_user);

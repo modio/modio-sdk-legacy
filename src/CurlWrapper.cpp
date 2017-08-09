@@ -21,7 +21,7 @@ int my_trace(CURL *handle, curl_infotype type,
   return 0;
 }
 
-void getJson(string url, vector<string> headers, function< void(json) > callback)
+void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback)
 {
   CURL *curl;
   CURLcode res;
@@ -60,5 +60,12 @@ void getJson(string url, vector<string> headers, function< void(json) > callback
   curl_global_cleanup();
   string json_string = ongoing_calls[curl]->response;
   json json_response = json::parse(json_string);
-  ongoing_calls[curl]->callback(json_response);
+
+  vector<Mod*> mods;
+  for(int i=0;i<(int)json_response["data"].size();i++)
+  {
+    Mod* mod = new Mod(json_response["data"][i]);
+    mods.push_back(mod);
+  }
+  ongoing_calls[curl]->callback(mods);
 }

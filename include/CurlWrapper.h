@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include "Utility.h"
+#include "Mod.h"
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
@@ -15,9 +16,9 @@ class GetJsonHandler
 {
 public:
   string response;
-  function< void(json) > callback;
+  function< void(vector<Mod*>) > callback;
 
-  GetJsonHandler(function< void(json) > callback)
+  GetJsonHandler(function< void(vector<Mod*>) > callback)
   {
     this->response = "";
     this->callback = callback;
@@ -28,4 +29,4 @@ int my_trace(CURL *handle, curl_infotype type,
              char *data, size_t size,
              void *userp);
 
-void getJson(string url, vector<string> headers, function< void(json) > callback);
+void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback);

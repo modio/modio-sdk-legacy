@@ -1,4 +1,5 @@
 #include "CurlWrapper.h"
+#include "Mod.h"
 
 class ModworksSDK
 {
@@ -7,5 +8,5 @@ public:
   int game_id;
 
   ModworksSDK(int game_id, string current_user);
-  void getMods(function< void(json) > callback);
+  void getMods(function< void(vector<Mod*>) > callback);
 };

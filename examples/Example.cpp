@@ -1,11 +1,12 @@
 #include "ModworksSDK.h"
 
-void getJsonCallback(json j)
+void getJsonCallback(vector<Mod*> mods)
 {
-  cout<<endl<<"Mod names"<<endl;
-  for(int i=0;i<(int)j["data"].size();i++)
+  cout<<endl<<"Listing mods:"<<endl;
+  for(int i=0;i<(int)mods.size();i++)
   {
-    cout<<j["data"][i]["name"]<<endl;
+    cout<<mods[i]->name<<endl;
+    cout<<mods[i]->summary<<endl;
   }
 }
 
