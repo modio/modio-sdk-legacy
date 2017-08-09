@@ -1,6 +1,6 @@
 #include "CurlWrapper.h"
 
-string response;
+map<CURL*, GetJsonHandler*> ongoing_calls;
 
 struct data
 {
@@ -15,24 +15,25 @@ int my_trace(CURL *handle, curl_infotype type,
 
   if(type == CURLINFO_DATA_IN)
   {
-    response = dataToJsonString(data, size);
+    ongoing_calls[handle]->response = dataToJsonString(data, size);
   }
 
   return 0;
 }
 
-json getJson(string url, vector<string> headers)
+void getJson(string url, vector<string> headers, function< void(json) > callback)
 {
   CURL *curl;
   CURLcode res;
-
-  response = "";
 
   struct data config;
 
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
   curl = curl_easy_init();
+
+  ongoing_calls[curl] = new GetJsonHandler(callback);
+
   if(curl) {
     struct curl_slist *chunk = NULL;
     for(int i=0;i<(int)headers.size();i++)
@@ -57,8 +58,7 @@ json getJson(string url, vector<string> headers)
   }
 
   curl_global_cleanup();
-
-  json j = json::parse(response);
-
-  return j;
+  string json_string = ongoing_calls[curl]->response;
+  json json_response = json::parse(json_string);
+  ongoing_calls[curl]->callback(json_response);
 }

@@ -6,19 +6,15 @@ ModworksSDK::ModworksSDK(int game_id, string current_user)
   this->current_user = current_user;
 }
 
-vector<string> ModworksSDK::getMods()
+void orales(json j)
+{
+
+}
+
+void ModworksSDK::getMods(function< void(json) > callback)
 {
   vector<string> headers;
   headers.push_back(string("Authorization: Bearer ") + current_user);
-
   string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods";
-  json j = getJson(url, headers);
-  vector<string> names;
-  
-  for(int i=0;i<(int)j["data"].size();i++)
-  {
-    names.push_back(j["data"][i]["name"]);
-  }
-
-  return names;
+  getJson(url, headers, callback);
 }

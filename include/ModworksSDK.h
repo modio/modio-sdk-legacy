@@ -7,5 +7,5 @@ public:
   int game_id;
 
   ModworksSDK(int game_id, string current_user);
-  vector<string> getMods();
+  void getMods(function< void(json) > callback);
 };
