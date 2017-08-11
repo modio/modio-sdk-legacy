@@ -3,6 +3,7 @@
 
 #include <json/json.hpp>
 #include <iostream>
+#include "CurlWrapper.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -19,6 +20,7 @@ public:
   string description;
 
   Mod(json mod_json);
+  void downloadLogoThumbnail(function< void(int) > callback);
 };
 
 #endif

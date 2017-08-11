@@ -1,3 +1,6 @@
+#ifndef CURL_WRAPPER_H
+#define CURL_WRAPPER_H
+
 #include <json/json.hpp>
 #include <stdio.h>
 #include <curl/curl.h>
@@ -5,6 +8,8 @@
 #include <map>
 #include "Utility.h"
 #include "Mod.h"
+
+class Mod;
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
@@ -17,16 +22,19 @@ class GetJsonHandler
 public:
   string response;
   function< void(vector<Mod*>) > callback;
-
-  GetJsonHandler(function< void(vector<Mod*>) > callback)
-  {
-    this->response = "";
-    this->callback = callback;
-  }
+  GetJsonHandler(function< void(vector<Mod*>) > callback);
 };
 
-int my_trace(CURL *handle, curl_infotype type,
-             char *data, size_t size,
-             void *userp);
-
 void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback);
+
+class DownloadFileHandler
+{
+public:
+  function< void(int) > callback;
+  DownloadFileHandler(function< void(int) > callback);
+};
+
+double curlGetFileSize(string url);
+void downloadFile(string url, string download_path, function< void(int) > callback);
+
+#endif
