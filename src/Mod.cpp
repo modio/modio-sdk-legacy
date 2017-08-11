@@ -10,3 +10,8 @@ Mod::Mod(json mod_json)
   this->summary = mod_json["summary"];
   this->description = mod_json["description"];
 }
+
+void Mod::downloadLogoThumbnail(function< void(int) > callback)
+{
+  downloadFile(this->logo_thumbnail_url, this->name + ".png", callback);
+}
