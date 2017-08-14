@@ -9,13 +9,20 @@ Mod::Mod(json mod_json)
   this->name = mod_json["name"];
   this->summary = mod_json["summary"];
   this->description = mod_json["description"];
-
-  this->logo_thumbnail_path = string(".modworks/images/") + toString(this->game) + "_" + toString(this->id) + "_thumb.png";
+  this->download_url = mod_json["modfile"]["download"];
+  //https:\/\/mod.works\/mods\/file\/12\/dc5337bed727254fe0218bd7712d961a?shhh=secret
 }
 
-void Mod::downloadLogoThumbnail(function< void(int, Mod*) > callback)
+void Mod::downloadLogoThumbnail(function< void(int, Mod*, string) > callback)
 {
-  //downloadFile(this->logo_thumbnail_url, this, callback);
-  std::thread download_file_thread(downloadFile, this->logo_thumbnail_url, this, callback);
+  string file_path = string(".modworks/images/") + toString(this->game) + "_" + toString(this->id) + "_thumb.png";
+  std::thread download_file_thread(downloadModFile, this, this->logo_thumbnail_url, file_path, callback);
+  download_file_thread.detach();
+}
+
+void Mod::download(function< void(int, Mod*, string) > callback)
+{
+  string file_path = string(".modworks/tmp/") + toString(this->game) + "_" + toString(this->id) + "_modfile.zip";
+  std::thread download_file_thread(downloadRedirect, this, this->download_url + "?shhh=secret", file_path, callback);
   download_file_thread.detach();
 }

@@ -35,6 +35,18 @@ public:
 };
 
 double curlGetFileSize(string url);
-void downloadFile(string url,  Mod* mod, function< void(int, Mod*) > callback);
+
+void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback);
+
+class DownloadRedirectHandler
+{
+public:
+  Mod* mod;
+  string path;
+  function< void(int, Mod*, string) > callback;
+  DownloadRedirectHandler(Mod* mod, string path, function< void(int, Mod*, string) > callback);
+};
+
+void downloadRedirect(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback);
 
 #endif

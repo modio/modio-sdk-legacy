@@ -1,6 +1,7 @@
 #include "CurlWrapper.h"
 
 map<CURL*, GetJsonHandler*> ongoing_calls;
+map<CURL*, DownloadRedirectHandler*> download_redirect_calls;
 
 GetJsonHandler::GetJsonHandler(function< void(vector<Mod*>) > callback)
 {
@@ -10,6 +11,13 @@ GetJsonHandler::GetJsonHandler(function< void(vector<Mod*>) > callback)
 
 DownloadFileHandler::DownloadFileHandler(function< void(int, Mod*) > callback)
 {
+  this->callback = callback;
+}
+
+DownloadRedirectHandler::DownloadRedirectHandler(Mod* mod, string path, function< void(int, Mod*, string) > callback)
+{
+  this->mod = mod;
+  this->path = path;
   this->callback = callback;
 }
 
@@ -111,13 +119,37 @@ static int download_file_trace(CURL *handle, curl_infotype type,
   return 0;
 }
 
+static int redirect_trace(CURL *handle, curl_infotype type,
+             char *data, size_t size,
+             void *userp)
+{
+  (void)handle; /* prevent compiler warning */
+  if(type == CURLINFO_HEADER_IN
+    && size > 10 /* "location: " */
+    && strncmp(data,"location: ",10) == 0)
+  {
+    string url = "";
+    for(int i = 10; i< (int)size; i++)
+    {
+      if(data[i]=='\n' || data[i]=='\t' || data[i]==' ' || data[i]==13 /* CR */)
+        break;
+      url += data[i];
+    }
+
+    DownloadRedirectHandler* handler = download_redirect_calls[handle];
+    downloadModFile(handler->mod, url, handler->path, handler->callback);
+
+  }
+  return 0;
+}
+
 size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
   size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
   return written;
 }
 
-void downloadFile(string url, Mod* mod, function< void(int, Mod*) > callback)
+void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback)
 {
   CURL *curl;
   FILE *file;
@@ -133,7 +165,7 @@ void downloadFile(string url, Mod* mod, function< void(int, Mod*) > callback)
     curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
     curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
-    file = fopen(mod->logo_thumbnail_path.c_str(),"wb");
+    file = fopen(path.c_str(),"wb");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
@@ -144,5 +176,31 @@ void downloadFile(string url, Mod* mod, function< void(int, Mod*) > callback)
 
     fclose(file);
   }
-  callback(1,mod);
+  callback(1,mod,path);
+}
+
+void downloadRedirect(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback)
+{
+  CURL *curl;
+
+  struct data config;
+
+  config.trace_ascii = 1; /* enable ascii tracing */
+  //FILE_SIZE = curlGetFileSize(url);
+  curl = curl_easy_init();
+
+  if(curl)
+  {
+    download_redirect_calls[curl] = new DownloadRedirectHandler(mod, path, callback);
+
+    curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, redirect_trace);
+    curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+    curl_easy_perform(curl);
+
+    curl_easy_cleanup(curl);
+  }
 }

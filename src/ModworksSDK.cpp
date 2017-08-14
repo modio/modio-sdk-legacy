@@ -7,6 +7,7 @@ ModworksSDK::ModworksSDK(int game_id, string current_user)
 
   mkdir(".modworks", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
   mkdir(".modworks/images", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  mkdir(".modworks/tmp", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 
 void ModworksSDK::getMods(function< void(vector<Mod*>) > callback)
