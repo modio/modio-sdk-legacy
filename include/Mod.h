@@ -1,8 +1,9 @@
 #ifndef MOD_H
 #define MOD_H
 
-#include <json/json.hpp>
 #include <iostream>
+#include <thread>
+#include "json/json.hpp"
 #include "CurlWrapper.h"
 
 using namespace std;
@@ -19,8 +20,10 @@ public:
   string summary;
   string description;
 
+  string logo_thumbnail_path;
+
   Mod(json mod_json);
-  void downloadLogoThumbnail(function< void(int) > callback);
+  void downloadLogoThumbnail(function< void(int, Mod*) > callback);
 };
 
 #endif

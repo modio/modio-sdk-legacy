@@ -8,7 +8,7 @@ GetJsonHandler::GetJsonHandler(function< void(vector<Mod*>) > callback)
   this->callback = callback;
 }
 
-DownloadFileHandler::DownloadFileHandler(function< void(int) > callback)
+DownloadFileHandler::DownloadFileHandler(function< void(int, Mod*) > callback)
 {
   this->callback = callback;
 }
@@ -117,7 +117,7 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
   return written;
 }
 
-void downloadFile(string url, string download_path, function< void(int) > callback)
+void downloadFile(string url, Mod* mod, function< void(int, Mod*) > callback)
 {
   CURL *curl;
   FILE *file;
@@ -133,7 +133,7 @@ void downloadFile(string url, string download_path, function< void(int) > callba
     curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
     curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
-    file = fopen(download_path.c_str(),"wb");
+    file = fopen(mod->logo_thumbnail_path.c_str(),"wb");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
@@ -141,7 +141,8 @@ void downloadFile(string url, string download_path, function< void(int) > callba
     curl_easy_perform(curl);
 
     curl_easy_cleanup(curl);
+
     fclose(file);
   }
-  callback(1);
+  callback(1,mod);
 }

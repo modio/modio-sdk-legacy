@@ -1,11 +1,11 @@
 #ifndef CURL_WRAPPER_H
 #define CURL_WRAPPER_H
 
-#include <json/json.hpp>
 #include <stdio.h>
-#include <curl/curl.h>
 #include <iostream>
 #include <map>
+#include "json/json.hpp"
+#include "curl/curl.h"
 #include "Utility.h"
 #include "Mod.h"
 
@@ -30,11 +30,11 @@ void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > 
 class DownloadFileHandler
 {
 public:
-  function< void(int) > callback;
-  DownloadFileHandler(function< void(int) > callback);
+  function< void(int, Mod*) > callback;
+  DownloadFileHandler(function< void(int, Mod*) > callback);
 };
 
 double curlGetFileSize(string url);
-void downloadFile(string url, string download_path, function< void(int) > callback);
+void downloadFile(string url,  Mod* mod, function< void(int, Mod*) > callback);
 
 #endif

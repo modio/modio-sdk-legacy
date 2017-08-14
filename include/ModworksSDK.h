@@ -1,6 +1,8 @@
 #ifndef MODWORKSSDK_H
 #define MODWORKSSDK_H
 
+#include <sys/stat.h>
+#include <thread>
 #include "CurlWrapper.h"
 #include "Mod.h"
 
