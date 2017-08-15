@@ -1,15 +1,15 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
-LDFLAGS=-pthread
-SOURCES=GetMods.cpp
+LDFLAGS=-lcurl -pthread -lz
+SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=GetMods
-LIBRARIES=libmodworks.a libcurl.a libcurldll.a
+EXECUTABLE=Example
+LIBRARIES=libcurl.a libcurldll.a ../src/libmodworks.a ../lib/libZipper-static.a
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@ -I ../include
+	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@ -I ../include

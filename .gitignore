@@ -34,3 +34,4 @@
 src/libmodworks.a
 examples/Example
 examples/.modworks/
+examples/.mod_example/
