@@ -1,0 +1,5 @@
+<ModifiersFile>
+	<Modifier at="0" velocity="5" angle="180"/>
+	<Modifier at="125" velocity="1" angle_change="5"/>
+	<Modifier at="200" pattern_type="A" velocity="1"/>
+</ModifiersFile>

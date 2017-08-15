@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <thread>
 #include "CurlWrapper.h"
+#include "ZipperWrapper.h"
 #include "Mod.h"
 
 class ModworksSDK

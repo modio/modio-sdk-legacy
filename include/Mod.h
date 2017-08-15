@@ -23,7 +23,7 @@ public:
 
   Mod(json mod_json);
   void downloadLogoThumbnail(function< void(int, Mod*, string) > callback);
-  void download(function< void(int, Mod*, string) > callback);
+  void download(string destination_path, function< void(int, Mod*, string) > callback);
 };
 
 #endif

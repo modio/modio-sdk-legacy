@@ -20,9 +20,9 @@ void Mod::downloadLogoThumbnail(function< void(int, Mod*, string) > callback)
   download_file_thread.detach();
 }
 
-void Mod::download(function< void(int, Mod*, string) > callback)
+void Mod::download(string destination_path, function< void(int, Mod*, string) > callback)
 {
   string file_path = string(".modworks/tmp/") + toString(this->game) + "_" + toString(this->id) + "_modfile.zip";
-  std::thread download_file_thread(downloadRedirect, this, this->download_url + "?shhh=secret", file_path, callback);
+  std::thread download_file_thread(downloadRedirect, this, this->download_url + "?shhh=secret", file_path, destination_path, callback);
   download_file_thread.detach();
 }

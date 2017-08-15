@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
 LDFLAGS=-lcurl -pthread -lz
-SOURCES=ModworksSDK.cpp Utility.cpp CurlWrapper.cpp Mod.cpp
+SOURCES=ModworksSDK.cpp Utility.cpp CurlWrapper.cpp ZipperWrapper.cpp Mod.cpp ../lib/libZipper-static.a
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBRARY=libmodworks.a
 

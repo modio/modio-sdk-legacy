@@ -1,0 +1,69 @@
+<BulletsFile>
+	<Bullet name="basic" damage="100" sound_channel="-1" sound="sounds/basic.ogg" width="20" height="6">
+    <Color red="255" green="255" blue="255" alpha="255"/>
+		<Sprite path="basic bullet.png"/>
+		<Hitbox x="-10" y="-3" width="20" height="6" angle="0"/>
+		<OnHit>
+			<Sprite path="kajira/1.png"/>
+			<Sprite path="kajira/2.png"/>
+			<Sprite path="kajira/3.png"/>
+			<Sprite path="kajira/4.png"/>
+		</OnHit>
+	</Bullet>
+	<Bullet name="large" damage="100" sound_channel="-1" sound="sounds/large.ogg" width="10" height="100">
+    <Color red="255" green="255" blue="255" alpha="255"/>
+		<Sprite path="large bullet.png"/>
+		<Hitbox x="-5" y="-50" width="10" height="100" angle="0"/>
+		<OnHit>
+			<Sprite path="kajira/1.png"/>
+			<Sprite path="kajira/2.png"/>
+			<Sprite path="kajira/3.png"/>
+			<Sprite path="kajira/4.png"/>
+		</OnHit>
+	</Bullet>
+	<Bullet name="square" damage="50" sound_channel="-1" sound="sounds/square.ogg" width="32" height="32">
+    <Color red="255" green="255" blue="255" alpha="255"/>
+		<Sprite path="undestructable bullet.png"/>
+		<Hitbox x="-16" y="-16" width="32" height="32" angle="0"/>
+		<OnHit>
+			<Sprite path="kajira/1.png"/>
+			<Sprite path="kajira/2.png"/>
+			<Sprite path="kajira/3.png"/>
+			<Sprite path="kajira/4.png"/>
+		</OnHit>
+	</Bullet>
+
+	<Bullet name="basic mute" damage="100" width="20" height="6">
+    <Color red="255" green="255" blue="255" alpha="255"/>
+		<Sprite path="basic bullet.png"/>
+		<Hitbox x="-10" y="-3" width="20" height="6" angle="0"/>
+		<OnHit>
+			<Sprite path="kajira/1.png"/>
+			<Sprite path="kajira/2.png"/>
+			<Sprite path="kajira/3.png"/>
+			<Sprite path="kajira/4.png"/>
+		</OnHit>
+	</Bullet>
+	<Bullet name="large mute" damage="100" width="10" height="100">
+    <Color red="255" green="255" blue="255" alpha="255"/>
+		<Sprite path="large bullet.png"/>
+		<Hitbox x="-5" y="-50" width="10" height="100" angle="0"/>
+		<OnHit>
+			<Sprite path="kajira/1.png"/>
+			<Sprite path="kajira/2.png"/>
+			<Sprite path="kajira/3.png"/>
+			<Sprite path="kajira/4.png"/>
+		</OnHit>
+	</Bullet>
+	<Bullet name="square mute" damage="50" width="32" height="32">
+    <Color red="255" green="255" blue="255" alpha="255"/>
+		<Sprite path="undestructable bullet.png"/>
+		<Hitbox x="-16" y="-16" width="32" height="32" angle="0"/>
+		<OnHit>
+			<Sprite path="kajira/1.png"/>
+			<Sprite path="kajira/2.png"/>
+			<Sprite path="kajira/3.png"/>
+			<Sprite path="kajira/4.png"/>
+		</OnHit>
+	</Bullet>
+</BulletsFile>

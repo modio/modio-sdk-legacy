@@ -29,7 +29,7 @@ void getJsonCallback(vector<Mod*> mods)
     cout<<mods[i]->name<<endl;
     cout<<mods[i]->summary<<endl;
     mods[i]->downloadLogoThumbnail(&downloadLogoThumbnailCallback);
-    mods[i]->download(&downloadModFileCallback);
+    mods[i]->download("mod_directory",&downloadModFileCallback);
   }
 }
 

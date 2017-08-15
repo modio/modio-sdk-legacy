@@ -14,11 +14,12 @@ DownloadFileHandler::DownloadFileHandler(function< void(int, Mod*) > callback)
   this->callback = callback;
 }
 
-DownloadRedirectHandler::DownloadRedirectHandler(Mod* mod, string path, function< void(int, Mod*, string) > callback)
+DownloadRedirectHandler::DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback)
 {
   this->mod = mod;
   this->path = path;
   this->callback = callback;
+  this->destination_path = destination_path;
 }
 
 struct data
@@ -137,7 +138,7 @@ static int redirect_trace(CURL *handle, curl_infotype type,
     }
 
     DownloadRedirectHandler* handler = download_redirect_calls[handle];
-    downloadModFile(handler->mod, url, handler->path, handler->callback);
+    downloadZipFile(handler->mod, url, handler->path, handler->destination_path, handler->callback);
 
   }
   return 0;
@@ -149,7 +150,7 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
   return written;
 }
 
-void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback)
+void downloadFile(string url, string path)
 {
   CURL *curl;
   FILE *file;
@@ -176,10 +177,15 @@ void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*
 
     fclose(file);
   }
+}
+
+void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback)
+{
+  downloadFile(url, path);
   callback(1,mod,path);
 }
 
-void downloadRedirect(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback)
+void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback)
 {
   CURL *curl;
 
@@ -191,7 +197,7 @@ void downloadRedirect(Mod* mod, string url, string path, function< void(int, Mod
 
   if(curl)
   {
-    download_redirect_calls[curl] = new DownloadRedirectHandler(mod, path, callback);
+    download_redirect_calls[curl] = new DownloadRedirectHandler(mod, path, destination_path, callback);
 
     curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, redirect_trace);
     curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
@@ -203,4 +209,11 @@ void downloadRedirect(Mod* mod, string url, string path, function< void(int, Mod
 
     curl_easy_cleanup(curl);
   }
+}
+
+void downloadZipFile(Mod* mod, string url, string path, string destination, function< void(int, Mod*, string) > callback)
+{
+  downloadFile(url, path);
+  extract(path, destination);
+  callback(1,mod,path);
 }

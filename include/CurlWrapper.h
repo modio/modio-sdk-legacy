@@ -6,6 +6,7 @@
 #include <map>
 #include "json/json.hpp"
 #include "curl/curl.h"
+#include "ZipperWrapper.h"
 #include "Utility.h"
 #include "Mod.h"
 
@@ -43,10 +44,12 @@ class DownloadRedirectHandler
 public:
   Mod* mod;
   string path;
+  string destination_path;
   function< void(int, Mod*, string) > callback;
-  DownloadRedirectHandler(Mod* mod, string path, function< void(int, Mod*, string) > callback);
+  DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback);
 };
 
-void downloadRedirect(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback);
+void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback);
+void downloadZipFile(Mod* mod, string url, string path, string downloadZipFile, function< void(int, Mod*, string) > callback);
 
 #endif
