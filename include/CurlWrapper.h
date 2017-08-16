@@ -6,7 +6,7 @@
 #include <map>
 #include "json/json.hpp"
 #include "curl/curl.h"
-#include "ZipperWrapper.h"
+#include "MinizipWrapper.h"
 #include "Utility.h"
 #include "Mod.h"
 

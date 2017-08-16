@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
 LDFLAGS=-lcurl -pthread -lz
-SOURCES=ModworksSDK.cpp Utility.cpp CurlWrapper.cpp ZipperWrapper.cpp Mod.cpp ../lib/libZipper-static.a
+SOURCES=ModworksSDK.cpp Utility.cpp CurlWrapper.cpp MinizipWrapper.cpp Mod.cpp minizip/unzip.cpp minizip/ioapi.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 LIBRARY=libmodworks.a
 
@@ -9,7 +9,7 @@ LIBRARY=libmodworks.a
 	$(CC) $(CFLAGS) $< -o $@ -I ../include
 
 $(LIBRARY): $(OBJECTS)
-	ar $(ARFLAGS) $@ $^
+	ar $(ARFLAGS) $@ $^ ../lib/libz.a
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;

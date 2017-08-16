@@ -3,7 +3,7 @@
 
 #include <thread>
 #include "CurlWrapper.h"
-#include "ZipperWrapper.h"
+#include "MinizipWrapper.h"
 #include "Mod.h"
 
 class ModworksSDK

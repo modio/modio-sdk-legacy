@@ -4,7 +4,7 @@ LDFLAGS=-lcurl -pthread -lz
 SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
-LIBRARIES=libcurl.a libcurldll.a ../src/libmodworks.a ../lib/libZipper-static.a
+LIBRARIES=libcurl.a libcurldll.a ../src/libmodworks.a
 
 all: $(SOURCES) $(EXECUTABLE)
 
