@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "zipper/unzipper.h"
+#include "zipper/CDirEntry.h"
 
 using namespace std;
 using namespace zipper;

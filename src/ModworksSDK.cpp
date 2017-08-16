@@ -5,9 +5,9 @@ ModworksSDK::ModworksSDK(int game_id, string current_user)
   this->game_id = game_id;
   this->current_user = current_user;
 
-  mkdir(".modworks", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-  mkdir(".modworks/images", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-  mkdir(".modworks/tmp", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  zipper::CDirEntry::createDir(".modworks");
+  zipper::CDirEntry::createDir(".modworks/images");
+  zipper::CDirEntry::createDir(".modworks/tmp");
 }
 
 void ModworksSDK::getMods(function< void(vector<Mod*>) > callback)
