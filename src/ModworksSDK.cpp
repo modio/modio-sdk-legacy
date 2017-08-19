@@ -16,6 +16,9 @@ void ModworksSDK::getMods(function< void(vector<Mod*>) > callback)
   headers.push_back(string("Authorization: Bearer ") + current_user);
   string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods";
 
-  std::thread get_json_thread(getJson, url, headers, callback);
+  int call_count = getCallCount();
+  advanceCallCount();
+
+  std::thread get_json_thread(getJson, url, headers, callback, call_count);
   get_json_thread.detach();
 }

@@ -3,6 +3,34 @@
 map<CURL*, GetJsonHandler*> ongoing_calls;
 map<CURL*, DownloadRedirectHandler*> download_redirect_calls;
 
+int call_count = 0;
+int ongoing_call = 0;
+
+int getCallCount()
+{
+  return call_count;
+}
+
+int getOngoingCall()
+{
+  return ongoing_call;
+}
+
+void advanceCallCount()
+{
+  call_count++;
+}
+
+void advanceOngoingCall()
+{
+  ongoing_call++;
+}
+
+void lockCall(int call_number)
+{
+  while(call_number!=getOngoingCall());
+}
+
 GetJsonHandler::GetJsonHandler(function< void(vector<Mod*>) > callback)
 {
   this->response = "";
@@ -14,12 +42,13 @@ DownloadFileHandler::DownloadFileHandler(function< void(int, Mod*) > callback)
   this->callback = callback;
 }
 
-DownloadRedirectHandler::DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback)
+DownloadRedirectHandler::DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number)
 {
   this->mod = mod;
   this->path = path;
   this->callback = callback;
   this->destination_path = destination_path;
+  this->call_number = call_number;
 }
 
 struct data
@@ -41,8 +70,9 @@ int get_json_trace(CURL *handle, curl_infotype type,
   return 0;
 }
 
-void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback)
+void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback, int call_number)
 {
+  lockCall(call_number);
   CURL *curl;
   CURLcode res;
 
@@ -88,6 +118,7 @@ void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > 
     mods.push_back(mod);
   }
   ongoing_calls[curl]->callback(mods);
+  advanceOngoingCall();
 }
 
 double curlGetFileSize(string url)
@@ -138,8 +169,7 @@ static int redirect_trace(CURL *handle, curl_infotype type,
     }
 
     DownloadRedirectHandler* handler = download_redirect_calls[handle];
-    downloadZipFile(handler->mod, url, handler->path, handler->destination_path, handler->callback);
-
+    downloadZipFile(handler->mod, url, handler->path, handler->destination_path, handler->callback, handler->call_number);
   }
   return 0;
 }
@@ -179,14 +209,18 @@ void downloadFile(string url, string path)
   }
 }
 
-void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback)
+void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback, int call_number)
 {
+  lockCall(call_number);
   downloadFile(url, path);
   callback(1,mod,path);
+  advanceOngoingCall();
 }
 
-void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback)
+void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number)
 {
+  lockCall(call_number);
+
   CURL *curl;
 
   struct data config;
@@ -197,7 +231,7 @@ void downloadRedirect(Mod* mod, string url, string path, string destination_path
 
   if(curl)
   {
-    download_redirect_calls[curl] = new DownloadRedirectHandler(mod, path, destination_path, callback);
+    download_redirect_calls[curl] = new DownloadRedirectHandler(mod, path, destination_path, callback, call_number);
 
     curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, redirect_trace);
     curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
@@ -211,9 +245,11 @@ void downloadRedirect(Mod* mod, string url, string path, string destination_path
   }
 }
 
-void downloadZipFile(Mod* mod, string url, string path, string destination, function< void(int, Mod*, string) > callback)
+void downloadZipFile(Mod* mod, string url, string path, string destination, function< void(int, Mod*, string) > callback, int call_number)
 {
+  lockCall(call_number);
   downloadFile(url, path);
   extract(path, destination);
   callback(1,mod,path);
+  advanceOngoingCall();
 }

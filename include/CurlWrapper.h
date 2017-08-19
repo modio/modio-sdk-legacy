@@ -18,6 +18,11 @@ class Mod;
 using namespace std;
 using json = nlohmann::json;
 
+int getCallCount();
+int getOngoingCall();
+void advanceCallCount();
+void advanceOngoingCall();
+
 class GetJsonHandler
 {
 public:
@@ -26,7 +31,7 @@ public:
   GetJsonHandler(function< void(vector<Mod*>) > callback);
 };
 
-void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback);
+void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback, int call_number);
 
 class DownloadFileHandler
 {
@@ -37,7 +42,7 @@ public:
 
 double curlGetFileSize(string url);
 
-void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback);
+void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback, int call_number);
 
 class DownloadRedirectHandler
 {
@@ -46,10 +51,11 @@ public:
   string path;
   string destination_path;
   function< void(int, Mod*, string) > callback;
-  DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback);
+  int call_number;
+  DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number);
 };
 
-void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback);
-void downloadZipFile(Mod* mod, string url, string path, string downloadZipFile, function< void(int, Mod*, string) > callback);
+void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number);
+void downloadZipFile(Mod* mod, string url, string path, string downloadZipFile, function< void(int, Mod*, string) > callback, int call_number);
 
 #endif

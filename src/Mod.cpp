@@ -16,13 +16,21 @@ Mod::Mod(json mod_json)
 void Mod::downloadLogoThumbnail(function< void(int, Mod*, string) > callback)
 {
   string file_path = string(".modworks/images/") + toString(this->game) + "_" + toString(this->id) + "_thumb.png";
-  std::thread download_file_thread(downloadModFile, this, this->logo_thumbnail_url, file_path, callback);
+
+  int call_count = getCallCount();
+  advanceCallCount();
+
+  std::thread download_file_thread(downloadModFile, this, this->logo_thumbnail_url, file_path, callback, call_count);
   download_file_thread.detach();
 }
 
 void Mod::download(string destination_path, function< void(int, Mod*, string) > callback)
 {
   string file_path = string(".modworks/tmp/") + toString(this->game) + "_" + toString(this->id) + "_modfile.zip";
-  std::thread download_file_thread(downloadRedirect, this, this->download_url + "?shhh=secret", file_path, destination_path, callback);
+
+  int call_count = getCallCount();
+  advanceCallCount();
+
+  std::thread download_file_thread(downloadRedirect, this, this->download_url + "?shhh=secret", file_path, destination_path, callback, call_count);
   download_file_thread.detach();
 }
