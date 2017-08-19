@@ -39,3 +39,10 @@ string toString(int number)
         returnvalue+=temp[temp.length()-i-1];
     return returnvalue;
 }
+
+void createDirectory(string directory)
+{
+  #ifdef LINUX
+    mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  #endif
+}
