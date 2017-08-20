@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "minizip/unzip.h"
+#include "Utility.h"
 
 #define dir_delimter '/'
 #define MAX_FILENAME 512

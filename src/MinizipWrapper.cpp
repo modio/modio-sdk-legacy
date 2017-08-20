@@ -11,6 +11,7 @@ void extract(string zip_path, string directory_path)
   {
     unz_file_info file_info;
     char filename[ MAX_FILENAME ];
+	char final_filename[ MAX_FILENAME ];
     if ( unzGetCurrentFileInfo(
         zipfile,
         &file_info,
@@ -21,29 +22,40 @@ void extract(string zip_path, string directory_path)
       unzClose(zipfile);
       return;
     }
+	
+	strcpy(final_filename,directory_path.c_str());
+	strcat(final_filename,"/");
+	strcat(final_filename,filename);
 
     const size_t filename_length = strlen(filename);
     if (filename[ filename_length-1 ] == dir_delimter)
     {
-      string file_path = directory_path + "/" + filename;
-      mkdir(file_path.c_str() , S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+      createDirectory(final_filename);
     }
     else
     {
-      string file_path = directory_path + "/" + filename;
-      FILE *out = fopen( file_path.c_str(), "wb" );
-      int error = UNZ_OK;
-      do
-      {
-        error = unzReadCurrentFile(zipfile, read_buffer, READ_SIZE);
+		unzOpenCurrentFile( zipfile );
 
-        if (error > 0)
-        {
-            fwrite( read_buffer, error, 1, out );
-        }
-      } while (error > 0);
+		string new_file_path = filename;
+		FILE *out = fopen( final_filename, "wb" );
 
-      fclose(out);
+		int error = UNZ_OK;
+		do    
+		{
+			error = unzReadCurrentFile( zipfile, read_buffer, READ_SIZE );
+			if ( error < 0 )
+			{
+				unzCloseCurrentFile( zipfile );
+				unzClose( zipfile );
+				return;
+			}
+			if ( error > 0 )
+			{
+				fwrite( read_buffer, error, 1, out );
+			}
+		} while ( error > 0 );
+
+		fclose( out );
     }
 
     unzCloseCurrentFile( zipfile );
@@ -59,3 +71,4 @@ void extract(string zip_path, string directory_path)
   }
   unzClose(zipfile);
 }
+

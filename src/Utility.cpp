@@ -45,4 +45,8 @@ void createDirectory(string directory)
   #ifdef LINUX
     mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
   #endif
+  
+  #ifdef WINDOWS
+    CreateDirectory(directory.c_str() ,NULL);
+  #endif
 }

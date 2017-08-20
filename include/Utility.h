@@ -25,6 +25,10 @@
 #include <sys/stat.h>
 #endif
 
+#ifdef WINDOWS
+#include <windows.h>
+#endif
+
 using namespace std;
 
 string dataToJsonString(char* data, size_t size);

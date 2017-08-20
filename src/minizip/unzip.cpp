@@ -24,7 +24,7 @@
 #  define NOUNCRYPT
 #endif*/
 
-#include "zlib.h"
+#include "zlib/zlib.h"
 #include "minizip/unzip.h"
 #include "minizip/crypt.h"
 
@@ -51,7 +51,7 @@
 #  include "aes/fileenc.h"
 #endif
 #ifndef NOUNCRYPT
-#  include "crypt.h"
+//#  include "minizip/crypt.h"
 #endif
 
 #ifndef local

@@ -1,15 +1,15 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
-LDFLAGS=-lcurl -pthread -lz
+LDFLAGS=-pthread
 SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
-LIBRARIES=libcurl.a libcurldll.a ../src/libmodworks.a
+LIBRARIES=../lib/libcurl.a ../lib/libcurldll.a ../lib/libz.a ../src/libmodworks.a
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@
+	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@ ../lib/libcurl.a ../lib/libcurldll.a ../lib/libz.a
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@ -I ../include
