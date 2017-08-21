@@ -4,6 +4,7 @@
 #include <thread>
 #include "CurlWrapper.h"
 #include "MinizipWrapper.h"
+#include "LoginForm.h"
 #include "Mod.h"
 
 class ModworksSDK
