@@ -1,5 +1,6 @@
 #include "LoginForm.h"
 
+#ifdef LINUX
 void onLoginButtonPressed(GtkWidget *widget, gpointer data)
 {
   LoginParams* login_params = (LoginParams*)data;
@@ -67,6 +68,108 @@ void loginFormThread(function< void(int result) > callback)
   status = g_application_run (G_APPLICATION (app), 0, 0);
   g_object_unref (app);
 }
+#endif
+
+#define WINDOWS
+
+#ifdef WINDOWS
+HWND email_entry, password_entry, login_button, close_button;
+LRESULT CALLBACK windowProcedureCallback(HWND, UINT, WPARAM, LPARAM);
+function< void(int result) > callback;
+
+void loginFormThread(function< void(int result) > callback_param)
+{
+	callback = callback_param;
+    WNDCLASSEX wincl;
+    wincl.hInstance = GetModuleHandle(NULL);
+    wincl.lpszClassName = "modworks.sdk.login";
+    wincl.lpfnWndProc = windowProcedureCallback;
+    wincl.style = CS_DBLCLKS;
+    wincl.cbSize = sizeof (WNDCLASSEX);
+
+    wincl.hIcon = LoadIcon (NULL, IDI_APPLICATION);
+    wincl.hIconSm = LoadIcon (NULL, IDI_APPLICATION);
+    wincl.hCursor = LoadCursor (NULL, IDC_ARROW);
+    wincl.cbClsExtra = 0;
+    wincl.cbWndExtra = 0;
+    wincl.hbrBackground = (HBRUSH) COLOR_BACKGROUND;
+
+    if(!RegisterClassEx (&wincl))
+        return;
+
+    HWND hwnd = CreateWindowEx(
+           0,
+           "modworks.sdk.login",
+           "Modworks Login", /* title */
+           WS_OVERLAPPEDWINDOW,
+           CW_USEDEFAULT, CW_USEDEFAULT, /* position on the screen */
+           240, 140, /* width, height */
+           HWND_DESKTOP,
+           NULL,
+           GetModuleHandle(NULL),
+           NULL
+           );
+
+    ShowWindow(hwnd, 10);
+
+	MSG messages;
+    while(GetMessage(&messages, NULL, 0, 0))
+    {
+        TranslateMessage(&messages);
+        DispatchMessage(&messages);
+    }
+}
+
+LRESULT CALLBACK windowProcedureCallback(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	if(message == WM_CREATE)
+	{
+		email_entry = CreateWindow("EDIT","", WS_VISIBLE | WS_BORDER | WS_CHILD, 10, 10, 200, 20, hwnd, (HMENU) 1, NULL, NULL);
+		password_entry = CreateWindow("EDIT","",WS_VISIBLE | WS_BORDER | WS_CHILD | ES_PASSWORD, 10, 40, 200, 20, hwnd, (HMENU) 2, NULL, NULL);
+		login_button = CreateWindow("BUTTON", "Login", WS_VISIBLE | WS_BORDER | WS_CHILD, 10, 70, 70, 20, hwnd, (HMENU) 3, NULL, NULL);
+		close_button = CreateWindow("BUTTON", "Close", WS_VISIBLE | WS_BORDER | WS_CHILD, 140, 70, 70, 20, hwnd, (HMENU) 4, NULL, NULL);
+	}
+	else if(message == WM_COMMAND)
+	{
+		if(LOWORD(wParam) == 3)
+		{
+			int email_lenght = GetWindowTextLength(email_entry) + 1;
+			char* email_char = new char[email_lenght];
+			GetWindowText(email_entry, &email_char[0], email_lenght);
+			
+			int password_lenght = GetWindowTextLength(password_entry) + 1;
+			char* password_char = new char[password_lenght];
+			GetWindowText(password_entry, &password_char[0], password_lenght);
+			
+			string email = email_char;
+			string password = password_char;
+
+			cout<<"Email: "<<email<<endl;
+			cout<<"Password: "<<password<<endl;
+			
+			callback(1);
+			
+			delete[] email_char;
+			delete[] password_char;
+		}
+		
+		if(LOWORD(wParam) == 4)
+		{
+			PostQuitMessage(0);
+		}
+	}
+	else if(message == WM_DESTROY)
+	{
+		PostQuitMessage(0);
+	}
+	else
+	{
+		return DefWindowProc(hwnd, message, wParam, lParam);
+	}
+
+    return 0;
+}
+#endif
 
 void showLoginForm(function< void(int result) > callback)
 {
