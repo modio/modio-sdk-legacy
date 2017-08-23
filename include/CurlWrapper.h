@@ -10,52 +10,55 @@
 #include "Utility.h"
 #include "Mod.h"
 
-class Mod;
-
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
 
-using namespace std;
-using json = nlohmann::json;
-
-int getCallCount();
-int getOngoingCall();
-void advanceCallCount();
-void advanceOngoingCall();
-
-class GetJsonHandler
+namespace modworks
 {
-public:
-  string response;
-  function< void(vector<Mod*>) > callback;
-  GetJsonHandler(function< void(vector<Mod*>) > callback);
-};
+  class Mod;
 
-void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback, int call_number);
+  using namespace std;
+  using json = nlohmann::json;
 
-class DownloadFileHandler
-{
-public:
-  function< void(int, Mod*) > callback;
-  DownloadFileHandler(function< void(int, Mod*) > callback);
-};
+  int getCallCount();
+  int getOngoingCall();
+  void advanceCallCount();
+  void advanceOngoingCall();
 
-double curlGetFileSize(string url);
+  class GetJsonHandler
+  {
+  public:
+    string response;
+    function< void(vector<modworks::Mod*>) > callback;
+    GetJsonHandler(function< void(vector<modworks::Mod*>) > callback);
+  };
 
-void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback, int call_number);
+  void getJson(string url, vector<string> headers, function< void(vector<modworks::Mod*>) > callback, int call_number);
 
-class DownloadRedirectHandler
-{
-public:
-  Mod* mod;
-  string path;
-  string destination_path;
-  function< void(int, Mod*, string) > callback;
-  int call_number;
-  DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number);
-};
+  class DownloadFileHandler
+  {
+  public:
+    function< void(int, modworks::Mod*) > callback;
+    DownloadFileHandler(function< void(int, modworks::Mod*) > callback);
+  };
 
-void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number);
-void downloadZipFile(Mod* mod, string url, string path, string downloadZipFile, function< void(int, Mod*, string) > callback, int call_number);
+  double curlGetFileSize(string url);
+
+  void downloadModFile(modworks::Mod* mod, string url, string path, function< void(int, modworks::Mod*, string) > callback, int call_number);
+
+  class DownloadRedirectHandler
+  {
+  public:
+    modworks::Mod* mod;
+    string path;
+    string destination_path;
+    function< void(int, modworks::Mod*, string) > callback;
+    int call_number;
+    DownloadRedirectHandler(modworks::Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number);
+  };
+
+  void downloadRedirect(modworks::Mod* mod, string url, string path, string destination_path, function< void(int, modworks::Mod*, string) > callback, int call_number);
+  void downloadZipFile(modworks::Mod* mod, string url, string path, string downloadZipFile, function< void(int, modworks::Mod*, string) > callback, int call_number);
+}
 
 #endif

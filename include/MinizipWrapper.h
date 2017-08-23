@@ -15,6 +15,9 @@
 
 using namespace std;
 
-void extract(string zip_path, string directory_path);
+namespace modworks
+{
+  void extract(string zip_path, string directory_path);
+}
 
 #endif

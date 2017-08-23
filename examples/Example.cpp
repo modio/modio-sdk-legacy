@@ -2,9 +2,9 @@
 
 int files_downloaded = 0;
 int files_to_download = 4;
-ModworksSDK* modworks;
+modworks::SDK* mworks;
 
-void onThumbnailDownloaded(int result,  Mod* mod, string path)
+void onThumbnailDownloaded(int result,  modworks::Mod* mod, string path)
 {
   if(result == 1)
   {
@@ -13,7 +13,7 @@ void onThumbnailDownloaded(int result,  Mod* mod, string path)
   files_downloaded++;
 }
 
-void onModInstalled(int result,  Mod* mod, string path)
+void onModInstalled(int result,  modworks::Mod* mod, string path)
 {
   if(result == 1)
   {
@@ -22,7 +22,7 @@ void onModInstalled(int result,  Mod* mod, string path)
   files_downloaded++;
 }
 
-void onModsGet(vector<Mod*> mods)
+void onModsGet(vector<modworks::Mod*> mods)
 {
   cout<<endl<<"Listing mods:"<<endl;
   for(int i=0;i<(int)mods.size();i++)
@@ -37,8 +37,8 @@ void onModsGet(vector<Mod*> mods)
 
 int main(void)
 {
-  modworks = new ModworksSDK(/*game_id*/7, /*username*/"turupawn");
-  modworks->getMods(&onModsGet);
+  mworks = new modworks::SDK(/*game_id*/7, /*username*/"turupawn");
+  mworks->getMods(&onModsGet);
   while(files_downloaded<files_to_download);
 
   return 0;

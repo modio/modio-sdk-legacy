@@ -1,7 +1,6 @@
 #ifndef MOD_H
 #define MOD_H
 
-#include <iostream>
 #include <thread>
 #include "json/json.hpp"
 #include "CurlWrapper.h"
@@ -9,21 +8,24 @@
 using namespace std;
 using json = nlohmann::json;
 
-class Mod
+namespace modworks
 {
-public:
-  int id;
-  int game;
-  string logo_url;
-  string logo_thumbnail_url;
-  string name;
-  string summary;
-  string description;
-  string download_url;
+  class Mod
+  {
+  public:
+    int id;
+    int game;
+    string logo_url;
+    string logo_thumbnail_url;
+    string name;
+    string summary;
+    string description;
+    string download_url;
 
-  Mod(json mod_json);
-  void downloadLogoThumbnail(function< void(int, Mod*, string) > callback);
-  void download(string destination_path, function< void(int, Mod*, string) > callback);
-};
+    Mod(json mod_json);
+    void downloadLogoThumbnail(function< void(int, Mod*, string) > callback);
+    void download(string destination_path, function< void(int, Mod*, string) > callback);
+  };
+}
 
 #endif
