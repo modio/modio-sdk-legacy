@@ -4,6 +4,7 @@ namespace modworks
 {
   void extract(string zip_path, string directory_path)
   {
+    writeLogLine(string("Extracting ") + zip_path);
     unzFile zipfile = unzOpen( zip_path.c_str() );
     unz_global_info global_info;
     unzGetGlobalInfo( zipfile, &global_info );
@@ -14,7 +15,7 @@ namespace modworks
     {
       unz_file_info file_info;
       char filename[ MAX_FILENAME ];
-  	char final_filename[ MAX_FILENAME ];
+      char final_filename[ MAX_FILENAME ];
       if ( unzGetCurrentFileInfo(
           zipfile,
           &file_info,
@@ -26,9 +27,9 @@ namespace modworks
         return;
       }
 
-  	strcpy(final_filename,directory_path.c_str());
-  	strcat(final_filename,"/");
-  	strcat(final_filename,filename);
+      strcpy(final_filename,directory_path.c_str());
+      strcat(final_filename,"/");
+      strcat(final_filename,filename);
 
       const size_t filename_length = strlen(filename);
       if (filename[ filename_length-1 ] == dir_delimter)
@@ -65,13 +66,14 @@ namespace modworks
 
       if((i+1) < global_info.number_entry)
       {
-          if(unzGoToNextFile(zipfile) != UNZ_OK)
-          {
-              unzClose(zipfile);
-              return;
-          }
+        if(unzGoToNextFile(zipfile) != UNZ_OK)
+        {
+          unzClose(zipfile);
+          return;
+        }
       }
     }
     unzClose(zipfile);
+    writeLogLine(zip_path + " extracted");
   }
 }

@@ -1,5 +1,5 @@
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef MODWORKS_UTILITY_H
+#define MODWORKS_UTILITY_H
 
 #include <iostream>
 
@@ -29,10 +29,16 @@
 #include <windows.h>
 #endif
 
+#include <fstream>
+
 using namespace std;
 
-string dataToJsonString(char* data, size_t size);
-string toString(int number);
-void createDirectory(string directory);
+namespace modworks
+{
+  string dataToJsonString(char* data, size_t size);
+  string toString(int number);
+  void createDirectory(string directory);
+  bool writeLogLine(string text);
+}
 
 #endif

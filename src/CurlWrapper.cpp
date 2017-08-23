@@ -74,6 +74,7 @@ namespace modworks
 
   void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback, int call_number)
   {
+    writeLogLine("getJsonCall call to " + url);
     lockCall(call_number);
     CURL *curl;
     CURLcode res;
@@ -94,7 +95,7 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
 
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-  	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
       curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, get_json_trace);
@@ -124,25 +125,7 @@ namespace modworks
     }
     ongoing_calls[curl]->callback(mods);
     advanceOngoingCall();
-  }
-
-  double curlGetFileSize(string url)
-  {
-    CURL *curl;
-    curl = curl_easy_init();
-
-    curl_easy_setopt(curl, CURLOPT_HEADER, 1);
-    curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
-    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-    curl_easy_perform(curl);
-
-    double result;
-    curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &result);
-    curl_easy_cleanup(curl);
-
-    return result;
+    writeLogLine("getJsonCall call to " + url + "finished");
   }
 
   static int download_file_trace(CURL *handle, curl_infotype type,
@@ -189,6 +172,7 @@ namespace modworks
 
   void downloadFile(string url, string path)
   {
+    writeLogLine("downloadFile call to " + url);
     CURL *curl;
     FILE *file;
 
@@ -217,18 +201,22 @@ namespace modworks
 
       fclose(file);
     }
+    writeLogLine("getJsonCall call to " + url + " finished");
   }
 
   void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback, int call_number)
   {
+    writeLogLine("downloadModFile call to " + url);
     lockCall(call_number);
     downloadFile(url, path);
     callback(1,mod,path);
     advanceOngoingCall();
+    writeLogLine("downloadModFile call to " + url + " finished");
   }
 
   void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number)
   {
+    writeLogLine("downloadRedirect call to " + url);
     lockCall(call_number);
 
     CURL *curl;
@@ -255,14 +243,17 @@ namespace modworks
 
       curl_easy_cleanup(curl);
     }
+    writeLogLine("downloadRedirect call to " + url + " finished");
   }
 
   void downloadZipFile(Mod* mod, string url, string path, string destination, function< void(int, Mod*, string) > callback, int call_number)
   {
+    writeLogLine("downloadZipFile call to " + url);
     lockCall(call_number);
     downloadFile(url, path);
     extract(path, destination);
     callback(1,mod,path);
     advanceOngoingCall();
+    writeLogLine("downloadZipFile call to " + url + " finished");
   }
 }

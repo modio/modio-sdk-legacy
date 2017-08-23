@@ -1,5 +1,5 @@
-#ifndef CURL_WRAPPER_H
-#define CURL_WRAPPER_H
+#ifndef MODWORKS_CURL_WRAPPER_H
+#define MODWORKS_CURL_WRAPPER_H
 
 #include <stdio.h>
 #include <iostream>

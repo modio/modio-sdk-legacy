@@ -1,5 +1,5 @@
-#ifndef MODWORKSSDK_H
-#define MODWORKSSDK_H
+#ifndef MODWORKS_SDK_H
+#define MODWORKS_SDK_H
 
 #include "CurlWrapper.h"
 #include "MinizipWrapper.h"

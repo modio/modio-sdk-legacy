@@ -1,5 +1,5 @@
-#ifndef MOD_H
-#define MOD_H
+#ifndef MODWORKS_MOD_H
+#define MODWORKS_MOD_H
 
 #include <thread>
 #include "json/json.hpp"

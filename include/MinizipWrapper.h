@@ -1,5 +1,5 @@
-#ifndef MINIZIP_WRAPPER_H
-#define MINIZIP_WRAPPER_H
+#ifndef MODWORKS_MINIZIP_WRAPPER_H
+#define MODWORKS_MINIZIP_WRAPPER_H
 
 #include <iostream>
 #include <stdio.h>
