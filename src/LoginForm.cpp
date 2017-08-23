@@ -144,8 +144,8 @@ LRESULT CALLBACK windowProcedureCallback(HWND hwnd, UINT message, WPARAM wParam,
 			string email = email_char;
 			string password = password_char;
 
-			cout<<"Email: "<<email<<endl;
-			cout<<"Password: "<<password<<endl;
+			//cout<<"Email: "<<email<<endl;
+			//cout<<"Password: "<<password<<endl;
 			
 			callback(1);
 			

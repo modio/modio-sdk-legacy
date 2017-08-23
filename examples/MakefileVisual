@@ -1,0 +1,4 @@
+SOURCES=Example.cpp
+
+foo: Example.cpp
+ cl /EHsc /MD $(SOURCES) /I ../include /link ../lib/libcurl.a ../lib/libcurldll.a ../lib/zlib.lib ../lib/zdll.lib ../lib/pthreadVC2.lib ../src/ModworksSDk.lib /SUBSYSTEM:CONSOLE

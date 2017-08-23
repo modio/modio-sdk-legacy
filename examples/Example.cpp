@@ -34,22 +34,11 @@ void onModsGet(vector<Mod*> mods)
   }
 }
 
-void onLoginFinished(int result)
-{
-  if(result == 1)
-  {
-    cout<<"Login correct"<<endl;
-    modworks->getMods(&onModsGet);
-  }else
-  {
-    cout<<"Login incorrect"<<endl;
-  }
-}
 
 int main(void)
 {
   modworks = new ModworksSDK(/*game_id*/7, /*username*/"turupawn");
-  showLoginForm(&onLoginFinished);
+  modworks->getMods(&onModsGet);
   while(files_downloaded<files_to_download);
 
   return 0;

@@ -4,6 +4,7 @@ void extract(string zip_path, string directory_path)
 {
   unzFile zipfile = unzOpen( zip_path.c_str() );
   unz_global_info global_info;
+  unzGetGlobalInfo( zipfile, &global_info );
   char read_buffer[ READ_SIZE ];
 
   uLong i;
@@ -26,7 +27,7 @@ void extract(string zip_path, string directory_path)
 	strcpy(final_filename,directory_path.c_str());
 	strcat(final_filename,"/");
 	strcat(final_filename,filename);
-
+	
     const size_t filename_length = strlen(filename);
     if (filename[ filename_length-1 ] == dir_delimter)
     {
