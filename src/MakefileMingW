@@ -1,9 +1,11 @@
-CC=g++
-CFLAGS=-c -Wall -std=c++11
-LDFLAGS=-lcurl -pthread -lz
-SOURCES=ModworksSDK.cpp Utility.cpp CurlWrapper.cpp MinizipWrapper.cpp LoginForm.cpp Mod.cpp minizip/unzip.cpp minizip/ioapi.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
-LIBRARY=libmodworks.a
+include Sources.mk
+
+CC = g++
+CFLAGS = -c -Wall -std=c++11
+LDFLAGS = -lcurl -pthread -lz
+SOURCES = $(MODWORKS_SOURCES)
+OBJECTS = $(SOURCES:.cpp=.o)
+LIBRARY = libmodworks.a
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@ -I ../include
