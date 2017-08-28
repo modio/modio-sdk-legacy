@@ -59,6 +59,8 @@ namespace modworks
 
   void downloadRedirect(modworks::Mod* mod, string url, string path, string destination_path, function< void(int, modworks::Mod*, string) > callback, int call_number);
   void downloadZipFile(modworks::Mod* mod, string url, string path, string downloadZipFile, function< void(int, modworks::Mod*, string) > callback, int call_number);
+
+  void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files);
 }
 
 #endif

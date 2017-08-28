@@ -189,7 +189,7 @@ namespace modworks
 
       file = fopen(path.c_str(),"wb");
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-  	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
@@ -236,7 +236,7 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-  	curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
       curl_easy_perform(curl);
@@ -255,5 +255,72 @@ namespace modworks
     callback(1,mod,path);
     advanceOngoingCall();
     writeLogLine("downloadZipFile call to " + url + " finished");
+  }
+
+  void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files)
+  {
+    CURL *curl;
+    CURLcode res;
+
+    struct curl_httppost *formpost=NULL;
+    struct curl_httppost *lastptr=NULL;
+    struct curl_slist *headerlist=NULL;
+    static const char buf[] = "Expect:";
+
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    for(map<string,string>::iterator i = curlform_files.begin();
+          i!=curlform_files.end();
+          i++)
+    {
+      curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
+        CURLFORM_FILE, (*i).second.c_str(), CURLFORM_END);
+    }
+
+    for(map<string,string>::iterator i = curlform_copycontents.begin();
+          i!=curlform_copycontents.end();
+          i++)
+    {
+      curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
+        CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
+    }
+
+    /* Fill in the submit field too, even if this is rarely needed */
+    curl_formadd(&formpost,
+                 &lastptr,
+                 CURLFORM_COPYNAME, "submit",
+                 CURLFORM_COPYCONTENTS, "send",
+                 CURLFORM_END);
+
+    curl = curl_easy_init();
+
+
+    struct curl_slist *chunk = NULL;
+    for(int i=0;i<(int)headers.size();i++)
+      chunk = curl_slist_append(chunk, headers[i].c_str());
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+    /* initialize custom header list (stating that Expect: 100-continue is not
+       wanted */
+    headerlist = curl_slist_append(headerlist, buf);
+    if(curl) {
+      /* what URL that receives this POST */
+      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+      //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
+        /* only disable 100-continue header if explicitly requested */
+        //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
+      curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+
+      res = curl_easy_perform(curl);
+
+      if(res != CURLE_OK)
+        fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                curl_easy_strerror(res));
+
+      curl_easy_cleanup(curl);
+      curl_formfree(formpost);
+      curl_slist_free_all(headerlist);
+    }
   }
 }
