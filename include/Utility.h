@@ -2,6 +2,9 @@
 #define MODWORKS_UTILITY_H
 
 #include <iostream>
+#include <vector>
+#include <string.h>
+#include <dirent.h>
 
 #ifdef __linux__
 #define LINUX
@@ -39,6 +42,7 @@ namespace modworks
   string toString(int number);
   void createDirectory(string directory);
   bool writeLogLine(string text);
+  vector<string> getFilenames(string directory);
 }
 
 #endif

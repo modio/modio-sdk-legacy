@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 
 #include "minizip/unzip.h"
+#include "minizip/minizip.h"
 #include "Utility.h"
 
 #define dir_delimter '/'
@@ -18,6 +19,7 @@ using namespace std;
 namespace modworks
 {
   void extract(string zip_path, string directory_path);
+  void compress(string directory, string zip_path);
 }
 
 #endif

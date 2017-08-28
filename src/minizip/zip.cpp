@@ -19,7 +19,7 @@
 #include <string.h>
 #include <time.h>
 #include "zlib.h"
-#include "zip.h"
+#include "minizip/zip.h"
 
 #ifdef STDC
 #  include <stddef.h>
@@ -959,12 +959,12 @@ extern zipFile ZEXPORT zipOpen3_64(const void *pathname, int append, ZPOS64_T di
 
 extern zipFile ZEXPORT zipOpen(const char* pathname, int append)
 {
-    return zipOpen3((const void*)pathname,append,0,NULL,NULL);
+    return zipOpen3((const char*)pathname,append,0,NULL,NULL);
 }
 
 extern zipFile ZEXPORT zipOpen64(const void* pathname, int append)
 {
-    return zipOpen3(pathname,append,0,NULL,NULL);
+    return zipOpen3((char*)pathname,append,0,NULL,NULL);
 }
 
 extern int ZEXPORT zipOpenNewFileInZip4_64(zipFile file, const char* filename, const zip_fileinfo* zipfi,
@@ -1479,7 +1479,7 @@ extern int ZEXPORT zipWriteInFileInZip(zipFile file,const void* buf,unsigned int
     if (zi->in_opened_file_inzip == 0)
         return ZIP_PARAMERROR;
 
-    zi->ci.crc32 = crc32(zi->ci.crc32, buf, (uInt)len);
+    zi->ci.crc32 = crc32(zi->ci.crc32, (Bytef*)buf, (uInt)len);
 
 #ifdef HAVE_BZIP2
     if ((zi->ci.compression_method == Z_BZIP2ED) && (!zi->ci.raw))

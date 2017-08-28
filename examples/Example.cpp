@@ -37,6 +37,8 @@ void onModsGet(vector<modworks::Mod*> mods)
 
 int main(void)
 {
+  //modworks::compress("dir/path","out.zip");
+
   mworks = new modworks::SDK(/*game_id*/7, /*username*/"turupawn");
   mworks->getMods(&onModsGet);
   while(files_downloaded<files_to_download);
