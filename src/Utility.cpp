@@ -56,7 +56,7 @@ namespace modworks
   bool writeLogLine(string text)
   {
     ofstream log_file(".modworks/log", ios::app);
-    log_file<<text<<"\n";
+    log_file<<text.c_str()<<"\n";
     log_file.close();
     return true;
   }

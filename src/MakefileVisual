@@ -1,6 +1,20 @@
-SOURCES=ModworksSDK.cpp Utility.cpp CurlWrapper.cpp MinizipWrapper.cpp Mod.cpp minizip/unzip.cpp minizip/ioapi.cpp
-OBJS=ModworksSDK.obj Utility.obj CurlWrapper.obj MinizipWrapper.obj Mod.obj unzip.obj ioapi.obj
+include Sources.mk
 
-foo: ModworksSDK.cpp
- cl /EHsc /MD /LD $(SOURCES) /I ../include /link ../lib/libcurl.a ../lib/libcurldll.a ../lib/zlib.lib ../lib/zdll.lib ../lib/pthreadVC2.lib /SUBSYSTEM:CONSOLE
- lib.exe /OUT:ModworksSDK.lib $(OBJS)
+CC = cl.exe
+CFLAGS = /EHsc /MD /LD
+SOURCES = $(MODWORKS_SOURCES)
+OUTPUT_LIB = libmodworks.lib
+OUTPUT_DLL = ModworksSDK.dll
+LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/zlib.lib ../lib/zdll.lib ../lib/pthreadVC2.lib
+LIBRARY_GENERATOR = lib.exe
+
+build:
+ $(CC) $(CFLAGS) $(SOURCES) /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ 
+link: *.obj
+ $(LIBRARY_GENERATOR) /OUT:$(OUTPUT_LIB) $?
+
+clean:
+ del *.obj
+ del $(OUTPUT_LIB)
+ del $(OUTPUT_DLL)
