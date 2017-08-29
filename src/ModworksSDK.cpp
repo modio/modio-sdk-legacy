@@ -2,11 +2,11 @@
 
 namespace modworks
 {
-  SDK::SDK(int game_id, string current_user)
+  SDK::SDK(int game_id, string api_key)
   {
     writeLogLine("Initializing SDK", verbose);
     this->game_id = game_id;
-    this->current_user = current_user;
+    this->api_key = api_key;
 
     createDirectory(".modworks");
     createDirectory(".modworks/images");
@@ -18,7 +18,7 @@ namespace modworks
   {
     writeLogLine("getMods call", verbose);
     vector<string> headers;
-    headers.push_back(string("Authorization: Bearer ") + current_user);
+    headers.push_back("Authorization: Bearer Turupawn");
     string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods";
 
     int call_count = getCallCount();
@@ -27,5 +27,13 @@ namespace modworks
     std::thread get_json_thread(getJson, url, headers, callback, call_count);
     get_json_thread.detach();
     writeLogLine("getJson thread detached", verbose);
+  }
+
+  void SDK::emailRequest(string email, function< void(int response) > callback)
+  {
+    map<string, string> data;
+    data["api_key"] = api_key;
+    data["email"] = email;
+    modworks::post("https://api.mod.works/oauth/emailrequest?shhh=secret",data, callback);
   }
 }

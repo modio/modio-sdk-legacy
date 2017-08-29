@@ -10,11 +10,12 @@ namespace modworks
   class SDK
   {
   public:
-    string current_user;
+    string api_key;
     int game_id;
 
-    SDK(int game_id, string current_user);
+    SDK(int game_id, string api_key);
     void getMods(function< void(vector<Mod*>) > callback);
+    void emailRequest(string email, function< void(int response) > callback);
   };
 }
 

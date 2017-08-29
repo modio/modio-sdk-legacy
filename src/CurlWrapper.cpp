@@ -324,4 +324,41 @@ namespace modworks
     }
     writeLogLine(string("postForm call to ") + url + " finished", verbose);
   }
+
+  void post(string url, map<string, string> data, function< void(int response) > callback)
+  {
+    CURL *curl;
+    CURLcode res;
+    curl_global_init(CURL_GLOBAL_ALL);
+    curl = curl_easy_init();
+
+    if(curl)
+    {
+      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+      string str_data = "";
+      for(map<string, string>::iterator i = data.begin(); i!=data.end(); i++)
+      {
+        if(i!=data.begin())
+          str_data += "&";
+        str_data += (*i).first + "=" + (*i).second;
+      }
+
+      cout<<"datax: "<<str_data<<endl;
+
+      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
+
+      res = curl_easy_perform(curl);
+
+      if(res != CURLE_OK)
+      {
+        writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+        callback(-1);
+      }
+
+      curl_easy_cleanup(curl);
+    }
+    curl_global_cleanup();
+    callback(1);
+  }
 }
