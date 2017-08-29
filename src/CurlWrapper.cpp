@@ -74,7 +74,7 @@ namespace modworks
 
   void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback, int call_number)
   {
-    writeLogLine("getJsonCall call to " + url);
+    writeLogLine("getJsonCall call to " + url, verbose);
     lockCall(call_number);
     CURL *curl;
     CURLcode res;
@@ -106,8 +106,7 @@ namespace modworks
       res = curl_easy_perform(curl);
       /* Check for errors */
       if(res != CURLE_OK)
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
+        writeLogLine(string("curl_easy_perform() failed ") + url, verbose);
 
       /* always cleanup */
       curl_easy_cleanup(curl);
@@ -125,7 +124,7 @@ namespace modworks
     }
     ongoing_calls[curl]->callback(mods);
     advanceOngoingCall();
-    writeLogLine("getJsonCall call to " + url + "finished");
+    writeLogLine("getJsonCall call to " + url + "finished", verbose);
   }
 
   static int download_file_trace(CURL *handle, curl_infotype type,
@@ -172,7 +171,7 @@ namespace modworks
 
   void downloadFile(string url, string path)
   {
-    writeLogLine("downloadFile call to " + url);
+    writeLogLine("downloadFile call to " + url, verbose);
     CURL *curl;
     FILE *file;
 
@@ -201,22 +200,22 @@ namespace modworks
 
       fclose(file);
     }
-    writeLogLine("getJsonCall call to " + url + " finished");
+    writeLogLine("getJsonCall call to " + url + " finished", verbose);
   }
 
   void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback, int call_number)
   {
-    writeLogLine("downloadModFile call to " + url);
+    writeLogLine("downloadModFile call to " + url, verbose);
     lockCall(call_number);
     downloadFile(url, path);
     callback(1,mod,path);
     advanceOngoingCall();
-    writeLogLine("downloadModFile call to " + url + " finished");
+    writeLogLine("downloadModFile call to " + url + " finished", verbose);
   }
 
   void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number)
   {
-    writeLogLine("downloadRedirect call to " + url);
+    writeLogLine("downloadRedirect call to " + url, verbose);
     lockCall(call_number);
 
     CURL *curl;
@@ -243,22 +242,23 @@ namespace modworks
 
       curl_easy_cleanup(curl);
     }
-    writeLogLine("downloadRedirect call to " + url + " finished");
+    writeLogLine("downloadRedirect call to " + url + " finished", verbose);
   }
 
   void downloadZipFile(Mod* mod, string url, string path, string destination, function< void(int, Mod*, string) > callback, int call_number)
   {
-    writeLogLine("downloadZipFile call to " + url);
+    writeLogLine("downloadZipFile call to " + url, verbose);
     lockCall(call_number);
     downloadFile(url, path);
     extract(path, destination);
     callback(1,mod,path);
     advanceOngoingCall();
-    writeLogLine("downloadZipFile call to " + url + " finished");
+    writeLogLine("downloadZipFile call to " + url + " finished", verbose);
   }
 
   void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files)
   {
+    writeLogLine(string("postForm call to ") + url, verbose);
     CURL *curl;
     CURLcode res;
 
@@ -302,7 +302,8 @@ namespace modworks
     /* initialize custom header list (stating that Expect: 100-continue is not
        wanted */
     headerlist = curl_slist_append(headerlist, buf);
-    if(curl) {
+    if(curl)
+    {
       /* what URL that receives this POST */
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
@@ -315,12 +316,12 @@ namespace modworks
       res = curl_easy_perform(curl);
 
       if(res != CURLE_OK)
-        fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
+        writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
 
       curl_easy_cleanup(curl);
       curl_formfree(formpost);
       curl_slist_free_all(headerlist);
     }
+    writeLogLine(string("postForm call to ") + url + " finished", verbose);
   }
 }

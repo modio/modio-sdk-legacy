@@ -53,9 +53,11 @@ namespace modworks
     #endif
   }
 
-  bool writeLogLine(string text)
+  bool writeLogLine(string text, DebugMode debug_mode)
   {
     ofstream log_file(".modworks/log", ios::app);
+    if(debug_mode == error)
+      log_file<<"Error: ";
     log_file<<text.c_str()<<"\n";
     log_file.close();
     return true;

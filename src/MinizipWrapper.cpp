@@ -4,7 +4,7 @@ namespace modworks
 {
   void extract(string zip_path, string directory_path)
   {
-    writeLogLine(string("Extracting ") + zip_path);
+    writeLogLine(string("Extracting ") + zip_path, verbose);
     unzFile zipfile = unzOpen( zip_path.c_str() );
     unz_global_info global_info;
     unzGetGlobalInfo( zipfile, &global_info );
@@ -74,11 +74,12 @@ namespace modworks
       }
     }
     unzClose(zipfile);
-    writeLogLine(zip_path + " extracted");
+    writeLogLine(zip_path + " extracted", verbose);
   }
 
   void compress(string directory, string zip_path)
   {
+    writeLogLine(string("Compressing ") + directory + " into " + zip_path, verbose);
     if(directory[directory.size()-1]!='/')
       directory += '/';
 
@@ -99,8 +100,7 @@ namespace modworks
     buf = (void*)malloc(size_buf);
     if (buf == NULL)
     {
-        printf("Error allocating memory\n");
-        //return ZIP_INTERNALERROR;
+      writeLogLine("Error allocating memory", error);
     }
 
     #ifdef USEWIN32IOAPI
@@ -112,11 +112,12 @@ namespace modworks
 
     if (zf == NULL)
     {
-        printf("error opening %s\n", zipfilename);
-        err = ZIP_ERRNO;
+      writeLogLine(string("Could not open ") + zipfilename, error);
     }
     else
-        printf("creating %s\n", zipfilename);
+    {
+      writeLogLine(string("Creating ") + zipfilename, verbose);
+    }
 
     vector<string> filenames = getFilenames(directory);
     for(int i=0;i<(int)filenames.size();i++)
@@ -167,14 +168,13 @@ namespace modworks
                     password, crcFile, zip64);
 
       if (err != ZIP_OK)
-        printf("error in opening %s in zipfile (%d)\n", filenameinzip, err);
+        writeLogLine(string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), error);
       else
       {
         fin = FOPEN_FUNC(complete_file_path.c_str(), "rb");
         if (fin == NULL)
         {
-          err = ZIP_ERRNO;
-          printf("error in opening %s for reading\n", filenameinzip);
+          writeLogLine(string("Could not open ") + filenameinzip + " for reading", error);
         }
       }
 
@@ -186,15 +186,14 @@ namespace modworks
           size_read = (int)fread(buf, 1, size_buf, fin);
           if ((size_read < size_buf) && (feof(fin) == 0))
           {
-            printf("error in reading %s\n",filenameinzip);
-            err = ZIP_ERRNO;
+            writeLogLine(string("Error in reading ") + filenameinzip, error);
           }
 
           if (size_read > 0)
           {
             err = zipWriteInFileInZip(zf, buf, size_read);
             if (err < 0)
-              printf("error in writing %s in the zipfile (%d)\n", filenameinzip, err);
+              writeLogLine(string("Error in writing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), error);
           }
         }
         while ((err == ZIP_OK) && (size_read > 0));
@@ -209,16 +208,15 @@ namespace modworks
       {
         err = zipCloseFileInZip(zf);
         if (err != ZIP_OK)
-          printf("error in closing %s in the zipfile (%d)\n", filenameinzip, err);
+          writeLogLine(string("Error in closing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), error);
       }
     }
 
     errclose = zipClose(zf, NULL);
 
     if (errclose != ZIP_OK)
-      printf("error in closing %s (%d)\n", zipfilename, errclose);
+      writeLogLine(string("Error in closing ") + zipfilename + ", zlib error: " + toString(errclose), error);
 
     free(buf);
-    //return err;
   }
 }

@@ -38,10 +38,11 @@ using namespace std;
 
 namespace modworks
 {
+  enum DebugMode { verbose, error };
   string dataToJsonString(char* data, size_t size);
   string toString(int number);
   void createDirectory(string directory);
-  bool writeLogLine(string text);
+  bool writeLogLine(string text, DebugMode debug_mode);
   vector<string> getFilenames(string directory);
 }
 
