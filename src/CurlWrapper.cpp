@@ -33,10 +33,9 @@ namespace modworks
     while(call_number!=getOngoingCall());
   }
 
-  GetJsonHandler::GetJsonHandler(function< void(vector<Mod*>) > callback)
+  GetJsonHandler::GetJsonHandler()
   {
     this->response = "";
-    this->callback = callback;
   }
 
   DownloadFileHandler::DownloadFileHandler(function< void(int, Mod*) > callback)
@@ -85,7 +84,7 @@ namespace modworks
 
     curl = curl_easy_init();
 
-    ongoing_calls[curl] = new GetJsonHandler(callback);
+    ongoing_calls[curl] = new GetJsonHandler();
 
     if(curl) {
       struct curl_slist *chunk = NULL;
@@ -122,7 +121,7 @@ namespace modworks
       Mod* mod = new Mod(json_response["data"][i]);
       mods.push_back(mod);
     }
-    ongoing_calls[curl]->callback(mods);
+    callback(mods);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + "finished", verbose);
   }
@@ -325,12 +324,28 @@ namespace modworks
     writeLogLine(string("postForm call to ") + url + " finished", verbose);
   }
 
+  int post_trace(CURL *handle, curl_infotype type,
+               char *data, size_t size,
+               void *userp)
+  {
+    (void)handle; /* prevent compiler warning */
+
+    if(type == CURLINFO_DATA_IN)
+    {
+      ongoing_calls[handle]->response = dataToJsonString(data, size);
+    }
+
+    return 0;
+  }
+
   void post(string url, map<string, string> data, function< void(int response) > callback)
   {
     CURL *curl;
     CURLcode res;
     curl_global_init(CURL_GLOBAL_ALL);
     curl = curl_easy_init();
+
+    ongoing_calls[curl] = new GetJsonHandler();
 
     if(curl)
     {
@@ -344,9 +359,13 @@ namespace modworks
         str_data += (*i).first + "=" + (*i).second;
       }
 
-      cout<<"datax: "<<str_data<<endl;
-
       curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
+      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, post_trace);
+
+      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
       res = curl_easy_perform(curl);
 
@@ -359,6 +378,9 @@ namespace modworks
       curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
+
+    string json_string = ongoing_calls[curl]->response;
+
     callback(1);
   }
 }

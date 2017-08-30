@@ -36,4 +36,12 @@ namespace modworks
     data["email"] = email;
     modworks::post("https://api.mod.works/oauth/emailrequest?shhh=secret",data, callback);
   }
+
+  void SDK::emailExchange(string security_code, function< void(int response) > callback)
+  {
+    map<string, string> data;
+    data["api_key"] = api_key;
+    data["security_code"] = security_code;
+    modworks::post("https://api.mod.works/oauth/emailexchange?shhh=secret",data, callback);
+  }
 }

@@ -16,6 +16,7 @@ namespace modworks
     SDK(int game_id, string api_key);
     void getMods(function< void(vector<Mod*>) > callback);
     void emailRequest(string email, function< void(int response) > callback);
+    void emailExchange(string security_code, function< void(int response) > callback);
   };
 }
 

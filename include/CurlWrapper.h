@@ -29,8 +29,7 @@ namespace modworks
   {
   public:
     string response;
-    function< void(vector<modworks::Mod*>) > callback;
-    GetJsonHandler(function< void(vector<modworks::Mod*>) > callback);
+    GetJsonHandler();
   };
 
   void getJson(string url, vector<string> headers, function< void(vector<modworks::Mod*>) > callback, int call_number);
