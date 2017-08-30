@@ -28,7 +28,7 @@ namespace modworks
   class GetJsonHandler
   {
   public:
-    string response;
+    json response;
     GetJsonHandler();
   };
 
@@ -60,7 +60,7 @@ namespace modworks
   void downloadZipFile(modworks::Mod* mod, string url, string path, string downloadZipFile, function< void(int, modworks::Mod*, string) > callback, int call_number);
 
   void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files);
-  void post(string url, map<string, string> data, function< void(int response) > callback);
+  void post(string url, map<string, string> data, function< void(json, function< void(int response) >) > sdk_callback, function< void(int response) > game_callback);
 }
 
 #endif

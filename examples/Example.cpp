@@ -8,7 +8,7 @@ modworks::SDK* mworks;
 
 void onEmailRequest(int result)
 {
-  if(result == 1)
+  if(result == 200)
   {
     cout<<"Code sent!"<<endl;
   }else
@@ -20,7 +20,7 @@ void onEmailRequest(int result)
 
 void onExchange(int result)
 {
-  if(result == 1)
+  if(result == 200)
   {
     cout<<"Code exchanged!"<<endl;
   }else

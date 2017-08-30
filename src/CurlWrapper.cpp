@@ -65,7 +65,8 @@ namespace modworks
 
     if(type == CURLINFO_DATA_IN)
     {
-      ongoing_calls[handle]->response = dataToJsonString(data, size);
+      string json_string = dataToJsonString(data, size);
+      ongoing_calls[handle]->response = json::parse(json_string);
     }
 
     return 0;
@@ -112,8 +113,7 @@ namespace modworks
     }
 
     curl_global_cleanup();
-    string json_string = ongoing_calls[curl]->response;
-    json json_response = json::parse(json_string);
+    json json_response = ongoing_calls[curl]->response;
 
     vector<Mod*> mods;
     for(int i=0;i<(int)json_response["data"].size();i++)
@@ -332,13 +332,14 @@ namespace modworks
 
     if(type == CURLINFO_DATA_IN)
     {
-      ongoing_calls[handle]->response = dataToJsonString(data, size);
+      string json_string = dataToJsonString(data, size);
+      ongoing_calls[handle]->response = json::parse(json_string);
     }
 
     return 0;
   }
 
-  void post(string url, map<string, string> data, function< void(int response) > callback)
+  void post(string url, map<string, string> data, function< void(json, function< void(int response) >) > sdk_callback, function< void(int response) > game_callback)
   {
     CURL *curl;
     CURLcode res;
@@ -372,15 +373,15 @@ namespace modworks
       if(res != CURLE_OK)
       {
         writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
-        callback(-1);
+        //callback(-1);
       }
 
       curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
 
-    string json_string = ongoing_calls[curl]->response;
+    json json_response = ongoing_calls[curl]->response;
 
-    callback(1);
+    sdk_callback(json_response, game_callback);
   }
 }

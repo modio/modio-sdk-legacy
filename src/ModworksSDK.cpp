@@ -29,19 +29,46 @@ namespace modworks
     writeLogLine("getJson thread detached", verbose);
   }
 
+  void onEmailRequested(json response, function< void(int response) > callback)
+  {
+    writeLogLine("onEmailRequested call", verbose);
+    int result_code = response["code"];
+    callback(result_code);
+    writeLogLine("onEmailRequested finished", verbose);
+  }
+
   void SDK::emailRequest(string email, function< void(int response) > callback)
   {
+    writeLogLine("emailRequest call", verbose);
     map<string, string> data;
     data["api_key"] = api_key;
     data["email"] = email;
-    modworks::post("https://api.mod.works/oauth/emailrequest?shhh=secret",data, callback);
+
+    std::thread get_json_thread(post, "https://api.mod.works/oauth/emailrequest?shhh=secret", data, &onEmailRequested, callback);
+    get_json_thread.detach();
+
+    writeLogLine("post detached", verbose);
   }
 
-  void SDK::emailExchange(string security_code, function< void(int response) > callback)
+  void onEmailExchanged(json response, function< void(int) > callback)
   {
+    writeLogLine("onEmailExchanged call", verbose);
+    string access_token = response["access_token"];
+    int result_code = response["code"];
+    callback(result_code);
+    writeLogLine("onEmailExchanged finished", verbose);
+  }
+
+  void SDK::emailExchange(string security_code, function< void(int) > callback)
+  {
+    writeLogLine("emailExchange call", verbose);
     map<string, string> data;
     data["api_key"] = api_key;
     data["security_code"] = security_code;
-    modworks::post("https://api.mod.works/oauth/emailexchange?shhh=secret",data, callback);
+
+    std::thread get_json_thread(post, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, &onEmailExchanged, callback);
+    get_json_thread.detach();
+
+    writeLogLine("post detached", verbose);
   }
 }
