@@ -7,6 +7,7 @@ namespace modworks
     writeLogLine("Initializing SDK", verbose);
     this->game_id = game_id;
     this->api_key = api_key;
+    this->access_token = "";
 
     createDirectory(".modworks");
     createDirectory(".modworks/images");
@@ -29,7 +30,7 @@ namespace modworks
     writeLogLine("getJson thread detached", verbose);
   }
 
-  void onEmailRequested(json response, function< void(int response) > callback)
+  void SDK::onEmailRequested(json response, function< void(int response) > callback)
   {
     writeLogLine("onEmailRequested call", verbose);
     int result_code = response["code"];
@@ -44,16 +45,24 @@ namespace modworks
     data["api_key"] = api_key;
     data["email"] = email;
 
-    std::thread get_json_thread(post, "https://api.mod.works/oauth/emailrequest?shhh=secret", data, &onEmailRequested, callback);
+    auto on_email_requested_ptr = std::bind(&SDK::onEmailRequested, *this, placeholders::_1, placeholders::_2);
+    std::thread get_json_thread(post, "https://api.mod.works/oauth/emailrequest?shhh=secret", data, on_email_requested_ptr, callback);
     get_json_thread.detach();
 
     writeLogLine("post detached", verbose);
   }
 
-  void onEmailExchanged(json response, function< void(int) > callback)
+  void SDK::onEmailExchanged(json response, function< void(int) > callback)
   {
     writeLogLine("onEmailExchanged call", verbose);
-    string access_token = response["access_token"];
+    this->access_token = response["access_token"];
+
+    json token_json;
+    token_json["access_token"] = this->access_token;
+    std::ofstream out(".modworks/token.json");
+    out<<setw(4)<<token_json<<endl;
+    out.close();
+
     int result_code = response["code"];
     callback(result_code);
     writeLogLine("onEmailExchanged finished", verbose);
@@ -66,7 +75,8 @@ namespace modworks
     data["api_key"] = api_key;
     data["security_code"] = security_code;
 
-    std::thread get_json_thread(post, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, &onEmailExchanged, callback);
+    auto on_email_exchanged_ptr = std::bind(&SDK::onEmailExchanged, *this, placeholders::_1, placeholders::_2);
+    std::thread get_json_thread(post, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, on_email_exchanged_ptr, callback);
     get_json_thread.detach();
 
     writeLogLine("post detached", verbose);
