@@ -42,6 +42,7 @@ namespace modworks
   string dataToJsonString(char* data, size_t size);
   string toString(int number);
   void createDirectory(string directory);
+  void clearLog();
   bool writeLogLine(string text, DebugMode debug_mode);
   vector<string> getFilenames(string directory);
 }

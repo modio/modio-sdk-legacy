@@ -80,13 +80,11 @@ namespace modworks
     CURLcode res;
 
     struct data config;
-
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
     curl = curl_easy_init();
 
     ongoing_calls[curl] = new GetJsonHandler();
-
     if(curl) {
       struct curl_slist *chunk = NULL;
       for(int i=0;i<(int)headers.size();i++)
@@ -101,26 +99,25 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, get_json_trace);
       curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
       /* Perform the request, res will get the return code */
       res = curl_easy_perform(curl);
       /* Check for errors */
       if(res != CURLE_OK)
         writeLogLine(string("curl_easy_perform() failed ") + url, verbose);
-
       /* always cleanup */
       curl_easy_cleanup(curl);
     }
 
     curl_global_cleanup();
     json json_response = ongoing_calls[curl]->response;
-
     vector<Mod*> mods;
+
     for(int i=0;i<(int)json_response["data"].size();i++)
     {
       Mod* mod = new Mod(json_response["data"][i]);
       mods.push_back(mod);
     }
+
     callback(mods);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + "finished", verbose);
@@ -255,6 +252,21 @@ namespace modworks
     writeLogLine("downloadZipFile call to " + url + " finished", verbose);
   }
 
+  int form_post_trace(CURL *handle, curl_infotype type,
+               char *data, size_t size,
+               void *userp)
+  {
+    (void)handle; /* prevent compiler warning */
+
+    if(type == CURLINFO_DATA_IN)
+    {
+      //string json_string = dataToJsonString(data, size);
+      //ongoing_calls[handle]->response = json::parse(json_string);
+    }
+
+    return 0;
+  }
+
   void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files)
   {
     writeLogLine(string("postForm call to ") + url, verbose);
@@ -293,7 +305,6 @@ namespace modworks
 
     curl = curl_easy_init();
 
-
     struct curl_slist *chunk = NULL;
     for(int i=0;i<(int)headers.size();i++)
       chunk = curl_slist_append(chunk, headers[i].c_str());
@@ -307,11 +318,14 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+
+      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, form_post_trace);
+
+      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
       //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
         /* only disable 100-continue header if explicitly requested */
         //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
       curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
-
       res = curl_easy_perform(curl);
 
       if(res != CURLE_OK)

@@ -20,6 +20,7 @@ namespace modworks
     void emailRequest(string email, function< void(int response) > callback);
     void onEmailExchanged(json response, function< void(int) > callback);
     void emailExchange(string security_code, function< void(int response) > callback);
+    void addMod(string name, string homepage, string summary, string logo_path);
   };
 }
 

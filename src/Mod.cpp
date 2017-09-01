@@ -11,8 +11,24 @@ namespace modworks
     this->name = mod_json["name"];
     this->summary = mod_json["summary"];
     this->description = mod_json["description"];
-    this->download_url = mod_json["modfile"]["download"];
-    //https:\/\/mod.works\/mods\/file\/12\/dc5337bed727254fe0218bd7712d961a?shhh=secret
+    if(mod_json.find("modfile") != mod_json.end() && mod_json["modfile"].find("download") != mod_json["modfile"].end())
+    {
+      this->download_url = mod_json["modfile"]["download"];
+    }
+  }
+
+  void Mod::addFile(string directory_path, string version, string changelog)
+  {
+    modworks::compress(directory_path,"test.zip");
+    vector<string> headers;
+    headers.push_back("Authorization: Bearer turupawn");
+    map<string, string> curlform_copycontents;
+    curlform_copycontents["version"]=version;
+    curlform_copycontents["changelog"]=changelog;
+    map<string, string> curlform_files;
+    curlform_files["filedata"]="test.zip";
+    string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(this->id) + "/files";
+    modworks::postForm(url, headers, curlform_copycontents, curlform_files);
   }
 
   void Mod::downloadLogoThumbnail(function< void(int, Mod*, string) > callback)

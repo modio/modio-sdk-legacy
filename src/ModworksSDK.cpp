@@ -4,6 +4,7 @@ namespace modworks
 {
   SDK::SDK(int game_id, string api_key)
   {
+    clearLog();
     writeLogLine("Initializing SDK", verbose);
     this->game_id = game_id;
     this->api_key = api_key;
@@ -19,7 +20,7 @@ namespace modworks
   {
     writeLogLine("getMods call", verbose);
     vector<string> headers;
-    headers.push_back("Authorization: Bearer Turupawn");
+    headers.push_back("Authorization: Bearer turupawn");
     string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods";
 
     int call_count = getCallCount();
@@ -80,5 +81,18 @@ namespace modworks
     get_json_thread.detach();
 
     writeLogLine("post detached", verbose);
+  }
+
+  void SDK::addMod(string name, string homepage, string summary, string logo_path)
+  {
+    vector<string> headers;
+    headers.push_back("Authorization: Bearer turupawn");
+    map<string, string> curlform_copycontents;
+    curlform_copycontents["name"]=name;
+    curlform_copycontents["homepage"]=homepage;
+    curlform_copycontents["summary"]=summary;
+    map<string, string> curlform_files;
+    curlform_files["logo"]=logo_path;
+    modworks::postForm(string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods", headers, curlform_copycontents, curlform_files);
   }
 }

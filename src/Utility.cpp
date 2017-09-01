@@ -53,6 +53,12 @@ namespace modworks
     #endif
   }
 
+  void clearLog()
+  {
+    ofstream log_file(".modworks/log");
+    log_file.close();
+  }
+
   bool writeLogLine(string text, DebugMode debug_mode)
   {
     ofstream log_file(".modworks/log", ios::app);

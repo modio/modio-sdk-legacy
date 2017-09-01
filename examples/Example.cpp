@@ -50,7 +50,11 @@ void onModInstalled(int result,  modworks::Mod* mod, string path)
 
 void onModsGet(vector<modworks::Mod*> mods)
 {
-  cout<<endl<<"Listing mods:"<<endl;
+  cout<<endl<<endl;
+  cout<<endl<<"Uploading file to:"<<endl;
+  cout<<mods[mods.size()-1]->name<<endl;
+  mods[mods.size()-1]->addFile("dir", "0.0.1", "This is a changelog text");
+  /*
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
@@ -58,26 +62,16 @@ void onModsGet(vector<modworks::Mod*> mods)
     mods[i]->downloadLogoThumbnail(&onThumbnailDownloaded);
     mods[i]->download("mod_directory",&onModInstalled);
   }
+  */
 }
 
 
 int main(void)
 {
   //modworks::compress("dir/path","out.zip");
+  mworks = new modworks::SDK(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
 
 /*
-  vector<string> headers;
-  headers.push_back("Authorization: Bearer turupawn");
-  map<string, string> curlform_copycontents;
-  curlform_copycontents["name"]="testmod111";
-  curlform_copycontents["homepage"]="http://www.moddb.com/";
-  curlform_copycontents["summary"]="test test test test test test test test test test test test test test test";
-  map<string, string> curlform_files;
-  curlform_files["logo"]="/home/turupawn/delet/test.png";
-  modworks::postForm("https://api.mod.works/v1/games/7/mods", headers, curlform_copycontents, curlform_files);
-  /**/
-
-  mworks = new modworks::SDK(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
   mworks->emailRequest("ahmed.hn.43@gmail.com",&onEmailRequest);
   while(!email_request_finished);
   string security_code;
@@ -86,9 +80,11 @@ int main(void)
   cout<<"Sending code"<<endl;
   mworks->emailExchange(security_code,&onExchange);
   while(!email_exchange_finished);
+  /**/
 
-  //mworks->getMods(&onModsGet);
-  //while(files_downloaded<files_to_download);
+  //mworks->addMod("test24", "http://hello.com", "test test test test test test test test test test test test test test test", "logo.png");
+  mworks->getMods(&onModsGet);
+  while(files_downloaded<files_to_download);
 
   return 0;
 }
