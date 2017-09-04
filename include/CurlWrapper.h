@@ -20,6 +20,7 @@ namespace modworks
   using namespace std;
   using json = nlohmann::json;
 
+  void initCurl();
   int getCallCount();
   int getOngoingCall();
   void advanceCallCount();
@@ -59,8 +60,8 @@ namespace modworks
   void downloadRedirect(modworks::Mod* mod, string url, string path, string destination_path, function< void(int, modworks::Mod*, string) > callback, int call_number);
   void downloadZipFile(modworks::Mod* mod, string url, string path, string downloadZipFile, function< void(int, modworks::Mod*, string) > callback, int call_number);
 
-  void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files);
   void post(string url, map<string, string> data, function< void(json, function< void(int response) >) > sdk_callback, function< void(int response) > game_callback);
+  void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(json response)> callback);
 }
 
 #endif

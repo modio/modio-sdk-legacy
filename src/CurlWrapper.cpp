@@ -8,6 +8,14 @@ namespace modworks
   int call_count = 0;
   int ongoing_call = 0;
 
+  void initCurl()
+  {
+    if(curl_global_init(CURL_GLOBAL_ALL))
+      writeLogLine("Curl initialized", verbose);
+    else
+      writeLogLine("Error initializing curl", error);
+  }
+
   int getCallCount()
   {
     return call_count;
@@ -260,14 +268,14 @@ namespace modworks
 
     if(type == CURLINFO_DATA_IN)
     {
-      //string json_string = dataToJsonString(data, size);
-      //ongoing_calls[handle]->response = json::parse(json_string);
+      string json_string = dataToJsonString(data, size);
+      ongoing_calls[handle]->response = json::parse(json_string);
     }
 
     return 0;
   }
 
-  void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files)
+  void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(json response)> callback)
   {
     writeLogLine(string("postForm call to ") + url, verbose);
     CURL *curl;
@@ -305,6 +313,8 @@ namespace modworks
 
     curl = curl_easy_init();
 
+    ongoing_calls[curl] = new GetJsonHandler();
+
     struct curl_slist *chunk = NULL;
     for(int i=0;i<(int)headers.size();i++)
       chunk = curl_slist_append(chunk, headers[i].c_str());
@@ -335,6 +345,10 @@ namespace modworks
       curl_formfree(formpost);
       curl_slist_free_all(headerlist);
     }
+
+    json json_response = ongoing_calls[curl]->response;
+    callback(json_response);
+
     writeLogLine(string("postForm call to ") + url + " finished", verbose);
   }
 

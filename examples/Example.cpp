@@ -50,11 +50,12 @@ void onModInstalled(int result,  modworks::Mod* mod, string path)
 
 void onModsGet(vector<modworks::Mod*> mods)
 {
-  cout<<endl<<endl;
+  /*
   cout<<endl<<"Uploading file to:"<<endl;
   cout<<mods[mods.size()-1]->name<<endl;
   mods[mods.size()-1]->addFile("dir", "0.0.1", "This is a changelog text");
-  /*
+  */
+
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
@@ -62,13 +63,11 @@ void onModsGet(vector<modworks::Mod*> mods)
     mods[i]->downloadLogoThumbnail(&onThumbnailDownloaded);
     mods[i]->download("mod_directory",&onModInstalled);
   }
-  */
 }
 
 
 int main(void)
 {
-  //modworks::compress("dir/path","out.zip");
   mworks = new modworks::SDK(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
 
 /*
@@ -80,10 +79,18 @@ int main(void)
   cout<<"Sending code"<<endl;
   mworks->emailExchange(security_code,&onExchange);
   while(!email_exchange_finished);
-  /**/
+  */
 
-  //mworks->addMod("test24", "http://hello.com", "test test test test test test test test test test test test test test test", "logo.png");
-  mworks->getMods(&onModsGet);
+  mworks->addMod( /*Mod param*/
+                  "test18",
+                  "http://hello.com",
+                  "test test test test test test test test test test test test test test test",
+                  "logo.png",
+                  /*File param*/
+                  "dir",
+                  "0.0.1",
+                  "This is a changelog text");
+  //mworks->getMods(&onModsGet);
   while(files_downloaded<files_to_download);
 
   return 0;

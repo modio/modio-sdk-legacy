@@ -5,6 +5,9 @@ namespace modworks
   SDK::SDK(int game_id, string api_key)
   {
     clearLog();
+
+    initCurl();
+
     writeLogLine("Initializing SDK", verbose);
     this->game_id = game_id;
     this->api_key = api_key;
@@ -83,8 +86,18 @@ namespace modworks
     writeLogLine("post detached", verbose);
   }
 
-  void SDK::addMod(string name, string homepage, string summary, string logo_path)
+  void SDK::onModAdded(json response)
   {
+    Mod* mod = new Mod(response);
+    mod->addFile(directory_path, version, changelog);
+  }
+
+  void SDK::addMod(/*Mod params*/string name, string homepage, string summary, string logo_path, /*File params*/string directory_path, string version, string changelog)
+  {
+    this->directory_path = directory_path;
+    this->version = version;
+    this->changelog = changelog;
+
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
     map<string, string> curlform_copycontents;
@@ -93,6 +106,8 @@ namespace modworks
     curlform_copycontents["summary"]=summary;
     map<string, string> curlform_files;
     curlform_files["logo"]=logo_path;
-    modworks::postForm(string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods", headers, curlform_copycontents, curlform_files);
+
+    auto on_mod_added_ptr = std::bind(&SDK::onModAdded, *this, placeholders::_1);
+    modworks::postForm(string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods", headers, curlform_copycontents, curlform_files, on_mod_added_ptr);
   }
 }
