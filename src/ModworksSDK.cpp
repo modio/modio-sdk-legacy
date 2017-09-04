@@ -86,10 +86,10 @@ namespace modworks
     writeLogLine("post detached", verbose);
   }
 
-  void SDK::onModAdded(json response)
+  void SDK::onModAdded(json response, map<string, string> params)
   {
     Mod* mod = new Mod(response);
-    mod->addFile(directory_path, version, changelog);
+    mod->addFile(params["directory_path"], params["version"], params["changelog"]);
   }
 
   void SDK::addMod(/*Mod params*/string name, string homepage, string summary, string logo_path, /*File params*/string directory_path, string version, string changelog)
@@ -107,7 +107,16 @@ namespace modworks
     map<string, string> curlform_files;
     curlform_files["logo"]=logo_path;
 
-    auto on_mod_added_ptr = std::bind(&SDK::onModAdded, *this, placeholders::_1);
-    modworks::postForm(string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods", headers, curlform_copycontents, curlform_files, on_mod_added_ptr);
+    map<string,string> params;
+    params["directory_path"] = directory_path;
+    params["version"] = version;
+    params["changelog"] = changelog;
+
+    int call_number = getCallCount();
+    advanceCallCount();
+
+    auto on_mod_added_ptr = std::bind(&SDK::onModAdded, *this, placeholders::_1, placeholders::_2);
+    std::thread add_mod_thread(modworks::postForm,call_number, string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods", headers, curlform_copycontents, curlform_files, on_mod_added_ptr, params);
+    add_mod_thread.detach();
   }
 }

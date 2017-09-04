@@ -275,9 +275,10 @@ namespace modworks
     return 0;
   }
 
-  void postForm(string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(json response)> callback)
+  void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(json response, map<string,string> params)> callback, map<string, string> params)
   {
     writeLogLine(string("postForm call to ") + url, verbose);
+    lockCall(call_number);
     CURL *curl;
     CURLcode res;
 
@@ -347,8 +348,8 @@ namespace modworks
     }
 
     json json_response = ongoing_calls[curl]->response;
-    callback(json_response);
-
+    callback(json_response, params);
+    advanceOngoingCall();
     writeLogLine(string("postForm call to ") + url + " finished", verbose);
   }
 

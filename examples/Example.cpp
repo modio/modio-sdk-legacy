@@ -50,12 +50,6 @@ void onModInstalled(int result,  modworks::Mod* mod, string path)
 
 void onModsGet(vector<modworks::Mod*> mods)
 {
-  /*
-  cout<<endl<<"Uploading file to:"<<endl;
-  cout<<mods[mods.size()-1]->name<<endl;
-  mods[mods.size()-1]->addFile("dir", "0.0.1", "This is a changelog text");
-  */
-
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
@@ -82,12 +76,12 @@ int main(void)
   */
 
   mworks->addMod( /*Mod param*/
-                  "test18",
+                  "test22",
                   "http://hello.com",
                   "test test test test test test test test test test test test test test test",
                   "logo.png",
                   /*File param*/
-                  "dir",
+                  "dir/moddir",
                   "0.0.1",
                   "This is a changelog text");
   //mworks->getMods(&onModsGet);

@@ -17,25 +17,31 @@ namespace modworks
     }
   }
 
-  void Mod::onFileAdded(json response)
+  void Mod::onFileAdded(json response, map<string, string> params)
   {
     cout<<"File added!"<<endl;
   }
 
   void Mod::addFile(string directory_path, string version, string changelog)
   {
-    modworks::compress(directory_path,"test.zip");
+    modworks::compress(directory_path,".modworks/tmp/modfile.zip");
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
     map<string, string> curlform_copycontents;
     curlform_copycontents["version"]=version;
     curlform_copycontents["changelog"]=changelog;
     map<string, string> curlform_files;
-    curlform_files["filedata"]="test.zip";
+    curlform_files["filedata"]=".modworks/tmp/modfile.zip";
     string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(this->id) + "/files";
 
-    auto on_file_added_ptr = std::bind(&Mod::onFileAdded, *this, placeholders::_1);
-    modworks::postForm(url, headers, curlform_copycontents, curlform_files, on_file_added_ptr);
+    map<string,string> params;
+
+    int call_number = getCallCount();
+    advanceCallCount();
+
+    auto on_file_added_ptr = std::bind(&Mod::onFileAdded, *this, placeholders::_1, placeholders::_2);
+    std::thread add_file_thread(modworks::postForm, call_number, url, headers, curlform_copycontents, curlform_files, on_file_added_ptr, params);
+    add_file_thread.detach();
   }
 
   void Mod::downloadLogoThumbnail(function< void(int, Mod*, string) > callback)

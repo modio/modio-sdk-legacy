@@ -23,7 +23,7 @@ namespace modworks
     string download_url;
 
     Mod(json mod_json);
-    void onFileAdded(json response);
+    void onFileAdded(json response, map<string, string> params);
     void addFile(string directory_path, string version, string changelog);
     void downloadLogoThumbnail(function< void(int, Mod*, string) > callback);
     void download(string destination_path, function< void(int, Mod*, string) > callback);

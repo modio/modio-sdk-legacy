@@ -31,7 +31,7 @@ namespace modworks
     //Callbacks
     void onEmailRequested(json response, function< void(int response) > callback);
     void onEmailExchanged(json response, function< void(int) > callback);
-    void onModAdded(json response);
+    void onModAdded(json response, map<string, string> params);
   };
 }
 
