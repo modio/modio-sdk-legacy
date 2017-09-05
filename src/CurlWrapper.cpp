@@ -2,8 +2,7 @@
 
 namespace modworks
 {
-  map<CURL*, GetJsonHandler*> ongoing_calls;
-  map<CURL*, DownloadRedirectHandler*> download_redirect_calls;
+  map<CURL*, JsonResponseHandler*> ongoing_calls;
 
   int call_count = 0;
   int ongoing_call = 0;
@@ -41,23 +40,9 @@ namespace modworks
     while(call_number!=getOngoingCall());
   }
 
-  GetJsonHandler::GetJsonHandler()
+  JsonResponseHandler::JsonResponseHandler()
   {
     this->response = "";
-  }
-
-  DownloadFileHandler::DownloadFileHandler(function< void(int, Mod*) > callback)
-  {
-    this->callback = callback;
-  }
-
-  DownloadRedirectHandler::DownloadRedirectHandler(Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number)
-  {
-    this->mod = mod;
-    this->path = path;
-    this->callback = callback;
-    this->destination_path = destination_path;
-    this->call_number = call_number;
   }
 
   struct data
@@ -92,7 +77,7 @@ namespace modworks
 
     curl = curl_easy_init();
 
-    ongoing_calls[curl] = new GetJsonHandler();
+    ongoing_calls[curl] = new JsonResponseHandler();
     if(curl) {
       struct curl_slist *chunk = NULL;
       for(int i=0;i<(int)headers.size();i++)
@@ -124,6 +109,12 @@ namespace modworks
     writeLogLine("getJsonCall call to " + url + "finished", verbose);
   }
 
+  size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
+  {
+    size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
+    return written;
+  }
+
   static int download_file_trace(CURL *handle, curl_infotype type,
                char *data, size_t size,
                void *userp)
@@ -137,38 +128,11 @@ namespace modworks
     return 0;
   }
 
-  static int redirect_trace(CURL *handle, curl_infotype type,
-               char *data, size_t size,
-               void *userp)
-  {
-    (void)handle; /* prevent compiler warning */
-    if(type == CURLINFO_HEADER_IN
-      && size > 10 /* "location: " */
-      && strncmp(data,"location: ",10) == 0)
-    {
-      string url = "";
-      for(int i = 10; i< (int)size; i++)
-      {
-        if(data[i]=='\n' || data[i]=='\t' || data[i]==' ' || data[i]==13 /* CR */)
-          break;
-        url += data[i];
-      }
 
-      DownloadRedirectHandler* handler = download_redirect_calls[handle];
-      downloadZipFile(handler->mod, url, handler->path, handler->destination_path, handler->callback, handler->call_number);
-    }
-    return 0;
-  }
-
-  size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
-  {
-    size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
-    return written;
-  }
-
-  void downloadFile(string url, string path)
+  void download(int call_number, map<string, string> params, string url, string path, function< void(int, int, string, string, map<string,string>) > callback)
   {
     writeLogLine("downloadFile call to " + url, verbose);
+    lockCall(call_number);
     CURL *curl;
     FILE *file;
 
@@ -188,6 +152,8 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
+      curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
 
@@ -197,60 +163,9 @@ namespace modworks
 
       fclose(file);
     }
+    callback(call_number, 200, url, path, params);
+    advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + " finished", verbose);
-  }
-
-  void downloadModFile(Mod* mod, string url, string path, function< void(int, Mod*, string) > callback, int call_number)
-  {
-    writeLogLine("downloadModFile call to " + url, verbose);
-    lockCall(call_number);
-    downloadFile(url, path);
-    callback(1,mod,path);
-    advanceOngoingCall();
-    writeLogLine("downloadModFile call to " + url + " finished", verbose);
-  }
-
-  void downloadRedirect(Mod* mod, string url, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number)
-  {
-    writeLogLine("downloadRedirect call to " + url, verbose);
-    lockCall(call_number);
-
-    CURL *curl;
-
-    struct data config;
-
-    config.trace_ascii = 1; /* enable ascii tracing */
-    //FILE_SIZE = curlGetFileSize(url);
-    curl = curl_easy_init();
-
-    if(curl)
-    {
-      download_redirect_calls[curl] = new DownloadRedirectHandler(mod, path, destination_path, callback, call_number);
-
-      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, redirect_trace);
-      curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
-      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-
-      curl_easy_perform(curl);
-
-      curl_easy_cleanup(curl);
-    }
-    writeLogLine("downloadRedirect call to " + url + " finished", verbose);
-  }
-
-  void downloadZipFile(Mod* mod, string url, string path, string destination, function< void(int, Mod*, string) > callback, int call_number)
-  {
-    writeLogLine("downloadZipFile call to " + url, verbose);
-    lockCall(call_number);
-    downloadFile(url, path);
-    extract(path, destination);
-    callback(1,mod,path);
-    advanceOngoingCall();
-    writeLogLine("downloadZipFile call to " + url + " finished", verbose);
   }
 
   int form_post_trace(CURL *handle, curl_infotype type,
@@ -307,7 +222,7 @@ namespace modworks
 
     curl = curl_easy_init();
 
-    ongoing_calls[curl] = new GetJsonHandler();
+    ongoing_calls[curl] = new JsonResponseHandler();
 
     struct curl_slist *chunk = NULL;
     for(int i=0;i<(int)headers.size();i++)
@@ -371,7 +286,7 @@ namespace modworks
     curl_global_init(CURL_GLOBAL_ALL);
     curl = curl_easy_init();
 
-    ongoing_calls[curl] = new GetJsonHandler();
+    ongoing_calls[curl] = new JsonResponseHandler();
 
     if(curl)
     {

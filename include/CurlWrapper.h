@@ -26,38 +26,15 @@ namespace modworks
   void advanceCallCount();
   void advanceOngoingCall();
 
-  class GetJsonHandler
+  class JsonResponseHandler
   {
   public:
     json response;
-    GetJsonHandler();
+    JsonResponseHandler();
   };
 
+  void download(int call_number, map<string, string> params, string url, string path, function< void(int, int, string, string, map<string,string>) > callback);
   void get(int call_number, map<string, string> params, string url, vector<string> headers, function<void(int call_number, json response, map<string,string> params)> callback);
-
-  class DownloadFileHandler
-  {
-  public:
-    function< void(int, modworks::Mod*) > callback;
-    DownloadFileHandler(function< void(int, modworks::Mod*) > callback);
-  };
-
-  void downloadModFile(modworks::Mod* mod, string url, string path, function< void(int, modworks::Mod*, string) > callback, int call_number);
-
-  class DownloadRedirectHandler
-  {
-  public:
-    modworks::Mod* mod;
-    string path;
-    string destination_path;
-    function< void(int, modworks::Mod*, string) > callback;
-    int call_number;
-    DownloadRedirectHandler(modworks::Mod* mod, string path, string destination_path, function< void(int, Mod*, string) > callback, int call_number);
-  };
-
-  void downloadRedirect(modworks::Mod* mod, string url, string path, string destination_path, function< void(int, modworks::Mod*, string) > callback, int call_number);
-  void downloadZipFile(modworks::Mod* mod, string url, string path, string downloadZipFile, function< void(int, modworks::Mod*, string) > callback, int call_number);
-
   void post(int call_number, map<string, string> params, string url, map<string, string> data, function<void(int call_number, json response, map<string,string> params)> callback);
   void postForm(int call_number, map<string, string> params, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, json response, map<string,string> params)> callback);
 }

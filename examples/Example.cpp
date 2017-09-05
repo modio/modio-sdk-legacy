@@ -1,7 +1,7 @@
 #include "ModworksSDK.h"
 
 int files_downloaded = 0;
-int files_to_download = 4;
+int files_to_download = 50;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 modworks::SDK* mworks;
@@ -40,7 +40,7 @@ void onExchange(int result)
 
 void onThumbnailDownloaded(int result,  modworks::Mod* mod, string path)
 {
-  if(result == 1)
+  if(result == 200)
   {
     cout<<mod->name<<" download thumb successful at "<<path<<endl;
   }
@@ -49,7 +49,7 @@ void onThumbnailDownloaded(int result,  modworks::Mod* mod, string path)
 
 void onModInstalled(int result,  modworks::Mod* mod, string path)
 {
-  if(result == 1)
+  if(result == 200)
   {
     cout<<mod->name<<" download file successful at "<<path<<endl;
   }
@@ -58,15 +58,14 @@ void onModInstalled(int result,  modworks::Mod* mod, string path)
 
 void onModsGet(int status, vector<modworks::Mod*> mods)
 {
+  cout<<"Listing mods:"<<endl;
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
-    cout<<mods[i]->summary<<endl;
     mods[i]->downloadLogoThumbnail(&onThumbnailDownloaded);
-    mods[i]->download("mod_directory",&onModInstalled);
+    mods[i]->download("mod_directory/"+mods[i]->name,&onModInstalled);
   }
 }
-
 
 int main(void)
 {

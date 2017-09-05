@@ -27,7 +27,7 @@ namespace modworks
 
     //GET methods
     void onGetMods(int call_number, json response, map<string, string> params);
-    void getMods(function< void(int ,vector<Mod*>) > callback);
+    void getMods(function< void(int, vector<Mod*>) > callback);
 
     //POST methods
     void emailExchange(string security_code, function< void(int response) > callback);

@@ -37,7 +37,7 @@ namespace modworks
     writeLogLine("getMods call", verbose);
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
-    string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods";
+    string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods" + "?shhh=secret";
 
     int call_number = getCallCount();
     advanceCallCount();
@@ -45,10 +45,9 @@ namespace modworks
     get_mods_callbacks[call_number] = callback;
 
     map<string, string> params;
-
     auto on_get_mods_ptr = std::bind(&SDK::onGetMods, *this, placeholders::_1, placeholders::_2, placeholders::_3);
-    std::thread get_json_thread(get, call_number, params, url, headers, on_get_mods_ptr);
-    get_json_thread.detach();
+    std::thread get_mods_thread(get, call_number, params, url, headers, on_get_mods_ptr);
+    get_mods_thread.detach();
     writeLogLine("getJson thread detached", verbose);
   }
 
