@@ -18,6 +18,8 @@ namespace modworks
     string version;
     string changelog;
 
+    map< int,function<void(int, Mod*)> > add_mod_callback;
+
     SDK(int game_id, string api_key);
 
     //GET methods
@@ -26,12 +28,14 @@ namespace modworks
     //POST methods
     void emailExchange(string security_code, function< void(int response) > callback);
     void emailRequest(string email, function< void(int response) > callback);
-    void addMod(/*Mod params*/string name, string homepage, string summary, string logo_path, /*File params*/string directory_path, string version, string changelog);
+    void addMod(/*Mod params*/string name, string homepage, string summary, string logo_path,
+                /*File params*/string directory_path, string version, string changelog,
+                /*Callback*/ function< void(int, Mod*) > callback);
 
     //Callbacks
     void onEmailRequested(json response, function< void(int response) > callback);
     void onEmailExchanged(json response, function< void(int) > callback);
-    void onModAdded(json response, map<string, string> params);
+    void onModAdded(int call_number, json response, map<string, string> params);
   };
 }
 

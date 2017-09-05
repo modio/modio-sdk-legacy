@@ -42,8 +42,6 @@ namespace modworks
     DownloadFileHandler(function< void(int, modworks::Mod*) > callback);
   };
 
-  double curlGetFileSize(string url);
-
   void downloadModFile(modworks::Mod* mod, string url, string path, function< void(int, modworks::Mod*, string) > callback, int call_number);
 
   class DownloadRedirectHandler
@@ -61,7 +59,7 @@ namespace modworks
   void downloadZipFile(modworks::Mod* mod, string url, string path, string downloadZipFile, function< void(int, modworks::Mod*, string) > callback, int call_number);
 
   void post(string url, map<string, string> data, function< void(json, function< void(int response) >) > sdk_callback, function< void(int response) > game_callback);
-  void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(json response, map<string,string> params)> callback, map<string, string> params);
+  void postForm(int call_number, map<string, string> params, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, json response, map<string,string> params)> callback);
 }
 
 #endif

@@ -17,12 +17,14 @@ namespace modworks
     }
   }
 
-  void Mod::onFileAdded(json response, map<string, string> params)
+  void Mod::onFileAdded(int call_number, json response, map<string, string> params)
   {
     cout<<"File added!"<<endl;
+    add_file_callbacks[call_number](200,this);
+    add_file_callbacks.erase(call_number);
   }
 
-  void Mod::addFile(string directory_path, string version, string changelog)
+  void Mod::addFile(string directory_path, string version, string changelog, function<void(int, Mod*)> callback)
   {
     modworks::compress(directory_path,".modworks/tmp/modfile.zip");
     vector<string> headers;
@@ -39,8 +41,10 @@ namespace modworks
     int call_number = getCallCount();
     advanceCallCount();
 
-    auto on_file_added_ptr = std::bind(&Mod::onFileAdded, *this, placeholders::_1, placeholders::_2);
-    std::thread add_file_thread(modworks::postForm, call_number, url, headers, curlform_copycontents, curlform_files, on_file_added_ptr, params);
+    add_file_callbacks[call_number] = callback;
+
+    auto on_file_added_ptr = std::bind(&Mod::onFileAdded, *this, placeholders::_1, placeholders::_2, placeholders::_3);
+    std::thread add_file_thread(modworks::postForm, call_number, params, url, headers, curlform_copycontents, curlform_files, on_file_added_ptr);
     add_file_thread.detach();
   }
 

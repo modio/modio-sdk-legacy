@@ -6,6 +6,14 @@ bool email_request_finished = false;
 bool email_exchange_finished = false;
 modworks::SDK* mworks;
 
+void onModAdded(int result, modworks::Mod* mod)
+{
+  if(result == 200)
+  {
+    cout<<"Mod added with id: "<<mod->id<<endl;
+  }
+}
+
 void onEmailRequest(int result)
 {
   if(result == 200)
@@ -83,7 +91,9 @@ int main(void)
                   /*File param*/
                   "dir/moddir",
                   "0.0.1",
-                  "This is a changelog text");
+                  "This is a changelog text",
+                  /*Callback*/
+                  &onModAdded);
   //mworks->getMods(&onModsGet);
   while(files_downloaded<files_to_download);
 
