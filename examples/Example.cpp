@@ -56,7 +56,7 @@ void onModInstalled(int result,  modworks::Mod* mod, string path)
   files_downloaded++;
 }
 
-void onModsGet(vector<modworks::Mod*> mods)
+void onModsGet(int status, vector<modworks::Mod*> mods)
 {
   for(int i=0;i<(int)mods.size();i++)
   {
@@ -72,7 +72,7 @@ int main(void)
 {
   mworks = new modworks::SDK(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
 
-/**/
+/*
   mworks->emailRequest("ahmed.hn.43@gmail.com",&onEmailRequest);
   while(!email_request_finished);
   string security_code;
@@ -81,7 +81,7 @@ int main(void)
   cout<<"Sending code"<<endl;
   mworks->emailExchange(security_code,&onExchange);
   while(!email_exchange_finished);
-
+*/
 
 /*
   mworks->addMod( "test22",//Mod params
@@ -93,7 +93,7 @@ int main(void)
                   "This is a changelog text",
                   &onModAdded);//Callback
 */
-  //mworks->getMods(&onModsGet);
+  mworks->getMods(&onModsGet);
   while(files_downloaded<files_to_download);
 
   return 0;

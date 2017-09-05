@@ -80,7 +80,7 @@ namespace modworks
     return 0;
   }
 
-  void getJson(string url, vector<string> headers, function< void(vector<Mod*>) > callback, int call_number)
+  void get(int call_number, map<string, string> params, string url, vector<string> headers, function<void(int call_number, json response, map<string,string> params)> callback)
   {
     writeLogLine("getJsonCall call to " + url, verbose);
     lockCall(call_number);
@@ -118,15 +118,8 @@ namespace modworks
 
     curl_global_cleanup();
     json json_response = ongoing_calls[curl]->response;
-    vector<Mod*> mods;
 
-    for(int i=0;i<(int)json_response["data"].size();i++)
-    {
-      Mod* mod = new Mod(json_response["data"][i]);
-      mods.push_back(mod);
-    }
-
-    callback(mods);
+    callback(call_number, json_response, params);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + "finished", verbose);
   }
@@ -372,7 +365,7 @@ namespace modworks
   {
     writeLogLine(string("post call to ") + url, verbose);
     lockCall(call_number);
-    
+
     CURL *curl;
     CURLcode res;
     curl_global_init(CURL_GLOBAL_ALL);

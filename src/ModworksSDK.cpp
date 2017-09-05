@@ -19,17 +19,35 @@ namespace modworks
     writeLogLine("SDK Initialized", verbose);
   }
 
-  void SDK::getMods(function< void(vector<Mod*>) > callback)
+  void SDK::onGetMods(int call_number, json response, map<string, string> params)
+  {
+    vector<Mod*> mods;
+
+    for(int i=0;i<(int)response["data"].size();i++)
+    {
+      Mod* mod = new Mod(response["data"][i]);
+      mods.push_back(mod);
+    }
+
+    get_mods_callbacks[call_number](200,mods);
+  }
+
+  void SDK::getMods(function< void(int, vector<Mod*>) > callback)
   {
     writeLogLine("getMods call", verbose);
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
     string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods";
 
-    int call_count = getCallCount();
+    int call_number = getCallCount();
     advanceCallCount();
 
-    std::thread get_json_thread(getJson, url, headers, callback, call_count);
+    get_mods_callbacks[call_number] = callback;
+
+    map<string, string> params;
+
+    auto on_get_mods_ptr = std::bind(&SDK::onGetMods, *this, placeholders::_1, placeholders::_2, placeholders::_3);
+    std::thread get_json_thread(get, call_number, params, url, headers, on_get_mods_ptr);
     get_json_thread.detach();
     writeLogLine("getJson thread detached", verbose);
   }

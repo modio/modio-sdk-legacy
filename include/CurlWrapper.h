@@ -33,7 +33,7 @@ namespace modworks
     GetJsonHandler();
   };
 
-  void getJson(string url, vector<string> headers, function< void(vector<modworks::Mod*>) > callback, int call_number);
+  void get(int call_number, map<string, string> params, string url, vector<string> headers, function<void(int call_number, json response, map<string,string> params)> callback);
 
   class DownloadFileHandler
   {

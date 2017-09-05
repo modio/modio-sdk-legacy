@@ -21,11 +21,13 @@ namespace modworks
     map< int,function<void(int, Mod*)> > add_mod_callback;
     map< int,function<void(int)> > email_request_callbacks;
     map< int,function<void(int)> > email_exchange_callbacks;
+    map< int,function<void(int, vector<Mod*>)> > get_mods_callbacks;
 
     SDK(int game_id, string api_key);
 
     //GET methods
-    void getMods(function< void(vector<Mod*>) > callback);
+    void onGetMods(int call_number, json response, map<string, string> params);
+    void getMods(function< void(int ,vector<Mod*>) > callback);
 
     //POST methods
     void emailExchange(string security_code, function< void(int response) > callback);
