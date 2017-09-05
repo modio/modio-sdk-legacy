@@ -19,6 +19,8 @@ namespace modworks
     string changelog;
 
     map< int,function<void(int, Mod*)> > add_mod_callback;
+    map< int,function<void(int)> > email_request_callbacks;
+    map< int,function<void(int)> > email_exchange_callbacks;
 
     SDK(int game_id, string api_key);
 
@@ -33,8 +35,8 @@ namespace modworks
                 /*Callback*/ function< void(int, Mod*) > callback);
 
     //Callbacks
-    void onEmailRequested(json response, function< void(int response) > callback);
-    void onEmailExchanged(json response, function< void(int) > callback);
+    void onEmailRequested(int call_number, json response, map<string, string> params);
+    void onEmailExchanged(int call_number, json response, map<string, string> params);
     void onModAdded(int call_number, json response, map<string, string> params);
   };
 }

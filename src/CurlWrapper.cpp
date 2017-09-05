@@ -368,8 +368,11 @@ namespace modworks
     return 0;
   }
 
-  void post(string url, map<string, string> data, function< void(json, function< void(int response) >) > sdk_callback, function< void(int response) > game_callback)
+  void post(int call_number, map<string, string> params, string url, map<string, string> data, function<void(int call_number, json response, map<string,string> params)> callback)
   {
+    writeLogLine(string("post call to ") + url, verbose);
+    lockCall(call_number);
+    
     CURL *curl;
     CURLcode res;
     curl_global_init(CURL_GLOBAL_ALL);
@@ -410,7 +413,8 @@ namespace modworks
     curl_global_cleanup();
 
     json json_response = ongoing_calls[curl]->response;
-
-    sdk_callback(json_response, game_callback);
+    callback(call_number, json_response, params);
+    advanceOngoingCall();
+    writeLogLine(string("post call to ") + url + " finished", verbose);
   }
 }
