@@ -50,7 +50,7 @@ namespace modworks
     char trace_ascii; /* 1 or 0 */
   };
 
-  int get_json_trace(CURL *handle, curl_infotype type,
+  int json_response_trace(CURL *handle, curl_infotype type,
                char *data, size_t size,
                void *userp)
   {
@@ -58,8 +58,7 @@ namespace modworks
 
     if(type == CURLINFO_DATA_IN)
     {
-      string json_string = dataToJsonString(data, size);
-      ongoing_calls[handle]->response = json::parse(json_string);
+      ongoing_calls[handle]->response.append(data, size);
     }
 
     return 0;
@@ -89,7 +88,7 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, get_json_trace);
+      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, json_response_trace);
       curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
       /* Perform the request, res will get the return code */
@@ -102,7 +101,9 @@ namespace modworks
     }
 
     curl_global_cleanup();
-    json json_response = ongoing_calls[curl]->response;
+
+    ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
+    json json_response = json::parse(ongoing_calls[curl]->response);
 
     callback(call_number, json_response, params);
     advanceOngoingCall();
@@ -168,21 +169,6 @@ namespace modworks
     writeLogLine("getJsonCall call to " + url + " finished", verbose);
   }
 
-  int form_post_trace(CURL *handle, curl_infotype type,
-               char *data, size_t size,
-               void *userp)
-  {
-    (void)handle; /* prevent compiler warning */
-
-    if(type == CURLINFO_DATA_IN)
-    {
-      string json_string = dataToJsonString(data, size);
-      ongoing_calls[handle]->response = json::parse(json_string);
-    }
-
-    return 0;
-  }
-
   void postForm(int call_number, map<string, string> params, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, json response, map<string,string> params)> callback)
   {
     writeLogLine(string("postForm call to ") + url, verbose);
@@ -238,7 +224,7 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, form_post_trace);
+      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, json_response_trace);
 
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
       //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
@@ -255,25 +241,11 @@ namespace modworks
       curl_slist_free_all(headerlist);
     }
 
-    json json_response = ongoing_calls[curl]->response;
+    json json_response = json::parse(ongoing_calls[curl]->response);
+
     callback(call_number, json_response, params);
     advanceOngoingCall();
     writeLogLine(string("postForm call to ") + url + " finished", verbose);
-  }
-
-  int post_trace(CURL *handle, curl_infotype type,
-               char *data, size_t size,
-               void *userp)
-  {
-    (void)handle; /* prevent compiler warning */
-
-    if(type == CURLINFO_DATA_IN)
-    {
-      string json_string = dataToJsonString(data, size);
-      ongoing_calls[handle]->response = json::parse(json_string);
-    }
-
-    return 0;
   }
 
   void post(int call_number, map<string, string> params, string url, map<string, string> data, function<void(int call_number, json response, map<string,string> params)> callback)
@@ -304,7 +276,7 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, post_trace);
+      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, json_response_trace);
 
       curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
@@ -320,7 +292,8 @@ namespace modworks
     }
     curl_global_cleanup();
 
-    json json_response = ongoing_calls[curl]->response;
+    json json_response = json::parse(ongoing_calls[curl]->response);
+
     callback(call_number, json_response, params);
     advanceOngoingCall();
     writeLogLine(string("post call to ") + url + " finished", verbose);

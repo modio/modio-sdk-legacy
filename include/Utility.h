@@ -40,6 +40,7 @@ namespace modworks
 {
   enum DebugMode { verbose, error };
   string dataToJsonString(char* data, size_t size);
+  string dataToJsonString(string data);
   string toString(int number);
   void createDirectory(string directory);
   void clearLog();

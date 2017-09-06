@@ -22,6 +22,11 @@ namespace modworks
     return response;
   }
 
+  string dataToJsonString(string data)
+  {
+    return dataToJsonString((char*)data.c_str(), data.size());
+  }
+
   string toString(int number)
   {
       if (number == 0)

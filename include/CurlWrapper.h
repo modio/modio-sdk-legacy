@@ -29,7 +29,7 @@ namespace modworks
   class JsonResponseHandler
   {
   public:
-    json response;
+    string response;
     JsonResponseHandler();
   };
 
