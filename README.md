@@ -1,5 +1,5 @@
 # mod.works SDK
-Welcome to [mod.works](https://mod.works) SDK, built using ???. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.works API](https://docs.mod.works), and [documentation for its endpoints](https://sdk.mod.works) can be viewed here.
+Welcome to [mod.works](https://mod.works) SDK, built using C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.works API](https://docs.mod.works), and [documentation for its endpoints](https://sdk.mod.works) can be viewed here.
 
 ## Contributions Welcome
 Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://apps.mod.works) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.
