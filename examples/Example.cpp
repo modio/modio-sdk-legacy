@@ -62,8 +62,8 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
-    mods[i]->downloadLogoThumbnail(&onThumbnailDownloaded);
-    mods[i]->download("mod_directory/"+mods[i]->name,&onModInstalled);
+    mworks->downloadLogoThumbnail(mods[i], &onThumbnailDownloaded);
+    //mworks->download(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
 }
 

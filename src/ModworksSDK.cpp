@@ -117,7 +117,7 @@ namespace modworks
   void SDK::onModAdded(int call_number, json response)
   {
     Mod* mod = new Mod(response);
-    mod->addFile(add_mod_callback[call_number]->directory_path,
+    this->addFile(mod, add_mod_callback[call_number]->directory_path,
                   add_mod_callback[call_number]->version,
                   add_mod_callback[call_number]->changelog,
                   add_mod_callback[call_number]->callback);
@@ -160,4 +160,90 @@ namespace modworks
     std::thread add_mod_thread(modworks::postForm, call_number, url, headers, curlform_copycontents, curlform_files, on_mod_added_ptr);
     add_mod_thread.detach();
   }
+
+
+
+    void SDK::onFileAdded(int call_number, json response)
+    {
+      add_file_callbacks[call_number]->callback(200,add_file_callbacks[call_number]->mod);
+      add_file_callbacks.erase(call_number);
+    }
+
+    void SDK::addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback)
+    {
+      modworks::compress(directory_path,".modworks/tmp/modfile.zip");
+      vector<string> headers;
+      headers.push_back("Authorization: Bearer turupawn");
+      map<string, string> curlform_copycontents;
+      curlform_copycontents["version"]=version;
+      curlform_copycontents["changelog"]=changelog;
+      map<string, string> curlform_files;
+      curlform_files["filedata"]=".modworks/tmp/modfile.zip";
+      string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(mod->id) + "/files";
+
+      int call_number = getCallCount();
+      advanceCallCount();
+
+      add_file_callbacks[call_number] = new AddFileParams;
+      add_file_callbacks[call_number]->mod = mod;
+      add_file_callbacks[call_number]->callback = callback;
+
+      auto on_file_added_ptr = std::bind(&SDK::onFileAdded, *this, placeholders::_1, placeholders::_2);
+      std::thread add_file_thread(modworks::postForm, call_number, url, headers, curlform_copycontents, curlform_files, on_file_added_ptr);
+      add_file_thread.detach();
+    }
+
+    void SDK::onThumbnailDownloaded(int call_number, int status, string url, string path)
+    {
+      download_thumbnail_callbacks[call_number]->callback(status, download_thumbnail_callbacks[call_number]->mod, path);
+    }
+
+    void SDK::downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
+    {
+      writeLogLine("Mod::downloadLogoThumbnail call", verbose);
+      string file_path = string(".modworks/images/") + toString(mod->game) + "_" + toString(mod->id) + "_thumb.png";
+
+      int call_number = getCallCount();
+      advanceCallCount();
+
+      download_thumbnail_callbacks[call_number] = new DownloadThumbnailParams;
+      download_thumbnail_callbacks[call_number]->mod = mod;
+      download_thumbnail_callbacks[call_number]->callback = callback;
+
+      auto on_thumbnail_downloaded_ptr = std::bind(&SDK::onThumbnailDownloaded, *this, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4);
+      std::thread download_thumbnail_thread(modworks::download, call_number, mod->logo_thumbnail_url, file_path, on_thumbnail_downloaded_ptr);
+      download_thumbnail_thread.detach();
+      writeLogLine("downloadModFile detached", verbose);
+    }
+
+    void SDK::onModfileDownloaded(int call_number, int status, string url, string path)
+    {
+      string destintation_path = download_modfile_callbacks[call_number]->destination_path;
+      createDirectory(destintation_path);
+      extract(path, destintation_path);
+      download_modfile_callbacks[call_number]->callback(status, add_file_callbacks[call_number]->mod, path);
+    }
+
+    void SDK::download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)
+    {
+      writeLogLine("Mod::download call", verbose);
+      string file_path = string(".modworks/tmp/") + toString(mod->game) + "_" + toString(mod->id) + "_modfile.zip";
+
+      int call_number = getCallCount();
+      advanceCallCount();
+
+      //std::thread download_file_thread(downloadRedirect, this, this->download_url + "?shhh=secret", file_path, destination_path, callback, call_count);
+      //download_file_thread.detach();
+
+      download_modfile_callbacks[call_number] = new DownloadModfileParams;
+      download_modfile_callbacks[call_number]->mod = mod;
+      download_modfile_callbacks[call_number]->destination_path = destination_path;
+      download_modfile_callbacks[call_number]->callback = callback;
+
+      auto on_modifile_downloaded_ptr = std::bind(&SDK::onModfileDownloaded, *this, placeholders::_1, placeholders::_2, placeholders::_3, placeholders::_4);
+      std::thread download_thread(modworks::download, call_number, mod->download_url + "?shhh=secret", file_path, on_modifile_downloaded_ptr);
+      download_thread.detach();
+
+      writeLogLine("downloadRedirect detached", verbose);
+    }
 }

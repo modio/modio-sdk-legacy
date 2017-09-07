@@ -48,6 +48,19 @@ namespace modworks
     void onEmailRequested(int call_number, json response);
     void onEmailExchanged(int call_number, json response);
     void onModAdded(int call_number, json response);
+
+    //Mod
+    map< int, AddFileParams* > add_file_callbacks;
+    map< int, DownloadThumbnailParams* > download_thumbnail_callbacks;
+    map< int, DownloadModfileParams* > download_modfile_callbacks;
+
+    void onThumbnailDownloaded(int call_number, int status, string url, string path);
+    void onModfileDownloaded(int call_number, int status, string url, string path);
+    void onFileAdded(int call_number, json response);
+
+    void addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback);
+    void downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback);
+    void download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback);
   };
 }
 
