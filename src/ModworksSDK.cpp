@@ -19,7 +19,7 @@ namespace modworks
     writeLogLine("SDK Initialized", verbose);
   }
 
-  void SDK::onGetMods(int call_number, json response, map<string, string> params)
+  void SDK::onGetMods(int call_number, json response)
   {
     vector<Mod*> mods;
 
@@ -44,14 +44,13 @@ namespace modworks
 
     get_mods_callbacks[call_number] = callback;
 
-    map<string, string> params;
-    auto on_get_mods_ptr = std::bind(&SDK::onGetMods, *this, placeholders::_1, placeholders::_2, placeholders::_3);
-    std::thread get_mods_thread(get, call_number, params, url, headers, on_get_mods_ptr);
+    auto on_get_mods_ptr = std::bind(&SDK::onGetMods, *this, placeholders::_1, placeholders::_2);
+    std::thread get_mods_thread(get, call_number, url, headers, on_get_mods_ptr);
     get_mods_thread.detach();
     writeLogLine("getJson thread detached", verbose);
   }
 
-  void SDK::onEmailRequested(int call_number, json response, map<string, string> params)
+  void SDK::onEmailRequested(int call_number, json response)
   {
     writeLogLine("onEmailRequested call", verbose);
     int result_code = response["code"];
@@ -72,16 +71,14 @@ namespace modworks
 
     email_request_callbacks[call_number] = callback;
 
-    map<string, string> params;
-
-    auto on_email_requested_ptr = std::bind(&SDK::onEmailRequested, *this, placeholders::_1, placeholders::_2, placeholders::_3);
-    std::thread email_request_thread(post, call_number, params, "https://api.mod.works/oauth/emailrequest?shhh=secret", data, on_email_requested_ptr);
+    auto on_email_requested_ptr = std::bind(&SDK::onEmailRequested, *this, placeholders::_1, placeholders::_2);
+    std::thread email_request_thread(post, call_number, "https://api.mod.works/oauth/emailrequest?shhh=secret", data, on_email_requested_ptr);
     email_request_thread.detach();
 
     writeLogLine("post detached", verbose);
   }
 
-  void SDK::onEmailExchanged(int call_number, json response, map<string, string> params)
+  void SDK::onEmailExchanged(int call_number, json response)
   {
     writeLogLine("onEmailExchanged call", verbose);
     this->access_token = response["access_token"];
@@ -110,19 +107,20 @@ namespace modworks
 
     email_exchange_callbacks[call_number] = callback;
 
-    map<string, string> params;
-
-    auto on_email_exchanged_ptr = std::bind(&SDK::onEmailExchanged, *this, placeholders::_1, placeholders::_2, placeholders::_3);
-    std::thread email_exchage_thread(post, call_number, params, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, on_email_exchanged_ptr);
+    auto on_email_exchanged_ptr = std::bind(&SDK::onEmailExchanged, *this, placeholders::_1, placeholders::_2);
+    std::thread email_exchage_thread(post, call_number, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, on_email_exchanged_ptr);
     email_exchage_thread.detach();
 
     writeLogLine("post detached", verbose);
   }
 
-  void SDK::onModAdded(int call_number, json response, map<string, string> params)
+  void SDK::onModAdded(int call_number, json response)
   {
     Mod* mod = new Mod(response);
-    mod->addFile(params["directory_path"], params["version"], params["changelog"], add_mod_callback[call_number]);
+    mod->addFile(add_mod_callback[call_number]->directory_path,
+                  add_mod_callback[call_number]->version,
+                  add_mod_callback[call_number]->changelog,
+                  add_mod_callback[call_number]->callback);
     add_mod_callback.erase(call_number);
   }
 
@@ -151,11 +149,15 @@ namespace modworks
     int call_number = getCallCount();
     advanceCallCount();
 
-    add_mod_callback[call_number] = callback;
+    add_mod_callback[call_number] = new AddModParam;
+    add_mod_callback[call_number]->directory_path = directory_path;
+    add_mod_callback[call_number]->version = version;
+    add_mod_callback[call_number]->changelog = changelog;
+    add_mod_callback[call_number]->callback = callback;
 
     string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods";
-    auto on_mod_added_ptr = std::bind(&SDK::onModAdded, *this, placeholders::_1, placeholders::_2, placeholders::_3);
-    std::thread add_mod_thread(modworks::postForm, call_number, params, url, headers, curlform_copycontents, curlform_files, on_mod_added_ptr);
+    auto on_mod_added_ptr = std::bind(&SDK::onModAdded, *this, placeholders::_1, placeholders::_2);
+    std::thread add_mod_thread(modworks::postForm, call_number, url, headers, curlform_copycontents, curlform_files, on_mod_added_ptr);
     add_mod_thread.detach();
   }
 }

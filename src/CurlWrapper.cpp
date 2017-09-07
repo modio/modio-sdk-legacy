@@ -64,7 +64,7 @@ namespace modworks
     return 0;
   }
 
-  void get(int call_number, map<string, string> params, string url, vector<string> headers, function<void(int call_number, json response, map<string,string> params)> callback)
+  void get(int call_number, string url, vector<string> headers, function<void(int call_number, json response)> callback)
   {
     writeLogLine("getJsonCall call to " + url, verbose);
     lockCall(call_number);
@@ -105,7 +105,7 @@ namespace modworks
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
     json json_response = json::parse(ongoing_calls[curl]->response);
 
-    callback(call_number, json_response, params);
+    callback(call_number, json_response);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + "finished", verbose);
   }
@@ -130,7 +130,7 @@ namespace modworks
   }
 
 
-  void download(int call_number, map<string, string> params, string url, string path, function< void(int, int, string, string, map<string,string>) > callback)
+  void download(int call_number, string url, string path, function< void(int, int, string, string) > callback)
   {
     writeLogLine("downloadFile call to " + url, verbose);
     lockCall(call_number);
@@ -164,12 +164,12 @@ namespace modworks
 
       fclose(file);
     }
-    callback(call_number, 200, url, path, params);
+    callback(call_number, 200, url, path);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + " finished", verbose);
   }
 
-  void postForm(int call_number, map<string, string> params, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, json response, map<string,string> params)> callback)
+  void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, json response)> callback)
   {
     writeLogLine(string("postForm call to ") + url, verbose);
     lockCall(call_number);
@@ -243,12 +243,12 @@ namespace modworks
 
     json json_response = json::parse(ongoing_calls[curl]->response);
 
-    callback(call_number, json_response, params);
+    callback(call_number, json_response);
     advanceOngoingCall();
     writeLogLine(string("postForm call to ") + url + " finished", verbose);
   }
 
-  void post(int call_number, map<string, string> params, string url, map<string, string> data, function<void(int call_number, json response, map<string,string> params)> callback)
+  void post(int call_number, string url, map<string, string> data, function<void(int call_number, json response)> callback)
   {
     writeLogLine(string("post call to ") + url, verbose);
     lockCall(call_number);
@@ -294,7 +294,7 @@ namespace modworks
 
     json json_response = json::parse(ongoing_calls[curl]->response);
 
-    callback(call_number, json_response, params);
+    callback(call_number, json_response);
     advanceOngoingCall();
     writeLogLine(string("post call to ") + url + " finished", verbose);
   }
