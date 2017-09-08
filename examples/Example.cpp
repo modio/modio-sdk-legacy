@@ -71,7 +71,9 @@ int main(void)
 {
   mworks = new modworks::SDK(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
 
-/*
+  string email;
+  cout<<"Enter your email: "<<endl;
+  cin>>email;
   mworks->emailRequest("ahmed.hn.43@gmail.com",&onEmailRequest);
   while(!email_request_finished);
   string security_code;
@@ -80,7 +82,7 @@ int main(void)
   cout<<"Sending code"<<endl;
   mworks->emailExchange(security_code,&onExchange);
   while(!email_exchange_finished);
-*/
+/**/
 
 /*
   mworks->addMod( "test22",//Mod params

@@ -241,6 +241,7 @@ namespace modworks
       curl_slist_free_all(headerlist);
     }
 
+    ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
     json json_response = json::parse(ongoing_calls[curl]->response);
 
     callback(call_number, json_response);
@@ -292,6 +293,7 @@ namespace modworks
     }
     curl_global_cleanup();
 
+    ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
     json json_response = json::parse(ongoing_calls[curl]->response);
 
     callback(call_number, json_response);

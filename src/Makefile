@@ -1,17 +1,17 @@
 include Sources.mk
 
 CC = g++
-CFLAGS = -c -Wall -std=c++11 `pkg-config --cflags --libs gtk+-3.0`
+CFLAGS = -c -Wall -std=c++11 -fPIC
 LDFLAGS = -lcurl -pthread -lz
 SOURCES = $(MODWORKS_SOURCES)
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = libmodworks.a
+LIBRARY = libmodworks.so
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@ -I ../include
 
 $(LIBRARY): $(OBJECTS)
-	ar $(ARFLAGS) $@ $^ ../lib/libz.a
+	g++ -shared -o $@ $^ ../lib/libz.a
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;

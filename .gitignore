@@ -31,7 +31,7 @@
 *.out
 *.app
 
-src/libmodworks.a
+src/libmodworks.so
 examples/Example
 examples/.modworks/
 examples/mod_directory/

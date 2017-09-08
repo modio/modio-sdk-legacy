@@ -1,10 +1,10 @@
 CC=g++
-CFLAGS=-c -Wall -std=c++11 `pkg-config --cflags --libs gtk+-3.0`
-LDFLAGS=-lcurl -pthread -lz `pkg-config --cflags --libs gtk+-3.0`
+CFLAGS=-c -Wall -std=c++11
+LDFLAGS=-lcurl -pthread -lz
 SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
-LIBRARIES=../src/libmodworks.a
+LIBRARIES=../src/libmodworks.so
 
 all: $(SOURCES) $(EXECUTABLE)
 
