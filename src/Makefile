@@ -11,7 +11,7 @@ LIBRARY = libmodworks.so
 	$(CC) $(CFLAGS) $< -o $@ -I ../include
 
 $(LIBRARY): $(OBJECTS)
-	g++ -shared -o $@ $^ ../lib/libz.a
+	$(CC) -shared -o $@ $^ ../lib/libz.a
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;

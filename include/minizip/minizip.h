@@ -35,9 +35,9 @@
 #  define FTELLO_FUNC(stream) ftello(stream)
 #  define FSEEKO_FUNC(stream, offset, origin) fseeko(stream, offset, origin)
 #else
-#  define FOPEN_FUNC(filename, mode) fopen64(filename, mode)
-#  define FTELLO_FUNC(stream) ftello64(stream)
-#  define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
+#  define FOPEN_FUNC(filename, mode) fopen(filename, mode)
+#  define FTELLO_FUNC(stream) ftell(stream)
+#  define FSEEKO_FUNC(stream, offset, origin) fseek(stream, offset, origin)
 #endif
 
 #include <stdio.h>

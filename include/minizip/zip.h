@@ -17,14 +17,16 @@
 
 #define INCLUDECRYPTINGCODE_IFCRYPTALLOWED
 
+#ifndef NOCRYPT
 #include "minizip/crypt.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifndef _ZLIB_H
-#  include "zlib.h"
+#  include "zlib/zlib.h"
 #endif
 
 #ifndef _ZLIBIOAPI_H

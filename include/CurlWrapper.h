@@ -13,12 +13,12 @@
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
 
+using namespace std;
+using json = nlohmann::json;
+
 namespace modworks
 {
   class Mod;
-
-  using namespace std;
-  using json = nlohmann::json;
 
   void initCurl();
   int getCallCount();

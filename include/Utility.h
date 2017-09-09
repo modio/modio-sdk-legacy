@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <string.h>
-#include <dirent.h>
 
 #ifdef __linux__
 #define LINUX
@@ -26,10 +25,12 @@
 
 #ifdef LINUX
 #include <sys/stat.h>
+#include <dirent.h>
 #endif
 
 #ifdef WINDOWS
 #include <windows.h>
+#include "dirent/dirent.h"
 #endif
 
 #include <fstream>

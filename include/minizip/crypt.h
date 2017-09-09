@@ -29,6 +29,8 @@
 #ifndef MINIZIP_CRYPT
 #define MINIZIP_CRYPT
 
+#include <time.h>
+
 #include <iostream>
 using namespace std;
 

@@ -1,9 +1,9 @@
 include Sources.mk
 
 CC = g++
-CFLAGS = -c -Wall -std=c++11
+CFLAGS = -c -Wall -std=c++11 -lcurl -pthread -lz
 LDFLAGS = -lcurl -pthread -lz
-SOURCES = $(MODWORKS_SOURCES)
+SOURCES = $(MODWORKS_WRAPPERS) $(MODWORKS_DEPENDENCIES) ModworksSDK.cpp Utility.cpp Mod.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARY = libmodworks.a
 

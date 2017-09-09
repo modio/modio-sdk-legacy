@@ -84,9 +84,9 @@ namespace modworks
       directory += '/';
 
     zipFile zf = NULL;
-    #ifdef USEWIN32IOAPI
-      zlib_filefunc64_def ffunc = {0};
-    #endif
+    //#ifdef USEWIN32IOAPI
+    //  zlib_filefunc64_def ffunc = {0};
+    //#endif
     char *zipfilename = (char*)zip_path.c_str();
     const char* password = NULL;
     void* buf = NULL;
@@ -103,12 +103,12 @@ namespace modworks
       writeLogLine("Error allocating memory", error);
     }
 
-    #ifdef USEWIN32IOAPI
-      fill_win32_filefunc64A(&ffunc);
-      zf = zipOpen2_64(zipfilename, opt_overwrite, NULL, &ffunc);
-    #else
+    //#ifdef USEWIN32IOAPI
+    //  fill_win32_filefunc64A(&ffunc);
+    //  zf = zipOpen2_64(zipfilename, opt_overwrite, NULL, &ffunc);
+    //#else
       zf = zipOpen64(zipfilename, opt_overwrite);
-    #endif
+    //#endif
 
     if (zf == NULL)
     {
