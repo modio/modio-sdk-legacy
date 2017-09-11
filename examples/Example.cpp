@@ -4,7 +4,6 @@ int files_downloaded = 0;
 int files_to_download = 50;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
-modworks::SDK* mworks;
 
 void onModAdded(int result, modworks::Mod* mod)
 {
@@ -62,14 +61,14 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
-    mworks->downloadLogoThumbnail(mods[i], &onThumbnailDownloaded);
-    mworks->download(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
+    modworks::downloadLogoThumbnail(mods[i], &onThumbnailDownloaded);
+    modworks::download(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
 }
 
 int main(void)
 {
-  mworks = new modworks::SDK(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
+  modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
 /*
   string email;
   cout<<"Enter your email: "<<endl;
@@ -94,7 +93,7 @@ int main(void)
                   "This is a changelog text",
                   &onModAdded);//Callback
 */
-  mworks->getMods(&onModsGet);
+  modworks::getMods(&onModsGet);
   while(files_downloaded<files_to_download);
 
   return 0;

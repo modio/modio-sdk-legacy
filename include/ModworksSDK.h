@@ -19,12 +19,9 @@
 
 namespace modworks
 {
-  class MODWORKS_DLL SDK;
-  
   struct EmailExchangeParams
   {
     function<void(int)> callback;
-	SDK* sdk;
   };
 
   struct AddModParams
@@ -33,36 +30,23 @@ namespace modworks
     string version;
     string changelog;
     function<void(int, Mod*)> callback;
-	SDK* sdk;
   };
 
-  class SDK
-  {
-  public:
-    string api_key;
-    string access_token;
-    int game_id;
+  void MODWORKS_DLL init(int game_id, string api_key);
 
-    string directory_path;
-    string version;
-    string changelog;
+  //GET methods
+  void MODWORKS_DLL getMods(function< void(int, vector<Mod*>) > callback);
 
-    SDK(int game_id, string api_key);
+  //POST methods
+  void MODWORKS_DLL emailExchange(string security_code, function< void(int response) > callback);
+  void MODWORKS_DLL emailRequest(string email, function< void(int response) > callback);
+  void MODWORKS_DLL addMod(/*Mod params*/string name, string homepage, string summary, string logo_path,
+              /*File params*/string directory_path, string version, string changelog,
+              /*Callback*/ function< void(int, Mod*) > callback);
 
-    //GET methods
-    void getMods(function< void(int, vector<Mod*>) > callback);
-
-    //POST methods
-    void emailExchange(string security_code, function< void(int response) > callback);
-    void emailRequest(string email, function< void(int response) > callback);
-    void addMod(/*Mod params*/string name, string homepage, string summary, string logo_path,
-                /*File params*/string directory_path, string version, string changelog,
-                /*Callback*/ function< void(int, Mod*) > callback);
-
-    void addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback);
-    void downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback);
-    void download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback);
-  };
+  void MODWORKS_DLL addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback);
+  void MODWORKS_DLL downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback);
+  void MODWORKS_DLL download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback);
 }
 
 #endif
