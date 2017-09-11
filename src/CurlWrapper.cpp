@@ -55,10 +55,12 @@ namespace modworks
                void *userp)
   {
     (void)handle; /* prevent compiler warning */
-
     if(type == CURLINFO_DATA_IN)
     {
+      cout<<endl<<"IIIIIIIIIIIIIIIIIIIIIIIIKKKK"<<endl<<endl;
       ongoing_calls[handle]->response.append(data, size);
+      //ongoing_calls[handle]->response += data;
+      cout<<endl<<"AAAAAAAAAAAAAAAAAAAAAAXXXXX"<<endl<<endl;
     }
 
     return 0;
@@ -101,8 +103,9 @@ namespace modworks
     }
 
     curl_global_cleanup();
-
+    cout<<endl<<endl<<"-!>"<<ongoing_calls[curl]->response<<"<!-"<<endl<<endl<<endl;
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
+    cout<<endl<<endl<<"->"<<ongoing_calls[curl]->response<<"<-"<<endl<<endl<<endl;
     json json_response = json::parse(ongoing_calls[curl]->response);
 
     callback(call_number, json_response);

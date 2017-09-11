@@ -4,20 +4,16 @@ namespace modworks
 {
   string dataToJsonString(char* data, size_t size)
   {
-    int brackets = 0;
-    string response;
+    string response = "";
+    bool is_json_block = false;
+
     for(int i=0; i<(int)size; i++)
     {
-      if(data[i]=='{')
-        brackets++;
+      if(data[i] == 10)
+        is_json_block = !is_json_block;
 
-      if(brackets>0)
-      {
-        response+=data[i];
-      }
-
-      if(data[i]=='}')
-        brackets--;
+      if(is_json_block)
+        response += data[i];
     }
     return response;
   }

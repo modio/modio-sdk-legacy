@@ -7,10 +7,14 @@
 #include "MinizipWrapper.h"
 #include "Mod.h"
 
-#ifdef BUILDING_MODWORKS_DLL
-#define MODWORKS_DLL __declspec(dllexport)
+#ifdef WINDOWS
+#  ifdef BUILDING_MODWORKS_DLL
+#    define MODWORKS_DLL __declspec(dllexport)
+#  else
+#    define MODWORKS_DLL __declspec(dllimport)
+#  endif
 #else
-#define MODWORKS_DLL __declspec(dllimport)
+#  define MODWORKS_DLL
 #endif
 
 namespace modworks
