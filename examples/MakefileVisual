@@ -1,7 +1,7 @@
 CC = cl.exe
 CFLAGS = /EHsc /MD
 SOURCES = Example.cpp
-LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/zlib.lib ../lib/zdll.lib ../lib/pthreadVC2.lib ../src/modworks.lib
+LIBRARIES = ../src/modworks.lib
 
 build:
  $(CC) $(CFLAGS) $(SOURCES) /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
