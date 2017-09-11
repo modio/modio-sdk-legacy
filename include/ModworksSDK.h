@@ -7,9 +7,15 @@
 #include "MinizipWrapper.h"
 #include "Mod.h"
 
+#ifdef BUILDING_MODWORKS_DLL
+#define MODWORKS_DLL __declspec(dllexport)
+#else
+#define MODWORKS_DLL __declspec(dllimport)
+#endif
+
 namespace modworks
 {
-  class SDK;
+  class MODWORKS_DLL SDK;
   
   struct EmailExchangeParams
   {

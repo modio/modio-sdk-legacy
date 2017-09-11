@@ -55,7 +55,7 @@ namespace modworks
     get_mods_callbacks[call_number](200,mods);
   }
   
-  void SDK::getMods(function< void(int, vector<Mod*>) > callback)
+  __declspec(dllexport) void SDK::getMods(function< void(int, vector<Mod*>) > callback)
   {
     writeLogLine("getMods call", verbose);
     vector<string> headers;

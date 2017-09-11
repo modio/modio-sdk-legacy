@@ -1,18 +1,20 @@
 include Sources.mk
 
 CC = g++
-CFLAGS = -c -Wall -std=c++11 -lcurl -pthread -lz
-LDFLAGS = -lcurl -pthread -lz
-SOURCES = $(MODWORKS_WRAPPERS) $(MODWORKS_DEPENDENCIES) ModworksSDK.cpp Utility.cpp Mod.cpp
+CFLAGS = -c -Wall -std=c++11
+SOURCES = $(MODWORKS_SOURCES)
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = libmodworks.a
+LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/libz.a
+IMPORT_LIBRARY = modworks.a
+LIBRARY = modworks.dll
 
 .cpp.o:
-	$(CC) $(CFLAGS) $< -o $@ -I ../include
+	$(CC) -DBUILDING_MODWORKS_DLL $(CFLAGS) $< -o $@ -I ../include
 
 $(LIBRARY): $(OBJECTS)
-	ar $(ARFLAGS) $@ $^
+	$(CC) -shared -o $(LIBRARY) $(OBJECTS) -Wl,--out-implib,$(IMPORT_LIBRARY) $(LIBRARIES)
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;
+	-rm -f $(IMPORT_LIBRARY)
 	-rm -f $(LIBRARY)

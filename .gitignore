@@ -35,4 +35,6 @@ src/libmodworks.so
 examples/Example
 examples/.modworks/
 examples/mod_directory/
-src/ModworksSDK.dll
+src/modworks.dll
+src/modworks.lib
+examples/modworks.dll

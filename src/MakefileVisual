@@ -1,20 +1,14 @@
 include Sources.mk
 
 CC = cl.exe
-CFLAGS = /EHsc /MD /LD
+CFLAGS = /EHsc /MD /LD 
 SOURCES = $(MODWORKS_SOURCES) dirent/dirent.cpp
-OUTPUT_LIB = libmodworks.lib
-OUTPUT_DLL = ModworksSDK.dll
 LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/zlib.lib ../lib/zdll.lib ../lib/pthreadVC2.lib
-LIBRARY_GENERATOR = lib.exe
+OUTPUT_NAME = modworks
 
 build:
- $(CC) $(CFLAGS) $(SOURCES) /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
- 
-link: *.obj
- $(LIBRARY_GENERATOR) /OUT:$(OUTPUT_LIB) $?
+ $(CC) $(CFLAGS) /Fe$(OUTPUT_NAME) $(SOURCES) /DBUILDING_MODWORKS_DLL /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
 
 clean:
  del *.obj
- del $(OUTPUT_LIB)
- del $(OUTPUT_DLL)
+ del $(OUTPUT_NAME).*
