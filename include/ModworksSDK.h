@@ -32,14 +32,18 @@ namespace modworks
     function<void(int, Mod*)> callback;
   };
 
+  //Auth
+  void MODWORKS_DLL emailExchange(string security_code, function< void(int response) > callback);
+  void MODWORKS_DLL emailRequest(string email, function< void(int response) > callback);
+  bool MODWORKS_DLL isLoggedIn();
+  void MODWORKS_DLL logout();
+
   void MODWORKS_DLL init(int game_id, string api_key);
 
   //GET methods
   void MODWORKS_DLL getMods(function< void(int, vector<Mod*>) > callback);
 
   //POST methods
-  void MODWORKS_DLL emailExchange(string security_code, function< void(int response) > callback);
-  void MODWORKS_DLL emailRequest(string email, function< void(int response) > callback);
   void MODWORKS_DLL addMod(/*Mod params*/string name, string homepage, string summary, string logo_path,
               /*File params*/string directory_path, string version, string changelog,
               /*Callback*/ function< void(int, Mod*) > callback);

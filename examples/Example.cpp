@@ -73,13 +73,13 @@ int main(void)
   string email;
   cout<<"Enter your email: "<<endl;
   cin>>email;
-  mworks->emailRequest("ahmed.hn.43@gmail.com",&onEmailRequest);
+  modworks::emailRequest("ahmed.hn.43@gmail.com",&onEmailRequest);
   while(!email_request_finished);
   string security_code;
   cout<<"Please enter the 5 digit security code: ";
   cin>>security_code;
   cout<<"Sending code"<<endl;
-  mworks->emailExchange(security_code,&onExchange);
+  modworks::emailExchange(security_code,&onExchange);
   while(!email_exchange_finished);
 */
 

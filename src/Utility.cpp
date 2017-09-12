@@ -12,9 +12,10 @@ namespace modworks
       if(data[i] == 10)
         is_json_block = !is_json_block;
 
-      if(is_json_block)
+      if(is_json_block && data[i] != 13 && data[i] != 10)
         response += data[i];
     }
+
     return response;
   }
 

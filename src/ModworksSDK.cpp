@@ -3,7 +3,7 @@
 namespace modworks
 {
   string api_key;
-  string access_token;
+  string access_token = "";
   int game_id;
 
   map< int,AddModParams* > add_mod_callback;
@@ -128,6 +128,7 @@ namespace modworks
     int call_number = getCallCount();
     advanceCallCount();
 
+    email_exchange_callbacks[call_number] = new EmailExchangeParams;
     email_exchange_callbacks[call_number]->callback = callback;
 
     std::thread email_exchage_thread(post, call_number, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, &onEmailExchanged);
@@ -261,5 +262,20 @@ namespace modworks
     download_thread.detach();
 
     writeLogLine("downloadRedirect detached", verbose);
+  }
+
+  bool isLoggedIn()
+  {
+    return access_token!="";
+  }
+
+  void logout()
+  {
+    access_token = "";
+
+    json empty_json;
+    std::ofstream out(".modworks/token.json");
+    out<<setw(4)<<empty_json<<endl;
+    out.close();
   }
 }
