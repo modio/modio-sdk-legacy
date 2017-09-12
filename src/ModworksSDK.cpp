@@ -278,4 +278,9 @@ namespace modworks
     out<<setw(4)<<empty_json<<endl;
     out.close();
   }
+
+  void modworks::setAcessToken(string access_token_param)
+  {
+    access_token = access_token_param;
+  }
 }

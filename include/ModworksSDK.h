@@ -37,6 +37,7 @@ namespace modworks
   void MODWORKS_DLL emailRequest(string email, function< void(int response) > callback);
   bool MODWORKS_DLL isLoggedIn();
   void MODWORKS_DLL logout();
+  void MODWORKS_DLL setAcessToken(string access_token_param);
 
   void MODWORKS_DLL init(int game_id, string api_key);
 
