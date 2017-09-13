@@ -6,6 +6,8 @@
 #include "CurlWrapper.h"
 #include "MinizipWrapper.h"
 #include "Mod.h"
+#include "Globals.h"
+#include "Authentication.h"
 
 #ifdef WINDOWS
 #  ifdef BUILDING_MODWORKS_DLL
@@ -19,11 +21,6 @@
 
 namespace modworks
 {
-  struct EmailExchangeParams
-  {
-    function<void(int)> callback;
-  };
-
   struct AddModParams
   {
     string directory_path;
@@ -31,13 +28,6 @@ namespace modworks
     string changelog;
     function<void(int, Mod*)> callback;
   };
-
-  //Auth
-  void MODWORKS_DLL emailExchange(string security_code, function< void(int response) > callback);
-  void MODWORKS_DLL emailRequest(string email, function< void(int response) > callback);
-  bool MODWORKS_DLL isLoggedIn();
-  void MODWORKS_DLL logout();
-  void MODWORKS_DLL setAcessToken(string access_token_param);
 
   void MODWORKS_DLL init(int game_id, string api_key);
 
