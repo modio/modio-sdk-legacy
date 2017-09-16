@@ -63,12 +63,13 @@ namespace modworks
     return 0;
   }
 
-  void get(int call_number, string url, vector<string> headers, function<void(int call_number, json response)> callback)
+  void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback)
   {
     writeLogLine("getJsonCall call to " + url, verbose);
     lockCall(call_number);
     CURL *curl;
     CURLcode res;
+    long response_code = 0;
 
     struct data config;
     curl_global_init(CURL_GLOBAL_DEFAULT);
@@ -95,6 +96,8 @@ namespace modworks
       /* Check for errors */
       if(res != CURLE_OK)
         writeLogLine(string("curl_easy_perform() failed ") + url, verbose);
+
+      curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
       /* always cleanup */
       curl_easy_cleanup(curl);
     }
@@ -103,7 +106,7 @@ namespace modworks
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
     json json_response = json::parse(ongoing_calls[curl]->response);
 
-    callback(call_number, json_response);
+    callback(call_number, response_code, json_response);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + "finished", verbose);
   }
@@ -128,12 +131,13 @@ namespace modworks
   }
 
 
-  void download(int call_number, string url, string path, function< void(int, int, string, string) > callback)
+  void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback)
   {
     writeLogLine("downloadFile call to " + url, verbose);
     lockCall(call_number);
     CURL *curl;
     FILE *file;
+    long response_code = 0;
 
     struct data config;
 
@@ -158,21 +162,24 @@ namespace modworks
 
       curl_easy_perform(curl);
 
+      curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
+
       curl_easy_cleanup(curl);
 
       fclose(file);
     }
-    callback(call_number, 200, url, path);
+    callback(call_number, response_code, url, path);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + " finished", verbose);
   }
 
-  void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, json response)> callback)
+  void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, json response)> callback)
   {
     writeLogLine(string("postForm call to ") + url, verbose);
     lockCall(call_number);
     CURL *curl;
     CURLcode res;
+    long response_code = 0;
 
     struct curl_httppost *formpost=NULL;
     struct curl_httppost *lastptr=NULL;
@@ -234,6 +241,8 @@ namespace modworks
       if(res != CURLE_OK)
         writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
 
+      curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
+
       curl_easy_cleanup(curl);
       curl_formfree(formpost);
       curl_slist_free_all(headerlist);
@@ -242,18 +251,20 @@ namespace modworks
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
     json json_response = json::parse(ongoing_calls[curl]->response);
 
-    callback(call_number, json_response);
+    callback(call_number, response_code, json_response);
     advanceOngoingCall();
     writeLogLine(string("postForm call to ") + url + " finished", verbose);
   }
 
-  void post(int call_number, string url, map<string, string> data, function<void(int call_number, json response)> callback)
+  void post(int call_number, string url, map<string, string> data, function<void(int call_number, int response_code, json response)> callback)
   {
     writeLogLine(string("post call to ") + url, verbose);
     lockCall(call_number);
 
     CURL *curl;
     CURLcode res;
+    long response_code = 0;
+
     curl_global_init(CURL_GLOBAL_ALL);
     curl = curl_easy_init();
 
@@ -286,6 +297,7 @@ namespace modworks
         writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
         //callback(-1);
       }
+      curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
 
       curl_easy_cleanup(curl);
     }
@@ -294,7 +306,7 @@ namespace modworks
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
     json json_response = json::parse(ongoing_calls[curl]->response);
 
-    callback(call_number, json_response);
+    callback(call_number, response_code, json_response);
     advanceOngoingCall();
     writeLogLine(string("post call to ") + url + " finished", verbose);
   }

@@ -8,6 +8,11 @@
 
 namespace modworks
 {
+  struct FilterHandle
+  {
+    map<string,string> filters;
+  };
+
   void MODWORKS_DLL getMods(function< void(int, vector<Mod*>) > callback);
 
   void MODWORKS_DLL addMod(/*Mod params*/string name, string homepage, string summary, string logo_path,

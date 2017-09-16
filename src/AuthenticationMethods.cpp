@@ -3,18 +3,17 @@
 namespace modworks
 {
   map< int,function<void(int)> > email_request_callbacks;
-  map< int,EmailExchangeParams* > email_exchange_callbacks;
+  map< int,function<void(int)> callback > email_exchange_callbacks;
 
-  void onEmailRequested(int call_number, json response)
+  void onEmailRequested(int call_number, int response_code, json response)
   {
     writeLogLine("onEmailRequested call", verbose);
-    int result_code = response["code"];
-    email_request_callbacks[call_number](result_code);
+    email_request_callbacks[call_number](response_code);
     email_request_callbacks.erase(call_number);
     writeLogLine("onEmailRequested finished", verbose);
   }
 
-  void emailRequest(string email, function< void(int response) > callback)
+  void emailRequest(string email, function< void(int response_code) > callback)
   {
     writeLogLine("emailRequest call", verbose);
     map<string, string> data;
@@ -32,7 +31,7 @@ namespace modworks
     writeLogLine("post detached", verbose);
   }
 
-  void onEmailExchanged(int call_number, json response)
+  void onEmailExchanged(int call_number, int response_code, json response)
   {
     writeLogLine("onEmailExchanged call", verbose);
     access_token = response["access_token"];
@@ -43,8 +42,7 @@ namespace modworks
     out<<setw(4)<<token_json<<endl;
     out.close();
 
-    int result_code = response["code"];
-    email_exchange_callbacks[call_number]->callback(result_code);
+    email_exchange_callbacks[call_number](response_code);
     email_exchange_callbacks.erase(call_number);
     writeLogLine("onEmailExchanged finished", verbose);
   }
@@ -59,8 +57,7 @@ namespace modworks
     int call_number = getCallCount();
     advanceCallCount();
 
-    email_exchange_callbacks[call_number] = new EmailExchangeParams;
-    email_exchange_callbacks[call_number]->callback = callback;
+    email_exchange_callbacks[call_number] = callback;
 
     std::thread email_exchage_thread(post, call_number, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, &onEmailExchanged);
     email_exchage_thread.detach();

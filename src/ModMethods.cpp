@@ -9,7 +9,7 @@ namespace modworks
     string changelog;
     function<void(int, Mod*)> callback;
   };
-  
+
   map< int,AddModParams* > add_mod_callback;
   map< int,function<void(int, vector<Mod*>)> > get_mods_callbacks;
 
@@ -17,17 +17,20 @@ namespace modworks
   map< int, DownloadThumbnailParams* > download_thumbnail_callbacks;
   map< int, DownloadModfileParams* > download_modfile_callbacks;
 
-  void onGetMods(int call_number, json response)
+  void onGetMods(int call_number, int response_code, json response)
   {
     vector<Mod*> mods;
 
-    for(int i=0;i<(int)response["data"].size();i++)
+    if(response_code == 200)
     {
-      Mod* mod = new Mod(response["data"][i]);
-      mods.push_back(mod);
+      for(int i=0;i<(int)response["data"].size();i++)
+      {
+        Mod* mod = new Mod(response["data"][i]);
+        mods.push_back(mod);
+      }
     }
 
-    get_mods_callbacks[call_number](200,mods);
+    get_mods_callbacks[call_number](response_code,mods);
   }
 
   void getMods(function< void(int, vector<Mod*>) > callback)
@@ -47,7 +50,7 @@ namespace modworks
     writeLogLine("getJson thread detached", verbose);
   }
 
-  void onModAdded(int call_number, json response)
+  void onModAdded(int call_number, int response_code, json response)
   {
     Mod* mod = new Mod(response);
     addFile(mod, add_mod_callback[call_number]->directory_path,
@@ -90,7 +93,7 @@ namespace modworks
     add_mod_thread.detach();
   }
 
-  void onFileAdded(int call_number, json response)
+  void onFileAdded(int call_number, int response_code, json response)
   {
     add_file_callbacks[call_number]->callback(200,add_file_callbacks[call_number]->mod);
     add_file_callbacks.erase(call_number);
@@ -120,9 +123,9 @@ namespace modworks
   }
 
 
-  void onThumbnailDownloaded(int call_number, int status, string url, string path)
+  void onThumbnailDownloaded(int call_number, int response_code, string url, string path)
   {
-    download_thumbnail_callbacks[call_number]->callback(status, download_thumbnail_callbacks[call_number]->mod, path);
+    download_thumbnail_callbacks[call_number]->callback(response_code, download_thumbnail_callbacks[call_number]->mod, path);
   }
 
   void downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
@@ -144,12 +147,12 @@ namespace modworks
     writeLogLine("downloadModFile detached", verbose);
   }
 
-  void onModfileDownloaded(int call_number, int status, string url, string path)
+  void onModfileDownloaded(int call_number, int response_code, string url, string path)
   {
     string destintation_path = download_modfile_callbacks[call_number]->destination_path;
     createDirectory(destintation_path);
     extract(path, destintation_path);
-    download_modfile_callbacks[call_number]->callback(status, download_modfile_callbacks[call_number]->mod, path);
+    download_modfile_callbacks[call_number]->callback(response_code, download_modfile_callbacks[call_number]->mod, path);
   }
 
   void download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)
