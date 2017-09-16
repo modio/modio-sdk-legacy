@@ -10,41 +10,30 @@ using json = nlohmann::json;
 
 namespace modworks
 {
-  class Mod;
-
-  struct AddFileParams
+  struct Mod
   {
-    Mod* mod;
-    function< void(int, Mod*) > callback;
-  };
-
-  struct DownloadThumbnailParams
-  {
-    Mod* mod;
-    function< void(int, Mod*, string) > callback;
-  };
-
-  struct DownloadModfileParams
-  {
-    Mod* mod;
-    string destination_path;
-    function< void(int, Mod*, string) > callback;
-  };
-
-  class Mod
-  {
-  public:
+    //Required
     int id;
     int game;
+    string name;
+    string homepage;
+    string summary;
+
+    //Non required
+    double price;
+    int stock;
+    string description;
+    string metadata;
+    string nameid;
+    int modfile;
+
+    //Urls
     string logo_url;
     string logo_thumbnail_url;
-    string name;
-    string summary;
-    string description;
     string download_url;
-
-    Mod(json mod_json);
   };
+
+  Mod* jsonToMod(json mod_json);
 }
 
 #endif

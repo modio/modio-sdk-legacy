@@ -25,7 +25,7 @@ namespace modworks
     {
       for(int i=0;i<(int)response["data"].size();i++)
       {
-        Mod* mod = new Mod(response["data"][i]);
+        Mod* mod = jsonToMod(response["data"][i]);
         mods.push_back(mod);
       }
     }
@@ -52,7 +52,7 @@ namespace modworks
 
   void onModAdded(int call_number, int response_code, json response)
   {
-    Mod* mod = new Mod(response);
+    Mod* mod = jsonToMod(response);
     addFile(mod, add_mod_callback[call_number]->directory_path,
                   add_mod_callback[call_number]->version,
                   add_mod_callback[call_number]->changelog,

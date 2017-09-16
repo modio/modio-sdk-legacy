@@ -8,6 +8,25 @@
 
 namespace modworks
 {
+  struct AddFileParams
+  {
+    Mod* mod;
+    function< void(int, Mod*) > callback;
+  };
+
+  struct DownloadThumbnailParams
+  {
+    Mod* mod;
+    function< void(int, Mod*, string) > callback;
+  };
+
+  struct DownloadModfileParams
+  {
+    Mod* mod;
+    string destination_path;
+    function< void(int, Mod*, string) > callback;
+  };
+  
   struct FilterHandle
   {
     map<string,string> filters;

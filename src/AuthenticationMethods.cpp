@@ -3,7 +3,7 @@
 namespace modworks
 {
   map< int,function<void(int)> > email_request_callbacks;
-  map< int,function<void(int)> callback > email_exchange_callbacks;
+  map< int,function<void(int)> > email_exchange_callbacks;
 
   void onEmailRequested(int call_number, int response_code, json response)
   {

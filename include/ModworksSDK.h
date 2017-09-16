@@ -1,7 +1,7 @@
 #ifndef MODWORKS_SDK_H
 #define MODWORKS_SDK_H
 
-#pragma warning(disable : 4503)
+//#pragma warning(disable : 4503)
 
 #include "CurlWrapper.h"
 #include "MinizipWrapper.h"
