@@ -26,11 +26,6 @@ namespace modworks
     string destination_path;
     function< void(int, Mod*, string) > callback;
   };
-  
-  struct FilterHandle
-  {
-    map<string,string> filters;
-  };
 
   void MODWORKS_DLL getMods(function< void(int, vector<Mod*>) > callback);
 

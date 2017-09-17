@@ -19,7 +19,7 @@ namespace modworks
     string homepage;
     string summary;
 
-    //Non required
+    //Not required
     double price;
     int stock;
     string description;
