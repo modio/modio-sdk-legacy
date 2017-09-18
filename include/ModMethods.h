@@ -5,6 +5,7 @@
 #include "MinizipWrapper.h"
 #include "Mod.h"
 #include "Globals.h"
+#include "Filter.h"
 
 namespace modworks
 {
@@ -27,7 +28,7 @@ namespace modworks
     function< void(int, Mod*, string) > callback;
   };
 
-  void MODWORKS_DLL getMods(function< void(int, vector<Mod*>) > callback);
+  void MODWORKS_DLL getMods(Filter* filter, function< void(int, vector<Mod*>) > callback);
 
   void MODWORKS_DLL addMod(/*Mod params*/string name, string homepage, string summary, string logo_path,
               /*File params*/string directory_path, string version, string changelog,

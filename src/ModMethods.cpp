@@ -33,12 +33,13 @@ namespace modworks
     get_mods_callbacks[call_number](response_code,mods);
   }
 
-  void getMods(function< void(int, vector<Mod*>) > callback)
+  void getMods(Filter* filter, function< void(int, vector<Mod*>) > callback)
   {
     writeLogLine("getMods call", verbose);
+    string filter_string = getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
-    string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods" + "?shhh=secret";
+    string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods?" + filter_string + "&shhh=secret";
 
     int call_number = getCallCount();
     advanceCallCount();

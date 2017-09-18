@@ -2,7 +2,7 @@
 
 namespace modworks
 {
-  void addFilterField(FilterHandle* filter, string field)
+  void addFilterField(Filter* filter, string field)
   {
     if(filter->params.find("_fields") == filter->params.end())
     {
@@ -13,37 +13,51 @@ namespace modworks
     }
   }
 
-  void setFilterSort(FilterHandle* filter, string field, bool ascending)
+  string getFilterString(Filter* filter)
+  {
+    string filter_string = "";
+    for(map<string, string>::iterator i = filter->params.begin();
+          i != filter->params.end();
+          i++)
+    {
+      if(filter_string!="")
+        filter_string += "&";
+      filter_string += (*i).first + "=" + (*i).second;
+    }
+    return filter_string;
+  }
+
+  void setFilterSort(Filter* filter, string field, bool ascending)
   {
     filter->params["_sort"] = field;
   }
 
-  void setFilterLimit(FilterHandle* filter, int limit)
+  void setFilterLimit(Filter* filter, int limit)
   {
     filter->params["_limit"] = toString(limit);
   }
 
-  void setFilterOffset(FilterHandle* filter, int offset)
+  void setFilterOffset(Filter* filter, int offset)
   {
     filter->params["_offset"] = toString(offset);
   }
 
-  void setFilterFullTextSearch(FilterHandle* filter, string text)
+  void setFilterFullTextSearch(Filter* filter, string text)
   {
     filter->params["_q"] = text;
   }
 
-  void addFilterLikeField(FilterHandle* filter, string field, string value)
+  void addFilterLikeField(Filter* filter, string field, string value)
   {
     filter->params[field + "-lk"] = value;
   }
 
-  void addFilterNotLikeField(FilterHandle* filter, string field, string value)
+  void addFilterNotLikeField(Filter* filter, string field, string value)
   {
     filter->params[field + "-not-lk"] = value;
   }
 
-  void addFilterInField(FilterHandle* filter, string field, string value)
+  void addFilterInField(Filter* filter, string field, string value)
   {
     string key = field + "-in";
 
@@ -56,7 +70,7 @@ namespace modworks
     }
   }
 
-  void addFilterNotInField(FilterHandle* filter, string field, string value)
+  void addFilterNotInField(Filter* filter, string field, string value)
   {
     string key = field + "-not-in";
 
@@ -69,27 +83,27 @@ namespace modworks
     }
   }
 
-  void addFilterMinField(FilterHandle* filter, string field, double value)
+  void addFilterMinField(Filter* filter, string field, double value)
   {
     filter->params[field + "-min"] = toString(value);
   }
 
-  void addFilterMaxField(FilterHandle* filter, string field, double value)
+  void addFilterMaxField(Filter* filter, string field, double value)
   {
     filter->params[field + "-max"] = toString(value);
   }
 
-  void addFilterSmallerThanField(FilterHandle* filter, string field, double value)
+  void addFilterSmallerThanField(Filter* filter, string field, double value)
   {
     filter->params[field + "-st"] = toString(value);
   }
 
-  void addFilterGreaterThanField(FilterHandle* filter, string field, double value)
+  void addFilterGreaterThanField(Filter* filter, string field, double value)
   {
     filter->params[field + "-gt"] = toString(value);
   }
 
-  void addFilterNotEqualField(FilterHandle* filter, string field, string value)
+  void addFilterNotEqualField(Filter* filter, string field, string value)
   {
     filter->params[field + "-not"] = value;
   }
