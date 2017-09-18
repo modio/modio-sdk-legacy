@@ -7,15 +7,12 @@ namespace modworks
 
   void onEmailRequested(int call_number, int response_code, json response)
   {
-    writeLogLine("onEmailRequested call", verbose);
     email_request_callbacks[call_number](response_code);
     email_request_callbacks.erase(call_number);
-    writeLogLine("onEmailRequested finished", verbose);
   }
 
   void emailRequest(string email, function< void(int response_code) > callback)
   {
-    writeLogLine("emailRequest call", verbose);
     map<string, string> data;
     data["api_key"] = api_key;
     data["email"] = email;
@@ -27,13 +24,10 @@ namespace modworks
 
     std::thread email_request_thread(post, call_number, "https://api.mod.works/oauth/emailrequest?shhh=secret", data, &onEmailRequested);
     email_request_thread.detach();
-
-    writeLogLine("post detached", verbose);
   }
 
   void onEmailExchanged(int call_number, int response_code, json response)
   {
-    writeLogLine("onEmailExchanged call", verbose);
     access_token = response["access_token"];
 
     json token_json;
@@ -44,12 +38,10 @@ namespace modworks
 
     email_exchange_callbacks[call_number](response_code);
     email_exchange_callbacks.erase(call_number);
-    writeLogLine("onEmailExchanged finished", verbose);
   }
 
   void emailExchange(string security_code, function< void(int) > callback)
   {
-    writeLogLine("emailExchange call", verbose);
     map<string, string> data;
     data["api_key"] = api_key;
     data["security_code"] = security_code;
@@ -61,8 +53,6 @@ namespace modworks
 
     std::thread email_exchage_thread(post, call_number, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, &onEmailExchanged);
     email_exchage_thread.detach();
-
-    writeLogLine("post detached", verbose);
   }
 
   bool isLoggedIn()

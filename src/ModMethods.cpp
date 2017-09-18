@@ -35,7 +35,6 @@ namespace modworks
 
   void getMods(Filter* filter, function< void(int, vector<Mod*>) > callback)
   {
-    writeLogLine("getMods call", verbose);
     string filter_string = getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
@@ -48,7 +47,6 @@ namespace modworks
 
     std::thread get_mods_thread(get, call_number, url, headers, &onGetMods);
     get_mods_thread.detach();
-    writeLogLine("getJson thread detached", verbose);
   }
 
   void onModAdded(int call_number, int response_code, json response)
@@ -131,7 +129,6 @@ namespace modworks
 
   void downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
   {
-    writeLogLine("Mod::downloadLogoThumbnail call", verbose);
     string file_path = string(".modworks/images/") + toString(mod->game) + "_" + toString(mod->id) + "_thumb.png";
 
     int call_number = getCallCount();
@@ -145,7 +142,6 @@ namespace modworks
     std::thread download_thumbnail_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo_thumbnail_url, file_path, &onThumbnailDownloaded);
 
     download_thumbnail_thread.detach();
-    writeLogLine("downloadModFile detached", verbose);
   }
 
   void onModfileDownloaded(int call_number, int response_code, string url, string path)
@@ -158,7 +154,6 @@ namespace modworks
 
   void download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)
   {
-    writeLogLine("Mod::download call", verbose);
     string file_path = string(".modworks/tmp/") + toString(mod->game) + "_" + toString(mod->id) + "_modfile.zip";
 
     int call_number = getCallCount();
@@ -171,7 +166,5 @@ namespace modworks
 
     std::thread download_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->download_url + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
-
-    writeLogLine("downloadRedirect detached", verbose);
   }
 }

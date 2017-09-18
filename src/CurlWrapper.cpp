@@ -94,8 +94,15 @@ namespace modworks
       /* Perform the request, res will get the return code */
       res = curl_easy_perform(curl);
       /* Check for errors */
-      if(res != CURLE_OK)
-        writeLogLine(string("curl_easy_perform() failed ") + url, verbose);
+      if(res == CURLE_OK)
+      {
+        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
+      }
+      else
+      {
+        writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+        response_code = 0;
+      }
 
       curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
       /* always cleanup */
@@ -136,6 +143,7 @@ namespace modworks
     writeLogLine("downloadFile call to " + url, verbose);
     lockCall(call_number);
     CURL *curl;
+    CURLcode res;
     FILE *file;
     long response_code = 0;
 
@@ -160,7 +168,17 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
 
-      curl_easy_perform(curl);
+      res = curl_easy_perform(curl);
+
+      if(res == CURLE_OK)
+      {
+        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
+      }
+      else
+      {
+        writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+        response_code = 0;
+      }
 
       curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
 
@@ -238,8 +256,15 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
       res = curl_easy_perform(curl);
 
-      if(res != CURLE_OK)
+      if(res == CURLE_OK)
+      {
+        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
+      }
+      else
+      {
         writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+        response_code = 0;
+      }
 
       curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
 
@@ -292,12 +317,15 @@ namespace modworks
 
       res = curl_easy_perform(curl);
 
-      if(res != CURLE_OK)
+      if(res == CURLE_OK)
+      {
+        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
+      }
+      else
       {
         writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
-        //callback(-1);
+        response_code = 0;
       }
-      curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
 
       curl_easy_cleanup(curl);
     }
