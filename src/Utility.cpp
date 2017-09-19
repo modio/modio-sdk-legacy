@@ -57,18 +57,20 @@ namespace modworks
 
   void clearLog()
   {
-    ofstream log_file(".modworks/log");
+    ofstream log_file(getModworksDirectory() + "log");
     log_file.close();
   }
 
-  bool writeLogLine(string text, DebugMode debug_mode)
+  void writeLogLine(string text, DebugMode debug_mode)
   {
-    ofstream log_file(".modworks/log", ios::app);
+    if(DEBUG_LEVEL == error && debug_mode == verbose)
+      return;
+
+    ofstream log_file(getModworksDirectory() + "log", ios::app);
     if(debug_mode == error)
       log_file<<"Error: ";
     log_file<<text.c_str()<<"\n";
     log_file.close();
-    return true;
   }
 
   vector<string> getFilenames(string directory)
@@ -103,5 +105,12 @@ namespace modworks
       closedir (dir);
     }
     return filenames;
+  }
+
+  string getModworksDirectory()
+  {
+    if(ROOT_PATH != "" && ROOT_PATH[ROOT_PATH.size()-1] != '/')
+      ROOT_PATH += "/";
+    return ROOT_PATH + ".modworks/";
   }
 }

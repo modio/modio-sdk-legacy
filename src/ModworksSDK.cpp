@@ -13,7 +13,7 @@ namespace modworks
     modworks::api_key = api_key;
     access_token = "";
 
-    std::ifstream token_file(".modworks/token.json");
+    std::ifstream token_file(getModworksDirectory() + "token.json");
     if(token_file.is_open())
     {
       json token_file_json;
@@ -24,9 +24,20 @@ namespace modworks
       }
     }
 
-    createDirectory(".modworks");
-    createDirectory(".modworks/images");
-    createDirectory(".modworks/tmp");
+    createDirectory(getModworksDirectory());
+    createDirectory(getModworksDirectory() + "images/");
+    createDirectory(getModworksDirectory() + "tmp/");
     writeLogLine("SDK Initialized", verbose);
+  }
+
+  void init(int game_id, string api_key, string root_path)
+  {
+    ROOT_PATH = root_path;
+    init(game_id, api_key);
+  }
+
+  void setDebugMode(DebugMode debug_mode)
+  {
+    DEBUG_LEVEL = debug_mode;
   }
 }

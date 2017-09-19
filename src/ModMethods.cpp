@@ -100,14 +100,14 @@ namespace modworks
 
   void addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback)
   {
-    modworks::compress(directory_path,".modworks/tmp/modfile.zip");
+    modworks::compress(directory_path, getModworksDirectory() + "tmp/modfile.zip");
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
     map<string, string> curlform_copycontents;
     curlform_copycontents["version"]=version;
     curlform_copycontents["changelog"]=changelog;
     map<string, string> curlform_files;
-    curlform_files["filedata"]=".modworks/tmp/modfile.zip";
+    curlform_files["filedata"] = getModworksDirectory() + "tmp/modfile.zip";
     string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(mod->id) + "/files";
 
     int call_number = getCallCount();
@@ -129,7 +129,7 @@ namespace modworks
 
   void downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
   {
-    string file_path = string(".modworks/images/") + toString(mod->game) + "_" + toString(mod->id) + "_thumb.png";
+    string file_path = string(getModworksDirectory() + "images/") + toString(mod->game) + "_" + toString(mod->id) + "_thumb.png";
 
     int call_number = getCallCount();
     advanceCallCount();
@@ -154,7 +154,7 @@ namespace modworks
 
   void download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)
   {
-    string file_path = string(".modworks/tmp/") + toString(mod->game) + "_" + toString(mod->id) + "_modfile.zip";
+    string file_path = string(getModworksDirectory() + "tmp/") + toString(mod->game) + "_" + toString(mod->id) + "_modfile.zip";
 
     int call_number = getCallCount();
     advanceCallCount();

@@ -14,11 +14,17 @@ using namespace std;
 #  define MODWORKS_DLL
 #endif
 
+#include "Utility.h"
+
 namespace modworks
 {
+  enum DebugMode : unsigned int;
+  
   extern string api_key;
   extern string access_token;
   extern int game_id;
+  extern string ROOT_PATH;
+  extern DebugMode DEBUG_LEVEL;
 }
 
 #endif

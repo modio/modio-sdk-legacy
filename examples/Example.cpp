@@ -68,7 +68,8 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
 
 int main(void)
 {
-  modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b");
+  modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
+  modworks::setDebugMode(modworks::verbose);
 /*
   string email;
   cout<<"Enter your email: "<<endl;

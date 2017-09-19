@@ -9,8 +9,8 @@ namespace modworks
 
     if(zipfile == NULL)
     {
-        writeLogLine("Cannot open " + zip_path, error);
-        return;
+      writeLogLine("Cannot open " + zip_path, error);
+      return;
     }
 
     unz_global_info global_info;
@@ -25,11 +25,11 @@ namespace modworks
       char final_filename[ MAX_FILENAME ];
 
       int err = unzGetCurrentFileInfo(
-          zipfile,
-          &file_info,
-          filename,
-          MAX_FILENAME,
-          NULL, 0, NULL, 0 );
+        zipfile,
+        &file_info,
+        filename,
+        MAX_FILENAME,
+        NULL, 0, NULL, 0 );
 
       if(err != UNZ_OK)
       {
@@ -49,7 +49,7 @@ namespace modworks
       }
       else
       {
-    		err = unzOpenCurrentFile(zipfile);
+        err = unzOpenCurrentFile(zipfile);
 
         if(err != UNZ_OK)
         {
@@ -57,48 +57,48 @@ namespace modworks
           return;
         }
 
-    		string new_file_path = filename;
-    		FILE *out = fopen( final_filename, "wb" );
+        string new_file_path = filename;
+        FILE *out = fopen( final_filename, "wb" );
 
         if(!out)
         {
           writeLogLine(string("error opening ") + final_filename, error);
         }
 
-    		err = UNZ_OK;
-    		do
-    		{
-    			err = unzReadCurrentFile( zipfile, read_buffer, READ_SIZE );
-    			if(err < 0)
-    			{
+        err = UNZ_OK;
+        do
+        {
+          err = unzReadCurrentFile(zipfile, read_buffer, READ_SIZE);
+          if(err < 0)
+          {
             writeLogLine("error " + toString(err) + " with zipfile in unzReadCurrentFile", error);
-    				unzCloseCurrentFile( zipfile );
-    				unzClose( zipfile );
-    				return;
-    			}
-    			if(err > 0)
-    			{
-    				if(fwrite(read_buffer, err, 1, out) != 1)
+            unzCloseCurrentFile( zipfile );
+            unzClose( zipfile );
+            return;
+          }
+          if(err > 0)
+          {
+            if(fwrite(read_buffer, err, 1, out) != 1)
             {
               writeLogLine("error " + toString(err) + " in writing extracted file", error);
             }
-    			}
-    		}while(err > 0);
+          }
+        }while(err > 0);
 
-    		fclose(out);
+        fclose(out);
+
+        err = unzCloseCurrentFile(zipfile);
+        if (err != UNZ_OK)
+          writeLogLine("error " + toString(err) + " with " + filename + " in unzCloseCurrentFile", error);
       }
-
-      err = unzCloseCurrentFile(zipfile);
-
-      if (err != UNZ_OK)
-          printf("error " + toString(err) + " with zipfile in unzCloseCurrentFile", error);
 
       if((i+1) < global_info.number_entry)
       {
         err = unzGoToNextFile(zipfile);
+
         if(err != UNZ_OK)
         {
-          printf("error " + toString(err) + " with zipfile in unzGoToNextFile", error);
+          writeLogLine("error " + toString(err) + " with zipfile in unzGoToNextFile", error);
           unzClose(zipfile);
           return;
         }

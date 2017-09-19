@@ -34,19 +34,22 @@
 #endif
 
 #include <fstream>
+#include "Globals.h"
 
 using namespace std;
 
 namespace modworks
 {
-  enum DebugMode { verbose, error };
+  enum DebugMode : unsigned int { verbose, error };
+  
   string dataToJsonString(char* data, size_t size);
   string dataToJsonString(string data);
   string toString(int number);
   void createDirectory(string directory);
   void clearLog();
-  bool writeLogLine(string text, DebugMode debug_mode);
+  void writeLogLine(string text, DebugMode debug_mode);
   vector<string> getFilenames(string directory);
+  string getModworksDirectory();
 }
 
 #endif

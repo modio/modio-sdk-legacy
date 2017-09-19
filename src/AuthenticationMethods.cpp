@@ -32,7 +32,7 @@ namespace modworks
 
     json token_json;
     token_json["access_token"] = response["access_token"];
-    std::ofstream out(".modworks/token.json");
+    std::ofstream out(getModworksDirectory() + "token.json");
     out<<setw(4)<<token_json<<endl;
     out.close();
 
@@ -65,7 +65,7 @@ namespace modworks
     access_token = "";
 
     json empty_json;
-    std::ofstream out(".modworks/token.json");
+    std::ofstream out(getModworksDirectory() + "token.json");
     out<<setw(4)<<empty_json<<endl;
     out.close();
   }
