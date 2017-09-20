@@ -31,6 +31,7 @@ namespace modworks
     }
 
     get_mods_callbacks[call_number](response_code,mods);
+    get_mods_callbacks.erase(call_number);
   }
 
   void getMods(Filter* filter, function< void(int, vector<Mod*>) > callback)
@@ -125,6 +126,7 @@ namespace modworks
   void onThumbnailDownloaded(int call_number, int response_code, string url, string path)
   {
     download_thumbnail_callbacks[call_number]->callback(response_code, download_thumbnail_callbacks[call_number]->mod, path);
+    download_thumbnail_callbacks.erase(call_number);
   }
 
   void downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
@@ -150,6 +152,7 @@ namespace modworks
     createDirectory(destintation_path);
     extract(path, destintation_path);
     download_modfile_callbacks[call_number]->callback(response_code, download_modfile_callbacks[call_number]->mod, path);
+    download_modfile_callbacks.erase(call_number);
   }
 
   void download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)

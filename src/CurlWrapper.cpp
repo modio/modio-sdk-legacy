@@ -111,7 +111,18 @@ namespace modworks
 
     curl_global_cleanup();
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
-    json json_response = json::parse(ongoing_calls[curl]->response);
+
+    json json_response;
+    try
+    {
+      json_response = json::parse(ongoing_calls[curl]->response);
+    }
+    catch (json::parse_error &e)
+    {
+      writeLogLine(string("Error parsing json: ") + e.what(), error);
+      response_code = 0;
+      json_response = "{}"_json;
+    }
 
     callback(call_number, response_code, json_response);
     advanceOngoingCall();
@@ -274,7 +285,18 @@ namespace modworks
     }
 
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
-    json json_response = json::parse(ongoing_calls[curl]->response);
+
+    json json_response;
+    try
+    {
+      json_response = json::parse(ongoing_calls[curl]->response);
+    }
+    catch (json::parse_error &e)
+    {
+      writeLogLine(string("Error parsing json: ") + e.what(), error);
+      response_code = 0;
+      json_response = "{}"_json;
+    }
 
     callback(call_number, response_code, json_response);
     advanceOngoingCall();
@@ -332,7 +354,18 @@ namespace modworks
     curl_global_cleanup();
 
     ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
-    json json_response = json::parse(ongoing_calls[curl]->response);
+
+    json json_response;
+    try
+    {
+      json_response = json::parse(ongoing_calls[curl]->response);
+    }
+    catch (json::parse_error &e)
+    {
+      writeLogLine(string("Error parsing json: ") + e.what(), error);
+      response_code = 0;
+      json_response = "{}"_json;
+    }
 
     callback(call_number, response_code, json_response);
     advanceOngoingCall();

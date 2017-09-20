@@ -28,13 +28,15 @@ namespace modworks
 
   void onEmailExchanged(int call_number, int response_code, json response)
   {
-    access_token = response["access_token"];
-
-    json token_json;
-    token_json["access_token"] = response["access_token"];
-    std::ofstream out(getModworksDirectory() + "token.json");
-    out<<setw(4)<<token_json<<endl;
-    out.close();
+    if(response_code == 200)
+    {
+      access_token = response["access_token"];
+      json token_json;
+      token_json["access_token"] = response["access_token"];
+      std::ofstream out(getModworksDirectory() + "token.json");
+      out<<setw(4)<<token_json<<endl;
+      out.close();
+    }
 
     email_exchange_callbacks[call_number](response_code);
     email_exchange_callbacks.erase(call_number);
