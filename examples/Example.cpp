@@ -71,7 +71,7 @@ int main(void)
   modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
   modworks::setDebugMode(modworks::verbose);
 
-/**/
+/*
   string email;
   cout<<"Enter your email: "<<endl;
   cin>>email;
@@ -83,7 +83,7 @@ int main(void)
   cout<<"Sending code"<<endl;
   modworks::emailExchange(security_code,&onExchange);
   while(!email_exchange_finished);
-
+*/
 
 /*
   mworks->addMod( "test22",//Mod params
