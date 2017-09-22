@@ -15,6 +15,7 @@ namespace modworks
   void MODWORKS_DLL init(int game_id, string api_key);
   void MODWORKS_DLL init(int game_id, string api_key, string root_path);
   void MODWORKS_DLL setDebugMode(DebugMode debug_mode);
+  void MODWORKS_DLL pauseCurrentDownload();
 }
 
 #endif

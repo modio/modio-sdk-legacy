@@ -4,11 +4,18 @@ namespace modworks
 {
   map<CURL*, JsonResponseHandler*> ongoing_calls;
 
+  CurrentDownloadHandle* current_download_handle;
+
   int call_count = 0;
   int ongoing_call = 0;
 
   void initCurl()
   {
+    current_download_handle = new CurrentDownloadHandle;
+    current_download_handle->path = "";
+    current_download_handle->pause_flag = false;
+    current_download_handle->curl = NULL;
+
     if(curl_global_init(CURL_GLOBAL_ALL))
       writeLogLine("Curl initialized", verbose);
     else
@@ -135,19 +142,46 @@ namespace modworks
     return written;
   }
 
-  static int download_file_trace(CURL *handle, curl_infotype type,
-               char *data, size_t size,
-               void *userp)
+  int progress_callback(void *clientp,   double dltotal,   double dlnow,   double ultotal,   double ulnow)
   {
-    (void)handle; /* prevent compiler warning */
-
-    if(type == CURLINFO_DATA_IN)
+    if(current_download_handle->pause_flag)
     {
-      //BYTES_DOWNLOADED+=size;
+      curl_easy_pause(current_download_handle->curl , CURLPAUSE_RECV);
+
+      string file_path = getModworksDirectory() + "paused_download.json";
+
+      json paused_download_json;
+
+      paused_download_json["path"] = current_download_handle->path;
+
+      time_t  timev;
+      time(&timev);
+      paused_download_json["time"] = timev;
+
+      paused_download_json["download_total"] = dltotal;
+      paused_download_json["download_progress"] = dlnow;
+
+      std::ofstream o(file_path);
+      o << std::setw(4) << paused_download_json << std::endl;
+      return -1;
     }
+
     return 0;
   }
 
+  void curlPauseCurrentDownload()
+  {
+    string path = current_download_handle->path;
+    string extension = path.substr(path.length() - 4);
+
+    for(int i=1; i<(int)extension.size();i++)
+      extension[i] = tolower(extension[i]);
+
+    if(extension == ".zip")
+    {
+      current_download_handle->pause_flag = true;
+    }
+  }
 
   void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback)
   {
@@ -157,18 +191,14 @@ namespace modworks
     CURLcode res;
     FILE *file;
     long response_code = 0;
-
-    struct data config;
-
-    config.trace_ascii = 1; /* enable ascii tracing */
-    //FILE_SIZE = curlGetFileSize(url);
     curl = curl_easy_init();
+
+    current_download_handle->path = path;
+    current_download_handle->pause_flag = false;
+    current_download_handle->curl = curl;
+
     if(curl)
     {
-      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, download_file_trace);
-      curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
-      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
       file = fopen(path.c_str(),"wb");
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
@@ -178,6 +208,10 @@ namespace modworks
 
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+
+      curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, current_download_handle);
+      curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
+      curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
       res = curl_easy_perform(curl);
 
@@ -197,6 +231,11 @@ namespace modworks
 
       fclose(file);
     }
+
+    current_download_handle->path = "";
+    current_download_handle->pause_flag = false;
+    current_download_handle->curl = NULL;
+
     callback(call_number, response_code, url, path);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + " finished", verbose);
