@@ -33,6 +33,11 @@
 #include "dirent/dirent.h"
 #endif
 
+#ifdef OSX
+#include <sys/stat.h>
+#include <dirent.h>
+#endif
+
 #include <fstream>
 #include "Globals.h"
 

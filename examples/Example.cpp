@@ -95,6 +95,7 @@ int main(void)
                   "This is a changelog text",
                   &onModAdded);//Callback
 */
+  
   modworks::Filter* filter = new modworks::Filter;
   modworks::setFilterLimit(filter, 0);
   modworks::getMods(filter, &onModsGet);

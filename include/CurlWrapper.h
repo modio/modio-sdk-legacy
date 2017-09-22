@@ -18,8 +18,6 @@ using json = nlohmann::json;
 
 namespace modworks
 {
-  class Mod;
-
   void initCurl();
   int getCallCount();
   int getOngoingCall();

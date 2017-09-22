@@ -1,0 +1,22 @@
+CC=clang++
+CFLAGS=-c -Wall -std=c++11
+LDFLAGS=-lcurl -pthread -lz
+SOURCES=Example.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=Example
+LIBRARIES=libmodworks.so
+
+all: $(SOURCES) $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) $< -o $@ -I ../include
+
+clean:
+	-find . -name '*.o' -exec rm -r {} \;
+	-rm -f $(EXECUTABLE)
+
+run:
+	$ ./$(EXECUTABLE)
