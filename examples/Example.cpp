@@ -66,6 +66,17 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   }
 }
 
+void printProgress()
+{
+  while(files_downloaded<files_to_download)
+  {
+    cout<<modworks::getCurrentDownloadInfo().url<<endl;
+    cout<<modworks::getCurrentDownloadInfo().download_progress
+      <<"/"<<modworks::getCurrentDownloadInfo().download_total<<endl;
+    sleep(1);
+  }
+}
+
 int main(void)
 {
   modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
@@ -95,17 +106,18 @@ int main(void)
                   "This is a changelog text",
                   &onModAdded);//Callback
 */
-  
+
   modworks::Filter* filter = new modworks::Filter;
   modworks::setFilterLimit(filter, 0);
   modworks::getMods(filter, &onModsGet);
 
+  std::thread print_progress_thread(printProgress);
+  print_progress_thread.detach();
+
   int x;
   cin>>x;
 
-  modworks::pauseCurrentDownload();
-
-  while(files_downloaded<files_to_download);
+  modworks::shutdown();
 
   return 0;
 }

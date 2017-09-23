@@ -146,60 +146,8 @@ namespace modworks
     download_thumbnail_thread.detach();
   }
 
-  json getModfileDownloads()
-  {
-    string file_path = getModworksDirectory() + "modfile_downloads.json";
-    std::ifstream in(file_path);
-    json modfile_downloads_json;
-    if(in.is_open())
-    {
-      in>>modfile_downloads_json;
-    }
-    return modfile_downloads_json;
-  }
-
-  void writeModfileDownloads(json modfile_downloads_json)
-  {
-    string file_path = getModworksDirectory() + "modfile_downloads.json";
-    std::ofstream out(file_path);
-    out<<std::setw(4)<<modfile_downloads_json<<std::endl;
-  }
-
-  void setModfileProgress(int id, string progress)
-  {
-    json modfile_downloads_json = getModfileDownloads();
-
-    time_t  timev;
-    time(&timev);
-
-    bool exists = false;
-    for(int i=0; i<(int)modfile_downloads_json.size(); i++)
-    {
-      if(modfile_downloads_json[i]["id"] == id)
-      {
-        modfile_downloads_json[i]["progress"] = progress;
-        modfile_downloads_json[i]["time"] = timev;
-        exists = true;
-        break;
-      }
-    }
-
-    if(!exists)
-    {
-      json modfile_json;
-      modfile_json["id"] = id;
-      modfile_json["progress"] = progress;
-      modfile_json["time"] = timev;
-      modfile_downloads_json.push_back(modfile_json);
-    }
-
-    writeModfileDownloads(modfile_downloads_json);
-  }
-
   void onModfileDownloaded(int call_number, int response_code, string url, string path)
   {
-    setModfileProgress(download_modfile_callbacks[call_number]->mod->id, "downloaded");
-
     string destintation_path = download_modfile_callbacks[call_number]->destination_path;
     createDirectory(destintation_path);
     extract(path, destintation_path);

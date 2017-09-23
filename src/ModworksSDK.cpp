@@ -41,8 +41,8 @@ namespace modworks
     DEBUG_LEVEL = debug_mode;
   }
 
-  void pauseCurrentDownload()
+  void shutdown()
   {
-    curlPauseCurrentDownload();
+    shutdownCurl();
   }
 }

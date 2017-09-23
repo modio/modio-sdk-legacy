@@ -6,6 +6,8 @@ namespace modworks
 
   CurrentDownloadHandle* current_download_handle;
 
+  CurrentDownloadInfo current_download_info;
+
   int call_count = 0;
   int ongoing_call = 0;
 
@@ -15,6 +17,10 @@ namespace modworks
     current_download_handle->path = "";
     current_download_handle->pause_flag = false;
     current_download_handle->curl = NULL;
+
+    current_download_info.url = "";
+    current_download_info.download_total = 0;
+    current_download_info.download_progress = 0;
 
     if(curl_global_init(CURL_GLOBAL_ALL))
       writeLogLine("Curl initialized", verbose);
@@ -144,6 +150,9 @@ namespace modworks
 
   int progress_callback(void *clientp,   double dltotal,   double dlnow,   double ultotal,   double ulnow)
   {
+    current_download_info.download_total = dltotal;
+    current_download_info.download_progress = dlnow;
+
     if(current_download_handle->pause_flag)
     {
       curl_easy_pause(current_download_handle->curl , CURLPAUSE_RECV);
@@ -169,7 +178,7 @@ namespace modworks
     return 0;
   }
 
-  void curlPauseCurrentDownload()
+  void shutdownCurl()
   {
     string path = current_download_handle->path;
     string extension = path.substr(path.length() - 4);
@@ -181,6 +190,33 @@ namespace modworks
     {
       current_download_handle->pause_flag = true;
     }
+
+    ongoing_call = -1;
+    call_count = -1;
+    ongoing_calls.clear();
+  }
+
+  curl_off_t getProgressIfStored(string path)
+  {
+    string file_path = getModworksDirectory() + "paused_download.json";
+    std::ifstream in(file_path);
+    json modfile_downloads_json;
+    if(in.is_open())
+    {
+      in>>modfile_downloads_json;
+      string path_stored = modfile_downloads_json["path"];
+      curl_off_t download_progress_stored = modfile_downloads_json["download_progress"];
+      if(path_stored == path)
+      {
+        return download_progress_stored;
+      }
+    }
+    return 0;
+  }
+
+  CurrentDownloadInfo getCurrentDownloadInfo()
+  {
+    return current_download_info;
   }
 
   void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback)
@@ -197,10 +233,20 @@ namespace modworks
     current_download_handle->pause_flag = false;
     current_download_handle->curl = curl;
 
+    current_download_info.url = url;
+
+    curl_off_t progress = getProgressIfStored(path);
+
     if(curl)
     {
       file = fopen(path.c_str(),"wb");
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+      if(progress != 0)
+      {
+        curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, progress);
+      }
+
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
@@ -209,7 +255,6 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
       curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
 
-      curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, current_download_handle);
       curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
       curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
@@ -232,9 +277,12 @@ namespace modworks
       fclose(file);
     }
 
-    current_download_handle->path = "";
-    current_download_handle->pause_flag = false;
-    current_download_handle->curl = NULL;
+    if(current_download_handle)
+    {
+      current_download_handle->path = "";
+      current_download_handle->pause_flag = false;
+      current_download_handle->curl = NULL;
+    }
 
     callback(call_number, response_code, url, path);
     advanceOngoingCall();
