@@ -284,6 +284,10 @@ namespace modworks
       current_download_handle->curl = NULL;
     }
 
+    current_download_info.url = "";
+    current_download_info.download_total = 0;
+    current_download_info.download_progress = 0;
+
     callback(call_number, response_code, url, path);
     advanceOngoingCall();
     writeLogLine("getJsonCall call to " + url + " finished", verbose);

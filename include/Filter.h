@@ -16,10 +16,10 @@ namespace modworks
 
   string getFilterString(Filter* filter);
 
-  void addFilterField(Filter* filter, string field);
   void setFilterSort(Filter* filter, string field, bool ascending);
   void setFilterLimit(Filter* filter, int limit);
   void setFilterOffset(Filter* filter, int offset);
+  void setFilterCursor(Filter* filter, int cursor);
   void setFilterFullTextSearch(Filter* filter, string text);
   void addFilterLikeField(Filter* filter, string field, string value);
   void addFilterNotLikeField(Filter* filter, string field, string value);

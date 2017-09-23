@@ -2,17 +2,6 @@
 
 namespace modworks
 {
-  void addFilterField(Filter* filter, string field)
-  {
-    if(filter->params.find("_fields") == filter->params.end())
-    {
-      filter->params["_fields"] = field;
-    }else
-    {
-      filter->params["_fields"] += string(",") + field;
-    }
-  }
-
   string getFilterString(Filter* filter)
   {
     string filter_string = "";
@@ -40,6 +29,11 @@ namespace modworks
   void setFilterOffset(Filter* filter, int offset)
   {
     filter->params["_offset"] = toString(offset);
+  }
+
+  void setFilterCursor(Filter* filter, int cursor)
+  {
+    filter->params["_cursor"] = toString(cursor);
   }
 
   void setFilterFullTextSearch(Filter* filter, string text)
