@@ -76,6 +76,14 @@ namespace modworks
     return 0;
   }
 
+  size_t get_data(char *ptr, size_t size, size_t nmemb, void *userdata)
+  {
+    CURL* handle = (CURL*)userdata;
+    int data_size = size * nmemb;
+    ongoing_calls[handle]->response.append(ptr, data_size);
+    return data_size;
+  }
+
   void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback)
   {
     writeLogLine("getJsonCall call to " + url, verbose);
@@ -84,7 +92,6 @@ namespace modworks
     CURLcode res;
     long response_code = 0;
 
-    struct data config;
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
     curl = curl_easy_init();
@@ -101,9 +108,8 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, json_response_trace);
-      curl_easy_setopt(curl, CURLOPT_DEBUGDATA, &config);
-      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
       /* Perform the request, res will get the return code */
       res = curl_easy_perform(curl);
       /* Check for errors */
@@ -123,7 +129,7 @@ namespace modworks
     }
 
     curl_global_cleanup();
-    ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
+    //ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
 
     json json_response;
     try

@@ -41,8 +41,6 @@ namespace modworks
     headers.push_back("Authorization: Bearer turupawn");
     string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods?" + filter_string + "&shhh=secret";
 
-    cout<<"URL!!!"<<url<<endl;
-
     int call_number = getCallCount();
     advanceCallCount();
 

@@ -108,7 +108,7 @@ int main(void)
 */
 
   modworks::Filter* filter = new modworks::Filter;
-  modworks::setFilterLimit(filter,3);
+  //modworks::setFilterLimit(filter,3);
   modworks::getMods(filter, &onModsGet);
 
   std::thread print_progress_thread(printProgress);
