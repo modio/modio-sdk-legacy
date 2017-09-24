@@ -5,7 +5,7 @@ CFLAGS = -c -Wall -std=c++11 -fPIC
 LDFLAGS = -lcurl -pthread -lz
 SOURCES = $(MODWORKS_SOURCES)
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = libmodworks.dylib
+LIBRARY = modworks.dylib
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@ -I ../include
