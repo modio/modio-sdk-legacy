@@ -141,7 +141,7 @@ namespace modworks
     download_thumbnail_callbacks[call_number]->callback = callback;
 
     //std::thread download_thumbnail_thread(download, call_number, mod->logo_thumbnail_url, file_path, &onThumbnailDownloaded);
-    std::thread download_thumbnail_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo_thumbnail_url, file_path, &onThumbnailDownloaded);
+    std::thread download_thumbnail_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo.thumbnail, file_path, &onThumbnailDownloaded);
 
     download_thumbnail_thread.detach();
   }
@@ -167,7 +167,7 @@ namespace modworks
     download_modfile_callbacks[call_number]->destination_path = destination_path;
     download_modfile_callbacks[call_number]->callback = callback;
 
-    std::thread download_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->download_url + "?shhh=secret", file_path, &onModfileDownloaded);
+    std::thread download_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->modfile.download + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
   }
 }

@@ -10,27 +10,69 @@ using json = nlohmann::json;
 
 namespace modworks
 {
+  struct Logo
+  {
+    string full;
+    string thumbnail;
+    string filename;
+  };
+
+  struct Modfile
+  {
+    int id;
+    int mod;
+    int member;
+    int datevirus;
+    int virusstatus;
+    int viruspoitive;
+    long filesize;
+    string filehash;
+    string filename;
+    string version;
+    //virustotal ?
+    string changelog;
+    string download;
+  };
+
+  struct Ratings
+  {
+    int total;
+    int positive;
+    int negative;
+    double weighted;
+    int percentage;
+    int stars;
+    string text;
+  };
+
+  struct Tag
+  {
+    int game;
+    int mod;
+    int date;
+    int member;
+    string tag;
+  };
+
   struct Mod
   {
-    //Required
     int id;
     int game;
-    string name;
-    string homepage;
-    string summary;
-
-    //Not required
+    int member;
     double price;
-    int stock;
-    string description;
-    string metadata;
+    int datereg;
+    int dateup;
+    Logo logo;
+    string homepage;
+    string name;
     string nameid;
-    int modfile;
-
-    //Urls
-    string logo_url;
-    string logo_thumbnail_url;
-    string download_url;
+    string summary;
+    string description;
+    //metadata ?
+    //media ?
+    Modfile modfile;
+    Ratings ratings;
+    Tag tag;
   };
 
   Mod* jsonToMod(json mod_json);

@@ -9,8 +9,8 @@ namespace modworks
     mod->name = mod_json["name"];
     mod->id = mod_json["id"];
     mod->game = mod_json["game"];
-    mod->logo_url = mod_json["logo"]["full"];
-    mod->logo_thumbnail_url = mod_json["logo"]["thumbnail"];
+    mod->logo.full = mod_json["logo"]["full"];
+    mod->logo.thumbnail = mod_json["logo"]["thumbnail"];
     mod->summary = mod_json["summary"];
 
     mod->description = "";
@@ -18,7 +18,7 @@ namespace modworks
       mod->description = mod_json["description"];
 
     if(mod_json.find("modfile") != mod_json.end() && mod_json["modfile"].find("download") != mod_json["modfile"].end())
-      mod->download_url = mod_json["modfile"]["download"];
+      mod->modfile.download = mod_json["modfile"]["download"];
 
     return mod;
   }
