@@ -94,7 +94,7 @@ int main(void)
     modworks::emailExchange(security_code,&onExchange);
     while(!email_exchange_finished);
   }
-  
+
 /*
   mworks->addMod( "test22",//Mod params
                   "http://hello.com",
@@ -107,7 +107,7 @@ int main(void)
 */
 
   modworks::Filter* filter = new modworks::Filter;
-  modworks::setFilterLimit(filter,3);
+  //modworks::setFilterLimit(filter,3);
   modworks::getMods(filter, &onModsGet);
 
   while(files_downloaded<files_to_download)

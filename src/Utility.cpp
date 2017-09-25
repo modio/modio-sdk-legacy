@@ -117,4 +117,9 @@ namespace modworks
       ROOT_PATH += "/";
     return ROOT_PATH + ".modworks/";
   }
+
+  bool hasKey(json json_object, string key)
+  {
+    return json_object.find(key) != json_object.end() && !json_object[key].is_null();
+  }
 }

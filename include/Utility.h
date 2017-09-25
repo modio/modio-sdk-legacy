@@ -39,14 +39,16 @@
 #endif
 
 #include <fstream>
+#include "json/json.hpp"
 #include "Globals.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 namespace modworks
 {
   enum DebugMode : unsigned int { verbose, error };
-  
+
   string dataToJsonString(char* data, size_t size);
   string dataToJsonString(string data);
   string toString(int number);
@@ -55,6 +57,7 @@ namespace modworks
   void writeLogLine(string text, DebugMode debug_mode);
   vector<string> getFilenames(string directory);
   string getModworksDirectory();
+  bool hasKey(json json_object, string key);
 }
 
 #endif
