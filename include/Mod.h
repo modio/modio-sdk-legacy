@@ -10,11 +10,18 @@ using json = nlohmann::json;
 
 namespace modworks
 {
-  struct Logo
+  struct Image
   {
     string full;
     string thumbnail;
     string filename;
+  };
+
+  struct Media
+  {
+    vector<string> youtube;
+    vector<string> sketchfab;
+    vector<Image> images;
   };
 
   struct Modfile
@@ -29,7 +36,7 @@ namespace modworks
     string filehash;
     string filename;
     string version;
-    //virustotal ?
+    string virustotal;
     string changelog;
     string download;
   };
@@ -62,14 +69,14 @@ namespace modworks
     double price;
     int datereg;
     int dateup;
-    Logo logo;
+    Image logo;
     string homepage;
     string name;
     string nameid;
     string summary;
     string description;
-    //metadata ?
-    //media ?
+    string metadata;
+    Media media;
     Modfile modfile;
     Ratings ratings;
     Tag tag;

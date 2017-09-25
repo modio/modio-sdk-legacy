@@ -2,18 +2,52 @@
 
 namespace modworks
 {
-  Logo jsonToLogo(json logo_json)
+  Image jsonToImage(json image_json)
   {
-    Logo logo;
+    Image image;
 
-    if(hasKey(logo_json, "full"))
-      logo.full = logo_json["full"];
-    if(hasKey(logo_json, "thumbnail"))
-      logo.thumbnail = logo_json["thumbnail"];
-    if(hasKey(logo_json, "filename"))
-      logo.filename = logo_json["filename"];
+    if(hasKey(image_json, "full"))
+      image.full = image_json["full"];
+    if(hasKey(image_json, "thumbnail"))
+      image.thumbnail = image_json["thumbnail"];
+    if(hasKey(image_json, "filename"))
+      image.filename = image_json["filename"];
 
-    return logo;
+    return image;
+  }
+
+  Media jsonToMedia(json media_json)
+  {
+    Media media;
+
+    if(hasKey(media_json, "youtube"))
+    {
+      json youtube_json = media_json["youtube"];
+      for(int i=0; i<(int)youtube_json.size(); i++)
+      {
+        media.youtube.push_back(youtube_json[i]);
+      }
+    }
+
+    if(hasKey(media_json, "sketchfab"))
+    {
+      json sketchfab_json = media_json["sketchfab"];
+      for(int i=0; i<(int)sketchfab_json.size(); i++)
+      {
+        media.sketchfab.push_back(sketchfab_json[i]);
+      }
+    }
+
+    if(hasKey(media_json, "images"))
+    {
+      json images_json = media_json["images"];
+      for(int i=0; i<(int)images_json.size(); i++)
+      {
+        media.images.push_back(jsonToImage(images_json[i]));
+      }
+    }
+
+    return media;
   }
 
   Modfile jsonToModfile(json modfile_json)
@@ -39,7 +73,8 @@ namespace modworks
       modfile.filename = modfile_json["filename"];
     if(hasKey(modfile_json, "version"))
       modfile.version = modfile_json["version"];
-    //virustotal ?
+    if(hasKey(modfile_json, "virustotal"))
+      modfile.virustotal = modfile_json["virustotal"];
     if(hasKey(modfile_json, "changelog"))
       modfile.changelog = modfile_json["changelog"];
     if(hasKey(modfile_json, "download"))
@@ -106,7 +141,7 @@ namespace modworks
       mod->dateup = mod_json["dateup"];
 
     if(hasKey(mod_json, "logo"))
-      mod->logo = jsonToLogo(mod_json["logo"]);
+      mod->logo = jsonToImage(mod_json["logo"]);
 
     if(hasKey(mod_json, "homepage"))
       mod->homepage = mod_json["homepage"];
@@ -118,9 +153,11 @@ namespace modworks
       mod->summary = mod_json["summary"];
     if(hasKey(mod_json, "description"))
       mod->description = mod_json["description"];
+    if(hasKey(mod_json, "metadata"))
+      mod->metadata = mod_json["metadata"];
 
-    //metadata ?
-    //media ?
+    if(hasKey(mod_json, "media"))
+      mod->media = jsonToMedia(mod_json["media"]);
 
     mod->modfile = jsonToModfile(mod_json["modfile"]);
     mod->ratings = jsonToRatings(mod_json["ratings"]);

@@ -107,7 +107,7 @@ int main(void)
 */
 
   modworks::Filter* filter = new modworks::Filter;
-  //modworks::setFilterLimit(filter,3);
+  //modworks::addFilterInField(filter,"id","31");
   modworks::getMods(filter, &onModsGet);
 
   while(files_downloaded<files_to_download)

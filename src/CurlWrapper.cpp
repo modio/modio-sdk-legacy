@@ -191,7 +191,7 @@ namespace modworks
     if(path != "")
     {
       string extension = path.substr(path.length() - 4);
-      
+
       for(int i=1; i<(int)extension.size();i++)
         extension[i] = tolower(extension[i]);
 
