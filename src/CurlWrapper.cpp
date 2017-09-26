@@ -434,9 +434,8 @@ namespace modworks
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-      curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, json_response_trace);
-
-      curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
 
       res = curl_easy_perform(curl);
 
@@ -453,8 +452,6 @@ namespace modworks
       curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
-
-    ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
 
     json json_response;
     try

@@ -41,7 +41,7 @@ void onThumbnailDownloaded(int result,  modworks::Mod* mod, string path)
 {
   if(result == 200)
   {
-    cout<<mod->name<<" download thumb successful at "<<path<<endl;
+    cout<<mod->name<<" thumb downloaded at "<<path<<endl;
   }
   files_downloaded++;
 }
@@ -50,17 +50,26 @@ void onModInstalled(int result,  modworks::Mod* mod, string path)
 {
   if(result == 200)
   {
-    cout<<mod->name<<" download file successful at "<<path<<endl;
+    cout<<mod->name<<" installed at "<<path<<endl;
   }
   files_downloaded++;
 }
 
 void onModsGet(int status, vector<modworks::Mod*> mods)
 {
-  cout<<"Listing mods:"<<endl;
+  cout<<"Listing mods"<<endl;
+  cout<<"============"<<endl;
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
+  }
+
+  cout<<endl<<endl;
+
+  cout<<"Downloads starting"<<endl;
+  cout<<"=================="<<endl;
+  for(int i=0;i<(int)mods.size();i++)
+  {
     modworks::downloadLogoThumbnail(mods[i], &onThumbnailDownloaded);
     modworks::download(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
@@ -71,20 +80,21 @@ int main(void)
   modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
   modworks::setDebugMode(modworks::verbose);
 
-/*
-  string email;
-  cout<<"Enter your email: "<<endl;
-  cin>>email;
-  modworks::emailRequest(email,&onEmailRequest);
-  while(!email_request_finished);
-  string security_code;
-  cout<<"Please enter the 5 digit security code: ";
-  cin>>security_code;
-  cout<<"Sending code"<<endl;
-  modworks::emailExchange(security_code,&onExchange);
-  while(!email_exchange_finished);
-*/
-
+  if(!modworks::isLoggedIn())
+  {
+    string email;
+    cout<<"Enter your email: "<<endl;
+    cin>>email;
+    modworks::emailRequest(email,&onEmailRequest);
+    while(!email_request_finished);
+    string security_code;
+    cout<<"Please enter the 5 digit security code: ";
+    cin>>security_code;
+    cout<<"Sending code"<<endl;
+    modworks::emailExchange(security_code,&onExchange);
+    while(!email_exchange_finished);
+  }
+  
 /*
   mworks->addMod( "test22",//Mod params
                   "http://hello.com",
@@ -104,14 +114,15 @@ int main(void)
   {
     if(modworks::getCurrentDownloadInfo().url != "")
     {
-      cout<<modworks::getCurrentDownloadInfo().url<<endl;
-      cout<<modworks::getCurrentDownloadInfo().download_progress
-        <<"/"<<modworks::getCurrentDownloadInfo().download_total<<endl;
+      double percentage = 0;
+      if(modworks::getCurrentDownloadInfo().download_progress != 0 && modworks::getCurrentDownloadInfo().download_total != 0)
+        percentage = 100.0 * modworks::getCurrentDownloadInfo().download_progress / modworks::getCurrentDownloadInfo().download_total;
+      cout<<percentage<<"%"<<endl;
       sleep(1);
     }
   }
 
-  cout<<"Download complete!"<<endl;
+  cout<<"Process finished!"<<endl;
 
   modworks::shutdown();
 
