@@ -2,30 +2,29 @@
 
 namespace modworks
 {
-  Image jsonToImage(json image_json)
+  Image::Image(json image_json)
   {
-    Image image;
-
+    this->full = "";
     if(hasKey(image_json, "full"))
-      image.full = image_json["full"];
-    if(hasKey(image_json, "thumbnail"))
-      image.thumbnail = image_json["thumbnail"];
-    if(hasKey(image_json, "filename"))
-      image.filename = image_json["filename"];
+      this->full = image_json["full"];
 
-    return image;
+    this->thumbnail = "";
+    if(hasKey(image_json, "thumbnail"))
+      this->thumbnail = image_json["thumbnail"];
+
+    this->filename = "";
+    if(hasKey(image_json, "filename"))
+      this->filename = image_json["filename"];
   }
 
-  Media jsonToMedia(json media_json)
+  Media::Media(json media_json)
   {
-    Media media;
-
     if(hasKey(media_json, "youtube"))
     {
       json youtube_json = media_json["youtube"];
       for(int i=0; i<(int)youtube_json.size(); i++)
       {
-        media.youtube.push_back(youtube_json[i]);
+        this->youtube.push_back(youtube_json[i]);
       }
     }
 
@@ -34,7 +33,7 @@ namespace modworks
       json sketchfab_json = media_json["sketchfab"];
       for(int i=0; i<(int)sketchfab_json.size(); i++)
       {
-        media.sketchfab.push_back(sketchfab_json[i]);
+        this->sketchfab.push_back(sketchfab_json[i]);
       }
     }
 
@@ -43,126 +42,188 @@ namespace modworks
       json images_json = media_json["images"];
       for(int i=0; i<(int)images_json.size(); i++)
       {
-        media.images.push_back(jsonToImage(images_json[i]));
+        this->images.push_back(new Image(images_json[i]));
       }
     }
-
-    return media;
   }
 
-  Modfile jsonToModfile(json modfile_json)
+  Modfile::Modfile(json modfile_json)
   {
-    Modfile modfile;
+    this->id = -1;
     if(hasKey(modfile_json, "id"))
-      modfile.id = modfile_json["id"];
+      this->id = modfile_json["id"];
+
+    this->mod = -1;
     if(hasKey(modfile_json, "mod"))
-      modfile.mod = modfile_json["mod"];
+      this->mod = modfile_json["mod"];
+
+    this->member = -1;
     if(hasKey(modfile_json, "member"))
-      modfile.member = modfile_json["member"];
+      this->member = modfile_json["member"];
+
+    this->datevirus = -1;
     if(hasKey(modfile_json, "datevirus"))
-      modfile.datevirus = modfile_json["datevirus"];
+      this->datevirus = modfile_json["datevirus"];
+
+    this->virusstatus = -1;
     if(hasKey(modfile_json, "virusstatus"))
-      modfile.virusstatus = modfile_json["virusstatus"];
+      this->virusstatus = modfile_json["virusstatus"];
+
+    this->viruspoitive = -1;
     if(hasKey(modfile_json, "viruspoitive"))
-      modfile.viruspoitive = modfile_json["viruspoitive"];
+      this->viruspoitive = modfile_json["viruspoitive"];
+
+    this->filesize = -1;
     if(hasKey(modfile_json, "filesize"))
-      modfile.filesize = modfile_json["filesize"];
+      this->filesize = modfile_json["filesize"];
+
+    this->filehash = -1;
     if(hasKey(modfile_json, "filehash"))
-      modfile.filehash = modfile_json["filehash"];
+      this->filehash = modfile_json["filehash"];
+
+    this->filename = "";
     if(hasKey(modfile_json, "filename"))
-      modfile.filename = modfile_json["filename"];
+      this->filename = modfile_json["filename"];
+
+    this->version = -1;
     if(hasKey(modfile_json, "version"))
-      modfile.version = modfile_json["version"];
+      this->version = modfile_json["version"];
+
+    this->virustotal = -1;
     if(hasKey(modfile_json, "virustotal"))
-      modfile.virustotal = modfile_json["virustotal"];
+      this->virustotal = modfile_json["virustotal"];
+
+    this->changelog = "";
     if(hasKey(modfile_json, "changelog"))
-      modfile.changelog = modfile_json["changelog"];
+      this->changelog = modfile_json["changelog"];
+
+    this->download = "";
     if(hasKey(modfile_json, "download"))
-      modfile.download = modfile_json["download"];
-
-    return modfile;
+      this->download = modfile_json["download"];
   }
 
-  Ratings jsonToRatings(json ratings_json)
+  Ratings::Ratings(json ratings_json)
   {
-    Ratings ratings;
-
+    this->total = -1;
     if(hasKey(ratings_json, "total"))
-      ratings.total = ratings_json["total"];
+      this->total = ratings_json["total"];
+
+    this->positive = -1;
     if(hasKey(ratings_json, "positive"))
-      ratings.positive = ratings_json["positive"];
+      this->positive = ratings_json["positive"];
+
+    this->negative = -1;
     if(hasKey(ratings_json, "negative"))
-      ratings.negative = ratings_json["negative"];
+      this->negative = ratings_json["negative"];
+
+    this->weighted = -1;
     if(hasKey(ratings_json, "weighted"))
-      ratings.weighted = ratings_json["weighted"];
+      this->weighted = ratings_json["weighted"];
+
+    this->percentage = -1;
     if(hasKey(ratings_json, "percentage"))
-      ratings.percentage = ratings_json["percentage"];
+      this->percentage = ratings_json["percentage"];
+
+    this->stars = -1;
     if(hasKey(ratings_json, "stars"))
-      ratings.stars = ratings_json["stars"];
+      this->stars = ratings_json["stars"];
+
+    this->text = "";
     if(hasKey(ratings_json, "text"))
-      ratings.text = ratings_json["text"];
-
-    return ratings;
+      this->text = ratings_json["text"];
   }
 
-  Tag jsonToTag(json tag_json)
+  Tag::Tag(json tag_json)
   {
-    Tag tag;
-
+    this->game = -1;
     if(hasKey(tag_json, "game"))
-      tag.game = tag_json["game"];
-    if(hasKey(tag_json, "mod"))
-      tag.mod = tag_json["mod"];
-    if(hasKey(tag_json, "date"))
-      tag.date = tag_json["date"];
-    if(hasKey(tag_json, "member"))
-      tag.member = tag_json["member"];
-    if(hasKey(tag_json, "tag"))
-      tag.tag = tag_json["tag"];
+      this->game = tag_json["game"];
 
-    return tag;
+    this->mod = -1;
+    if(hasKey(tag_json, "mod"))
+      this->mod = tag_json["mod"];
+
+    this->date = -1;
+    if(hasKey(tag_json, "date"))
+      this->date = tag_json["date"];
+
+    this->member = -1;
+    if(hasKey(tag_json, "member"))
+      this->member = tag_json["member"];
+
+    this->tag = "";
+    if(hasKey(tag_json, "tag"))
+      this->tag = tag_json["tag"];
   }
 
-  Mod* jsonToMod(json mod_json)
+  Mod::Mod(json mod_json)
   {
-    Mod* mod = new Mod;
-
+    this->id = -1;
     if(hasKey(mod_json, "id"))
-      mod->id = mod_json["id"];
+      this->id = mod_json["id"];
+
+    this->game = -1;
     if(hasKey(mod_json, "game"))
-      mod->game = mod_json["game"];
+      this->game = mod_json["game"];
+
+    this->member = -1;
     if(hasKey(mod_json, "member"))
-      mod->member = mod_json["member"];
+      this->member = mod_json["member"];
+
+    this->price = -1;
     if(hasKey(mod_json, "price"))
-      mod->price = mod_json["price"];
+      this->price = mod_json["price"];
+
+    this->datereg = -1;
     if(hasKey(mod_json, "datereg"))
-      mod->datereg = mod_json["datereg"];
+      this->datereg = mod_json["datereg"];
+
+    this->dateup = -1;
     if(hasKey(mod_json, "dateup"))
-      mod->dateup = mod_json["dateup"];
+      this->dateup = mod_json["dateup"];
 
+    this->logo = NULL;
     if(hasKey(mod_json, "logo"))
-      mod->logo = jsonToImage(mod_json["logo"]);
+      this->logo = new Image(mod_json["logo"]);
 
+    this->homepage = "";
     if(hasKey(mod_json, "homepage"))
-      mod->homepage = mod_json["homepage"];
+      this->homepage = mod_json["homepage"];
+
+    this->name = "";
     if(hasKey(mod_json, "name"))
-      mod->name = mod_json["name"];
+      this->name = mod_json["name"];
+
+    this->nameid = "";
     if(hasKey(mod_json, "nameid"))
-      mod->nameid = mod_json["nameid"];
+      this->nameid = mod_json["nameid"];
+
+    this->summary = "";
     if(hasKey(mod_json, "summary"))
-      mod->summary = mod_json["summary"];
+      this->summary = mod_json["summary"];
+
+    this->description = "";
     if(hasKey(mod_json, "description"))
-      mod->description = mod_json["description"];
+      this->description = mod_json["description"];
+
+    this->metadata = "";
     if(hasKey(mod_json, "metadata"))
-      mod->metadata = mod_json["metadata"];
+      this->metadata = mod_json["metadata"];
 
+    this->media = NULL;
     if(hasKey(mod_json, "media"))
-      mod->media = jsonToMedia(mod_json["media"]);
+      this->media = new Media(mod_json["media"]);
 
-    mod->modfile = jsonToModfile(mod_json["modfile"]);
-    mod->ratings = jsonToRatings(mod_json["ratings"]);
-    mod->tag = jsonToTag(mod_json["tag"]);
+    this->modfile = NULL;
+    if(hasKey(mod_json, "modfile"))
+      this->modfile = new Modfile(mod_json["modfile"]);
 
-    return mod;
+    this->ratings = NULL;
+    if(hasKey(mod_json, "ratings"))
+      this->ratings = new Ratings(mod_json["ratings"]);
+
+    this->tag = NULL;
+    if(hasKey(mod_json, "tag"))
+      this->tag = new Tag(mod_json["tag"]);
   }
 }

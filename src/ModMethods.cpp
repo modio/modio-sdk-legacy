@@ -25,7 +25,7 @@ namespace modworks
     {
       for(int i=0;i<(int)response["data"].size();i++)
       {
-        Mod* mod = jsonToMod(response["data"][i]);
+        Mod* mod = new Mod(response["data"][i]);
         mods.push_back(mod);
       }
     }
@@ -52,7 +52,7 @@ namespace modworks
 
   void onModAdded(int call_number, int response_code, json response)
   {
-    Mod* mod = jsonToMod(response);
+    Mod* mod = new Mod(response);
     addFile(mod, add_mod_callback[call_number]->directory_path,
                   add_mod_callback[call_number]->version,
                   add_mod_callback[call_number]->changelog,
@@ -140,8 +140,7 @@ namespace modworks
     download_thumbnail_callbacks[call_number]->mod = mod;
     download_thumbnail_callbacks[call_number]->callback = callback;
 
-    //std::thread download_thumbnail_thread(download, call_number, mod->logo_thumbnail_url, file_path, &onThumbnailDownloaded);
-    std::thread download_thumbnail_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo.thumbnail, file_path, &onThumbnailDownloaded);
+    std::thread download_thumbnail_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo->thumbnail, file_path, &onThumbnailDownloaded);
 
     download_thumbnail_thread.detach();
   }
@@ -167,7 +166,7 @@ namespace modworks
     download_modfile_callbacks[call_number]->destination_path = destination_path;
     download_modfile_callbacks[call_number]->callback = callback;
 
-    std::thread download_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->modfile.download + "?shhh=secret", file_path, &onModfileDownloaded);
+    std::thread download_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->modfile->download + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
   }
 }

@@ -10,22 +10,29 @@ using json = nlohmann::json;
 
 namespace modworks
 {
-  struct Image
+  class Image
   {
+  public:
+    Image(json image_json);
     string full;
     string thumbnail;
     string filename;
   };
 
-  struct Media
+  class Media
   {
+  public:
+    Media(json image_json);
+    ~Media();
     vector<string> youtube;
     vector<string> sketchfab;
-    vector<Image> images;
+    vector<Image*> images;
   };
 
-  struct Modfile
+  class Modfile
   {
+  public:
+    Modfile(json image_json);
     int id;
     int mod;
     int member;
@@ -41,8 +48,10 @@ namespace modworks
     string download;
   };
 
-  struct Ratings
+  class Ratings
   {
+  public:
+    Ratings(json ratings_json);
     int total;
     int positive;
     int negative;
@@ -52,8 +61,10 @@ namespace modworks
     string text;
   };
 
-  struct Tag
+  class Tag
   {
+  public:
+    Tag(json tag_json);
     int game;
     int mod;
     int date;
@@ -61,28 +72,29 @@ namespace modworks
     string tag;
   };
 
-  struct Mod
+  class Mod
   {
+  public:
+    Mod(json mod_json);
+    ~Mod();
     int id;
     int game;
     int member;
     double price;
     int datereg;
     int dateup;
-    Image logo;
+    Image* logo;
     string homepage;
     string name;
     string nameid;
     string summary;
     string description;
     string metadata;
-    Media media;
-    Modfile modfile;
-    Ratings ratings;
-    Tag tag;
+    Media* media;
+    Modfile* modfile;
+    Ratings* ratings;
+    Tag* tag;
   };
-
-  Mod* jsonToMod(json mod_json);
 }
 
 #endif
