@@ -1,7 +1,7 @@
 #include "ModworksSDK.h"
 
 int files_downloaded = 0;
-int files_to_download = 50;
+int files_to_download = 6;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
@@ -66,17 +66,6 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   }
 }
 
-void printProgress()
-{
-  while(files_downloaded<files_to_download)
-  {
-    cout<<modworks::getCurrentDownloadInfo().url<<endl;
-    cout<<modworks::getCurrentDownloadInfo().download_progress
-      <<"/"<<modworks::getCurrentDownloadInfo().download_total<<endl;
-    sleep(1);
-  }
-}
-
 int main(void)
 {
   modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
@@ -108,14 +97,21 @@ int main(void)
 */
 
   modworks::Filter* filter = new modworks::Filter;
-  //modworks::setFilterLimit(filter,3);
+  modworks::setFilterLimit(filter,3);
   modworks::getMods(filter, &onModsGet);
 
-  std::thread print_progress_thread(printProgress);
-  print_progress_thread.detach();
+  while(files_downloaded<files_to_download)
+  {
+    if(modworks::getCurrentDownloadInfo().url != "")
+    {
+      cout<<modworks::getCurrentDownloadInfo().url<<endl;
+      cout<<modworks::getCurrentDownloadInfo().download_progress
+        <<"/"<<modworks::getCurrentDownloadInfo().download_total<<endl;
+      sleep(1);
+    }
+  }
 
-  int x;
-  cin>>x;
+  cout<<"Download complete!"<<endl;
 
   modworks::shutdown();
 

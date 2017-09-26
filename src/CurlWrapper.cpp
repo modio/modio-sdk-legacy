@@ -187,14 +187,18 @@ namespace modworks
   void shutdownCurl()
   {
     string path = current_download_handle->path;
-    string extension = path.substr(path.length() - 4);
 
-    for(int i=1; i<(int)extension.size();i++)
-      extension[i] = tolower(extension[i]);
-
-    if(extension == ".zip")
+    if(path != "")
     {
-      current_download_handle->pause_flag = true;
+      string extension = path.substr(path.length() - 4);
+      
+      for(int i=1; i<(int)extension.size();i++)
+        extension[i] = tolower(extension[i]);
+
+      if(extension == ".zip")
+      {
+        current_download_handle->pause_flag = true;
+      }
     }
 
     ongoing_call = -1;
