@@ -5,7 +5,7 @@
 
 #include "CurlWrapper.h"
 #include "MinizipWrapper.h"
-#include "Mod.h"
+#include "DataContainers/Mod.h"
 #include "Globals.h"
 #include "AuthenticationMethods.h"
 #include "ModMethods.h"

@@ -8,7 +8,7 @@
 #include "curl/curl.h"
 #include "MinizipWrapper.h"
 #include "Utility.h"
-#include "Mod.h"
+#include "DataContainers/Mod.h"
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
