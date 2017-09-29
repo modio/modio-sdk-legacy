@@ -3,9 +3,9 @@
 
 //#pragma warning(disable : 4503)
 
-#include "CurlWrapper.h"
-#include "MinizipWrapper.h"
-#include "DataContainers/Mod.h"
+#include "wrappers/CurlWrapper.h"
+#include "wrappers/MinizipWrapper.h"
+#include "data_containers/Mod.h"
 #include "Globals.h"
 #include "AuthenticationMethods.h"
 #include "ModMethods.h"

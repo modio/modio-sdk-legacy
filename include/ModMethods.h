@@ -1,9 +1,9 @@
 #ifndef MOD_METHODS
 #define MOD_METHODS
 
-#include "CurlWrapper.h"
-#include "MinizipWrapper.h"
-#include "DataContainers/Mod.h"
+#include "wrappers/CurlWrapper.h"
+#include "wrappers/MinizipWrapper.h"
+#include "data_containers/Mod.h"
 #include "Globals.h"
 #include "Filter.h"
 

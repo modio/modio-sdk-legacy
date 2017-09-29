@@ -39,7 +39,7 @@
 #endif
 
 #include <fstream>
-#include "json/json.hpp"
+#include "dependencies/json/json.hpp"
 #include "Globals.h"
 
 using namespace std;

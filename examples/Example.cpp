@@ -1,7 +1,7 @@
 #include "ModworksSDK.h"
 
 int files_downloaded = 0;
-int files_to_download = 6;
+int files_to_download = 50;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 

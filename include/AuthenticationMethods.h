@@ -1,9 +1,10 @@
 #ifndef AUTHENTICATION_H
 #define AUTHENTICATION_H
 
-#include "CurlWrapper.h"
-#include "MinizipWrapper.h"
+#include "wrappers/CurlWrapper.h"
+#include "wrappers/MinizipWrapper.h"
 #include "Globals.h"
+#include <thread>
 
 #ifdef WINDOWS
 #  ifdef BUILDING_MODWORKS_DLL
