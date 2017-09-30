@@ -1,5 +1,16 @@
 #include "ModworksSDK.h"
 
+#ifdef _WIN32
+#define WINDOWS
+#endif
+#ifdef _WIN64
+#define WINDOWS
+#endif
+
+#ifdef WINDOWS
+#include <windows.h>
+#endif
+
 int files_downloaded = 0;
 int files_to_download = 50;
 bool email_request_finished = false;
@@ -124,7 +135,6 @@ int main(void)
   modworks::Filter* filter = new modworks::Filter;
   modworks::addFilterInField(filter,"id","27");
   modworks::getMods(filter, &onModsGet);
-
 
   std::thread print_progress_thread(printProgress);
   print_progress_thread.detach();
