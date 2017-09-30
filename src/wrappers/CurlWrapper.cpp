@@ -184,7 +184,7 @@ namespace modworks
     return 0;
   }
 
-  void shutdownCurl()
+  void pauseCurrentDownload()
   {
     string path = current_download_handle->path;
 
@@ -200,6 +200,11 @@ namespace modworks
         current_download_handle->pause_flag = true;
       }
     }
+  }
+
+  void shutdownCurl()
+  {
+    pauseCurrentDownload();
 
     ongoing_call = -1;
     call_count = -1;
@@ -246,6 +251,8 @@ namespace modworks
     current_download_info.url = url;
 
     curl_off_t progress = getProgressIfStored(path);
+
+    cout<<"Progress:"<<progress<<endl;
 
     if(curl)
     {

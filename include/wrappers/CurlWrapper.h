@@ -46,6 +46,7 @@ namespace modworks
   };
 
   CurrentDownloadInfo MODWORKS_DLL getCurrentDownloadInfo();
+  void MODWORKS_DLL pauseCurrentDownload();
   void shutdownCurl();
   void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback);
   void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback);

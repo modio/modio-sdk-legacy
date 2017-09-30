@@ -75,6 +75,21 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   }
 }
 
+void printProgress()
+{
+  while(files_downloaded<files_to_download)
+  {
+    if(modworks::getCurrentDownloadInfo().url != "")
+    {
+      double percentage = 0;
+      if(modworks::getCurrentDownloadInfo().download_progress != 0 && modworks::getCurrentDownloadInfo().download_total != 0)
+        percentage = 100.0 * modworks::getCurrentDownloadInfo().download_progress / modworks::getCurrentDownloadInfo().download_total;
+      cout<<percentage<<"%"<<endl;
+      sleep(1);
+    }
+  }
+}
+
 int main(void)
 {
   modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
@@ -107,20 +122,19 @@ int main(void)
 */
 
   modworks::Filter* filter = new modworks::Filter;
-  //modworks::addFilterInField(filter,"id","31");
+  modworks::addFilterInField(filter,"id","27");
   modworks::getMods(filter, &onModsGet);
 
-  while(files_downloaded<files_to_download)
-  {
-    if(modworks::getCurrentDownloadInfo().url != "")
-    {
-      double percentage = 0;
-      if(modworks::getCurrentDownloadInfo().download_progress != 0 && modworks::getCurrentDownloadInfo().download_total != 0)
-        percentage = 100.0 * modworks::getCurrentDownloadInfo().download_progress / modworks::getCurrentDownloadInfo().download_total;
-      cout<<percentage<<"%"<<endl;
-      sleep(1);
-    }
-  }
+
+  std::thread print_progress_thread(printProgress);
+  print_progress_thread.detach();
+
+  int x;
+  cin>>x;
+
+  modworks::pauseCurrentDownload();
+
+  cin>>x;
 
   cout<<"Process finished!"<<endl;
 
