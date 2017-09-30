@@ -1,5 +1,16 @@
 #include "ModworksSDK.h"
 
+#ifdef _WIN32
+#define WINDOWS
+#endif
+#ifdef _WIN64
+#define WINDOWS
+#endif
+
+#ifdef WINDOWS
+#include <windows.h>
+#endif
+
 int files_downloaded = 0;
 int files_to_download = 50;
 bool email_request_finished = false;
@@ -118,7 +129,11 @@ int main(void)
       if(modworks::getCurrentDownloadInfo().download_progress != 0 && modworks::getCurrentDownloadInfo().download_total != 0)
         percentage = 100.0 * modworks::getCurrentDownloadInfo().download_progress / modworks::getCurrentDownloadInfo().download_total;
       cout<<percentage<<"%"<<endl;
-      sleep(1);
+	  #ifdef WINDOWS
+	  Sleep(1000);
+	  #else
+	  sleep(1);
+      #endif
     }
   }
 

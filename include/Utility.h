@@ -30,7 +30,7 @@
 
 #ifdef WINDOWS
 #include <windows.h>
-#include "dirent/dirent.h"
+#include "dependencies/dirent/dirent.h"
 #endif
 
 #ifdef OSX
