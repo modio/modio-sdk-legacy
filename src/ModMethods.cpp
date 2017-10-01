@@ -15,6 +15,7 @@ namespace modworks
 
   map< int, AddFileParams* > add_file_callbacks;
   map< int, DownloadImageParams* > download_image_callbacks;
+  map< int, DownloadImagesParams* > download_images_callbacks;
   map< int, DownloadModfileParams* > download_modfile_callbacks;
 
   void onGetMods(int call_number, int response_code, json response)
@@ -159,6 +160,34 @@ namespace modworks
     std::thread download_image_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo->full, file_path, &onImageDownloaded);
 
     download_image_thread.detach();
+  }
+
+  void onImageFromVectorDownloaded(int call_number, int response_code, string url, string path)
+  {
+    download_images_callbacks[call_number]->images.push_back(path);
+    if((int)download_images_callbacks[call_number]->images.size() == download_images_callbacks[call_number]->image_amount)
+    {
+      download_images_callbacks[call_number]->callback(response_code, download_images_callbacks[call_number]->mod, download_images_callbacks[call_number]->images);
+    }
+    download_images_callbacks.erase(call_number);
+  }
+
+  void downloadModMediaImages(Mod *mod, function< void(int, Mod*, vector<string>) > callback)
+  {
+    DownloadImagesParams* download_images_params = new DownloadImagesParams;
+    download_images_params->mod = mod;
+    download_images_params->image_amount = mod->media->images.size();
+    download_images_params->callback = callback;
+
+    for(int i=0; i<(int)mod->media->images.size();i++)
+    {
+      int call_number = getCallCount();
+      advanceCallCount();
+      download_images_callbacks[call_number] = download_images_params;
+      string file_path = string(getModworksDirectory() + "images/") + toString(i) + "_media_image.png";
+      std::thread download_image_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->media->images[i]->thumbnail, file_path, &onImageFromVectorDownloaded);
+      download_image_thread.detach();
+    }
   }
 
   void onModfileDownloaded(int call_number, int response_code, string url, string path)

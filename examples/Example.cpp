@@ -16,17 +16,17 @@ int files_to_download = 50;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onModAdded(int result, modworks::Mod* mod)
+void onModAdded(int response_code, modworks::Mod* mod)
 {
-  if(result == 200)
+  if(response_code == 200)
   {
     cout<<"Mod added with id: "<<mod->id<<endl;
   }
 }
 
-void onEmailRequest(int result)
+void onEmailRequest(int response_code)
 {
-  if(result == 200)
+  if(response_code == 200)
   {
     cout<<"Code sent!"<<endl;
   }else
@@ -36,9 +36,9 @@ void onEmailRequest(int result)
   email_request_finished = true;
 }
 
-void onExchange(int result)
+void onExchange(int response_code)
 {
-  if(result == 200)
+  if(response_code == 200)
   {
     cout<<"Code exchanged!"<<endl;
   }else
@@ -48,22 +48,32 @@ void onExchange(int result)
   email_exchange_finished = true;
 }
 
-void onThumbnailDownloaded(int result,  modworks::Mod* mod, string path)
+void onThumbnailDownloaded(int response_code,  modworks::Mod* mod, string path)
 {
-  if(result == 200)
+  if(response_code == 200)
   {
     cout<<mod->name<<" thumb downloaded at "<<path<<endl;
   }
   files_downloaded++;
 }
 
-void onModInstalled(int result,  modworks::Mod* mod, string path)
+void onModInstalled(int response_code,  modworks::Mod* mod, string path)
 {
-  if(result == 200)
+  if(response_code == 200)
   {
     cout<<mod->name<<" installed at "<<path<<endl;
   }
   files_downloaded++;
+}
+
+void onMediaImagesDownloaded(int response_code, modworks::Mod* mod, vector<string> images)
+{
+  if(response_code == 200)
+  {
+    cout<<"Media images downloaded:"<<endl;
+    for(int i=0;i<(int)images.size();i++)
+      cout<<images[i]<<endl;
+  }
 }
 
 void onModsGet(int status, vector<modworks::Mod*> mods)
@@ -82,6 +92,8 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   for(int i=0;i<(int)mods.size();i++)
   {
     modworks::downloadModLogoThumbnail(mods[i], &onThumbnailDownloaded);
+    modworks::downloadModLogoFull(mods[i], &onThumbnailDownloaded);
+    modworks::downloadModMediaImages(mods[i], &onMediaImagesDownloaded);
     modworks::installMod(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
 }
@@ -133,12 +145,12 @@ int main(void)
 */
 
   modworks::Filter* filter = new modworks::Filter;
-  modworks::addFilterInField(filter,"id","27");
+  modworks::addFilterInField(filter,"id","31");
   modworks::getMods(filter, &onModsGet);
 
-  std::thread print_progress_thread(printProgress);
-  print_progress_thread.detach();
+  while(true);
 
+/*
   int x;
   cin>>x;
 
@@ -147,7 +159,7 @@ int main(void)
   cin>>x;
 
   cout<<"Process finished!"<<endl;
-
+*/
   modworks::shutdown();
 
   return 0;

@@ -21,6 +21,14 @@ namespace modworks
     function< void(int, Mod*, string) > callback;
   };
 
+  struct DownloadImagesParams
+  {
+    Mod* mod;
+    int image_amount;
+    vector<string> images;
+    function< void(int, Mod*, vector<string>) > callback;
+  };
+
   struct DownloadModfileParams
   {
     Mod* mod;
@@ -37,6 +45,7 @@ namespace modworks
   void MODWORKS_DLL addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback);
   void MODWORKS_DLL downloadModLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback);
   void MODWORKS_DLL downloadModLogoFull(Mod *mod, function< void(int, Mod*, string) > callback);
+  void MODWORKS_DLL downloadModMediaImages(Mod *mod, function< void(int, Mod*, vector<string>) > callback);
   void MODWORKS_DLL installMod(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback);
 }
 

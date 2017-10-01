@@ -252,17 +252,17 @@ namespace modworks
 
     curl_off_t progress = getProgressIfStored(path);
 
-    cout<<"Progress:"<<progress<<endl;
-
     if(curl)
     {
-      file = fopen(path.c_str(),"ab");
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
       if(progress != 0)
       {
-        cout<<"Progress!!!"<<endl;
+        file = fopen(path.c_str(),"ab");
         curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, progress);
+      }else
+      {
+        file = fopen(path.c_str(),"wb");
       }
 
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
