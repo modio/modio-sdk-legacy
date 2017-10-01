@@ -122,4 +122,12 @@ namespace modworks
   {
     return json_object.find(key) != json_object.end() && !json_object[key].is_null();
   }
+
+  void removeFile(string filename)
+  {
+    if(remove(filename.c_str()) != 0)
+      writeLogLine("Could not remove " + filename, error);
+    else
+      writeLogLine(filename + " removed", verbose);
+  }
 }

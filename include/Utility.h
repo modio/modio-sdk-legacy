@@ -58,6 +58,7 @@ namespace modworks
   vector<string> getFilenames(string directory);
   string getModworksDirectory();
   bool hasKey(json json_object, string key);
+  void removeFile(string filename);
 }
 
 #endif

@@ -14,7 +14,7 @@ namespace modworks
   map< int,function<void(int, vector<Mod*>)> > get_mods_callbacks;
 
   map< int, AddFileParams* > add_file_callbacks;
-  map< int, DownloadThumbnailParams* > download_thumbnail_callbacks;
+  map< int, DownloadImageParams* > download_image_callbacks;
   map< int, DownloadModfileParams* > download_modfile_callbacks;
 
   void onGetMods(int call_number, int response_code, json response)
@@ -123,26 +123,42 @@ namespace modworks
   }
 
 
-  void onThumbnailDownloaded(int call_number, int response_code, string url, string path)
+  void onImageDownloaded(int call_number, int response_code, string url, string path)
   {
-    download_thumbnail_callbacks[call_number]->callback(response_code, download_thumbnail_callbacks[call_number]->mod, path);
-    download_thumbnail_callbacks.erase(call_number);
+    download_image_callbacks[call_number]->callback(response_code, download_image_callbacks[call_number]->mod, path);
+    download_image_callbacks.erase(call_number);
   }
 
-  void downloadLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
+  void downloadModLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
   {
-    string file_path = string(getModworksDirectory() + "images/") + toString(mod->game) + "_" + toString(mod->id) + "_thumb.png";
+    string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_thumb.png";
 
     int call_number = getCallCount();
     advanceCallCount();
 
-    download_thumbnail_callbacks[call_number] = new DownloadThumbnailParams;
-    download_thumbnail_callbacks[call_number]->mod = mod;
-    download_thumbnail_callbacks[call_number]->callback = callback;
+    download_image_callbacks[call_number] = new DownloadImageParams;
+    download_image_callbacks[call_number]->mod = mod;
+    download_image_callbacks[call_number]->callback = callback;
 
-    std::thread download_thumbnail_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo->thumbnail, file_path, &onThumbnailDownloaded);
+    std::thread download_image_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo->thumbnail, file_path, &onImageDownloaded);
 
-    download_thumbnail_thread.detach();
+    download_image_thread.detach();
+  }
+
+  void downloadModLogoFull(Mod *mod, function< void(int, Mod*, string) > callback)
+  {
+    string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_full.png";
+
+    int call_number = getCallCount();
+    advanceCallCount();
+
+    download_image_callbacks[call_number] = new DownloadImageParams;
+    download_image_callbacks[call_number]->mod = mod;
+    download_image_callbacks[call_number]->callback = callback;
+
+    std::thread download_image_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo->full, file_path, &onImageDownloaded);
+
+    download_image_thread.detach();
   }
 
   void onModfileDownloaded(int call_number, int response_code, string url, string path)
@@ -150,13 +166,14 @@ namespace modworks
     string destintation_path = download_modfile_callbacks[call_number]->destination_path;
     createDirectory(destintation_path);
     extract(path, destintation_path);
+    removeFile(path);
     download_modfile_callbacks[call_number]->callback(response_code, download_modfile_callbacks[call_number]->mod, path);
     download_modfile_callbacks.erase(call_number);
   }
 
-  void download(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)
+  void installMod(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)
   {
-    string file_path = string(getModworksDirectory() + "tmp/") + toString(mod->game) + "_" + toString(mod->id) + "_modfile.zip";
+    string file_path = string(getModworksDirectory() + "tmp/") + toString(mod->modfile->id) + "_modfile.zip";
 
     int call_number = getCallCount();
     advanceCallCount();

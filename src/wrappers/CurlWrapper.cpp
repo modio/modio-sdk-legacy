@@ -256,11 +256,12 @@ namespace modworks
 
     if(curl)
     {
-      file = fopen(path.c_str(),"wb");
+      file = fopen(path.c_str(),"ab");
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
       if(progress != 0)
       {
+        cout<<"Progress!!!"<<endl;
         curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, progress);
       }
 
