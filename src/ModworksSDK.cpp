@@ -6,7 +6,7 @@ namespace modworks
   {
     clearLog();
 
-    initCurl();
+    curlwrapper::initCurl();
 
     writeLogLine("Initializing SDK", verbose);
     modworks::game_id = game_id;
@@ -43,6 +43,16 @@ namespace modworks
 
   void shutdown()
   {
-    shutdownCurl();
+    curlwrapper::shutdownCurl();
+  }
+
+  CurrentDownloadInfo getCurrentDownloadInfo()
+  {
+    return curlwrapper::getCurrentDownloadInfo();
+  }
+
+  void pauseCurrentDownload()
+  {
+    curlwrapper::pauseCurrentDownload();
   }
 }

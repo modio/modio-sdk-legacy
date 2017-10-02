@@ -17,41 +17,37 @@ using json = nlohmann::json;
 
 namespace modworks
 {
-  void initCurl();
-  int getCallCount();
-  int getOngoingCall();
-  void advanceCallCount();
-  void advanceOngoingCall();
-  void cleanCallQueue();
-
-  class JsonResponseHandler
+  namespace curlwrapper
   {
-  public:
-    string response;
-    JsonResponseHandler();
-  };
+    void initCurl();
+    int getCallCount();
+    int getOngoingCall();
+    void advanceCallCount();
+    void advanceOngoingCall();
+    void cleanCallQueue();
 
-  struct CurrentDownloadHandle
-  {
-    CURL* curl;
-    string path;
-    bool pause_flag;
-  };
+    class JsonResponseHandler
+    {
+    public:
+      string response;
+      JsonResponseHandler();
+    };
 
-  struct CurrentDownloadInfo
-  {
-    string url;
-    long download_total;
-    long download_progress;
-  };
+    struct CurrentDownloadHandle
+    {
+      CURL* curl;
+      string path;
+      bool pause_flag;
+    };
 
-  CurrentDownloadInfo MODWORKS_DLL getCurrentDownloadInfo();
-  void MODWORKS_DLL pauseCurrentDownload();
-  void shutdownCurl();
-  void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback);
-  void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback);
-  void post(int call_number, string url, map<string, string> data, function<void(int call_number, int response_code, json response)> callback);
-  void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, json response)> callback);
+    CurrentDownloadInfo getCurrentDownloadInfo();
+    void pauseCurrentDownload();
+    void shutdownCurl();
+    void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback);
+    void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback);
+    void post(int call_number, string url, map<string, string> data, function<void(int call_number, int response_code, json response)> callback);
+    void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, json response)> callback);
+  }
 }
 
 #endif

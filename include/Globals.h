@@ -18,8 +18,15 @@ using namespace std;
 
 namespace modworks
 {
+  struct CurrentDownloadInfo
+  {
+    string url;
+    long download_total;
+    long download_progress;
+  };
+
   enum DebugMode : unsigned int;
-  
+
   extern string api_key;
   extern string access_token;
   extern int game_id;

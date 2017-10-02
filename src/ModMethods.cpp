@@ -42,12 +42,12 @@ namespace modworks
     headers.push_back("Authorization: Bearer turupawn");
     string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods?" + filter_string + "&shhh=secret";
 
-    int call_number = getCallCount();
-    advanceCallCount();
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
 
     get_mods_callbacks[call_number] = callback;
 
-    std::thread get_mods_thread(get, call_number, url, headers, &onGetMods);
+    std::thread get_mods_thread(curlwrapper::get, call_number, url, headers, &onGetMods);
     get_mods_thread.detach();
   }
 
@@ -79,8 +79,8 @@ namespace modworks
     params["version"] = version;
     params["changelog"] = changelog;
 
-    int call_number = getCallCount();
-    advanceCallCount();
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
 
     add_mod_callback[call_number] = new AddModParams;
     add_mod_callback[call_number]->directory_path = directory_path;
@@ -90,7 +90,7 @@ namespace modworks
 
     string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods";
 
-    std::thread add_mod_thread(modworks::postForm, call_number, url, headers, curlform_copycontents, curlform_files, &onModAdded);
+    std::thread add_mod_thread(curlwrapper::postForm, call_number, url, headers, curlform_copycontents, curlform_files, &onModAdded);
     add_mod_thread.detach();
   }
 
@@ -112,14 +112,14 @@ namespace modworks
     curlform_files["filedata"] = getModworksDirectory() + "tmp/modfile.zip";
     string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(mod->id) + "/files";
 
-    int call_number = getCallCount();
-    advanceCallCount();
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
 
     add_file_callbacks[call_number] = new AddFileParams;
     add_file_callbacks[call_number]->mod = mod;
     add_file_callbacks[call_number]->callback = callback;
 
-    std::thread add_file_thread(modworks::postForm, call_number, url, headers, curlform_copycontents, curlform_files, &onFileAdded);
+    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, curlform_copycontents, curlform_files, &onFileAdded);
     add_file_thread.detach();
   }
 
@@ -134,14 +134,14 @@ namespace modworks
   {
     string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_thumb.png";
 
-    int call_number = getCallCount();
-    advanceCallCount();
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
 
     download_image_callbacks[call_number] = new DownloadImageParams;
     download_image_callbacks[call_number]->mod = mod;
     download_image_callbacks[call_number]->callback = callback;
 
-    std::thread download_image_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo->thumbnail, file_path, &onImageDownloaded);
+    std::thread download_image_thread(curlwrapper::download, call_number, mod->logo->thumbnail, file_path, &onImageDownloaded);
 
     download_image_thread.detach();
   }
@@ -150,14 +150,14 @@ namespace modworks
   {
     string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_full.png";
 
-    int call_number = getCallCount();
-    advanceCallCount();
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
 
     download_image_callbacks[call_number] = new DownloadImageParams;
     download_image_callbacks[call_number]->mod = mod;
     download_image_callbacks[call_number]->callback = callback;
 
-    std::thread download_image_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->logo->full, file_path, &onImageDownloaded);
+    std::thread download_image_thread(curlwrapper::download, call_number, mod->logo->full, file_path, &onImageDownloaded);
 
     download_image_thread.detach();
   }
@@ -172,7 +172,7 @@ namespace modworks
     download_images_callbacks.erase(call_number);
   }
 
-  void downloadModMediaImages(Mod *mod, function< void(int, Mod*, vector<string>) > callback)
+  void downloadModMediaImagesThumbnail(Mod *mod, function< void(int, Mod*, vector<string>) > callback)
   {
     DownloadImagesParams* download_images_params = new DownloadImagesParams;
     download_images_params->mod = mod;
@@ -181,11 +181,31 @@ namespace modworks
 
     for(int i=0; i<(int)mod->media->images.size();i++)
     {
-      int call_number = getCallCount();
-      advanceCallCount();
+      int call_number = curlwrapper::getCallCount();
+      curlwrapper::advanceCallCount();
       download_images_callbacks[call_number] = download_images_params;
-      string file_path = string(getModworksDirectory() + "images/") + toString(i) + "_media_image.png";
-      std::thread download_image_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->media->images[i]->thumbnail, file_path, &onImageFromVectorDownloaded);
+      createDirectory(string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/");
+      string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/" + toString(i) + "_image_thumb.png";
+      std::thread download_image_thread(curlwrapper::download, call_number, mod->media->images[i]->thumbnail, file_path, &onImageFromVectorDownloaded);
+      download_image_thread.detach();
+    }
+  }
+
+  void downloadModMediaImagesFull(Mod *mod, function< void(int, Mod*, vector<string>) > callback)
+  {
+    DownloadImagesParams* download_images_params = new DownloadImagesParams;
+    download_images_params->mod = mod;
+    download_images_params->image_amount = mod->media->images.size();
+    download_images_params->callback = callback;
+
+    for(int i=0; i<(int)mod->media->images.size();i++)
+    {
+      int call_number = curlwrapper::getCallCount();
+      curlwrapper::advanceCallCount();
+      download_images_callbacks[call_number] = download_images_params;
+      createDirectory(string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/");
+      string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/" + toString(i) + "_image_full.png";
+      std::thread download_image_thread(curlwrapper::download, call_number, mod->media->images[i]->full, file_path, &onImageFromVectorDownloaded);
       download_image_thread.detach();
     }
   }
@@ -204,15 +224,15 @@ namespace modworks
   {
     string file_path = string(getModworksDirectory() + "tmp/") + toString(mod->modfile->id) + "_modfile.zip";
 
-    int call_number = getCallCount();
-    advanceCallCount();
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
 
     download_modfile_callbacks[call_number] = new DownloadModfileParams;
     download_modfile_callbacks[call_number]->mod = mod;
     download_modfile_callbacks[call_number]->destination_path = destination_path;
     download_modfile_callbacks[call_number]->callback = callback;
 
-    std::thread download_thread(static_cast<void(*)(int call_number, string url, string path, function< void(int, int, string, string) > callback)>(&download), call_number, mod->modfile->download + "?shhh=secret", file_path, &onModfileDownloaded);
+    std::thread download_thread(curlwrapper::download, call_number, mod->modfile->download + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
   }
 }

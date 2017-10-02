@@ -93,7 +93,8 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   {
     modworks::downloadModLogoThumbnail(mods[i], &onThumbnailDownloaded);
     modworks::downloadModLogoFull(mods[i], &onThumbnailDownloaded);
-    modworks::downloadModMediaImages(mods[i], &onMediaImagesDownloaded);
+    modworks::downloadModMediaImagesThumbnail(mods[i], &onMediaImagesDownloaded);
+    modworks::downloadModMediaImagesFull(mods[i], &onMediaImagesDownloaded);
     modworks::installMod(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
 }
