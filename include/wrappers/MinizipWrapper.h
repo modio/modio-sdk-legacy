@@ -18,8 +18,11 @@ using namespace std;
 
 namespace modworks
 {
-  void extract(string zip_path, string directory_path);
-  void compress(string directory, string zip_path);
+  namespace minizipwrapper
+  {
+    void extract(string zip_path, string directory_path);
+    void compress(string directory, string zip_path);
+  }
 }
 
 #endif

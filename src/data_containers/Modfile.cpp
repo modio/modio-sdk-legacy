@@ -24,9 +24,9 @@ namespace modworks
     if(hasKey(modfile_json, "virusstatus"))
       this->virusstatus = modfile_json["virusstatus"];
 
-    this->viruspoitive = -1;
-    if(hasKey(modfile_json, "viruspoitive"))
-      this->viruspoitive = modfile_json["viruspoitive"];
+    this->viruspositive = -1;
+    if(hasKey(modfile_json, "viruspositive"))
+      this->viruspositive = modfile_json["viruspositive"];
 
     this->filesize = -1;
     if(hasKey(modfile_json, "filesize"))

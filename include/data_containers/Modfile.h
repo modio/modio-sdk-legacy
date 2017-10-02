@@ -18,7 +18,7 @@ namespace modworks
     int member;
     int datevirus;
     int virusstatus;
-    int viruspoitive;
+    int viruspositive;
     long filesize;
     string filehash;
     string filename;

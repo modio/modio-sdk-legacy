@@ -102,7 +102,7 @@ namespace modworks
 
   void addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback)
   {
-    modworks::compress(directory_path, getModworksDirectory() + "tmp/modfile.zip");
+    minizipwrapper::compress(directory_path, getModworksDirectory() + "tmp/modfile.zip");
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
     map<string, string> curlform_copycontents;
@@ -214,7 +214,7 @@ namespace modworks
   {
     string destintation_path = download_modfile_callbacks[call_number]->destination_path;
     createDirectory(destintation_path);
-    extract(path, destintation_path);
+    minizipwrapper::extract(path, destintation_path);
     removeFile(path);
     download_modfile_callbacks[call_number]->callback(response_code, download_modfile_callbacks[call_number]->mod, path);
     download_modfile_callbacks.erase(call_number);
