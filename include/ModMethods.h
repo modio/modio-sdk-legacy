@@ -9,40 +9,28 @@
 
 namespace modworks
 {
-  struct AddFileParams
+  class AddModHandler
   {
-    Mod* mod;
-    function< void(int, Mod*) > callback;
-  };
-
-  struct DownloadImageParams
-  {
-    Mod* mod;
-    function< void(int, Mod*, string) > callback;
-  };
-
-  struct DownloadImagesParams
-  {
-    Mod* mod;
-    int image_amount;
-    vector<string> images;
-    function< void(int, Mod*, vector<string>) > callback;
-  };
-
-  struct DownloadModfileParams
-  {
-    Mod* mod;
-    string destination_path;
-    function< void(int, Mod*, string) > callback;
+  public:
+    map<string, string> curlform_copycontents;
+    map<string, string> curlform_files;
+    void setLogoPath(string logo_path);
+    void setName(string name);
+    void setHomepage(string homepage);
+    void setSummary(string summary);
+    void setPrice(double price);
+    void setStock(int stock);
+    void setDescription(string description);
+    void setMetadata(string metadata);
+    void setNameid(string nameid);
+    void setModfile(int modfile);
   };
 
   void MODWORKS_DLL getMods(Filter* filter, function< void(int, vector<Mod*>) > callback);
 
-  void MODWORKS_DLL addMod(/*Mod params*/string name, string homepage, string summary, string logo_path,
-              /*File params*/string directory_path, string version, string changelog,
-              /*Callback*/ function< void(int, Mod*) > callback);
-
+  void MODWORKS_DLL addMod(AddModHandler* add_mod_handler, function<void(int, Mod*)> callback);
   void MODWORKS_DLL addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback);
+
   void MODWORKS_DLL downloadModLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback);
   void MODWORKS_DLL downloadModLogoFull(Mod *mod, function< void(int, Mod*, string) > callback);
   void MODWORKS_DLL downloadModMediaImagesThumbnail(Mod *mod, function< void(int, Mod*, vector<string>) > callback);

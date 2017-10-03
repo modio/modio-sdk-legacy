@@ -10,6 +10,33 @@ namespace modworks
     function<void(int, Mod*)> callback;
   };
 
+  struct AddFileParams
+  {
+    Mod* mod;
+    function< void(int, Mod*) > callback;
+  };
+
+  struct DownloadImageParams
+  {
+    Mod* mod;
+    function< void(int, Mod*, string) > callback;
+  };
+
+  struct DownloadImagesParams
+  {
+    Mod* mod;
+    int image_amount;
+    vector<string> images;
+    function< void(int, Mod*, vector<string>) > callback;
+  };
+
+  struct DownloadModfileParams
+  {
+    Mod* mod;
+    string destination_path;
+    function< void(int, Mod*, string) > callback;
+  };
+
   map< int,AddModParams* > add_mod_callback;
   map< int,function<void(int, vector<Mod*>)> > get_mods_callbacks;
 
@@ -54,43 +81,24 @@ namespace modworks
   void onModAdded(int call_number, int response_code, json response)
   {
     Mod* mod = new Mod(response);
-    addFile(mod, add_mod_callback[call_number]->directory_path,
-                  add_mod_callback[call_number]->version,
-                  add_mod_callback[call_number]->changelog,
-                  add_mod_callback[call_number]->callback);
+    add_mod_callback[call_number]->callback(response_code, mod);
     add_mod_callback.erase(call_number);
   }
 
-  void addMod(string name, string homepage, string summary, string logo_path,
-                    string directory_path, string version, string changelog,
-                    function<void(int, Mod*)> callback)
+  void addMod(AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
-    map<string, string> curlform_copycontents;
-    curlform_copycontents["name"]=name;
-    curlform_copycontents["homepage"]=homepage;
-    curlform_copycontents["summary"]=summary;
-    map<string, string> curlform_files;
-    curlform_files["logo"]=logo_path;
-
-    map<string,string> params;
-    params["directory_path"] = directory_path;
-    params["version"] = version;
-    params["changelog"] = changelog;
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
 
     add_mod_callback[call_number] = new AddModParams;
-    add_mod_callback[call_number]->directory_path = directory_path;
-    add_mod_callback[call_number]->version = version;
-    add_mod_callback[call_number]->changelog = changelog;
     add_mod_callback[call_number]->callback = callback;
 
     string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods";
 
-    std::thread add_mod_thread(curlwrapper::postForm, call_number, url, headers, curlform_copycontents, curlform_files, &onModAdded);
+    std::thread add_mod_thread(curlwrapper::postForm, call_number, url, headers, add_mod_handler->curlform_copycontents, add_mod_handler->curlform_files, &onModAdded);
     add_mod_thread.detach();
   }
 
@@ -234,5 +242,55 @@ namespace modworks
 
     std::thread download_thread(curlwrapper::download, call_number, mod->modfile->download + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
+  }
+
+  void AddModHandler::setLogoPath(string logo_path)
+  {
+    this->curlform_files["logo"] = logo_path;
+  }
+
+  void AddModHandler::setName(string name)
+  {
+    this->curlform_copycontents["name"] = name;
+  }
+
+  void AddModHandler::setHomepage(string homepage)
+  {
+    this->curlform_copycontents["homepage"] = homepage;
+  }
+
+  void AddModHandler::setSummary(string summary)
+  {
+    this->curlform_copycontents["summary"] = summary;
+  }
+
+  void AddModHandler::setPrice(double price)
+  {
+    this->curlform_copycontents["price"] = price;
+  }
+
+  void AddModHandler::setStock(int stock)
+  {
+    this->curlform_copycontents["stock"] = stock;
+  }
+
+  void AddModHandler::setDescription(string description)
+  {
+    this->curlform_copycontents["description"] = description;
+  }
+
+  void AddModHandler::setMetadata(string metadata)
+  {
+    this->curlform_copycontents["metadata"] = metadata;
+  }
+
+  void AddModHandler::setNameid(string nameid)
+  {
+    this->curlform_copycontents["nameid"] = nameid;
+  }
+
+  void AddModHandler::setModfile(int modfile)
+  {
+    this->curlform_copycontents["modfile"] = modfile;
   }
 }

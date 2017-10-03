@@ -92,6 +92,17 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   }
 }
 
+void onModAdded(int response_code, modworks::Mod* mod)
+{
+  cout<<"Response code: "<<response_code<<endl;
+
+  if(response_code == 200)
+  {
+    cout<<"Mod added!"<<endl;
+    cout<<"name: "<<mod->name<<endl;
+  }
+}
+
 int main(void)
 {
   modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
@@ -112,11 +123,21 @@ int main(void)
     while(!email_exchange_finished);
   }
 
+  modworks::AddModHandler* add_mod_handler = new modworks::AddModHandler();
+  add_mod_handler->setLogoPath("logo.png");
+  add_mod_handler->setName("New sdk add method");
+  add_mod_handler->setHomepage("http://www.webpage.com");
+  add_mod_handler->setSummary("new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method");
+
+  modworks::addMod(add_mod_handler, &onModAdded);
+
+  /*
   modworks::Filter* filter = new modworks::Filter;
   modworks::addFilterInField(filter,"id","31");
   modworks::getMods(filter, &onModsGet);
+  */
 
-  while(files_downloaded<files_to_download);
+  while(true);
 
   modworks::shutdown();
 
