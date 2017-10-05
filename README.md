@@ -21,7 +21,7 @@ git checkout -b my-new-feature
 git commit -am 'Add some feature'
 git push origin my-new-feature
 ```
-3. Ceate a pull request
+3. Create a pull request
 
 ### Reporting a bug
 
