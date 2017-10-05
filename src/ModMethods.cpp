@@ -122,7 +122,7 @@ namespace modworks
     add_file_callbacks[call_number]->mod = mod;
     add_file_callbacks[call_number]->callback = callback;
 
-    add_mod_file_handler->curlform_files["filedata"] = "tmp/modfile.zip";
+    add_mod_file_handler->curlform_files["filedata"] = getModworksDirectory() + "tmp/modfile.zip";
 
     std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, add_mod_file_handler->curlform_files, &onFileAdded);
     add_file_thread.detach();

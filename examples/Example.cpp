@@ -97,7 +97,7 @@ void onModAdded(int response_code, modworks::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
-  if(response_code == 200)
+  if(response_code == 201)
   {
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;
