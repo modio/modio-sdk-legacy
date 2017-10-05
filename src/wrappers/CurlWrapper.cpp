@@ -99,7 +99,8 @@ namespace modworks
       curl = curl_easy_init();
 
       ongoing_calls[curl] = new JsonResponseHandler();
-      if(curl) {
+      if(curl)
+      {
         struct curl_slist *chunk = NULL;
         for(int i=0;i<(int)headers.size();i++)
           chunk = curl_slist_append(chunk, headers[i].c_str());
@@ -369,9 +370,9 @@ namespace modworks
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-        curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, json_response_trace);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
 
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
         //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
           /* only disable 100-continue header if explicitly requested */
           //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
@@ -394,8 +395,6 @@ namespace modworks
         curl_formfree(formpost);
         curl_slist_free_all(headerlist);
       }
-
-      ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
 
       json json_response;
       try

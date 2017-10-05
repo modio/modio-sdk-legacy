@@ -2,28 +2,6 @@
 
 namespace modworks
 {
-  string dataToJsonString(char* data, size_t size)
-  {
-    string response = "";
-    bool is_json_block = false;
-
-    for(int i=0; i<(int)size; i++)
-    {
-      if(data[i] == 10)
-        is_json_block = !is_json_block;
-
-      if(is_json_block && data[i] != 13 && data[i] != 10)
-        response += data[i];
-    }
-
-    return response;
-  }
-
-  string dataToJsonString(string data)
-  {
-    return dataToJsonString((char*)data.c_str(), data.size());
-  }
-
   string toString(int number)
   {
       if (number == 0)

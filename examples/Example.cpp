@@ -76,6 +76,7 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
+    cout<<"username: "<<mods[i]->member->username<<endl;
   }
 
   cout<<endl<<endl;
@@ -100,6 +101,12 @@ void onModAdded(int response_code, modworks::Mod* mod)
   {
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;
+
+    modworks::AddModFileHandler* add_mod_file_handler = new modworks::AddModFileHandler();
+    add_mod_file_handler->setPath("testdir");
+    add_mod_file_handler->setVersion("1.0.1");
+    add_mod_file_handler->setChangelog("this was a change this was a change");
+    modworks::addModFile(mod, add_mod_file_handler, &onModAdded);
   }
 }
 
@@ -123,6 +130,7 @@ int main(void)
     while(!email_exchange_finished);
   }
 
+
   modworks::AddModHandler* add_mod_handler = new modworks::AddModHandler();
   add_mod_handler->setLogoPath("logo.png");
   add_mod_handler->setName("New sdk add method");
@@ -131,7 +139,8 @@ int main(void)
 
   modworks::addMod(add_mod_handler, &onModAdded);
 
-  /*
+
+/*
   modworks::Filter* filter = new modworks::Filter;
   modworks::addFilterInField(filter,"id","31");
   modworks::getMods(filter, &onModsGet);

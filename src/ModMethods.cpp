@@ -108,16 +108,11 @@ namespace modworks
     add_file_callbacks.erase(call_number);
   }
 
-  void addFile(Mod *mod, string directory_path, string version, string changelog, function<void(int, Mod*)> callback)
+  void MODWORKS_DLL addModFile(Mod *mod, AddModFileHandler* add_mod_file_handler, function<void(int, Mod*)> callback)
   {
-    minizipwrapper::compress(directory_path, getModworksDirectory() + "tmp/modfile.zip");
+    minizipwrapper::compress(add_mod_file_handler->path, getModworksDirectory() + "tmp/modfile.zip");
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
-    map<string, string> curlform_copycontents;
-    curlform_copycontents["version"]=version;
-    curlform_copycontents["changelog"]=changelog;
-    map<string, string> curlform_files;
-    curlform_files["filedata"] = getModworksDirectory() + "tmp/modfile.zip";
     string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(mod->id) + "/files";
 
     int call_number = curlwrapper::getCallCount();
@@ -127,7 +122,9 @@ namespace modworks
     add_file_callbacks[call_number]->mod = mod;
     add_file_callbacks[call_number]->callback = callback;
 
-    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, curlform_copycontents, curlform_files, &onFileAdded);
+    add_mod_file_handler->curlform_files["filedata"] = "tmp/modfile.zip";
+
+    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, add_mod_file_handler->curlform_files, &onFileAdded);
     add_file_thread.detach();
   }
 
@@ -292,5 +289,26 @@ namespace modworks
   void AddModHandler::setModfile(int modfile)
   {
     this->curlform_copycontents["modfile"] = modfile;
+  }
+
+
+  void AddModFileHandler::setVersion(string version)
+  {
+    this->curlform_copycontents["version"] = version;
+  }
+
+  void AddModFileHandler::setChangelog(string changelog)
+  {
+    this->curlform_copycontents["changelog"] = changelog;
+  }
+
+  void AddModFileHandler::setFiledata(string filedata)
+  {
+    this->curlform_files["filedata"] = filedata;
+  }
+
+  void AddModFileHandler::setPath(string path)
+  {
+    this->path = path;
   }
 }
