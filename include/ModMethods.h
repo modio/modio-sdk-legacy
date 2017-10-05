@@ -30,18 +30,17 @@ namespace modworks
   {
   public:
     map<string, string> curlform_copycontents;
-    map<string, string> curlform_files;
     string path;
+    void setPath(string path);
     void setVersion(string version);
     void setChangelog(string changelog);
-    void setFiledata(string filedata);
-    void setPath(string path);
+    void setActive(string active);
   };
 
   void MODWORKS_DLL getMods(Filter* filter, function< void(int, vector<Mod*>) > callback);
 
   void MODWORKS_DLL addMod(AddModHandler* add_mod_handler, function<void(int, Mod*)> callback);
-  void MODWORKS_DLL addModFile(Mod *mod, AddModFileHandler* add_mod_file_handler, function<void(int, Mod*)> callback);
+  void MODWORKS_DLL addModFile(Mod* mod, AddModFileHandler* add_mod_file_handler, function<void(int, Mod*)> callback);
 
   void MODWORKS_DLL downloadModLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback);
   void MODWORKS_DLL downloadModLogoFull(Mod *mod, function< void(int, Mod*, string) > callback);

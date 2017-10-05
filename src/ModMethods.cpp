@@ -85,6 +85,7 @@ namespace modworks
     add_mod_callback.erase(call_number);
   }
 
+
   void addMod(AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
   {
     vector<string> headers;
@@ -122,9 +123,10 @@ namespace modworks
     add_file_callbacks[call_number]->mod = mod;
     add_file_callbacks[call_number]->callback = callback;
 
-    add_mod_file_handler->curlform_files["filedata"] = getModworksDirectory() + "tmp/modfile.zip";
+    map<string, string> curlform_files;
+    curlform_files["filedata"] = getModworksDirectory() + "tmp/modfile.zip";
 
-    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, add_mod_file_handler->curlform_files, &onFileAdded);
+    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, curlform_files, &onFileAdded);
     add_file_thread.detach();
   }
 
@@ -302,13 +304,13 @@ namespace modworks
     this->curlform_copycontents["changelog"] = changelog;
   }
 
-  void AddModFileHandler::setFiledata(string filedata)
-  {
-    this->curlform_files["filedata"] = filedata;
-  }
-
   void AddModFileHandler::setPath(string path)
   {
     this->path = path;
+  }
+
+  void AddModFileHandler::setActive(string active)
+  {
+    this->curlform_copycontents["active"] = active;
   }
 }
