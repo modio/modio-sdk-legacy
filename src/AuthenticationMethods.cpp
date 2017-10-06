@@ -17,12 +17,14 @@ namespace modworks
     data["api_key"] = api_key;
     data["email"] = email;
 
+    vector<string> headers;
+
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
 
     email_request_callbacks[call_number] = callback;
 
-    std::thread email_request_thread(curlwrapper::post, call_number, "https://api.mod.works/oauth/emailrequest?shhh=secret", data, &onEmailRequested);
+    std::thread email_request_thread(curlwrapper::post, call_number, "https://api.mod.works/oauth/emailrequest?shhh=secret", headers, data, &onEmailRequested);
     email_request_thread.detach();
   }
 
@@ -48,12 +50,14 @@ namespace modworks
     data["api_key"] = api_key;
     data["security_code"] = security_code;
 
+    vector<string> headers;
+
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
 
     email_exchange_callbacks[call_number] = callback;
 
-    std::thread email_exchage_thread(curlwrapper::post, call_number, "https://api.mod.works/oauth/emailexchange?shhh=secret",data, &onEmailExchanged);
+    std::thread email_exchage_thread(curlwrapper::post, call_number, "https://api.mod.works/oauth/emailexchange?shhh=secret", headers, data, &onEmailExchanged);
     email_exchage_thread.detach();
   }
 

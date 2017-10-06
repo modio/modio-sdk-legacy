@@ -98,10 +98,7 @@ namespace modworks
 
     string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods/" + toString(mod->id);
 
-    //std::thread add_mod_thread(curlwrapper::post, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
-    //add_mod_thread.detach();
-
-    std::thread email_exchage_thread(curlwrapper::put, call_number, url, add_mod_handler->curlform_copycontents, &onModAdded);
+    std::thread email_exchage_thread(curlwrapper::put, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
     email_exchage_thread.detach();
   }
 

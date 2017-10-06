@@ -413,7 +413,7 @@ namespace modworks
       writeLogLine(string("postForm call to ") + url + " finished", verbose);
     }
 
-    void post(int call_number, string url, map<string, string> data, function<void(int call_number, int response_code, json response)> callback)
+    void post(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, json response)> callback)
     {
       writeLogLine(string("post call to ") + url, verbose);
       lockCall(call_number);
@@ -430,6 +430,12 @@ namespace modworks
       if(curl)
       {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        struct curl_slist *chunk = NULL;
+        for(int i=0;i<(int)headers.size();i++)
+          chunk = curl_slist_append(chunk, headers[i].c_str());
+
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
 
         string str_data = "";
         for(map<string, string>::iterator i = data.begin(); i!=data.end(); i++)
@@ -479,7 +485,7 @@ namespace modworks
       writeLogLine(string("post call to ") + url + " finished", verbose);
     }
 
-    void put(int call_number, string url, map<string, string> data, function<void(int call_number, int response_code, json response)> callback)
+    void put(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, json response)> callback)
     {
       writeLogLine(string("put call to ") + url, verbose);
       lockCall(call_number);
@@ -499,8 +505,8 @@ namespace modworks
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
 
         struct curl_slist *chunk = NULL;
-        //for(int i=0;i<(int)headers.size();i++)
-        chunk = curl_slist_append(chunk, "Authorization: Bearer turupawn");
+        for(int i=0;i<(int)headers.size();i++)
+          chunk = curl_slist_append(chunk, headers[i].c_str());
 
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
 
