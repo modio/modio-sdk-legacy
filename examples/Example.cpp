@@ -26,6 +26,16 @@ void onModEdited(int response_code, modworks::Mod* mod)
   }
 }
 
+void onModDeleted(int response_code, modworks::Mod* mod)
+{
+  cout<<"Response code: "<<response_code<<endl;
+
+  if(response_code == 204)
+  {
+    cout<<"Mod deleted!"<<endl;
+  }
+}
+
 void onEmailRequest(int response_code)
 {
   if(response_code == 200)
@@ -87,12 +97,7 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   {
     cout<<mods[i]->name<<endl;
 
-    modworks::AddModHandler* add_mod_handler = new modworks::AddModHandler();
-    add_mod_handler->setName("renamed");
-    modworks::editMod(mods[i],add_mod_handler,&onModEdited);
-
-
-    cout<<"username: "<<mods[i]->member->username<<endl;
+    modworks::deleteMod(mods[i],&onModDeleted);
   }
 
   cout<<endl<<endl;

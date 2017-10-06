@@ -30,6 +30,12 @@ namespace modworks
     function< void(int, Mod*, vector<string>) > callback;
   };
 
+  struct DeleteModParams
+  {
+    Mod* mod;
+    function<void(int, Mod*)> callback;
+  };
+
   struct DownloadModfileParams
   {
     Mod* mod;
@@ -38,6 +44,7 @@ namespace modworks
   };
 
   map< int,AddModParams* > add_mod_callback;
+  map< int,DeleteModParams* > delete_mod_callbacks;
   map< int,function<void(int, vector<Mod*>)> > get_mods_callbacks;
 
   map< int, AddFileParams* > add_file_callbacks;
@@ -85,7 +92,7 @@ namespace modworks
     add_mod_callback.erase(call_number);
   }
 
-  void MODWORKS_DLL editMod(Mod* mod, AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
+  void editMod(Mod* mod, AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
@@ -119,13 +126,37 @@ namespace modworks
     add_mod_thread.detach();
   }
 
+  void onModDeleted(int call_number, int response_code, json response)
+  {
+    Mod* mod = new Mod(response);
+    delete_mod_callbacks[call_number]->callback(response_code, mod);
+    delete_mod_callbacks.erase(call_number);
+  }
+
+  void deleteMod(Mod* mod, function<void(int, Mod*)> callback)
+  {
+    vector<string> headers;
+    headers.push_back("Authorization: Bearer turupawn");
+
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
+
+    delete_mod_callbacks[call_number] = new DeleteModParams;
+    delete_mod_callbacks[call_number]->callback = callback;
+
+    string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods/" + toString(mod->id);
+
+    std::thread email_exchage_thread(curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
+    email_exchage_thread.detach();
+  }
+
   void onFileAdded(int call_number, int response_code, json response)
   {
     add_file_callbacks[call_number]->callback(200,add_file_callbacks[call_number]->mod);
     add_file_callbacks.erase(call_number);
   }
 
-  void MODWORKS_DLL addModFile(Mod *mod, AddModFileHandler* add_mod_file_handler, function<void(int, Mod*)> callback)
+  void addModFile(Mod *mod, AddModFileHandler* add_mod_file_handler, function<void(int, Mod*)> callback)
   {
     minizipwrapper::compress(add_mod_file_handler->path, getModworksDirectory() + "tmp/modfile.zip");
     vector<string> headers;

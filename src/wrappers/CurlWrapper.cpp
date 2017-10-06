@@ -526,5 +526,56 @@ namespace modworks
       writeLogLine(string("put call to ") + url + " finished", verbose);
     }
 
+    void deleteCall(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback)
+    {
+      writeLogLine(string("delete call to ") + url, verbose);
+      lockCall(call_number);
+      CURL *curl;
+      CURLcode res;
+      long response_code = 0;
+
+      curl_global_init(CURL_GLOBAL_ALL);
+      curl = curl_easy_init();
+
+      ongoing_calls[curl] = new JsonResponseHandler();
+
+      if(curl)
+      {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+        headers.push_back("Content-Type: application/x-www-form-urlencoded");
+        setHeaders(headers, curl);
+        setVerifies(curl);
+        setJsonResponseWrite(curl);
+
+        res = curl_easy_perform(curl);
+        if(res == CURLE_OK)
+        {
+          curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
+        }
+        else
+        {
+          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+          response_code = 0;
+        }
+
+        curl_easy_cleanup(curl);
+      }
+      curl_global_cleanup();
+
+      json json_response = parseJsonResonse(ongoing_calls[curl]->response);
+
+      string message = "";
+      if(hasKey(json_response, "message"))
+        message = json_response["message"];
+
+      cout<<"Message: "<<json_response<<endl;
+
+      callback(call_number, response_code, json_response);
+      advanceOngoingCall();
+      writeLogLine(string("delete call to ") + url + " finished", verbose);
+    }
+
   }
 }
