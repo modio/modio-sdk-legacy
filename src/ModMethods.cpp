@@ -85,6 +85,25 @@ namespace modworks
     add_mod_callback.erase(call_number);
   }
 
+  void MODWORKS_DLL editMod(Mod* mod, AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
+  {
+    vector<string> headers;
+    headers.push_back("Authorization: Bearer turupawn");
+
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
+
+    add_mod_callback[call_number] = new AddModParams;
+    add_mod_callback[call_number]->callback = callback;
+
+    string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods/" + toString(mod->id);
+
+    //std::thread add_mod_thread(curlwrapper::post, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
+    //add_mod_thread.detach();
+
+    std::thread email_exchage_thread(curlwrapper::put, call_number, url, add_mod_handler->curlform_copycontents, &onModAdded);
+    email_exchage_thread.detach();
+  }
 
   void addMod(AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
   {

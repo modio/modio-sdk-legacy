@@ -16,6 +16,16 @@ int files_to_download = 5;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
+void onModEdited(int response_code, modworks::Mod* mod)
+{
+  cout<<"Response code: "<<response_code<<endl;
+
+  if(response_code == 201)
+  {
+    cout<<"Mod edited!"<<endl;
+  }
+}
+
 void onEmailRequest(int response_code)
 {
   if(response_code == 200)
@@ -76,11 +86,17 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
+
+    modworks::AddModHandler* add_mod_handler = new modworks::AddModHandler();
+    add_mod_handler->setName("renamed");
+    modworks::editMod(mods[i],add_mod_handler,&onModEdited);
+
+
     cout<<"username: "<<mods[i]->member->username<<endl;
   }
 
   cout<<endl<<endl;
-
+/*
   cout<<"Downloads starting"<<endl;
   cout<<"=================="<<endl;
   for(int i=0;i<(int)mods.size();i++)
@@ -91,6 +107,7 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
     modworks::downloadModMediaImagesFull(mods[i], &onMediaImagesDownloaded);
     modworks::installMod(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
+  */
 }
 
 void onModAdded(int response_code, modworks::Mod* mod)
@@ -130,7 +147,7 @@ int main(void)
     while(!email_exchange_finished);
   }
 
-
+/*
   modworks::AddModHandler* add_mod_handler = new modworks::AddModHandler();
   add_mod_handler->setLogoPath("logo.png");
   add_mod_handler->setName("New sdk add method");
@@ -138,13 +155,13 @@ int main(void)
   add_mod_handler->setSummary("new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method");
 
   modworks::addMod(add_mod_handler, &onModAdded);
+*/
 
 
-/*
   modworks::Filter* filter = new modworks::Filter;
   modworks::addFilterInField(filter,"id","31");
   modworks::getMods(filter, &onModsGet);
-  */
+
 
   while(true);
 

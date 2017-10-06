@@ -46,6 +46,7 @@ namespace modworks
     void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback);
     void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback);
     void post(int call_number, string url, map<string, string> data, function<void(int call_number, int response_code, json response)> callback);
+    void put(int call_number, string url, map<string, string> data, function<void(int call_number, int response_code, json response)> callback);
     void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, json response)> callback);
   }
 }
