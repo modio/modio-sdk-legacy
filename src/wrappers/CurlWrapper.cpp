@@ -60,30 +60,48 @@ namespace modworks
       this->response = "";
     }
 
-    struct data
-    {
-      char trace_ascii; /* 1 or 0 */
-    };
-
-    int json_response_trace(CURL *handle, curl_infotype type,
-                 char *data, size_t size,
-                 void *userp)
-    {
-      (void)handle; /* prevent compiler warning */
-      if(type == CURLINFO_DATA_IN)
-      {
-        ongoing_calls[handle]->response.append(data, size);
-      }
-
-      return 0;
-    }
-
     size_t get_data(char *ptr, size_t size, size_t nmemb, void *userdata)
     {
       CURL* handle = (CURL*)userdata;
       int data_size = size * nmemb;
       ongoing_calls[handle]->response.append(ptr, data_size);
       return data_size;
+    }
+
+    void setHeaders(vector<string> headers, CURL* curl)
+    {
+      struct curl_slist *chunk = NULL;
+      for(int i=0;i<(int)headers.size();i++)
+        chunk = curl_slist_append(chunk, headers[i].c_str());
+
+      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+    }
+
+    void setVerifies(CURL* curl)
+    {
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+      curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+    }
+
+    void setJsonResponseWrite(CURL* curl)
+    {
+      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+    }
+
+    json parseJsonResonse(string response)
+    {
+      json json_response;
+      try
+      {
+        json_response = json::parse(response);
+      }
+      catch (json::parse_error &e)
+      {
+        writeLogLine(string("Error parsing json: ") + e.what(), error);
+        json_response = "{}"_json;
+      }
+      return json_response;
     }
 
     void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback)
@@ -101,18 +119,13 @@ namespace modworks
       ongoing_calls[curl] = new JsonResponseHandler();
       if(curl)
       {
-        struct curl_slist *chunk = NULL;
-        for(int i=0;i<(int)headers.size();i++)
-          chunk = curl_slist_append(chunk, headers[i].c_str());
-
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+        setHeaders(headers, curl);
 
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+        setVerifies(curl);
+        setJsonResponseWrite(curl);
+
         /* Perform the request, res will get the return code */
         res = curl_easy_perform(curl);
         /* Check for errors */
@@ -134,17 +147,11 @@ namespace modworks
       curl_global_cleanup();
       //ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
 
-      json json_response;
-      try
-      {
-        json_response = json::parse(ongoing_calls[curl]->response);
-      }
-      catch (json::parse_error &e)
-      {
-        writeLogLine(string("Error parsing json: ") + e.what(), error);
-        response_code = 0;
-        json_response = "{}"_json;
-      }
+      json json_response = parseJsonResonse(ongoing_calls[curl]->response);
+
+      string message = "";
+      if(hasKey(json_response, "message"))
+        message = json_response["message"];
 
       callback(call_number, response_code, json_response);
       advanceOngoingCall();
@@ -268,8 +275,7 @@ namespace modworks
           file = fopen(path.c_str(),"wb");
         }
 
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+        setVerifies(curl);
 
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
@@ -356,10 +362,8 @@ namespace modworks
 
       ongoing_calls[curl] = new JsonResponseHandler();
 
-      struct curl_slist *chunk = NULL;
-      for(int i=0;i<(int)headers.size();i++)
-        chunk = curl_slist_append(chunk, headers[i].c_str());
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+      setHeaders(headers, curl);
+
       /* initialize custom header list (stating that Expect: 100-continue is not
          wanted */
       headerlist = curl_slist_append(headerlist, buf);
@@ -367,11 +371,9 @@ namespace modworks
       {
         /* what URL that receives this POST */
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+        setVerifies(curl);
+        setJsonResponseWrite(curl);
 
         //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
           /* only disable 100-continue header if explicitly requested */
@@ -396,17 +398,11 @@ namespace modworks
         curl_slist_free_all(headerlist);
       }
 
-      json json_response;
-      try
-      {
-        json_response = json::parse(ongoing_calls[curl]->response);
-      }
-      catch (json::parse_error &e)
-      {
-        writeLogLine(string("Error parsing json: ") + e.what(), error);
-        response_code = 0;
-        json_response = "{}"_json;
-      }
+      json json_response = parseJsonResonse(ongoing_calls[curl]->response);
+
+      string message = "";
+      if(hasKey(json_response, "message"))
+        message = json_response["message"];
 
       callback(call_number, response_code, json_response);
       advanceOngoingCall();
@@ -431,11 +427,7 @@ namespace modworks
       {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-        struct curl_slist *chunk = NULL;
-        for(int i=0;i<(int)headers.size();i++)
-          chunk = curl_slist_append(chunk, headers[i].c_str());
-
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+        setHeaders(headers, curl);
 
         string str_data = "";
         for(map<string, string>::iterator i = data.begin(); i!=data.end(); i++)
@@ -446,11 +438,9 @@ namespace modworks
         }
 
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+        setVerifies(curl);
+        setJsonResponseWrite(curl);
 
         res = curl_easy_perform(curl);
 
@@ -468,17 +458,11 @@ namespace modworks
       }
       curl_global_cleanup();
 
-      json json_response;
-      try
-      {
-        json_response = json::parse(ongoing_calls[curl]->response);
-      }
-      catch (json::parse_error &e)
-      {
-        writeLogLine(string("Error parsing json: ") + e.what(), error);
-        response_code = 0;
-        json_response = "{}"_json;
-      }
+      json json_response = parseJsonResonse(ongoing_calls[curl]->response);
+
+      string message = "";
+      if(hasKey(json_response, "message"))
+        message = json_response["message"];
 
       callback(call_number, response_code, json_response);
       advanceOngoingCall();
@@ -489,7 +473,6 @@ namespace modworks
     {
       writeLogLine(string("put call to ") + url, verbose);
       lockCall(call_number);
-
       CURL *curl;
       CURLcode res;
       long response_code = 0;
@@ -503,13 +486,7 @@ namespace modworks
       {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
-
-        struct curl_slist *chunk = NULL;
-        for(int i=0;i<(int)headers.size();i++)
-          chunk = curl_slist_append(chunk, headers[i].c_str());
-
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
-
+        setHeaders(headers, curl);
         string str_data = "";
         for(map<string, string>::iterator i = data.begin(); i!=data.end(); i++)
         {
@@ -519,14 +496,11 @@ namespace modworks
         }
 
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_data);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+        setVerifies(curl);
+        setJsonResponseWrite(curl);
 
         res = curl_easy_perform(curl);
-
         if(res == CURLE_OK)
         {
           curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
@@ -541,19 +515,11 @@ namespace modworks
       }
       curl_global_cleanup();
 
-      json json_response;
-      try
-      {
-        json_response = json::parse(ongoing_calls[curl]->response);
-      }
-      catch (json::parse_error &e)
-      {
-        writeLogLine(string("Error parsing json: ") + e.what(), error);
-        response_code = 0;
-        json_response = "{}"_json;
-      }
+      json json_response = parseJsonResonse(ongoing_calls[curl]->response);
 
-      cout<<json_response<<endl;
+      string message = "";
+      if(hasKey(json_response, "message"))
+        message = json_response["message"];
 
       callback(call_number, response_code, json_response);
       advanceOngoingCall();
