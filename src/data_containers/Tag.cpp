@@ -1,6 +1,6 @@
 #include "data_containers/Tag.h"
 
-namespace modworks
+namespace modio
 {
   Tag::Tag(json tag_json)
   {

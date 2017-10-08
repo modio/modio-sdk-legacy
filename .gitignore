@@ -31,11 +31,11 @@
 *.out
 *.app
 
-src/modworks.so
-src/modworks.dylib
+src/modio.so
+src/modio.dylib
 examples/Example
-examples/.modworks/
+examples/.modio/
 examples/mod_directory/
-src/modworks.dll
-src/modworks.lib
-examples/modworks.dll
+src/modio.dll
+src/modio.lib
+examples/modio.dll

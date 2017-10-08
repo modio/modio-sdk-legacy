@@ -1,22 +1,22 @@
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#ifndef MODIO_GLOBALS_H
+#define MODIO_GLOBALS_H
 
 #include <iostream>
 using namespace std;
 
 #ifdef WINDOWS
-#  ifdef BUILDING_MODWORKS_DLL
-#    define MODWORKS_DLL __declspec(dllexport)
+#  ifdef BUILDING_MODIO_DLL
+#    define MODIO_DLL __declspec(dllexport)
 #  else
-#    define MODWORKS_DLL __declspec(dllimport)
+#    define MODIO_DLL __declspec(dllimport)
 #  endif
 #else
-#  define MODWORKS_DLL
+#  define MODIO_DLL
 #endif
 
 #include "Utility.h"
 
-namespace modworks
+namespace modio
 {
   struct CurrentDownloadInfo
   {

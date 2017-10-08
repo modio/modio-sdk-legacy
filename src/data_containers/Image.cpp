@@ -1,6 +1,6 @@
 #include "data_containers/Image.h"
 
-namespace modworks
+namespace modio
 {
   Image::Image(json image_json)
   {

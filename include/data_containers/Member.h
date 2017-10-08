@@ -1,5 +1,5 @@
-#ifndef MEMBER_MEDIA
-#define MEMBER_MEDIA
+#ifndef MODIO_MEMBER_H
+#define MODIO_MEMBER_H
 
 #include "dependencies/json/json.hpp"
 #include "data_containers/Image.h"
@@ -8,7 +8,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   class Member
   {

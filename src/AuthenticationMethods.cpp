@@ -1,6 +1,6 @@
 #include "AuthenticationMethods.h"
 
-namespace modworks
+namespace modio
 {
   map< int,function<void(int, string)> > email_request_callbacks;
   map< int,function<void(int, string)> > email_exchange_callbacks;
@@ -35,7 +35,7 @@ namespace modworks
       access_token = response["access_token"];
       json token_json;
       token_json["access_token"] = response["access_token"];
-      std::ofstream out(getModworksDirectory() + "token.json");
+      std::ofstream out(getModIODirectory() + "token.json");
       out<<setw(4)<<token_json<<endl;
       out.close();
     }
@@ -71,7 +71,7 @@ namespace modworks
     access_token = "";
 
     json empty_json;
-    std::ofstream out(getModworksDirectory() + "token.json");
+    std::ofstream out(getModIODirectory() + "token.json");
     out<<setw(4)<<empty_json<<endl;
     out.close();
   }

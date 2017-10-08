@@ -1,6 +1,6 @@
 #include "data_containers/Media.h"
 
-namespace modworks
+namespace modio
 {
   Media::Media(json media_json)
   {

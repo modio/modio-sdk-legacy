@@ -1,6 +1,6 @@
 #include "ModMethods.h"
 
-namespace modworks
+namespace modio
 {
   struct AddModParams
   {
@@ -158,7 +158,7 @@ namespace modworks
 
   void addModfile(Mod *mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, Mod* mod)> callback)
   {
-    minizipwrapper::compress(add_mod_file_handler->path, getModworksDirectory() + "tmp/modfile.zip");
+    minizipwrapper::compress(add_mod_file_handler->path, getModIODirectory() + "tmp/modfile.zip");
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
     string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(mod->id) + "/files";
@@ -171,7 +171,7 @@ namespace modworks
     add_file_callbacks[call_number]->callback = callback;
 
     map<string, string> curlform_files;
-    curlform_files["filedata"] = getModworksDirectory() + "tmp/modfile.zip";
+    curlform_files["filedata"] = getModIODirectory() + "tmp/modfile.zip";
 
     std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, curlform_files, &onFileAdded);
     add_file_thread.detach();
@@ -186,7 +186,7 @@ namespace modworks
 
   void downloadModLogoThumbnail(Mod *mod, function< void(int response_code, string message, Mod* mod, string path) > callback)
   {
-    string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_thumb.png";
+    string file_path = string(getModIODirectory() + "images/") + toString(mod->id) + "_mod_logo_thumb.png";
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -202,7 +202,7 @@ namespace modworks
 
   void downloadModLogoFull(Mod *mod, function< void(int response_code, string message, Mod*mod, string path) > callback)
   {
-    string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_full.png";
+    string file_path = string(getModIODirectory() + "images/") + toString(mod->id) + "_mod_logo_full.png";
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -238,8 +238,8 @@ namespace modworks
       int call_number = curlwrapper::getCallCount();
       curlwrapper::advanceCallCount();
       download_images_callbacks[call_number] = download_images_params;
-      createDirectory(string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/");
-      string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/" + toString(i) + "_image_thumb.png";
+      createDirectory(string(getModIODirectory() + "images/") + toString(mod->id) + "_mod_media/");
+      string file_path = string(getModIODirectory() + "images/") + toString(mod->id) + "_mod_media/" + toString(i) + "_image_thumb.png";
       std::thread download_image_thread(curlwrapper::download, call_number, mod->media->images[i]->thumbnail, file_path, &onImageFromVectorDownloaded);
       download_image_thread.detach();
     }
@@ -257,8 +257,8 @@ namespace modworks
       int call_number = curlwrapper::getCallCount();
       curlwrapper::advanceCallCount();
       download_images_callbacks[call_number] = download_images_params;
-      createDirectory(string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/");
-      string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_media/" + toString(i) + "_image_full.png";
+      createDirectory(string(getModIODirectory() + "images/") + toString(mod->id) + "_mod_media/");
+      string file_path = string(getModIODirectory() + "images/") + toString(mod->id) + "_mod_media/" + toString(i) + "_image_full.png";
       std::thread download_image_thread(curlwrapper::download, call_number, mod->media->images[i]->full, file_path, &onImageFromVectorDownloaded);
       download_image_thread.detach();
     }
@@ -276,7 +276,7 @@ namespace modworks
 
   void installMod(Mod *mod, string destination_path, function< void(int response_code, string message, Mod* mod, string path) > callback)
   {
-    string file_path = string(getModworksDirectory() + "tmp/") + toString(mod->modfile->id) + "_modfile.zip";
+    string file_path = string(getModIODirectory() + "tmp/") + toString(mod->modfile->id) + "_modfile.zip";
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();

@@ -1,5 +1,5 @@
-#ifndef AUTHENTICATION_H
-#define AUTHENTICATION_H
+#ifndef MODIO_AUTHENTICATION_H
+#define MODIO_AUTHENTICATION_H
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
@@ -7,21 +7,21 @@
 #include <thread>
 
 #ifdef WINDOWS
-#  ifdef BUILDING_MODWORKS_DLL
-#    define MODWORKS_DLL __declspec(dllexport)
+#  ifdef BUILDING_MODIO_DLL
+#    define MODIO_DLL __declspec(dllexport)
 #  else
-#    define MODWORKS_DLL __declspec(dllimport)
+#    define MODIO_DLL __declspec(dllimport)
 #  endif
 #else
-#  define MODWORKS_DLL
+#  define MODIO_DLL
 #endif
 
-namespace modworks
+namespace modio
 {
-  void MODWORKS_DLL emailExchange(string security_code, function< void(int response_code, string message) > callback);
-  void MODWORKS_DLL emailRequest(string email, function< void(int response_code, string message) > callback);
-  bool MODWORKS_DLL isLoggedIn();
-  void MODWORKS_DLL logout();
+  void MODIO_DLL emailExchange(string security_code, function< void(int response_code, string message) > callback);
+  void MODIO_DLL emailRequest(string email, function< void(int response_code, string message) > callback);
+  bool MODIO_DLL isLoggedIn();
+  void MODIO_DLL logout();
 }
 
 #endif

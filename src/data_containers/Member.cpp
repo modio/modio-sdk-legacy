@@ -1,6 +1,6 @@
 #include "data_containers/Member.h"
 
-namespace modworks
+namespace modio
 {
   Member::Member(json member_json)
   {

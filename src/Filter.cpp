@@ -1,6 +1,6 @@
 #include "Filter.h"
 
-namespace modworks
+namespace modio
 {
   string getFilterString(Filter* filter)
   {

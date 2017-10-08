@@ -1,7 +1,7 @@
 CC = cl.exe
 CFLAGS = /EHsc /MD
 SOURCES = Example.cpp
-LIBRARIES = ../src/modworks.lib
+LIBRARIES = ../src/modio.lib
 
 build:
  $(CC) $(CFLAGS) $(SOURCES) /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE

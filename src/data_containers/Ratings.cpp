@@ -1,6 +1,6 @@
 #include "data_containers/Ratings.h"
 
-namespace modworks
+namespace modio
 {
   Ratings::Ratings(json ratings_json)
   {

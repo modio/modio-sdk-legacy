@@ -1,6 +1,6 @@
 #include "Utility.h"
 
-namespace modworks
+namespace modio
 {
   string toString(int number)
   {
@@ -39,7 +39,7 @@ namespace modworks
 
   void clearLog()
   {
-    ofstream log_file(getModworksDirectory() + "log");
+    ofstream log_file(getModIODirectory() + "log");
     log_file.close();
   }
 
@@ -48,7 +48,7 @@ namespace modworks
     if(DEBUG_LEVEL == error && debug_mode == verbose)
       return;
 
-    ofstream log_file(getModworksDirectory() + "log", ios::app);
+    ofstream log_file(getModIODirectory() + "log", ios::app);
     if(debug_mode == error)
       log_file<<"Error: ";
     log_file<<text.c_str()<<"\n";
@@ -89,11 +89,11 @@ namespace modworks
     return filenames;
   }
 
-  string getModworksDirectory()
+  string getModIODirectory()
   {
     if(ROOT_PATH != "" && ROOT_PATH[ROOT_PATH.size()-1] != '/')
       ROOT_PATH += "/";
-    return ROOT_PATH + ".modworks/";
+    return ROOT_PATH + ".modio/";
   }
 
   bool hasKey(json json_object, string key)

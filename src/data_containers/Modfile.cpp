@@ -1,6 +1,6 @@
 #include "data_containers/Modfile.h"
 
-namespace modworks
+namespace modio
 {
   Modfile::Modfile(json modfile_json)
   {

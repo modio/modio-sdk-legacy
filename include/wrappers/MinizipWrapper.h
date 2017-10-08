@@ -1,5 +1,5 @@
-#ifndef MODWORKS_MINIZIP_WRAPPER_H
-#define MODWORKS_MINIZIP_WRAPPER_H
+#ifndef MODIO_MINIZIP_WRAPPER_H
+#define MODIO_MINIZIP_WRAPPER_H
 
 #include <iostream>
 #include <stdio.h>
@@ -16,7 +16,7 @@
 
 using namespace std;
 
-namespace modworks
+namespace modio
 {
   namespace minizipwrapper
   {

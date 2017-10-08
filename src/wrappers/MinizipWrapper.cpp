@@ -1,6 +1,6 @@
 #include "wrappers/MinizipWrapper.h"
 
-namespace modworks
+namespace modio
 {
   namespace minizipwrapper
   {

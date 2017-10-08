@@ -1,5 +1,5 @@
-#ifndef MODWORKS_MODFILE
-#define MODWORKS_MODFILE
+#ifndef MODIO_MODFILE_H
+#define MODIO_MODFILE_H
 
 #include "dependencies/json/json.hpp"
 #include "data_containers/Member.h"
@@ -8,7 +8,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   class Modfile
   {

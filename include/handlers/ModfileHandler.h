@@ -1,6 +1,9 @@
+#ifndef MODIO_MODFILE_HANDLER_H
+#define MODIO_MODFILE_HANDLER_H
+
 #include "Globals.h"
 
-namespace modworks
+namespace modio
 {
   class ModfileHandler
   {
@@ -13,3 +16,5 @@ namespace modworks
     void setActive(string active);
   };
 }
+
+#endif

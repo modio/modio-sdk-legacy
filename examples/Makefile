@@ -4,7 +4,7 @@ LDFLAGS=-lcurl -pthread -lz
 SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
-LIBRARIES=../src/modworks.so
+LIBRARIES=../src/modio.so
 
 all: $(SOURCES) $(EXECUTABLE)
 

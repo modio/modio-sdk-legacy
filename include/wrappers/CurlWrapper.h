@@ -1,5 +1,5 @@
-#ifndef MODWORKS_CURL_WRAPPER_H
-#define MODWORKS_CURL_WRAPPER_H
+#ifndef MODIO_CURL_WRAPPER_H
+#define MODIO_CURL_WRAPPER_H
 
 #include <stdio.h>
 #include <iostream>
@@ -15,7 +15,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   namespace curlwrapper
   {

@@ -1,4 +1,4 @@
-#include "ModworksSDK.h"
+#include "ModIOSDK.h"
 
 #ifdef _WIN32
 #define WINDOWS
@@ -16,7 +16,7 @@ int files_to_download = 5;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onModEdited(int response_code, string message, modworks::Mod* mod)
+void onModEdited(int response_code, string message, modio::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
@@ -26,7 +26,7 @@ void onModEdited(int response_code, string message, modworks::Mod* mod)
   }
 }
 
-void onModDeleted(int response_code, string message, modworks::Mod* mod)
+void onModDeleted(int response_code, string message, modio::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
@@ -60,7 +60,7 @@ void onExchange(int response_code, string message)
   email_exchange_finished = true;
 }
 
-void onImageDownloaded(int response_code, string message, modworks::Mod* mod, string path)
+void onImageDownloaded(int response_code, string message, modio::Mod* mod, string path)
 {
   if(response_code == 200)
   {
@@ -69,7 +69,7 @@ void onImageDownloaded(int response_code, string message, modworks::Mod* mod, st
   files_downloaded++;
 }
 
-void onModInstalled(int response_code, string message, modworks::Mod* mod, string path)
+void onModInstalled(int response_code, string message, modio::Mod* mod, string path)
 {
   if(response_code == 200)
   {
@@ -78,7 +78,7 @@ void onModInstalled(int response_code, string message, modworks::Mod* mod, strin
   files_downloaded++;
 }
 
-void onMediaImagesDownloaded(int response_code, string message, modworks::Mod* mod, vector<string> images)
+void onMediaImagesDownloaded(int response_code, string message, modio::Mod* mod, vector<string> images)
 {
   if(response_code == 200)
   {
@@ -89,7 +89,7 @@ void onMediaImagesDownloaded(int response_code, string message, modworks::Mod* m
   files_downloaded++;
 }
 
-void onModsGet(int response_code, string message, vector<modworks::Mod*> mods)
+void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
 {
   cout<<"Listing mods"<<endl;
   cout<<"============"<<endl;
@@ -97,7 +97,7 @@ void onModsGet(int response_code, string message, vector<modworks::Mod*> mods)
   {
     cout<<mods[i]->name<<endl;
 
-    modworks::deleteMod(mods[i],&onModDeleted);
+    modio::deleteMod(mods[i],&onModDeleted);
   }
 
   cout<<endl<<endl;
@@ -106,16 +106,16 @@ void onModsGet(int response_code, string message, vector<modworks::Mod*> mods)
   cout<<"=================="<<endl;
   for(int i=0;i<(int)mods.size();i++)
   {
-    modworks::downloadModLogoThumbnail(mods[i], &onImageDownloaded);
-    modworks::downloadModLogoFull(mods[i], &onImageDownloaded);
-    modworks::downloadModMediaImagesThumbnail(mods[i], &onMediaImagesDownloaded);
-    modworks::downloadModMediaImagesFull(mods[i], &onMediaImagesDownloaded);
-    modworks::installMod(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
+    modio::downloadModLogoThumbnail(mods[i], &onImageDownloaded);
+    modio::downloadModLogoFull(mods[i], &onImageDownloaded);
+    modio::downloadModMediaImagesThumbnail(mods[i], &onMediaImagesDownloaded);
+    modio::downloadModMediaImagesFull(mods[i], &onMediaImagesDownloaded);
+    modio::installMod(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
   */
 }
 
-void onModAdded(int response_code, string message, modworks::Mod* mod)
+void onModAdded(int response_code, string message, modio::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
@@ -124,53 +124,53 @@ void onModAdded(int response_code, string message, modworks::Mod* mod)
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;
 
-    modworks::ModfileHandler* modfile_handler = new modworks::ModfileHandler();
+    modio::ModfileHandler* modfile_handler = new modio::ModfileHandler();
     modfile_handler->setPath("testdir");
     modfile_handler->setVersion("1.0.1");
     modfile_handler->setChangelog("this was a change this was a change");
-    modworks::addModfile(mod, modfile_handler, &onModAdded);
+    modio::addModfile(mod, modfile_handler, &onModAdded);
   }
 }
 
 int main(void)
 {
-  modworks::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
-  modworks::setDebugMode(modworks::verbose);
+  modio::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
+  modio::setDebugMode(modio::verbose);
 
-  if(!modworks::isLoggedIn())
+  if(!modio::isLoggedIn())
   {
     string email;
     cout<<"Enter your email: "<<endl;
     cin>>email;
-    modworks::emailRequest(email,&onEmailRequest);
+    modio::emailRequest(email,&onEmailRequest);
     while(!email_request_finished);
     string security_code;
     cout<<"Please enter the 5 digit security code: ";
     cin>>security_code;
     cout<<"Sending code"<<endl;
-    modworks::emailExchange(security_code,&onExchange);
+    modio::emailExchange(security_code,&onExchange);
     while(!email_exchange_finished);
   }
 
 /*
-  modworks::AddModHandler* add_mod_handler = new modworks::AddModHandler();
+  modio::AddModHandler* add_mod_handler = new modio::AddModHandler();
   add_mod_handler->setLogoPath("logo.png");
   add_mod_handler->setName("New sdk add method");
   add_mod_handler->setHomepage("http://www.webpage.com");
   add_mod_handler->setSummary("new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method");
 
-  modworks::addMod(add_mod_handler, &onModAdded);
+  modio::addMod(add_mod_handler, &onModAdded);
 */
 
 
-  modworks::Filter* filter = new modworks::Filter;
-  modworks::addFilterInField(filter,"id","31");
-  modworks::getMods(filter, &onModsGet);
+  modio::Filter* filter = new modio::Filter;
+  modio::addFilterInField(filter,"id","31");
+  modio::getMods(filter, &onModsGet);
 
 
   while(true);
 
-  modworks::shutdown();
+  modio::shutdown();
 
   cout<<"Process finished"<<endl;
 

@@ -1,5 +1,5 @@
-#ifndef MODWORKS_UTILITY_H
-#define MODWORKS_UTILITY_H
+#ifndef MODIO_UTILITY_H
+#define MODIO_UTILITY_H
 
 #include <iostream>
 #include <vector>
@@ -45,7 +45,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   enum DebugMode : unsigned int { verbose, error };
 
@@ -56,7 +56,7 @@ namespace modworks
   void clearLog();
   void writeLogLine(string text, DebugMode debug_mode);
   vector<string> getFilenames(string directory);
-  string getModworksDirectory();
+  string getModIODirectory();
   bool hasKey(json json_object, string key);
   void removeFile(string filename);
 }

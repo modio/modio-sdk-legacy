@@ -1,6 +1,6 @@
-#include "ModworksSDK.h"
+#include "ModIOSDK.h"
 
-namespace modworks
+namespace modio
 {
   void init(int game_id, string api_key)
   {
@@ -9,11 +9,11 @@ namespace modworks
     curlwrapper::initCurl();
 
     writeLogLine("Initializing SDK", verbose);
-    modworks::game_id = game_id;
-    modworks::api_key = api_key;
+    modio::game_id = game_id;
+    modio::api_key = api_key;
     access_token = "";
 
-    std::ifstream token_file(getModworksDirectory() + "token.json");
+    std::ifstream token_file(getModIODirectory() + "token.json");
     if(token_file.is_open())
     {
       json token_file_json;
@@ -24,9 +24,9 @@ namespace modworks
       }
     }
 
-    createDirectory(getModworksDirectory());
-    createDirectory(getModworksDirectory() + "images/");
-    createDirectory(getModworksDirectory() + "tmp/");
+    createDirectory(getModIODirectory());
+    createDirectory(getModIODirectory() + "images/");
+    createDirectory(getModIODirectory() + "tmp/");
     writeLogLine("SDK Initialized", verbose);
   }
 

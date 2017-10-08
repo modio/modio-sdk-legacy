@@ -1,5 +1,5 @@
-#ifndef MODWORKS_IMAGE
-#define MODWORKS_IMAGE
+#ifndef MODIO_IMAGE_H
+#define MODIO_IMAGE_H
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
@@ -7,7 +7,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   class Image
   {

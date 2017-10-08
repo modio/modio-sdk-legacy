@@ -1,5 +1,5 @@
-#ifndef MOD_FILTER_METHODS
-#define MOD_FILTER_METHODS
+#ifndef MODIO_FILTER_H
+#define MODIO_FILTER_H
 
 #include <map>
 #include "Globals.h"
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace modworks
+namespace modio
 {
   struct Filter
   {

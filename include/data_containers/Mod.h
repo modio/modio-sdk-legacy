@@ -1,5 +1,5 @@
-#ifndef MODWORKS_MOD_H
-#define MODWORKS_MOD_H
+#ifndef MODIO_MOD_H
+#define MODIO_MOD_H
 
 #include <thread>
 #include "dependencies/json/json.hpp"
@@ -15,7 +15,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   class Mod
   {

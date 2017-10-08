@@ -1,5 +1,5 @@
-#ifndef MODWORKS_TAG
-#define MODWORKS_TAG
+#ifndef MODIO_TAG_H
+#define MODIO_TAG_H
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
@@ -7,7 +7,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   class Tag
   {

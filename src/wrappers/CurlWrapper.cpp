@@ -1,6 +1,6 @@
 #include "wrappers/CurlWrapper.h"
 
-namespace modworks
+namespace modio
 {
   namespace curlwrapper
   {
@@ -178,7 +178,7 @@ namespace modworks
       {
         curl_easy_pause(current_download_handle->curl , CURLPAUSE_RECV);
 
-        string file_path = getModworksDirectory() + "paused_download.json";
+        string file_path = getModIODirectory() + "paused_download.json";
 
         json paused_download_json;
 
@@ -228,7 +228,7 @@ namespace modworks
 
     curl_off_t getProgressIfStored(string path)
     {
-      string file_path = getModworksDirectory() + "paused_download.json";
+      string file_path = getModIODirectory() + "paused_download.json";
       std::ifstream in(file_path);
       json modfile_downloads_json;
       if(in.is_open())

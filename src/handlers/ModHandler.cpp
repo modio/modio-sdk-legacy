@@ -1,6 +1,6 @@
 #include "handlers/ModHandler.h"
 
-namespace modworks
+namespace modio
 {
   void ModHandler::setLogoPath(string logo_path)
   {

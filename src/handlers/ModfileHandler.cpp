@@ -1,6 +1,6 @@
 #include "handlers/ModfileHandler.h"
 
-namespace modworks
+namespace modio
 {
   void ModfileHandler::setVersion(string version)
   {

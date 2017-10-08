@@ -3,7 +3,7 @@ CFLAGS=-c -Wall -std=c++11
 SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
-LIBRARIES=../src/modworks.a
+LIBRARIES=../src/modio.a
 
 all: $(SOURCES) $(EXECUTABLE)
 

@@ -3,9 +3,9 @@ include Sources.mk
 CC = clang++
 CFLAGS = -c -Wall -std=c++11 -fPIC
 LDFLAGS = -lcurl -pthread -lz
-SOURCES = $(MODWORKS_SOURCES)
+SOURCES = $(MODIO_SOURCES)
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARY = modworks.dylib
+LIBRARY = modio.dylib
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@ -I ../include

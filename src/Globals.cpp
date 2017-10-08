@@ -1,6 +1,6 @@
 #include "Globals.h"
 
-namespace modworks
+namespace modio
 {
   string api_key;
   string access_token = "";

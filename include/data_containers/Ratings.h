@@ -1,5 +1,5 @@
-#ifndef MODWORKS_RATINGS
-#define MODWORKS_RATINGS
+#ifndef MODIO_RATINGS_H
+#define MODIO_RATINGS_H
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
@@ -7,7 +7,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modworks
+namespace modio
 {
   class Ratings
   {

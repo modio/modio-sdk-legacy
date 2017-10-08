@@ -2,14 +2,14 @@ include Sources.mk
 
 CC = g++
 CFLAGS = -c -Wall -std=c++11
-SOURCES = $(MODWORKS_SOURCES)
+SOURCES = $(MODIO_SOURCES)
 OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/libz.a
-IMPORT_LIBRARY = modworks.a
-LIBRARY = modworks.dll
+IMPORT_LIBRARY = modio.a
+LIBRARY = modio.dll
 
 .cpp.o:
-	$(CC) -DBUILDING_MODWORKS_DLL $(CFLAGS) $< -o $@ -I ../include
+	$(CC) -DBUILDING_MODIO_DLL $(CFLAGS) $< -o $@ -I ../include
 
 $(LIBRARY): $(OBJECTS)
 	$(CC) -shared -o $(LIBRARY) $(OBJECTS) -Wl,--out-implib,$(IMPORT_LIBRARY) $(LIBRARIES)
