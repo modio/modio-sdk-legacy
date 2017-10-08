@@ -149,6 +149,11 @@ namespace modworks
 
       json json_response = parseJsonResonse(ongoing_calls[curl]->response);
 
+      if(json_response.is_array())
+      {
+        json_response = "{}"_json;
+      }
+
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
