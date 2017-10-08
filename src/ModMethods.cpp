@@ -92,7 +92,7 @@ namespace modworks
     add_mod_callback.erase(call_number);
   }
 
-  void editMod(Mod* mod, AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
+  void editMod(Mod* mod, ModHandler* add_mod_handler, function<void(int, Mod*)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
@@ -109,7 +109,7 @@ namespace modworks
     email_exchage_thread.detach();
   }
 
-  void addMod(AddModHandler* add_mod_handler, function<void(int, Mod*)> callback)
+  void addMod(ModHandler* add_mod_handler, function<void(int, Mod*)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
@@ -156,7 +156,7 @@ namespace modworks
     add_file_callbacks.erase(call_number);
   }
 
-  void addModFile(Mod *mod, AddModFileHandler* add_mod_file_handler, function<void(int, Mod*)> callback)
+  void addModfile(Mod *mod, ModfileHandler* add_mod_file_handler, function<void(int, Mod*)> callback)
   {
     minizipwrapper::compress(add_mod_file_handler->path, getModworksDirectory() + "tmp/modfile.zip");
     vector<string> headers;
@@ -288,76 +288,5 @@ namespace modworks
 
     std::thread download_thread(curlwrapper::download, call_number, mod->modfile->download + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
-  }
-
-  void AddModHandler::setLogoPath(string logo_path)
-  {
-    this->curlform_files["logo"] = logo_path;
-  }
-
-  void AddModHandler::setName(string name)
-  {
-    this->curlform_copycontents["name"] = name;
-  }
-
-  void AddModHandler::setHomepage(string homepage)
-  {
-    this->curlform_copycontents["homepage"] = homepage;
-  }
-
-  void AddModHandler::setSummary(string summary)
-  {
-    this->curlform_copycontents["summary"] = summary;
-  }
-
-  void AddModHandler::setPrice(double price)
-  {
-    this->curlform_copycontents["price"] = price;
-  }
-
-  void AddModHandler::setStock(int stock)
-  {
-    this->curlform_copycontents["stock"] = stock;
-  }
-
-  void AddModHandler::setDescription(string description)
-  {
-    this->curlform_copycontents["description"] = description;
-  }
-
-  void AddModHandler::setMetadata(string metadata)
-  {
-    this->curlform_copycontents["metadata"] = metadata;
-  }
-
-  void AddModHandler::setNameid(string nameid)
-  {
-    this->curlform_copycontents["nameid"] = nameid;
-  }
-
-  void AddModHandler::setModfile(int modfile)
-  {
-    this->curlform_copycontents["modfile"] = modfile;
-  }
-
-
-  void AddModFileHandler::setVersion(string version)
-  {
-    this->curlform_copycontents["version"] = version;
-  }
-
-  void AddModFileHandler::setChangelog(string changelog)
-  {
-    this->curlform_copycontents["changelog"] = changelog;
-  }
-
-  void AddModFileHandler::setPath(string path)
-  {
-    this->path = path;
-  }
-
-  void AddModFileHandler::setActive(string active)
-  {
-    this->curlform_copycontents["active"] = active;
   }
 }

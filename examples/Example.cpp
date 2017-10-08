@@ -124,11 +124,11 @@ void onModAdded(int response_code, modworks::Mod* mod)
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;
 
-    modworks::AddModFileHandler* add_mod_file_handler = new modworks::AddModFileHandler();
-    add_mod_file_handler->setPath("testdir");
-    add_mod_file_handler->setVersion("1.0.1");
-    add_mod_file_handler->setChangelog("this was a change this was a change");
-    modworks::addModFile(mod, add_mod_file_handler, &onModAdded);
+    modworks::ModfileHandler* modfile_handler = new modworks::ModfileHandler();
+    modfile_handler->setPath("testdir");
+    modfile_handler->setVersion("1.0.1");
+    modfile_handler->setChangelog("this was a change this was a change");
+    modworks::addModfile(mod, modfile_handler, &onModAdded);
   }
 }
 
