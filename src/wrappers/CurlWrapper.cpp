@@ -104,7 +104,7 @@ namespace modworks
       return json_response;
     }
 
-    void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback)
+    void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine("getJsonCall call to " + url, verbose);
       lockCall(call_number);
@@ -158,7 +158,7 @@ namespace modworks
       if(hasKey(json_response, "message"))
         message = json_response["message"];
 
-      callback(call_number, response_code, json_response);
+      callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + "finished", verbose);
     }
@@ -249,7 +249,7 @@ namespace modworks
       return current_download_info;
     }
 
-    void download(int call_number, string url, string path, function< void(int call_number, int response_code, string url, string path) > callback)
+    void download(int call_number, string url, string path, function< void(int call_number, int response_code, string message, string url, string path) > callback)
     {
       writeLogLine("downloadFile call to " + url, verbose);
       lockCall(call_number);
@@ -320,12 +320,12 @@ namespace modworks
       current_download_info.download_total = 0;
       current_download_info.download_progress = 0;
 
-      callback(call_number, response_code, url, path);
+      callback(call_number, response_code, "", url, path);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + " finished", verbose);
     }
 
-    void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, json response)> callback)
+    void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("postForm call to ") + url, verbose);
       lockCall(call_number);
@@ -409,12 +409,12 @@ namespace modworks
       if(hasKey(json_response, "message"))
         message = json_response["message"];
 
-      callback(call_number, response_code, json_response);
+      callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine(string("postForm call to ") + url + " finished", verbose);
     }
 
-    void post(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, json response)> callback)
+    void post(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("post call to ") + url, verbose);
       lockCall(call_number);
@@ -469,12 +469,12 @@ namespace modworks
       if(hasKey(json_response, "message"))
         message = json_response["message"];
 
-      callback(call_number, response_code, json_response);
+      callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine(string("post call to ") + url + " finished", verbose);
     }
 
-    void put(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, json response)> callback)
+    void put(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("put call to ") + url, verbose);
       lockCall(call_number);
@@ -526,12 +526,12 @@ namespace modworks
       if(hasKey(json_response, "message"))
         message = json_response["message"];
 
-      callback(call_number, response_code, json_response);
+      callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine(string("put call to ") + url + " finished", verbose);
     }
 
-    void deleteCall(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response)> callback)
+    void deleteCall(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("delete call to ") + url, verbose);
       lockCall(call_number);
@@ -577,7 +577,7 @@ namespace modworks
 
       cout<<"Message: "<<json_response<<endl;
 
-      callback(call_number, response_code, json_response);
+      callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine(string("delete call to ") + url + " finished", verbose);
     }

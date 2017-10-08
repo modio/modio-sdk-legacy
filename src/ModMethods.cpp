@@ -7,19 +7,19 @@ namespace modworks
     string directory_path;
     string version;
     string changelog;
-    function<void(int, Mod*)> callback;
+    function<void(int, string, Mod*)> callback;
   };
 
   struct AddFileParams
   {
     Mod* mod;
-    function< void(int, Mod*) > callback;
+    function< void(int, string, Mod*) > callback;
   };
 
   struct DownloadImageParams
   {
     Mod* mod;
-    function< void(int, Mod*, string) > callback;
+    function< void(int, string, Mod*, string) > callback;
   };
 
   struct DownloadImagesParams
@@ -27,32 +27,32 @@ namespace modworks
     Mod* mod;
     int image_amount;
     vector<string> images;
-    function< void(int, Mod*, vector<string>) > callback;
+    function< void(int, string, Mod*, vector<string>) > callback;
   };
 
   struct DeleteModParams
   {
     Mod* mod;
-    function<void(int, Mod*)> callback;
+    function<void(int, string, Mod*)> callback;
   };
 
   struct DownloadModfileParams
   {
     Mod* mod;
     string destination_path;
-    function< void(int, Mod*, string) > callback;
+    function< void(int, string, Mod*, string) > callback;
   };
 
   map< int,AddModParams* > add_mod_callback;
   map< int,DeleteModParams* > delete_mod_callbacks;
-  map< int,function<void(int, vector<Mod*>)> > get_mods_callbacks;
+  map< int,function<void(int, string, vector<Mod*>)> > get_mods_callbacks;
 
   map< int, AddFileParams* > add_file_callbacks;
   map< int, DownloadImageParams* > download_image_callbacks;
   map< int, DownloadImagesParams* > download_images_callbacks;
   map< int, DownloadModfileParams* > download_modfile_callbacks;
 
-  void onGetMods(int call_number, int response_code, json response)
+  void onGetMods(int call_number, int response_code, string message, json response)
   {
     vector<Mod*> mods;
 
@@ -65,11 +65,11 @@ namespace modworks
       }
     }
 
-    get_mods_callbacks[call_number](response_code,mods);
+    get_mods_callbacks[call_number](response_code, message, mods);
     get_mods_callbacks.erase(call_number);
   }
 
-  void getMods(Filter* filter, function< void(int, vector<Mod*>) > callback)
+  void getMods(Filter* filter, function< void(int response_code, string message, vector<Mod*> mods) > callback)
   {
     string filter_string = getFilterString(filter);
     vector<string> headers;
@@ -85,14 +85,14 @@ namespace modworks
     get_mods_thread.detach();
   }
 
-  void onModAdded(int call_number, int response_code, json response)
+  void onModAdded(int call_number, int response_code, string message, json response)
   {
     Mod* mod = new Mod(response);
-    add_mod_callback[call_number]->callback(response_code, mod);
+    add_mod_callback[call_number]->callback(response_code, message, mod);
     add_mod_callback.erase(call_number);
   }
 
-  void editMod(Mod* mod, ModHandler* add_mod_handler, function<void(int, Mod*)> callback)
+  void editMod(Mod* mod, ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
@@ -109,7 +109,7 @@ namespace modworks
     email_exchage_thread.detach();
   }
 
-  void addMod(ModHandler* add_mod_handler, function<void(int, Mod*)> callback)
+  void addMod(ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
@@ -126,14 +126,14 @@ namespace modworks
     add_mod_thread.detach();
   }
 
-  void onModDeleted(int call_number, int response_code, json response)
+  void onModDeleted(int call_number, int response_code, string message, json response)
   {
     Mod* mod = new Mod(response);
-    delete_mod_callbacks[call_number]->callback(response_code, mod);
+    delete_mod_callbacks[call_number]->callback(response_code, message, mod);
     delete_mod_callbacks.erase(call_number);
   }
 
-  void deleteMod(Mod* mod, function<void(int, Mod*)> callback)
+  void deleteMod(Mod* mod, function<void(int response_code, string message, Mod* mod)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
@@ -150,13 +150,13 @@ namespace modworks
     email_exchage_thread.detach();
   }
 
-  void onFileAdded(int call_number, int response_code, json response)
+  void onFileAdded(int call_number, int response_code, string message, json response)
   {
-    add_file_callbacks[call_number]->callback(200,add_file_callbacks[call_number]->mod);
+    add_file_callbacks[call_number]->callback(200, message, add_file_callbacks[call_number]->mod);
     add_file_callbacks.erase(call_number);
   }
 
-  void addModfile(Mod *mod, ModfileHandler* add_mod_file_handler, function<void(int, Mod*)> callback)
+  void addModfile(Mod *mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, Mod* mod)> callback)
   {
     minizipwrapper::compress(add_mod_file_handler->path, getModworksDirectory() + "tmp/modfile.zip");
     vector<string> headers;
@@ -178,13 +178,13 @@ namespace modworks
   }
 
 
-  void onImageDownloaded(int call_number, int response_code, string url, string path)
+  void onImageDownloaded(int call_number, int response_code, string message, string url, string path)
   {
-    download_image_callbacks[call_number]->callback(response_code, download_image_callbacks[call_number]->mod, path);
+    download_image_callbacks[call_number]->callback(response_code, message, download_image_callbacks[call_number]->mod, path);
     download_image_callbacks.erase(call_number);
   }
 
-  void downloadModLogoThumbnail(Mod *mod, function< void(int, Mod*, string) > callback)
+  void downloadModLogoThumbnail(Mod *mod, function< void(int response_code, string message, Mod* mod, string path) > callback)
   {
     string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_thumb.png";
 
@@ -200,7 +200,7 @@ namespace modworks
     download_image_thread.detach();
   }
 
-  void downloadModLogoFull(Mod *mod, function< void(int, Mod*, string) > callback)
+  void downloadModLogoFull(Mod *mod, function< void(int response_code, string message, Mod*mod, string path) > callback)
   {
     string file_path = string(getModworksDirectory() + "images/") + toString(mod->id) + "_mod_logo_full.png";
 
@@ -216,17 +216,17 @@ namespace modworks
     download_image_thread.detach();
   }
 
-  void onImageFromVectorDownloaded(int call_number, int response_code, string url, string path)
+  void onImageFromVectorDownloaded(int call_number, int response_code, string message, string url, string path)
   {
     download_images_callbacks[call_number]->images.push_back(path);
     if((int)download_images_callbacks[call_number]->images.size() == download_images_callbacks[call_number]->image_amount)
     {
-      download_images_callbacks[call_number]->callback(response_code, download_images_callbacks[call_number]->mod, download_images_callbacks[call_number]->images);
+      download_images_callbacks[call_number]->callback(response_code, message, download_images_callbacks[call_number]->mod, download_images_callbacks[call_number]->images);
     }
     download_images_callbacks.erase(call_number);
   }
 
-  void downloadModMediaImagesThumbnail(Mod *mod, function< void(int, Mod*, vector<string>) > callback)
+  void downloadModMediaImagesThumbnail(Mod *mod, function< void(int response_code, string message, Mod* mod, vector<string> paths) > callback)
   {
     DownloadImagesParams* download_images_params = new DownloadImagesParams;
     download_images_params->mod = mod;
@@ -245,7 +245,7 @@ namespace modworks
     }
   }
 
-  void downloadModMediaImagesFull(Mod *mod, function< void(int, Mod*, vector<string>) > callback)
+  void downloadModMediaImagesFull(Mod *mod, function< void(int response_code, string message, Mod* mod, vector<string> paths) > callback)
   {
     DownloadImagesParams* download_images_params = new DownloadImagesParams;
     download_images_params->mod = mod;
@@ -264,17 +264,17 @@ namespace modworks
     }
   }
 
-  void onModfileDownloaded(int call_number, int response_code, string url, string path)
+  void onModfileDownloaded(int call_number, int response_code, string message, string url, string path)
   {
     string destintation_path = download_modfile_callbacks[call_number]->destination_path;
     createDirectory(destintation_path);
     minizipwrapper::extract(path, destintation_path);
     removeFile(path);
-    download_modfile_callbacks[call_number]->callback(response_code, download_modfile_callbacks[call_number]->mod, path);
+    download_modfile_callbacks[call_number]->callback(response_code, message, download_modfile_callbacks[call_number]->mod, path);
     download_modfile_callbacks.erase(call_number);
   }
 
-  void installMod(Mod *mod, string destination_path, function< void(int, Mod*, string) > callback)
+  void installMod(Mod *mod, string destination_path, function< void(int response_code, string message, Mod* mod, string path) > callback)
   {
     string file_path = string(getModworksDirectory() + "tmp/") + toString(mod->modfile->id) + "_modfile.zip";
 

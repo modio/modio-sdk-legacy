@@ -2,16 +2,16 @@
 
 namespace modworks
 {
-  map< int,function<void(int)> > email_request_callbacks;
-  map< int,function<void(int)> > email_exchange_callbacks;
+  map< int,function<void(int, string)> > email_request_callbacks;
+  map< int,function<void(int, string)> > email_exchange_callbacks;
 
-  void onEmailRequested(int call_number, int response_code, json response)
+  void onEmailRequested(int call_number, int response_code, string message, json response)
   {
-    email_request_callbacks[call_number](response_code);
+    email_request_callbacks[call_number](response_code, message);
     email_request_callbacks.erase(call_number);
   }
 
-  void emailRequest(string email, function< void(int response_code) > callback)
+  void emailRequest(string email, function< void(int response_code, string message) > callback)
   {
     map<string, string> data;
     data["api_key"] = api_key;
@@ -28,7 +28,7 @@ namespace modworks
     email_request_thread.detach();
   }
 
-  void onEmailExchanged(int call_number, int response_code, json response)
+  void onEmailExchanged(int call_number, int response_code, string message, json response)
   {
     if(response_code == 200)
     {
@@ -40,11 +40,11 @@ namespace modworks
       out.close();
     }
 
-    email_exchange_callbacks[call_number](response_code);
+    email_exchange_callbacks[call_number](response_code, message);
     email_exchange_callbacks.erase(call_number);
   }
 
-  void emailExchange(string security_code, function< void(int) > callback)
+  void emailExchange(string security_code, function< void(int response_code, string message) > callback)
   {
     map<string, string> data;
     data["api_key"] = api_key;

@@ -16,7 +16,7 @@ int files_to_download = 5;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onModEdited(int response_code, modworks::Mod* mod)
+void onModEdited(int response_code, string message, modworks::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
@@ -26,7 +26,7 @@ void onModEdited(int response_code, modworks::Mod* mod)
   }
 }
 
-void onModDeleted(int response_code, modworks::Mod* mod)
+void onModDeleted(int response_code, string message, modworks::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
@@ -36,7 +36,7 @@ void onModDeleted(int response_code, modworks::Mod* mod)
   }
 }
 
-void onEmailRequest(int response_code)
+void onEmailRequest(int response_code, string message)
 {
   if(response_code == 200)
   {
@@ -48,7 +48,7 @@ void onEmailRequest(int response_code)
   email_request_finished = true;
 }
 
-void onExchange(int response_code)
+void onExchange(int response_code, string message)
 {
   if(response_code == 200)
   {
@@ -60,7 +60,7 @@ void onExchange(int response_code)
   email_exchange_finished = true;
 }
 
-void onImageDownloaded(int response_code,  modworks::Mod* mod, string path)
+void onImageDownloaded(int response_code, string message, modworks::Mod* mod, string path)
 {
   if(response_code == 200)
   {
@@ -69,7 +69,7 @@ void onImageDownloaded(int response_code,  modworks::Mod* mod, string path)
   files_downloaded++;
 }
 
-void onModInstalled(int response_code,  modworks::Mod* mod, string path)
+void onModInstalled(int response_code, string message, modworks::Mod* mod, string path)
 {
   if(response_code == 200)
   {
@@ -78,7 +78,7 @@ void onModInstalled(int response_code,  modworks::Mod* mod, string path)
   files_downloaded++;
 }
 
-void onMediaImagesDownloaded(int response_code, modworks::Mod* mod, vector<string> images)
+void onMediaImagesDownloaded(int response_code, string message, modworks::Mod* mod, vector<string> images)
 {
   if(response_code == 200)
   {
@@ -89,7 +89,7 @@ void onMediaImagesDownloaded(int response_code, modworks::Mod* mod, vector<strin
   files_downloaded++;
 }
 
-void onModsGet(int status, vector<modworks::Mod*> mods)
+void onModsGet(int response_code, string message, vector<modworks::Mod*> mods)
 {
   cout<<"Listing mods"<<endl;
   cout<<"============"<<endl;
@@ -115,7 +115,7 @@ void onModsGet(int status, vector<modworks::Mod*> mods)
   */
 }
 
-void onModAdded(int response_code, modworks::Mod* mod)
+void onModAdded(int response_code, string message, modworks::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 

@@ -18,8 +18,8 @@
 
 namespace modworks
 {
-  void MODWORKS_DLL emailExchange(string security_code, function< void(int response_code) > callback);
-  void MODWORKS_DLL emailRequest(string email, function< void(int response_code) > callback);
+  void MODWORKS_DLL emailExchange(string security_code, function< void(int response_code, string message) > callback);
+  void MODWORKS_DLL emailRequest(string email, function< void(int response_code, string message) > callback);
   bool MODWORKS_DLL isLoggedIn();
   void MODWORKS_DLL logout();
 }
