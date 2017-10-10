@@ -90,22 +90,47 @@ void onMediaImagesDownloaded(int response_code, string message, modio::Mod* mod,
   files_downloaded++;
 }
 
+void onModfileAdded(int response_code, string message, modio::Mod* mod)
+{
+  cout<<"Response: "<<response_code<<endl;
+}
+
+void onModfileEdited(int response_code, string message, modio::Modfile* modfile)
+{
+  cout<<"Response: "<<response_code<<endl;
+}
+
 void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
 {
   cout<<"Listing mods"<<endl;
   cout<<"============"<<endl;
-  
-  /*
+
+/*
+  modio::ModfileHandler* add_mod_file_handler = new modio::ModfileHandler();
+  add_mod_file_handler->setPath("moddir");
+  add_mod_file_handler->setVersion("v1.1.1");
+  add_mod_file_handler->setChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+
+  addModfile(mods[0], add_mod_file_handler, &onModfileAdded);
+*/
+
+/*
+  cout<<"Version: "<<mods[0]->modfile->version<<endl;
+  cout<<"Changelog: "<<mods[0]->modfile->changelog<<endl;
+  modio::ModfileHandler* edit_mod_file_handler = new modio::ModfileHandler();
+  edit_mod_file_handler->setVersion("v1.1.2");
+  edit_mod_file_handler->setChangelog("Changed! This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+  editModfile(mods[0]->modfile, edit_mod_file_handler, &onModfileEdited);
+*/
+
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
-
-    modio::deleteMod(mods[i],&onModDeleted);
   }
-  */
 
   cout<<endl<<endl;
 
+/*
   cout<<"Downloads starting"<<endl;
   cout<<"=================="<<endl;
   for(int i=0;i<(int)mods.size();i++)
@@ -116,6 +141,7 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
     modio::downloadModMediaImagesFull(mods[i], &onMediaImagesDownloaded);
     modio::installMod(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
+*/
 }
 
 void onModAdded(int response_code, string message, modio::Mod* mod)
@@ -126,7 +152,7 @@ void onModAdded(int response_code, string message, modio::Mod* mod)
   {
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;
-	
+
     modio::ModfileHandler* modfile_handler = new modio::ModfileHandler();
     modfile_handler->setPath("testdir");
     modfile_handler->setVersion("1.0.1");
@@ -167,7 +193,7 @@ int main(void)
 
 
   modio::Filter* filter = new modio::Filter;
-  modio::addFilterInField(filter,string("id"),string("31"));
+  modio::addFilterInField(filter,"id","24");
   modio::getMods(filter, &onModsGet);
 
 

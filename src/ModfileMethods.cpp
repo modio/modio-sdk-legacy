@@ -8,12 +8,25 @@ namespace modio
     function< void(int, string, Mod*) > callback;
   };
 
-  map< int, AddModfileParams* > add_modfile_callbacks;
+  struct EditModfileParams
+  {
+    Modfile* modfile;
+    function< void(int, string, Modfile*) > callback;
+  };
 
-  void onFileAdded(int call_number, int response_code, string message, json response)
+  map< int, AddModfileParams* > add_modfile_callbacks;
+  map< int, EditModfileParams* > edit_modfile_callbacks;
+
+  void onModfileAdded(int call_number, int response_code, string message, json response)
   {
     add_modfile_callbacks[call_number]->callback(200, message, add_modfile_callbacks[call_number]->mod);
     add_modfile_callbacks.erase(call_number);
+  }
+
+  void onModfileEdited(int call_number, int response_code, string message, json response)
+  {
+    edit_modfile_callbacks[call_number]->callback(200, message, edit_modfile_callbacks[call_number]->modfile);
+    edit_modfile_callbacks.erase(call_number);
   }
 
   void addModfile(Mod *mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, Mod* mod)> callback)
@@ -33,7 +46,26 @@ namespace modio
     map<string, string> curlform_files;
     curlform_files["filedata"] = getModIODirectory() + "tmp/modfile.zip";
 
-    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, curlform_files, &onFileAdded);
+    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, curlform_files, &onModfileAdded);
     add_file_thread.detach();
+  }
+
+
+  void MODIO_DLL editModfile(Modfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, Modfile* modfile)> callback)
+  {
+    vector<string> headers;
+    headers.push_back("Authorization: Bearer turupawn");
+
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
+
+    edit_modfile_callbacks[call_number] = new EditModfileParams;
+    edit_modfile_callbacks[call_number]->modfile = modfile;
+    edit_modfile_callbacks[call_number]->callback = callback;
+
+    string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods/" + toString(modfile->mod) + "/files/" + toString(modfile->id);
+
+    std::thread edit_modfile_thread(curlwrapper::put, call_number, url, headers, modfile_handler->curlform_copycontents, &onModfileEdited);
+    edit_modfile_thread.detach();
   }
 }

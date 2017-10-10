@@ -9,6 +9,7 @@
 #include "Globals.h"
 #include "AuthenticationMethods.h"
 #include "ModMethods.h"
+#include "ModfileMethods.h"
 
 namespace modio
 {
