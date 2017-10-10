@@ -1,4 +1,5 @@
 #include "ModIOSDK.h"
+#include "Filter.h"
 
 #ifdef _WIN32
 #define WINDOWS
@@ -93,15 +94,18 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
 {
   cout<<"Listing mods"<<endl;
   cout<<"============"<<endl;
+  
+  /*
   for(int i=0;i<(int)mods.size();i++)
   {
     cout<<mods[i]->name<<endl;
 
     modio::deleteMod(mods[i],&onModDeleted);
   }
+  */
 
   cout<<endl<<endl;
-/*
+
   cout<<"Downloads starting"<<endl;
   cout<<"=================="<<endl;
   for(int i=0;i<(int)mods.size();i++)
@@ -112,7 +116,6 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
     modio::downloadModMediaImagesFull(mods[i], &onMediaImagesDownloaded);
     modio::installMod(mods[i], "mod_directory/"+mods[i]->name,&onModInstalled);
   }
-  */
 }
 
 void onModAdded(int response_code, string message, modio::Mod* mod)
@@ -123,7 +126,7 @@ void onModAdded(int response_code, string message, modio::Mod* mod)
   {
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;
-
+	
     modio::ModfileHandler* modfile_handler = new modio::ModfileHandler();
     modfile_handler->setPath("testdir");
     modfile_handler->setVersion("1.0.1");
@@ -164,7 +167,7 @@ int main(void)
 
 
   modio::Filter* filter = new modio::Filter;
-  modio::addFilterInField(filter,"id","31");
+  modio::addFilterInField(filter,string("id"),string("31"));
   modio::getMods(filter, &onModsGet);
 
 
