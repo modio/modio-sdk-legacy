@@ -10,12 +10,6 @@ namespace modio
     function<void(int, string, Mod*)> callback;
   };
 
-  struct AddFileParams
-  {
-    Mod* mod;
-    function< void(int, string, Mod*) > callback;
-  };
-
   struct DownloadImageParams
   {
     Mod* mod;
@@ -47,7 +41,6 @@ namespace modio
   map< int,DeleteModParams* > delete_mod_callbacks;
   map< int,function<void(int, string, vector<Mod*>)> > get_mods_callbacks;
 
-  map< int, AddFileParams* > add_file_callbacks;
   map< int, DownloadImageParams* > download_image_callbacks;
   map< int, DownloadImagesParams* > download_images_callbacks;
   map< int, DownloadModfileParams* > download_modfile_callbacks;
@@ -149,34 +142,6 @@ namespace modio
     std::thread email_exchage_thread(curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
     email_exchage_thread.detach();
   }
-
-  void onFileAdded(int call_number, int response_code, string message, json response)
-  {
-    add_file_callbacks[call_number]->callback(200, message, add_file_callbacks[call_number]->mod);
-    add_file_callbacks.erase(call_number);
-  }
-
-  void addModfile(Mod *mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, Mod* mod)> callback)
-  {
-    minizipwrapper::compress(add_mod_file_handler->path, getModIODirectory() + "tmp/modfile.zip");
-    vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
-    string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(mod->id) + "/files";
-
-    int call_number = curlwrapper::getCallCount();
-    curlwrapper::advanceCallCount();
-
-    add_file_callbacks[call_number] = new AddFileParams;
-    add_file_callbacks[call_number]->mod = mod;
-    add_file_callbacks[call_number]->callback = callback;
-
-    map<string, string> curlform_files;
-    curlform_files["filedata"] = getModIODirectory() + "tmp/modfile.zip";
-
-    std::thread add_file_thread(curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, curlform_files, &onFileAdded);
-    add_file_thread.detach();
-  }
-
 
   void onImageDownloaded(int call_number, int response_code, string message, string url, string path)
   {
