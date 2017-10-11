@@ -1,4 +1,4 @@
-#include "ModMethods.h"
+#include "exported_methods/ModMethods.h"
 
 namespace modio
 {

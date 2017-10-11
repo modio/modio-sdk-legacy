@@ -7,9 +7,9 @@
 #include "wrappers/MinizipWrapper.h"
 #include "data_containers/Mod.h"
 #include "Globals.h"
-#include "AuthenticationMethods.h"
-#include "ModMethods.h"
-#include "ModfileMethods.h"
+#include "exported_methods/AuthenticationMethods.h"
+#include "exported_methods/ModMethods.h"
+#include "exported_methods/ModfileMethods.h"
 
 namespace modio
 {

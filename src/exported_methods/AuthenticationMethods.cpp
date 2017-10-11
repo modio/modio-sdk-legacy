@@ -1,4 +1,4 @@
-#include "AuthenticationMethods.h"
+#include "exported_methods/AuthenticationMethods.h"
 
 namespace modio
 {
