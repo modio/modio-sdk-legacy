@@ -13,12 +13,13 @@
 
 namespace modio
 {
-  void MODIO_DLL init(int game_id, string api_key);
-  void MODIO_DLL init(int game_id, string api_key, string root_path);
-  void MODIO_DLL setDebugMode(DebugMode debug_mode);
-  void MODIO_DLL shutdown();
-  CurrentDownloadInfo MODIO_DLL getCurrentDownloadInfo();
-  void MODIO_DLL pauseCurrentDownload();
+  MODIO_DLL void init(int game_id, string api_key);
+  MODIO_DLL void init(int game_id, string api_key, string root_path);
+  MODIO_DLL void setDebugMode(DebugMode debug_mode);
+  MODIO_DLL void shutdown();
+  MODIO_DLL CurrentDownloadInfo getCurrentDownloadInfo();
+  MODIO_DLL void pauseCurrentDownload();
 }
+
 
 #endif
