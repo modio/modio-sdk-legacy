@@ -14,7 +14,7 @@ namespace modio
   void emailRequest(string email, function< void(int response_code, string message) > callback)
   {
     map<string, string> data;
-    data["api_key"] = api_key;
+    data["api_key"] = modio::API_KEY;
     data["email"] = email;
 
     vector<string> headers;
@@ -32,7 +32,7 @@ namespace modio
   {
     if(response_code == 200)
     {
-      access_token = response["access_token"];
+      modio::ACCESS_TOKEN = response["access_token"];
       json token_json;
       token_json["access_token"] = response["access_token"];
       std::ofstream out(getModIODirectory() + "token.json");
@@ -47,7 +47,7 @@ namespace modio
   void emailExchange(string security_code, function< void(int response_code, string message) > callback)
   {
     map<string, string> data;
-    data["api_key"] = api_key;
+    data["api_key"] = modio::API_KEY;
     data["security_code"] = security_code;
 
     vector<string> headers;
@@ -63,12 +63,12 @@ namespace modio
 
   bool isLoggedIn()
   {
-    return access_token!="";
+    return modio::ACCESS_TOKEN!="";
   }
 
   void logout()
   {
-    access_token = "";
+    modio::ACCESS_TOKEN = "";
 
     json empty_json;
     std::ofstream out(getModIODirectory() + "token.json");
