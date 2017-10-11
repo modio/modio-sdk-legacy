@@ -14,6 +14,7 @@ namespace modio
   void MODIO_DLL addMod(ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback);
   void MODIO_DLL editMod(Mod* mod, ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback);
   void MODIO_DLL deleteMod(Mod* mod, function<void(int response_code, string message, Mod* mod)> callback);
+  void MODIO_DLL addTags(Mod* mod, vector<string> tags, function<void(int response_code, string message, Mod* mod)> callback);
 
   void MODIO_DLL downloadModLogoThumbnail(Mod *mod, function< void(int response_code, string message, Mod* mod, string path) > callback);
   void MODIO_DLL downloadModLogoFull(Mod *mod, function< void(int response_code, string message, Mod* mod, string path) > callback);

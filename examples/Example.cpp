@@ -100,6 +100,12 @@ void onModfileEdited(int response_code, string message, modio::Modfile* modfile)
   cout<<"Response: "<<response_code<<endl;
 }
 
+void onTagsAdded(int response_code, string message, modio::Mod* mod)
+{
+  cout<<"Response: "<<response_code<<endl;
+  cout<<"Response: "<<message<<endl;
+}
+
 void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
 {
   cout<<"Listing mods"<<endl;
@@ -125,7 +131,11 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
 
   for(int i=0;i<(int)mods.size();i++)
   {
+    vector<string> tags;
+    tags.push_back("Easy");
+    tags.push_back("Medium");
     cout<<mods[i]->name<<endl;
+    modio::addTags(mods[0], tags, &onTagsAdded);
   }
 
   cout<<endl<<endl;

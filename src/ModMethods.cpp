@@ -4,9 +4,6 @@ namespace modio
 {
   struct AddModParams
   {
-    string directory_path;
-    string version;
-    string changelog;
     function<void(int, string, Mod*)> callback;
   };
 
@@ -37,9 +34,16 @@ namespace modio
     function< void(int, string, Mod*, string) > callback;
   };
 
+  struct EditTagsParams
+  {
+    Mod* mod;
+    function<void(int, string, Mod*)> callback;
+  };
+
   map< int,AddModParams* > add_mod_callback;
   map< int,DeleteModParams* > delete_mod_callbacks;
   map< int,function<void(int, string, vector<Mod*>)> > get_mods_callbacks;
+  map< int, EditTagsParams* > add_tags_callbacks;
 
   map< int, DownloadImageParams* > download_image_callbacks;
   map< int, DownloadImagesParams* > download_images_callbacks;
@@ -139,8 +143,44 @@ namespace modio
 
     string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods/" + toString(mod->id);
 
-    std::thread email_exchage_thread(curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
-    email_exchage_thread.detach();
+    std::thread delete_mod_thread(curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
+    delete_mod_thread.detach();
+  }
+
+  void onTagsAdded(int call_number, int response_code, string message, json response)
+  {
+    add_tags_callbacks[call_number]->callback(response_code, message, add_tags_callbacks[call_number]->mod);
+    add_tags_callbacks.erase(call_number);
+  }
+
+  void MODIO_DLL addTags(Mod* mod, vector<string> tags, function<void(int response_code, string message, Mod* mod)> callback)
+  {
+    map<string, string> data;
+
+    vector<string> headers;
+    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Content-Type: application/x-www-form-urlencoded");
+
+    int call_number = curlwrapper::getCallCount();
+    curlwrapper::advanceCallCount();
+
+    add_tags_callbacks[call_number] = new EditTagsParams;
+    add_tags_callbacks[call_number]->callback = callback;
+    add_tags_callbacks[call_number]->mod = mod;
+
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods/" + toString(mod->id) + "/tags";
+
+    for(int i=0; i<(int)tags.size(); i++)
+    {
+      if(i==0)
+        url += "?";
+      else
+        url += "&";
+      url += "tags[]=" + tags[i];
+    }
+
+    std::thread add_tags_thread(curlwrapper::post, call_number, url, headers, data, &onTagsAdded);
+    add_tags_thread.detach();
   }
 
   void onImageDownloaded(int call_number, int response_code, string message, string url, string path)

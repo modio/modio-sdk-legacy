@@ -442,6 +442,8 @@ namespace modio
           str_data += (*i).first + "=" + (*i).second;
         }
 
+        cout<<str_data<<endl;
+
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
 
         setVerifies(curl);
