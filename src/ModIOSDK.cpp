@@ -28,6 +28,9 @@ namespace modio
     createDirectory(getModIODirectory() + "images/");
     createDirectory(getModIODirectory() + "tmp/");
     writeLogLine("SDK Initialized", verbose);
+
+    //TODO: Use retrived acess token when server does
+    modio::ACCESS_TOKEN = "turupawn";
   }
 
   void init(int game_id, string api_key, string root_path)

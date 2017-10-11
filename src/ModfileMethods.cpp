@@ -33,7 +33,7 @@ namespace modio
   {
     minizipwrapper::compress(add_mod_file_handler->path, getModIODirectory() + "tmp/modfile.zip");
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods/" + toString(mod->id) + "/files";
 
     int call_number = curlwrapper::getCallCount();
@@ -54,7 +54,7 @@ namespace modio
   void MODIO_DLL editModfile(Modfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, Modfile* modfile)> callback)
   {
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();

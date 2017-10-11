@@ -85,7 +85,7 @@ namespace modio
   {
     string filter_string = getFilterString(filter);
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret";
 
     int call_number = curlwrapper::getCallCount();
@@ -107,7 +107,7 @@ namespace modio
   void editMod(Mod* mod, ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback)
   {
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -124,7 +124,7 @@ namespace modio
   void addMod(ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback)
   {
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -148,7 +148,7 @@ namespace modio
   void deleteMod(Mod* mod, function<void(int response_code, string message, Mod* mod)> callback)
   {
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -181,7 +181,7 @@ namespace modio
   void getTags(Mod* mod, function<void(int response_code, string message, Mod* mod, vector<string> tags)> callback)
   {
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods/" + toString(mod->id) + "/tags/";
 
     int call_number = curlwrapper::getCallCount();
@@ -206,7 +206,7 @@ namespace modio
     map<string, string> data;
 
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     headers.push_back("Content-Type: application/x-www-form-urlencoded");
 
     int call_number = curlwrapper::getCallCount();
@@ -242,7 +242,7 @@ namespace modio
     map<string, string> data;
 
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     headers.push_back("Content-Type: application/x-www-form-urlencoded");
 
     int call_number = curlwrapper::getCallCount();
