@@ -10,6 +10,7 @@
 #include "exported_methods/AuthenticationMethods.h"
 #include "exported_methods/ModMethods.h"
 #include "exported_methods/ModfileMethods.h"
+#include "exported_methods/TagMethods.h"
 
 namespace modio
 {
