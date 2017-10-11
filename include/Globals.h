@@ -32,6 +32,8 @@ namespace modio
   extern int game_id;
   extern string ROOT_PATH;
   extern DebugMode DEBUG_LEVEL;
+  extern string MODIO_URL;
+  extern string MODIO_VERSION_PATH;
 }
 
 #endif

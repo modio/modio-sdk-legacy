@@ -67,7 +67,7 @@ namespace modio
     string filter_string = getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
-    string url = string("https://api.mod.works/v1/games/") + toString(game_id) + "/mods?" + filter_string + "&shhh=secret";
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods?" + filter_string + "&shhh=secret";
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -96,7 +96,7 @@ namespace modio
     add_mod_callback[call_number] = new AddModParams;
     add_mod_callback[call_number]->callback = callback;
 
-    string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods/" + toString(mod->id);
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods/" + toString(mod->id);
 
     std::thread email_exchage_thread(curlwrapper::put, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
     email_exchage_thread.detach();
@@ -113,7 +113,7 @@ namespace modio
     add_mod_callback[call_number] = new AddModParams;
     add_mod_callback[call_number]->callback = callback;
 
-    string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods";
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods";
 
     std::thread add_mod_thread(curlwrapper::postForm, call_number, url, headers, add_mod_handler->curlform_copycontents, add_mod_handler->curlform_files, &onModAdded);
     add_mod_thread.detach();
@@ -137,7 +137,7 @@ namespace modio
     delete_mod_callbacks[call_number] = new DeleteModParams;
     delete_mod_callbacks[call_number]->callback = callback;
 
-    string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods/" + toString(mod->id);
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods/" + toString(mod->id);
 
     std::thread email_exchage_thread(curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
     email_exchage_thread.detach();

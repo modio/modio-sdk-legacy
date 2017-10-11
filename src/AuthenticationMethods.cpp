@@ -24,7 +24,7 @@ namespace modio
 
     email_request_callbacks[call_number] = callback;
 
-    std::thread email_request_thread(curlwrapper::post, call_number, "https://api.mod.works/oauth/emailrequest?shhh=secret", headers, data, &onEmailRequested);
+    std::thread email_request_thread(curlwrapper::post, call_number, MODIO_URL + "oauth/emailrequest?shhh=secret", headers, data, &onEmailRequested);
     email_request_thread.detach();
   }
 
@@ -57,7 +57,7 @@ namespace modio
 
     email_exchange_callbacks[call_number] = callback;
 
-    std::thread email_exchage_thread(curlwrapper::post, call_number, "https://api.mod.works/oauth/emailexchange?shhh=secret", headers, data, &onEmailExchanged);
+    std::thread email_exchage_thread(curlwrapper::post, call_number, MODIO_URL + "oauth/emailexchange?shhh=secret", headers, data, &onEmailExchanged);
     email_exchage_thread.detach();
   }
 

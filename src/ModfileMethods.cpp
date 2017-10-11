@@ -34,7 +34,7 @@ namespace modio
     minizipwrapper::compress(add_mod_file_handler->path, getModIODirectory() + "tmp/modfile.zip");
     vector<string> headers;
     headers.push_back("Authorization: Bearer turupawn");
-    string url = string("https://api.mod.works/v1/games/") + toString(7) + "/mods/" + toString(mod->id) + "/files";
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(7) + "/mods/" + toString(mod->id) + "/files";
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -63,7 +63,7 @@ namespace modio
     edit_modfile_callbacks[call_number]->modfile = modfile;
     edit_modfile_callbacks[call_number]->callback = callback;
 
-    string url = "https://api.mod.works/v1/games/" + toString(game_id) + "/mods/" + toString(modfile->mod) + "/files/" + toString(modfile->id);
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods/" + toString(modfile->mod) + "/files/" + toString(modfile->id);
 
     std::thread edit_modfile_thread(curlwrapper::put, call_number, url, headers, modfile_handler->curlform_copycontents, &onModfileEdited);
     edit_modfile_thread.detach();
