@@ -157,7 +157,7 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-
+      
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + "finished", verbose);
@@ -576,8 +576,6 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-
-      cout<<"Message: "<<json_response<<endl;
 
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
