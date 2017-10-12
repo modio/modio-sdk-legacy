@@ -2,9 +2,9 @@
 
 namespace modio
 {
-  string api_key;
-  string access_token = "";
-  int game_id;
+  string API_KEY;
+  string ACCESS_TOKEN = "";
+  int GAME_ID;
   string ROOT_PATH = "";
   DebugMode DEBUG_LEVEL = error;
   string MODIO_URL = "https://api.mod.io/";

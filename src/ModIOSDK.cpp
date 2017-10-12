@@ -9,9 +9,9 @@ namespace modio
     curlwrapper::initCurl();
 
     writeLogLine("Initializing SDK", verbose);
-    modio::game_id = game_id;
-    modio::api_key = api_key;
-    access_token = "";
+    modio::GAME_ID = game_id;
+    modio::API_KEY = api_key;
+    modio::ACCESS_TOKEN = "";
 
     std::ifstream token_file(getModIODirectory() + "token.json");
     if(token_file.is_open())
@@ -20,7 +20,7 @@ namespace modio
       token_file >> token_file_json;
       if(token_file_json.find("access_token") != token_file_json.end())
       {
-        access_token = token_file_json["access_token"];
+        modio::ACCESS_TOKEN = token_file_json["access_token"];
       }
     }
 
@@ -28,6 +28,9 @@ namespace modio
     createDirectory(getModIODirectory() + "images/");
     createDirectory(getModIODirectory() + "tmp/");
     writeLogLine("SDK Initialized", verbose);
+
+    //TODO: Use retrived acess token when server does
+    modio::ACCESS_TOKEN = "turupawn";
   }
 
   void init(int game_id, string api_key, string root_path)
