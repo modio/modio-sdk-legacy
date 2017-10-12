@@ -24,7 +24,7 @@ namespace modio
       current_download_info.download_total = 0;
       current_download_info.download_progress = 0;
 
-      if(curl_global_init(CURL_GLOBAL_ALL))
+      if(curl_global_init(CURL_GLOBAL_ALL) == 0)
         writeLogLine("Curl initialized", verbose);
       else
         writeLogLine("Error initializing curl", error);
