@@ -148,7 +148,7 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
     //tags.push_back("Easy");
     //tags.push_back("Medium");
     cout<<mods[i]->name<<endl;
-    modio::getTags(mods[0], &onTagsGet);
+    //modio::getTags(mods[0], &onTagsGet);
   }
 
   cout<<endl<<endl;
@@ -170,17 +170,20 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
 void onModAdded(int response_code, string message, modio::Mod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
+  cout<<"Message: "<<message<<endl;
 
   if(response_code == 201)
   {
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;
 
+/*
     modio::ModfileHandler* modfile_handler = new modio::ModfileHandler();
     modfile_handler->setPath("testdir");
     modfile_handler->setVersion("1.0.1");
     modfile_handler->setChangelog("this was a change this was a change");
     modio::addModfile(mod, modfile_handler, &onModAdded);
+*/
   }
 }
 
@@ -204,15 +207,17 @@ int main(void)
     while(!email_exchange_finished);
   }
 
-/*
-  modio::AddModHandler* add_mod_handler = new modio::AddModHandler();
+
+  modio::ModHandler* add_mod_handler = new modio::ModHandler();
   add_mod_handler->setLogoPath("logo.png");
   add_mod_handler->setName("New sdk add method");
   add_mod_handler->setHomepage("http://www.webpage.com");
   add_mod_handler->setSummary("new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method");
+  add_mod_handler->addTag("Easy");
+  add_mod_handler->addTag("Medium");
 
   modio::addMod(add_mod_handler, &onModAdded);
-*/
+/**/
 
 
   modio::Filter* filter = new modio::Filter;
