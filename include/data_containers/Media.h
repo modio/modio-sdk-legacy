@@ -10,15 +10,15 @@ using json = nlohmann::json;
 
 namespace modio
 {
-  class Media
+  struct Media
   {
-  public:
-    Media(json image_json);
-    ~Media();
     vector<string> youtube;
     vector<string> sketchfab;
     vector<Image*> images;
   };
+
+  void initMedia(Media* media, json media_json);
+  void freeMedia(Media* media);
 }
 
 #endif

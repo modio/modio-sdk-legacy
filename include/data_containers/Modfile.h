@@ -10,10 +10,8 @@ using json = nlohmann::json;
 
 namespace modio
 {
-  class Modfile
+  struct Modfile
   {
-  public:
-    Modfile(json image_json);
     int id;
     int mod;
     Member* member;
@@ -28,6 +26,9 @@ namespace modio
     string changelog;
     string download;
   };
+
+  void initModfile(Modfile* modfile, json modfile_json);
+  void freeModfile(Modfile* modfile);
 }
 
 #endif

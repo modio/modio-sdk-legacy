@@ -2,14 +2,14 @@
 
 namespace modio
 {
-  Media::Media(json media_json)
+  void initMedia(Media* media, json media_json)
   {
     if(hasKey(media_json, "youtube"))
     {
       json youtube_json = media_json["youtube"];
       for(int i=0; i<(int)youtube_json.size(); i++)
       {
-        this->youtube.push_back(youtube_json[i]);
+        media->youtube.push_back(youtube_json[i]);
       }
     }
 
@@ -18,26 +18,28 @@ namespace modio
       json sketchfab_json = media_json["sketchfab"];
       for(int i=0; i<(int)sketchfab_json.size(); i++)
       {
-        this->sketchfab.push_back(sketchfab_json[i]);
+        media->sketchfab.push_back(sketchfab_json[i]);
       }
     }
 
     if(hasKey(media_json, "images"))
     {
+      /*
       json images_json = media_json["images"];
       for(int i=0; i<(int)images_json.size(); i++)
       {
-        this->images.push_back(new Image(images_json[i]));
+        media->images.push_back(new Image(images_json[i]));
       }
+      */
     }
   }
 
-  Media::~Media()
+  void freeMedia(Media* media)
   {
-    for(int i=0; i<(int)this->images.size(); i++)
+    for(int i=0; i<(int)media->images.size(); i++)
     {
-      delete this->images.back();
-      this->images.pop_back();
+      freeImage(media->images.back());
+      media->images.pop_back();
     }
   }
 }

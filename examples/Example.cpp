@@ -214,7 +214,7 @@ int main(void)
   setHomepage(add_mod_handler, "http://www.webpage.com");
   setSummary(add_mod_handler, "new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method");
   addTag(add_mod_handler, "Easy");
-  addTag(add_mod_handler, "Mediumx");
+  addTag(add_mod_handler, "Medium");
 
   modio::addMod(add_mod_handler, &onModAdded);
 /**/

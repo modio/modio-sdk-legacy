@@ -50,7 +50,8 @@ namespace modio
     {
       for(int i=0;i<(int)response["data"].size();i++)
       {
-        Mod* mod = new Mod(response["data"][i]);
+        Mod* mod = new Mod;
+        initMod(mod, response["data"][i]);
         mods.push_back(mod);
       }
     }
@@ -77,7 +78,8 @@ namespace modio
 
   void onModAdded(int call_number, int response_code, string message, json response)
   {
-    Mod* mod = new Mod(response);
+    Mod* mod = new Mod;
+    initMod(mod, response);
     add_mod_callback[call_number]->callback(response_code, message, mod);
     add_mod_callback.erase(call_number);
   }
@@ -118,7 +120,8 @@ namespace modio
 
   void onModDeleted(int call_number, int response_code, string message, json response)
   {
-    Mod* mod = new Mod(response);
+    Mod* mod = new Mod;
+    initMod(mod, response);
     delete_mod_callbacks[call_number]->callback(response_code, message, mod);
     delete_mod_callbacks.erase(call_number);
   }

@@ -2,58 +2,66 @@
 
 namespace modio
 {
-  Modfile::Modfile(json modfile_json)
+  void initModfile(Modfile* modfile, json modfile_json)
   {
-    this->id = -1;
+    modfile->id = -1;
     if(hasKey(modfile_json, "id"))
-      this->id = modfile_json["id"];
+      modfile->id = modfile_json["id"];
 
-    this->mod = -1;
+    modfile->mod = -1;
     if(hasKey(modfile_json, "mod"))
-      this->mod = modfile_json["mod"];
+      modfile->mod = modfile_json["mod"];
 
-    this->member = NULL;
+    modfile->member = NULL;
     if(hasKey(modfile_json, "member"))
-      this->member = new Member(modfile_json["member"]);
+    {
+      modfile->member = new Member;
+      initMember(modfile->member, modfile_json["member"]);
+    }
 
-    this->datevirus = -1;
+    modfile->datevirus = -1;
     if(hasKey(modfile_json, "datevirus"))
-      this->datevirus = modfile_json["datevirus"];
+      modfile->datevirus = modfile_json["datevirus"];
 
-    this->virusstatus = -1;
+    modfile->virusstatus = -1;
     if(hasKey(modfile_json, "virusstatus"))
-      this->virusstatus = modfile_json["virusstatus"];
+      modfile->virusstatus = modfile_json["virusstatus"];
 
-    this->viruspositive = -1;
+    modfile->viruspositive = -1;
     if(hasKey(modfile_json, "viruspositive"))
-      this->viruspositive = modfile_json["viruspositive"];
+      modfile->viruspositive = modfile_json["viruspositive"];
 
-    this->filesize = -1;
+    modfile->filesize = -1;
     if(hasKey(modfile_json, "filesize"))
-      this->filesize = modfile_json["filesize"];
+      modfile->filesize = modfile_json["filesize"];
 
-    this->filehash = -1;
+    modfile->filehash = -1;
     if(hasKey(modfile_json, "filehash"))
-      this->filehash = modfile_json["filehash"];
+      modfile->filehash = modfile_json["filehash"];
 
-    this->filename = "";
+    modfile->filename = "";
     if(hasKey(modfile_json, "filename"))
-      this->filename = modfile_json["filename"];
+      modfile->filename = modfile_json["filename"];
 
-    this->version = -1;
+    modfile->version = -1;
     if(hasKey(modfile_json, "version"))
-      this->version = modfile_json["version"];
+      modfile->version = modfile_json["version"];
 
-    this->virustotal = -1;
+    modfile->virustotal = -1;
     if(hasKey(modfile_json, "virustotal"))
-      this->virustotal = modfile_json["virustotal"];
+      modfile->virustotal = modfile_json["virustotal"];
 
-    this->changelog = "";
+    modfile->changelog = "";
     if(hasKey(modfile_json, "changelog"))
-      this->changelog = modfile_json["changelog"];
+      modfile->changelog = modfile_json["changelog"];
 
-    this->download = "";
+    modfile->download = "";
     if(hasKey(modfile_json, "download"))
-      this->download = modfile_json["download"];
+      modfile->download = modfile_json["download"];
+  }
+
+  void freeModfile(Modfile* modfile)
+  {
+    delete modfile;
   }
 }

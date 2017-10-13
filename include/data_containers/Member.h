@@ -10,12 +10,8 @@ using json = nlohmann::json;
 
 namespace modio
 {
-  class Member
+  struct Member
   {
-  public:
-    Member(json member_json);
-    ~Member();
-
     int id;
     string username;
     int online;
@@ -23,6 +19,9 @@ namespace modio
     string timezone;
     string language;
   };
+
+  void initMember(Member* member, json member_json);
+  void freeMember(Member* member);
 }
 
 #endif
