@@ -408,7 +408,7 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-
+cout<<json_response<<endl;
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine(string("postForm call to ") + url + " finished", verbose);

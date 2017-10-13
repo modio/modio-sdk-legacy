@@ -15,16 +15,16 @@
 
 namespace modio
 {
-  class ModfileHandler
+  struct ModfileHandler
   {
-  public:
     multimap<string, string> curlform_copycontents;
     string path;
-    void MODIO_DLL setPath(string path);
-    void MODIO_DLL setVersion(string version);
-    void MODIO_DLL setChangelog(string changelog);
-    void MODIO_DLL setActive(string active);
   };
+
+  void MODIO_DLL setModfilePath(ModfileHandler* modfile_handler, string path);
+  void MODIO_DLL setModfileVersion(ModfileHandler* modfile_handler, string version);
+  void MODIO_DLL setModfileChangelog(ModfileHandler* modfile_handler, string changelog);
+  void MODIO_DLL setModfileActive(ModfileHandler* modfile_handler, string active);
 }
 
 #endif
