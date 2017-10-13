@@ -157,7 +157,7 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-      
+
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + "finished", verbose);
@@ -325,7 +325,7 @@ namespace modio
       writeLogLine("getJsonCall call to " + url + " finished", verbose);
     }
 
-    void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, string message, json response)> callback)
+    void postForm(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("postForm call to ") + url, verbose);
       lockCall(call_number);
@@ -442,8 +442,6 @@ namespace modio
           str_data += (*i).first + "=" + (*i).second;
         }
 
-        cout<<str_data<<endl;
-
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
 
         setVerifies(curl);
@@ -476,7 +474,7 @@ namespace modio
       writeLogLine(string("post call to ") + url + " finished", verbose);
     }
 
-    void put(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
+    void put(int call_number, string url, vector<string> headers, multimap<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("put call to ") + url, verbose);
       lockCall(call_number);
