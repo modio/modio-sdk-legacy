@@ -91,6 +91,8 @@ namespace modio
 
   string getModIODirectory()
   {
+    // TODO(@turupawn): Can we handle paths passed as C:\ rather than C:/ ?
+    //  (re: windows programmers like myself)
     if(ROOT_PATH != "" && ROOT_PATH[ROOT_PATH.size()-1] != '/')
       ROOT_PATH += "/";
     return ROOT_PATH + ".modio/";

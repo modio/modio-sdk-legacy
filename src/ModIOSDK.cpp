@@ -4,8 +4,9 @@ namespace modio
 {
   void init(int game_id, string api_key)
   {
-    clearLog();
+    createDirectory(getModIODirectory());
 
+    clearLog();
     curlwrapper::initCurl();
 
     writeLogLine("Initializing SDK", verbose);
@@ -24,7 +25,6 @@ namespace modio
       }
     }
 
-    createDirectory(getModIODirectory());
     createDirectory(getModIODirectory() + "images/");
     createDirectory(getModIODirectory() + "tmp/");
     writeLogLine("SDK Initialized", verbose);
@@ -33,10 +33,10 @@ namespace modio
     modio::ACCESS_TOKEN = "turupawn";
   }
 
-  void init(int game_id, string api_key, string root_path)
+  void init(int game_id, const char* api_key, const char* root_path)
   {
     ROOT_PATH = root_path;
-    init(game_id, api_key);
+    init(game_id, string(api_key));
   }
 
   void setDebugMode(DebugMode debug_mode)

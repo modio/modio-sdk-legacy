@@ -14,8 +14,9 @@
 
 namespace modio
 {
-  MODIO_DLL void init(int game_id, string api_key);
-  MODIO_DLL void init(int game_id, string api_key, string root_path);
+  void init(int game_id, string api_key);
+
+  extern "C" MODIO_DLL void init(int game_id, const char* api_key, const char* root_path);
   MODIO_DLL void setDebugMode(DebugMode debug_mode);
   MODIO_DLL void shutdown();
   MODIO_DLL CurrentDownloadInfo getCurrentDownloadInfo();
