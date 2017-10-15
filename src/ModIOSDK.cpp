@@ -1,61 +1,63 @@
 #include "ModIOSDK.h"
 
-namespace modio
+void modioInit(int game_id, char* api_key)
 {
-  void init(int game_id, char* api_key)
+  modio::clearLog();
+
+  modio::curlwrapper::initCurl();
+
+  modio::writeLogLine("Initializing SDK", modio::verbose);
+  modio::GAME_ID = game_id;
+  modio::API_KEY = api_key;
+  modio::ACCESS_TOKEN = "";
+
+  std::ifstream token_file(modio::getModIODirectory() + "token.json");
+  if(token_file.is_open())
   {
-    clearLog();
-
-    curlwrapper::initCurl();
-
-    writeLogLine("Initializing SDK", verbose);
-    modio::GAME_ID = game_id;
-    modio::API_KEY = api_key;
-    modio::ACCESS_TOKEN = "";
-
-    std::ifstream token_file(getModIODirectory() + "token.json");
-    if(token_file.is_open())
+    json token_file_json;
+    token_file >> token_file_json;
+    if(token_file_json.find("access_token") != token_file_json.end())
     {
-      json token_file_json;
-      token_file >> token_file_json;
-      if(token_file_json.find("access_token") != token_file_json.end())
-      {
-        modio::ACCESS_TOKEN = token_file_json["access_token"];
-      }
+      modio::ACCESS_TOKEN = token_file_json["access_token"];
     }
-
-    createDirectory(getModIODirectory());
-    createDirectory(getModIODirectory() + "images/");
-    createDirectory(getModIODirectory() + "tmp/");
-    writeLogLine("SDK Initialized", verbose);
-
-    //TODO: Use retrived acess token when server does
-    modio::ACCESS_TOKEN = "turupawn";
   }
+
+  modio::createDirectory(modio::getModIODirectory());
+  modio::createDirectory(modio::getModIODirectory() + "images/");
+  modio::createDirectory(modio::getModIODirectory() + "tmp/");
+  modio::writeLogLine("SDK Initialized", modio::verbose);
+
+  //TODO: Use retrived acess token when server does
+  modio::ACCESS_TOKEN = "turupawn";
+}
 /*
-  void init(int game_id, char* api_key, char* root_path)
-  {
-    ROOT_PATH = root_path;
-    init(game_id, api_key);
-  }
+void init(int game_id, char* api_key, char* root_path)
+{
+  ROOT_PATH = root_path;
+  init(game_id, api_key);
+}
 */
-  void setDebugMode(DebugMode debug_mode)
-  {
-    DEBUG_LEVEL = debug_mode;
-  }
 
-  void shutdown()
-  {
-    curlwrapper::shutdownCurl();
-  }
+/*
+void setDebugMode(DebugMode debug_mode)
+{
+  DEBUG_LEVEL = debug_mode;
+}
+*/
 
-  CurrentDownloadInfo getCurrentDownloadInfo()
-  {
-    return curlwrapper::getCurrentDownloadInfo();
-  }
+void modioShutdown()
+{
+  modio::curlwrapper::shutdownCurl();
+}
 
-  void pauseCurrentDownload()
-  {
-    curlwrapper::pauseCurrentDownload();
-  }
+/*
+CurrentDownloadInfo modioGetCurrentDownloadInfo()
+{
+  return curlwrapper::getCurrentDownloadInfo();
+}
+*/
+
+void modioPauseCurrentDownload()
+{
+  modio::curlwrapper::pauseCurrentDownload();
 }

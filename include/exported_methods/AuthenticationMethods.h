@@ -18,13 +18,10 @@
 
 extern "C"
 {
-  namespace modio
-  {
-    void MODIO_DLL emailRequest(char* email, void (*callback)(int response_code, char* message));
-    void MODIO_DLL emailExchange(char* security_code, void (*callback)(int response_code, char* message));
-    bool MODIO_DLL isLoggedIn();
-    void MODIO_DLL logout();
-  }
+  void MODIO_DLL modioEmailRequest(char* email, void (*callback)(int response_code, char* message));
+  void MODIO_DLL modioEmailExchange(char* security_code, void (*callback)(int response_code, char* message));
+  bool MODIO_DLL modioIsLoggedIn();
+  void MODIO_DLL modioLogout();
 }
 
 #endif
