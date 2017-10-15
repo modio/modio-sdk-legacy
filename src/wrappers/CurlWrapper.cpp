@@ -24,7 +24,7 @@ namespace modio
       current_download_info.download_total = 0;
       current_download_info.download_progress = 0;
 
-      if(curl_global_init(CURL_GLOBAL_ALL))
+      if(curl_global_init(CURL_GLOBAL_ALL) == 0)
         writeLogLine("Curl initialized", verbose);
       else
         writeLogLine("Error initializing curl", error);
@@ -325,7 +325,7 @@ namespace modio
       writeLogLine("getJsonCall call to " + url + " finished", verbose);
     }
 
-    void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, string message, json response)> callback)
+    void postForm(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("postForm call to ") + url, verbose);
       lockCall(call_number);
@@ -474,7 +474,7 @@ namespace modio
       writeLogLine(string("post call to ") + url + " finished", verbose);
     }
 
-    void put(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
+    void put(int call_number, string url, vector<string> headers, multimap<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
     {
       writeLogLine(string("put call to ") + url, verbose);
       lockCall(call_number);
@@ -574,8 +574,6 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-
-      cout<<"Message: "<<json_response<<endl;
 
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();

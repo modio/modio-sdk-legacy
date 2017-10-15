@@ -8,7 +8,7 @@ namespace modio
   class ModfileHandler
   {
   public:
-    map<string, string> curlform_copycontents;
+    multimap<string, string> curlform_copycontents;
     string path;
     MODIO_DLL void setPath(string path);
     MODIO_DLL void setVersion(string version);

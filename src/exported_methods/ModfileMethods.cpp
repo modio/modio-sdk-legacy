@@ -1,4 +1,4 @@
-#include "ModfileMethods.h"
+#include "exported_methods/ModfileMethods.h"
 
 namespace modio
 {
@@ -33,8 +33,8 @@ namespace modio
   {
     minizipwrapper::compress(add_mod_file_handler->path, getModIODirectory() + "tmp/modfile.zip");
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
-    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(7) + "/mods/" + toString(mod->id) + "/files";
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods/" + toString(mod->id) + "/files";
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -54,7 +54,7 @@ namespace modio
   MODIO_DLL void editModfile(Modfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, Modfile* modfile)> callback)
   {
     vector<string> headers;
-    headers.push_back("Authorization: Bearer turupawn");
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
     int call_number = curlwrapper::getCallCount();
     curlwrapper::advanceCallCount();
@@ -63,7 +63,7 @@ namespace modio
     edit_modfile_callbacks[call_number]->modfile = modfile;
     edit_modfile_callbacks[call_number]->callback = callback;
 
-    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(game_id) + "/mods/" + toString(modfile->mod) + "/files/" + toString(modfile->id);
+    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods/" + toString(modfile->mod) + "/files/" + toString(modfile->id);
 
     std::thread edit_modfile_thread(curlwrapper::put, call_number, url, headers, modfile_handler->curlform_copycontents, &onModfileEdited);
     edit_modfile_thread.detach();

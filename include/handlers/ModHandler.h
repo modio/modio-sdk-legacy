@@ -8,7 +8,7 @@ namespace modio
   class ModHandler
   {
   public:
-    map<string, string> curlform_copycontents;
+    multimap<string, string> curlform_copycontents;
     map<string, string> curlform_files;
     MODIO_DLL void setLogoPath(string logo_path);
     MODIO_DLL void setName(string name);
@@ -20,6 +20,7 @@ namespace modio
     MODIO_DLL void setMetadata(string metadata);
     MODIO_DLL void setNameid(string nameid);
     MODIO_DLL void setModfile(int modfile);
+    MODIO_DLL void addTag(string tag);
   };
 }
 

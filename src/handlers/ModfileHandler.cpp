@@ -4,12 +4,12 @@ namespace modio
 {
   void ModfileHandler::setVersion(string version)
   {
-    this->curlform_copycontents["version"] = version;
+    this->curlform_copycontents.insert(pair<string,string>("version",version));
   }
 
   void ModfileHandler::setChangelog(string changelog)
   {
-    this->curlform_copycontents["changelog"] = changelog;
+    this->curlform_copycontents.insert(pair<string,string>("changelog",changelog));
   }
 
   void ModfileHandler::setPath(string path)
@@ -19,6 +19,6 @@ namespace modio
 
   void ModfileHandler::setActive(string active)
   {
-    this->curlform_copycontents["active"] = active;
+    this->curlform_copycontents.insert(pair<string,string>("active",active));
   }
 }
