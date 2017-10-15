@@ -1,62 +1,62 @@
 #include "data_containers/Modfile.h"
 
-namespace modio
+extern "C"
 {
   void initModfile(Modfile* modfile, json modfile_json)
   {
     modfile->id = -1;
-    if(hasKey(modfile_json, "id"))
+    if(modio::hasKey(modfile_json, "id"))
       modfile->id = modfile_json["id"];
 
     modfile->mod = -1;
-    if(hasKey(modfile_json, "mod"))
+    if(modio::hasKey(modfile_json, "mod"))
       modfile->mod = modfile_json["mod"];
 
     modfile->member = NULL;
-    if(hasKey(modfile_json, "member"))
+    if(modio::hasKey(modfile_json, "member"))
     {
       modfile->member = new Member;
       initMember(modfile->member, modfile_json["member"]);
     }
 
     modfile->datevirus = -1;
-    if(hasKey(modfile_json, "datevirus"))
+    if(modio::hasKey(modfile_json, "datevirus"))
       modfile->datevirus = modfile_json["datevirus"];
 
     modfile->virusstatus = -1;
-    if(hasKey(modfile_json, "virusstatus"))
+    if(modio::hasKey(modfile_json, "virusstatus"))
       modfile->virusstatus = modfile_json["virusstatus"];
 
     modfile->viruspositive = -1;
-    if(hasKey(modfile_json, "viruspositive"))
+    if(modio::hasKey(modfile_json, "viruspositive"))
       modfile->viruspositive = modfile_json["viruspositive"];
 
     modfile->filesize = -1;
-    if(hasKey(modfile_json, "filesize"))
+    if(modio::hasKey(modfile_json, "filesize"))
       modfile->filesize = modfile_json["filesize"];
 
     modfile->filehash = -1;
-    if(hasKey(modfile_json, "filehash"))
+    if(modio::hasKey(modfile_json, "filehash"))
       modfile->filehash = modfile_json["filehash"];
 
     modfile->filename = "";
-    if(hasKey(modfile_json, "filename"))
+    if(modio::hasKey(modfile_json, "filename"))
       modfile->filename = modfile_json["filename"];
 
     modfile->version = -1;
-    if(hasKey(modfile_json, "version"))
+    if(modio::hasKey(modfile_json, "version"))
       modfile->version = modfile_json["version"];
 
     modfile->virustotal = -1;
-    if(hasKey(modfile_json, "virustotal"))
+    if(modio::hasKey(modfile_json, "virustotal"))
       modfile->virustotal = modfile_json["virustotal"];
 
     modfile->changelog = "";
-    if(hasKey(modfile_json, "changelog"))
+    if(modio::hasKey(modfile_json, "changelog"))
       modfile->changelog = modfile_json["changelog"];
 
     modfile->download = "";
-    if(hasKey(modfile_json, "download"))
+    if(modio::hasKey(modfile_json, "download"))
       modfile->download = modfile_json["download"];
   }
 

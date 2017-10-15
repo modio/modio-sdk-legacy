@@ -13,7 +13,7 @@
 #  define MODIO_DLL
 #endif
 
-namespace modio
+extern "C"
 {
   struct ModHandler
   {

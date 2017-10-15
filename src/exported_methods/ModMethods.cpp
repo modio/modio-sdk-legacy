@@ -1,16 +1,28 @@
 #include "exported_methods/ModMethods.h"
 
-namespace modio
+extern "C"
 {
-  struct AddModParams
+  struct GetModsParams
   {
-    function<void(int, string, Mod*)> callback;
+    void (*callback)(int response_code, char* message, Mod* mods, int mods_size);
   };
 
+  struct AddModParams
+  {
+    void (*callback)(int response_code, char* message, Mod* mod);
+  };
+
+  struct DeleteModParams
+  {
+    Mod* mod;
+    void (*callback)(int response_code, char* message, Mod* mod);
+  };
+
+/*
   struct DownloadImageParams
   {
     Mod* mod;
-    function< void(int, string, Mod*, string) > callback;
+    void (*)(int, char*, Mod*, char*) callback;
   };
 
   struct DownloadImagesParams
@@ -18,61 +30,58 @@ namespace modio
     Mod* mod;
     int image_amount;
     vector<string> images;
-    function< void(int, string, Mod*, vector<string>) > callback;
-  };
-
-  struct DeleteModParams
-  {
-    Mod* mod;
-    function<void(int, string, Mod*)> callback;
+    void (*)(int, char*, Mod*, char**, int) callback;
   };
 
   struct DownloadModfileParams
   {
     Mod* mod;
     string destination_path;
-    function< void(int, string, Mod*, string) > callback;
+    void (*)(int, char*, Mod*, string) callback;
   };
+*/
 
   map< int,AddModParams* > add_mod_callback;
   map< int,DeleteModParams* > delete_mod_callbacks;
-  map< int,function<void(int, string, vector<Mod*>)> > get_mods_callbacks;
+  map< int,GetModsParams* > get_mods_callbacks;
 
+/*
   map< int, DownloadImageParams* > download_image_callbacks;
   map< int, DownloadImagesParams* > download_images_callbacks;
   map< int, DownloadModfileParams* > download_modfile_callbacks;
+*/
 
   void onGetMods(int call_number, int response_code, string message, json response)
   {
-    vector<Mod*> mods;
-
+    Mod* mods = NULL;
+    int mods_size = 0;
     if(response_code == 200)
     {
-      for(int i=0;i<(int)response["data"].size();i++)
+      mods_size = (int)response["data"].size();
+      mods = new Mod[mods_size];
+      for(int i=0;i<mods_size;i++)
       {
-        Mod* mod = new Mod;
-        initMod(mod, response["data"][i]);
-        mods.push_back(mod);
+        initMod(&mods[i], response["data"][i]);
       }
     }
-
-    get_mods_callbacks[call_number](response_code, message, mods);
+    get_mods_callbacks[call_number]->callback(response_code, (char*)message.c_str(), mods, mods_size);
     get_mods_callbacks.erase(call_number);
   }
 
-  void getMods(Filter* filter, function< void(int response_code, string message, vector<Mod*> mods) > callback)
+  void getMods(Filter* filter, void (*callback)(int response_code, char* message, Mod* mods, int mods_size))
   {
     string filter_string = getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret";
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret";
 
-    int call_number = curlwrapper::getCallCount();
-    curlwrapper::advanceCallCount();
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
 
-    get_mods_callbacks[call_number] = callback;
+    get_mods_callbacks[call_number] = new GetModsParams;
+    get_mods_callbacks[call_number]->callback = callback;
 
-    std::thread get_mods_thread(curlwrapper::get, call_number, url, headers, &onGetMods);
+    std::thread get_mods_thread(modio::curlwrapper::get, call_number, url, headers, &onGetMods);
     get_mods_thread.detach();
   }
 
@@ -80,41 +89,41 @@ namespace modio
   {
     Mod* mod = new Mod;
     initMod(mod, response);
-    add_mod_callback[call_number]->callback(response_code, message, mod);
+    add_mod_callback[call_number]->callback(response_code, (char*)message.c_str(), mod);
     add_mod_callback.erase(call_number);
   }
 
-  void editMod(Mod* mod, ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback)
+  void editMod(Mod* mod, ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, Mod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
-    int call_number = curlwrapper::getCallCount();
-    curlwrapper::advanceCallCount();
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
 
     add_mod_callback[call_number] = new AddModParams;
     add_mod_callback[call_number]->callback = callback;
 
-    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods/" + toString(mod->id);
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod->id);
 
-    std::thread email_exchage_thread(curlwrapper::put, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
+    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
     email_exchage_thread.detach();
   }
 
-  void addMod(ModHandler* add_mod_handler, function<void(int response_code, string message, Mod* mod)> callback)
+  void addMod(ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, Mod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
-    int call_number = curlwrapper::getCallCount();
-    curlwrapper::advanceCallCount();
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
 
     add_mod_callback[call_number] = new AddModParams;
     add_mod_callback[call_number]->callback = callback;
 
-    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods";
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
 
-    std::thread add_mod_thread(curlwrapper::postForm, call_number, url, headers, add_mod_handler->curlform_copycontents, add_mod_handler->curlform_files, &onModAdded);
+    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, add_mod_handler->curlform_copycontents, add_mod_handler->curlform_files, &onModAdded);
     add_mod_thread.detach();
   }
 
@@ -122,27 +131,28 @@ namespace modio
   {
     Mod* mod = new Mod;
     initMod(mod, response);
-    delete_mod_callbacks[call_number]->callback(response_code, message, mod);
+    delete_mod_callbacks[call_number]->callback(response_code, (char*)message.c_str(), mod);
     delete_mod_callbacks.erase(call_number);
   }
 
-  void deleteMod(Mod* mod, function<void(int response_code, string message, Mod* mod)> callback)
+  void MODIO_DLL deleteMod(Mod* mod, void (*callback)(int response_code, char* message, Mod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
-    int call_number = curlwrapper::getCallCount();
-    curlwrapper::advanceCallCount();
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
 
     delete_mod_callbacks[call_number] = new DeleteModParams;
     delete_mod_callbacks[call_number]->callback = callback;
 
-    string url = MODIO_URL + MODIO_VERSION_PATH + "games/" + toString(modio::GAME_ID) + "/mods/" + toString(mod->id);
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod->id);
 
-    std::thread delete_mod_thread(curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
+    std::thread delete_mod_thread(modio::curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
     delete_mod_thread.detach();
   }
 
+/*
   void onImageDownloaded(int call_number, int response_code, string message, string url, string path)
   {
     download_image_callbacks[call_number]->callback(response_code, message, download_image_callbacks[call_number]->mod, path);
@@ -254,4 +264,6 @@ namespace modio
     std::thread download_thread(curlwrapper::download, call_number, mod->modfile->download + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
   }
+*/
+
 }

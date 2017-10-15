@@ -1,10 +1,10 @@
 #include "data_containers/Media.h"
 
-namespace modio
+extern "C"
 {
   void initMedia(Media* media, json media_json)
   {
-    if(hasKey(media_json, "youtube"))
+    if(modio::hasKey(media_json, "youtube"))
     {
       json youtube_json = media_json["youtube"];
       for(int i=0; i<(int)youtube_json.size(); i++)
@@ -13,7 +13,7 @@ namespace modio
       }
     }
 
-    if(hasKey(media_json, "sketchfab"))
+    if(modio::hasKey(media_json, "sketchfab"))
     {
       json sketchfab_json = media_json["sketchfab"];
       for(int i=0; i<(int)sketchfab_json.size(); i++)
@@ -22,7 +22,7 @@ namespace modio
       }
     }
 
-    if(hasKey(media_json, "images"))
+    if(modio::hasKey(media_json, "images"))
     {
       /*
       json images_json = media_json["images"];

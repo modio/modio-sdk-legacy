@@ -1,6 +1,6 @@
 #include "handlers/ModHandler.h"
 
-namespace modio
+extern "C"
 {
   void setLogoPath(ModHandler* mod_handler, string logo_path)
   {
@@ -24,12 +24,12 @@ namespace modio
 
   void setPrice(ModHandler* mod_handler, double price)
   {
-    mod_handler->curlform_copycontents.insert(pair<string,string>("price",toString(price)));
+    mod_handler->curlform_copycontents.insert(pair<string,string>("price", modio::toString(price)));
   }
 
   void setStock(ModHandler* mod_handler, int stock)
   {
-    mod_handler->curlform_copycontents.insert(pair<string,string>("stock",toString(stock)));
+    mod_handler->curlform_copycontents.insert(pair<string,string>("stock", modio::toString(stock)));
   }
 
   void setDescription(ModHandler* mod_handler, string description)
@@ -49,7 +49,7 @@ namespace modio
 
   void setModfile(ModHandler* mod_handler, int modfile)
   {
-    mod_handler->curlform_copycontents.insert(pair<string,string>("modfile",toString(modfile)));
+    mod_handler->curlform_copycontents.insert(pair<string,string>("modfile", modio::toString(modfile)));
   }
 
   void addTag(ModHandler* mod_handler, string tag)

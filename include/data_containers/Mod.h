@@ -15,7 +15,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modio
+extern "C"
 {
   struct Mod
   {

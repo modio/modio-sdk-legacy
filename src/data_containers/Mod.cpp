@@ -1,97 +1,97 @@
 #include "data_containers/Mod.h"
 
-namespace modio
+extern "C"
 {
   void initMod(Mod* mod, json mod_json)
   {
     mod->id = -1;
-    if(hasKey(mod_json, "id"))
+    if(modio::hasKey(mod_json, "id"))
       mod->id = mod_json["id"];
 
     mod->game = -1;
-    if(hasKey(mod_json, "game"))
+    if(modio::hasKey(mod_json, "game"))
       mod->game = mod_json["game"];
 
     mod->member = NULL;
-    if(hasKey(mod_json, "member"))
+    if(modio::hasKey(mod_json, "member"))
     {
       mod->member = new Member;
       initMember(mod->member, mod_json["member"]);
     }
 
     mod->price = -1;
-    if(hasKey(mod_json, "price"))
+    if(modio::hasKey(mod_json, "price"))
       mod->price = mod_json["price"];
 
     mod->datereg = -1;
-    if(hasKey(mod_json, "datereg"))
+    if(modio::hasKey(mod_json, "datereg"))
       mod->datereg = mod_json["datereg"];
 
     mod->dateup = -1;
-    if(hasKey(mod_json, "dateup"))
+    if(modio::hasKey(mod_json, "dateup"))
       mod->dateup = mod_json["dateup"];
 
     mod->logo = NULL;
-    if(hasKey(mod_json, "logo"))
+    if(modio::hasKey(mod_json, "logo"))
     {
       mod->logo = new Image;
       initImage(mod->logo, mod_json["logo"]);
     }
 
     mod->homepage = "";
-    if(hasKey(mod_json, "homepage"))
+    if(modio::hasKey(mod_json, "homepage"))
       mod->homepage = mod_json["homepage"];
 
     mod->name = "";
-    if(hasKey(mod_json, "name"))
+    if(modio::hasKey(mod_json, "name"))
       mod->name = mod_json["name"];
 
     mod->nameid = "";
-    if(hasKey(mod_json, "nameid"))
+    if(modio::hasKey(mod_json, "nameid"))
       mod->nameid = mod_json["nameid"];
 
     mod->summary = "";
-    if(hasKey(mod_json, "summary"))
+    if(modio::hasKey(mod_json, "summary"))
       mod->summary = mod_json["summary"];
 
     mod->description = "";
-    if(hasKey(mod_json, "description"))
+    if(modio::hasKey(mod_json, "description"))
       mod->description = mod_json["description"];
 
     mod->metadata = "";
-    if(hasKey(mod_json, "metadata"))
+    if(modio::hasKey(mod_json, "metadata"))
       mod->metadata = mod_json["metadata"];
 
     mod->media = NULL;
-    if(hasKey(mod_json, "media"))
+    if(modio::hasKey(mod_json, "media"))
     {
       mod->media = new Media;
       initMedia(mod->media, mod_json["media"]);
     }
 
     mod->modfile = NULL;
-    if(hasKey(mod_json, "modfile"))
+    if(modio::hasKey(mod_json, "modfile"))
     {
       mod->modfile = new Modfile;
       initModfile(mod->modfile, mod_json["modfile"]);
     }
 
     mod->ratings = NULL;
-    if(hasKey(mod_json, "ratings"))
+    if(modio::hasKey(mod_json, "ratings"))
     {
       mod->ratings = new Ratings;
       initRatings(mod->ratings, mod_json["ratings"]);
     }
 
     mod->tag = NULL;
-    if(hasKey(mod_json, "tag"))
+    if(modio::hasKey(mod_json, "tag"))
     {
       mod->tag = new Tag;
       initTag(mod->tag, mod_json["tag"]);
     }
   }
 
-  void deleteMod(Mod* mod)
+  void freeMod(Mod* mod)
   {
     if(mod->logo)
       freeImage(mod->logo);
