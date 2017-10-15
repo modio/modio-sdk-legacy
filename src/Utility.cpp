@@ -43,14 +43,15 @@ namespace modio
     log_file.close();
   }
 
-  void writeLogLine(string text, DebugMode debug_mode)
+  void writeLogLine(string text, unsigned int debug_level)
   {
-    if(DEBUG_LEVEL == error && debug_mode == verbose)
+    // NOTE(@jackson): Lower value is higher severity (error == 0)
+    if(DEBUG_LEVEL < debug_level)
       return;
 
     ofstream log_file(getModIODirectory() + "log", ios::app);
-    if(debug_mode == error)
-      log_file<<"Error: ";
+    if(debug_level == MODIO_DEBUGLEVEL_ERROR) { log_file<<"Error: "; }
+    else if(debug_level == MODIO_DEBUGLEVEL_WARNING) { log_file<<"Warning: "; }
     log_file<<text.c_str()<<"\n";
     log_file.close();
   }
@@ -106,8 +107,8 @@ namespace modio
   void removeFile(string filename)
   {
     if(remove(filename.c_str()) != 0)
-      writeLogLine("Could not remove " + filename, error);
+      writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
     else
-      writeLogLine(filename + " removed", verbose);
+      writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
   }
 }

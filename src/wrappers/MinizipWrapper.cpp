@@ -6,12 +6,12 @@ namespace modio
   {
     void extract(string zip_path, string directory_path)
     {
-      writeLogLine(string("Extracting ") + zip_path, verbose);
+      writeLogLine(string("Extracting ") + zip_path, MODIO_DEBUGLEVEL_LOG);
       unzFile zipfile = unzOpen( zip_path.c_str() );
 
       if(zipfile == NULL)
       {
-        writeLogLine("Cannot open " + zip_path, error);
+        writeLogLine("Cannot open " + zip_path, MODIO_DEBUGLEVEL_ERROR);
         return;
       }
 
@@ -36,7 +36,7 @@ namespace modio
         if(err != UNZ_OK)
         {
           unzClose(zipfile);
-          writeLogLine("error " + toString(err) + " with zipfile in unzGetCurrentFileInfo", error);
+          writeLogLine("error " + toString(err) + " with zipfile in unzGetCurrentFileInfo", MODIO_DEBUGLEVEL_ERROR);
           return;
         }
 
@@ -55,7 +55,7 @@ namespace modio
 
           if(err != UNZ_OK)
           {
-            writeLogLine(string("Cannot open ") + filename, error);
+            writeLogLine(string("Cannot open ") + filename, MODIO_DEBUGLEVEL_ERROR);
             return;
           }
 
@@ -64,7 +64,7 @@ namespace modio
 
           if(!out)
           {
-            writeLogLine(string("error opening ") + final_filename, error);
+            writeLogLine(string("error opening ") + final_filename, MODIO_DEBUGLEVEL_ERROR);
           }
 
           err = UNZ_OK;
@@ -73,7 +73,7 @@ namespace modio
             err = unzReadCurrentFile(zipfile, read_buffer, READ_SIZE);
             if(err < 0)
             {
-              writeLogLine("error " + toString(err) + " with zipfile in unzReadCurrentFile", error);
+              writeLogLine("error " + toString(err) + " with zipfile in unzReadCurrentFile", MODIO_DEBUGLEVEL_ERROR);
               unzCloseCurrentFile( zipfile );
               unzClose( zipfile );
               return;
@@ -82,7 +82,7 @@ namespace modio
             {
               if(fwrite(read_buffer, err, 1, out) != 1)
               {
-                writeLogLine("error " + toString(err) + " in writing extracted file", error);
+                writeLogLine("error " + toString(err) + " in writing extracted file", MODIO_DEBUGLEVEL_ERROR);
               }
             }
           }while(err > 0);
@@ -91,7 +91,7 @@ namespace modio
 
           err = unzCloseCurrentFile(zipfile);
           if (err != UNZ_OK)
-            writeLogLine("error " + toString(err) + " with " + filename + " in unzCloseCurrentFile", error);
+            writeLogLine("error " + toString(err) + " with " + filename + " in unzCloseCurrentFile", MODIO_DEBUGLEVEL_ERROR);
         }
 
         if((i+1) < global_info.number_entry)
@@ -100,19 +100,19 @@ namespace modio
 
           if(err != UNZ_OK)
           {
-            writeLogLine("error " + toString(err) + " with zipfile in unzGoToNextFile", error);
+            writeLogLine("error " + toString(err) + " with zipfile in unzGoToNextFile", MODIO_DEBUGLEVEL_ERROR);
             unzClose(zipfile);
             return;
           }
         }
       }
       unzClose(zipfile);
-      writeLogLine(zip_path + " extracted", verbose);
+      writeLogLine(zip_path + " extracted", MODIO_DEBUGLEVEL_LOG);
     }
 
     void compress(string directory, string zip_path)
     {
-      writeLogLine(string("Compressing ") + directory + " into " + zip_path, verbose);
+      writeLogLine(string("Compressing ") + directory + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
       if(directory[directory.size()-1]!='/')
         directory += '/';
 
@@ -133,7 +133,7 @@ namespace modio
       buf = (void*)malloc(size_buf);
       if (buf == NULL)
       {
-        writeLogLine("Error allocating memory", error);
+        writeLogLine("Error allocating memory", MODIO_DEBUGLEVEL_ERROR);
       }
 
       //#ifdef USEWIN32IOAPI
@@ -145,11 +145,11 @@ namespace modio
 
       if (zf == NULL)
       {
-        writeLogLine(string("Could not open ") + zipfilename, error);
+        writeLogLine(string("Could not open ") + zipfilename, MODIO_DEBUGLEVEL_ERROR);
       }
       else
       {
-        writeLogLine(string("Creating ") + zipfilename, verbose);
+        writeLogLine(string("Creating ") + zipfilename, MODIO_DEBUGLEVEL_LOG);
       }
 
       vector<string> filenames = getFilenames(directory);
@@ -201,13 +201,13 @@ namespace modio
                       password, crcFile, zip64);
 
         if (err != ZIP_OK)
-          writeLogLine(string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), error);
+          writeLogLine(string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
         else
         {
           fin = FOPEN_FUNC(complete_file_path.c_str(), "rb");
           if (fin == NULL)
           {
-            writeLogLine(string("Could not open ") + filenameinzip + " for reading", error);
+            writeLogLine(string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);
           }
         }
 
@@ -219,14 +219,14 @@ namespace modio
             size_read = (int)fread(buf, 1, size_buf, fin);
             if ((size_read < size_buf) && (feof(fin) == 0))
             {
-              writeLogLine(string("Error in reading ") + filenameinzip, error);
+              writeLogLine(string("Error in reading ") + filenameinzip, MODIO_DEBUGLEVEL_ERROR);
             }
 
             if (size_read > 0)
             {
               err = zipWriteInFileInZip(zf, buf, size_read);
               if (err < 0)
-                writeLogLine(string("Error in writing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), error);
+                writeLogLine(string("Error in writing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
             }
           }
           while ((err == ZIP_OK) && (size_read > 0));
@@ -241,14 +241,14 @@ namespace modio
         {
           err = zipCloseFileInZip(zf);
           if (err != ZIP_OK)
-            writeLogLine(string("Error in closing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), error);
+            writeLogLine(string("Error in closing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
         }
       }
 
       errclose = zipClose(zf, NULL);
 
       if (errclose != ZIP_OK)
-        writeLogLine(string("Error in closing ") + zipfilename + ", zlib error: " + toString(errclose), error);
+        writeLogLine(string("Error in closing ") + zipfilename + ", zlib error: " + toString(errclose), MODIO_DEBUGLEVEL_ERROR);
 
       free(buf);
     }

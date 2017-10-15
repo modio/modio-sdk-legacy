@@ -9,7 +9,7 @@ namespace modio
     clearLog();
     curlwrapper::initCurl();
 
-    writeLogLine("Initializing SDK", verbose);
+    writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
     modio::GAME_ID = game_id;
     modio::API_KEY = api_key;
     modio::ACCESS_TOKEN = "";
@@ -27,7 +27,7 @@ namespace modio
 
     createDirectory(getModIODirectory() + "images/");
     createDirectory(getModIODirectory() + "tmp/");
-    writeLogLine("SDK Initialized", verbose);
+    writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 
     //TODO: Use retrived acess token when server does
     modio::ACCESS_TOKEN = "turupawn";
@@ -39,9 +39,9 @@ namespace modio
     init(game_id, string(api_key));
   }
 
-  void setDebugMode(DebugMode debug_mode)
+  void setDebugLevel(unsigned int debug_level)
   {
-    DEBUG_LEVEL = debug_mode;
+    DEBUG_LEVEL = debug_level;
   }
 
   void shutdown()
