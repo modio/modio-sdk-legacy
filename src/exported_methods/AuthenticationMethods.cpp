@@ -2,16 +2,18 @@
 
 namespace modio
 {
-  map< int,function<void(int, string)> > email_request_callbacks;
-  map< int,function<void(int, string)> > email_exchange_callbacks;
+  typedef void (*ScriptFunction)(void);
+
+  map< int,void (*)(int, char*) > email_request_callbacks;
+  map< int,void (*)(int, char*) > email_exchange_callbacks;
 
   void onEmailRequested(int call_number, int response_code, string message, json response)
   {
-    email_request_callbacks[call_number](response_code, message);
+    email_request_callbacks[call_number](response_code, (char*)message.c_str());
     email_request_callbacks.erase(call_number);
   }
 
-  void emailRequest(string email, function< void(int response_code, string message) > callback)
+  void emailRequest(char* email, void (*callback)(int response_code, char* message))
   {
     map<string, string> data;
     data["api_key"] = modio::API_KEY;
@@ -40,11 +42,11 @@ namespace modio
       out.close();
     }
 
-    email_exchange_callbacks[call_number](response_code, message);
+    email_exchange_callbacks[call_number](response_code, (char*)message.c_str());
     email_exchange_callbacks.erase(call_number);
   }
 
-  void emailExchange(string security_code, function< void(int response_code, string message) > callback)
+  void emailExchange(char* security_code, void (*callback)(int response_code, char* message))
   {
     map<string, string> data;
     data["api_key"] = modio::API_KEY;

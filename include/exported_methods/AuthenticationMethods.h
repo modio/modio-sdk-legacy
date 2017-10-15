@@ -16,12 +16,15 @@
 #  define MODIO_DLL
 #endif
 
-namespace modio
+extern "C"
 {
-  void MODIO_DLL emailExchange(string security_code, function< void(int response_code, string message) > callback);
-  void MODIO_DLL emailRequest(string email, function< void(int response_code, string message) > callback);
-  bool MODIO_DLL isLoggedIn();
-  void MODIO_DLL logout();
+  namespace modio
+  {
+    void MODIO_DLL emailRequest(char* email, void (*callback)(int response_code, char* message));
+    void MODIO_DLL emailExchange(char* security_code, void (*callback)(int response_code, char* message));
+    bool MODIO_DLL isLoggedIn();
+    void MODIO_DLL logout();
+  }
 }
 
 #endif

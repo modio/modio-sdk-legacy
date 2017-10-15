@@ -2,7 +2,7 @@
 
 namespace modio
 {
-  void init(int game_id, string api_key)
+  void init(int game_id, char* api_key)
   {
     clearLog();
 
@@ -32,13 +32,13 @@ namespace modio
     //TODO: Use retrived acess token when server does
     modio::ACCESS_TOKEN = "turupawn";
   }
-
-  void init(int game_id, string api_key, string root_path)
+/*
+  void init(int game_id, char* api_key, char* root_path)
   {
     ROOT_PATH = root_path;
     init(game_id, api_key);
   }
-
+*/
   void setDebugMode(DebugMode debug_mode)
   {
     DEBUG_LEVEL = debug_mode;
