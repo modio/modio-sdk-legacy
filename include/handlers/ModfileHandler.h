@@ -3,18 +3,18 @@
 
 #include "Globals.h"
 
-namespace modio
+extern "C"
 {
-  class ModfileHandler
+  struct ModfileHandler
   {
-  public:
     multimap<string, string> curlform_copycontents;
     string path;
-    MODIO_DLL void setPath(string path);
-    MODIO_DLL void setVersion(string version);
-    MODIO_DLL void setChangelog(string changelog);
-    MODIO_DLL void setActive(string active);
   };
+
+  void MODIO_DLL setModfilePath(ModfileHandler* modfile_handler, string path);
+  void MODIO_DLL setModfileVersion(ModfileHandler* modfile_handler, string version);
+  void MODIO_DLL setModfileChangelog(ModfileHandler* modfile_handler, string changelog);
+  void MODIO_DLL setModfileActive(ModfileHandler* modfile_handler, string active);
 }
 
 #endif

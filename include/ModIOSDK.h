@@ -12,15 +12,14 @@
 #include "exported_methods/ModfileMethods.h"
 #include "exported_methods/TagMethods.h"
 
-namespace modio
+extern "C"
 {
-  MODIO_DLL void init(int game_id, string api_key);
-  MODIO_DLL CurrentDownloadInfo getCurrentDownloadInfo();
-
-  extern "C" MODIO_DLL void init(int game_id, const char* api_key, const char* root_path);
-  extern "C" MODIO_DLL void setDebugLevel(unsigned int debug_level);
-  extern "C" MODIO_DLL void shutdown();
-  extern "C" MODIO_DLL void pauseCurrentDownload();
+  void MODIO_DLL modioInit(int game_id, char* api_key);
+  //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
+  void MODIO_DLL modioShutdown();
+  //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();
+  void MODIO_DLL modioPauseCurrentDownload();
+  void MODIO_DLL modioSetDebugLevel(unsigned int debug_level);
 }
 
 

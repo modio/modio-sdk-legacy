@@ -6,12 +6,22 @@
 #include "Globals.h"
 #include <thread>
 
-namespace modio
+#ifdef WINDOWS
+#  ifdef BUILDING_MODIO_DLL
+#    define MODIO_DLL __declspec(dllexport)
+#  else
+#    define MODIO_DLL __declspec(dllimport)
+#  endif
+#else
+#  define MODIO_DLL
+#endif
+
+extern "C"
 {
-  MODIO_DLL void emailExchange(string security_code, function< void(int response_code, string message) > callback);
-  MODIO_DLL void emailRequest(string email, function< void(int response_code, string message) > callback);
-  MODIO_DLL bool isLoggedIn();
-  MODIO_DLL void logout();
+  void MODIO_DLL modioEmailRequest(char* email, void (*callback)(int response_code, char* message));
+  void MODIO_DLL modioEmailExchange(char* security_code, void (*callback)(int response_code, char* message));
+  bool MODIO_DLL modioIsLoggedIn();
+  void MODIO_DLL modioLogout();
 }
 
 #endif

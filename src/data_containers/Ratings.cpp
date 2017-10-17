@@ -1,35 +1,40 @@
 #include "data_containers/Ratings.h"
 
-namespace modio
+extern "C"
 {
-  Ratings::Ratings(json ratings_json)
+  void initRatings(Ratings* ratings, json ratings_json)
   {
-    this->total = -1;
-    if(hasKey(ratings_json, "total"))
-      this->total = ratings_json["total"];
+    ratings->total = -1;
+    if(modio::hasKey(ratings_json, "total"))
+      ratings->total = ratings_json["total"];
 
-    this->positive = -1;
-    if(hasKey(ratings_json, "positive"))
-      this->positive = ratings_json["positive"];
+    ratings->positive = -1;
+    if(modio::hasKey(ratings_json, "positive"))
+      ratings->positive = ratings_json["positive"];
 
-    this->negative = -1;
-    if(hasKey(ratings_json, "negative"))
-      this->negative = ratings_json["negative"];
+    ratings->negative = -1;
+    if(modio::hasKey(ratings_json, "negative"))
+      ratings->negative = ratings_json["negative"];
 
-    this->weighted = -1;
-    if(hasKey(ratings_json, "weighted"))
-      this->weighted = ratings_json["weighted"];
+    ratings->weighted = -1;
+    if(modio::hasKey(ratings_json, "weighted"))
+      ratings->weighted = ratings_json["weighted"];
 
-    this->percentage = -1;
-    if(hasKey(ratings_json, "percentage"))
-      this->percentage = ratings_json["percentage"];
+    ratings->percentage = -1;
+    if(modio::hasKey(ratings_json, "percentage"))
+      ratings->percentage = ratings_json["percentage"];
 
-    this->stars = -1;
-    if(hasKey(ratings_json, "stars"))
-      this->stars = ratings_json["stars"];
+    ratings->stars = -1;
+    if(modio::hasKey(ratings_json, "stars"))
+      ratings->stars = ratings_json["stars"];
 
-    this->text = "";
-    if(hasKey(ratings_json, "text"))
-      this->text = ratings_json["text"];
+    ratings->text = "";
+    if(modio::hasKey(ratings_json, "text"))
+      ratings->text = ratings_json["text"];
+  }
+
+  void freeRatings(Ratings* ratings)
+  {
+    delete ratings;
   }
 }

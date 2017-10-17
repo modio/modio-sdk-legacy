@@ -7,17 +7,18 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modio
+extern "C"
 {
-  class Tag
+  struct Tag
   {
-  public:
-    Tag(json tag_json);
     int game;
     int mod;
     int date;
     string tag;
   };
+
+  void initTag(Tag* tag, json tag_json);
+  void freeTag(Tag* tag);
 }
 
 #endif

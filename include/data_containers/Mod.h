@@ -15,13 +15,10 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modio
+extern "C"
 {
-  class Mod
+  struct Mod
   {
-  public:
-    Mod(json mod_json);
-    ~Mod();
     int id;
     int game;
     Member* member;
@@ -40,6 +37,9 @@ namespace modio
     Ratings* ratings;
     Tag* tag;
   };
+
+  void initMod(Mod* mod, json mod_json);
+  void freeMod(Mod* mod);
 }
 
 #endif

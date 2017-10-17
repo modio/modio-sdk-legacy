@@ -1,37 +1,40 @@
 #include "data_containers/Member.h"
 
-namespace modio
+extern "C"
 {
-  Member::Member(json member_json)
+  void initMember(Member* member, json member_json)
   {
-    this->id = -1;
-    if(hasKey(member_json, "id"))
-      this->id = member_json["id"];
+    member->id = -1;
+    if(modio::hasKey(member_json, "id"))
+      member->id = member_json["id"];
 
-    this->username = "";
-    if(hasKey(member_json, "username"))
-      this->username = member_json["username"];
+    member->username = "";
+    if(modio::hasKey(member_json, "username"))
+      member->username = member_json["username"];
 
-    this->online = -1;
-    if(hasKey(member_json, "online"))
-      this->online = member_json["online"];
+    member->online = -1;
+    if(modio::hasKey(member_json, "online"))
+      member->online = member_json["online"];
 
-    this->avatar = NULL;
-    if(hasKey(member_json, "avatar"))
-      this->avatar = new Image(member_json["avatar"]);
+    member->avatar = NULL;
+    if(modio::hasKey(member_json, "avatar"))
+    {
+      member->avatar = new Image;
+      initImage(member->avatar, member_json["avatar"]);
+    }
 
-    this->timezone = "";
-    if(hasKey(member_json, "timezone"))
-      this->timezone = member_json["timezone"];
+    member->timezone = "";
+    if(modio::hasKey(member_json, "timezone"))
+      member->timezone = member_json["timezone"];
 
-    this->language = "";
-    if(hasKey(member_json, "language"))
-      this->language = member_json["language"];
+    member->language = "";
+    if(modio::hasKey(member_json, "language"))
+      member->language = member_json["language"];
   }
 
-  Member::~Member()
+  void freeMember(Member* member)
   {
-    if(avatar)
-      delete avatar;
+    if(member->avatar)
+      freeImage(member->avatar);
   }
 }

@@ -3,25 +3,35 @@
 
 #include "Globals.h"
 
-namespace modio
+#ifdef WINDOWS
+#  ifdef BUILDING_MODIO_DLL
+#    define MODIO_DLL __declspec(dllexport)
+#  else
+#    define MODIO_DLL __declspec(dllimport)
+#  endif
+#else
+#  define MODIO_DLL
+#endif
+
+extern "C"
 {
-  class ModHandler
+  struct ModHandler
   {
-  public:
     multimap<string, string> curlform_copycontents;
     map<string, string> curlform_files;
-    MODIO_DLL void setLogoPath(string logo_path);
-    MODIO_DLL void setName(string name);
-    MODIO_DLL void setHomepage(string homepage);
-    MODIO_DLL void setSummary(string summary);
-    MODIO_DLL void setPrice(double price);
-    MODIO_DLL void setStock(int stock);
-    MODIO_DLL void setDescription(string description);
-    MODIO_DLL void setMetadata(string metadata);
-    MODIO_DLL void setNameid(string nameid);
-    MODIO_DLL void setModfile(int modfile);
-    MODIO_DLL void addTag(string tag);
   };
+
+  void MODIO_DLL setLogoPath(ModHandler* mod_handler, string logo_path);
+  void MODIO_DLL setName(ModHandler* mod_handler, string name);
+  void MODIO_DLL setHomepage(ModHandler* mod_handler, string homepage);
+  void MODIO_DLL setSummary(ModHandler* mod_handler, string summary);
+  void MODIO_DLL setPrice(ModHandler* mod_handler, double price);
+  void MODIO_DLL setStock(ModHandler* mod_handler, int stock);
+  void MODIO_DLL setDescription(ModHandler* mod_handler, string description);
+  void MODIO_DLL setMetadata(ModHandler* mod_handler, string metadata);
+  void MODIO_DLL setNameid(ModHandler* mod_handler, string nameid);
+  void MODIO_DLL setModfile(ModHandler* mod_handler, int modfile);
+  void MODIO_DLL addTag(ModHandler* mod_handler, string tag);
 }
 
 #endif

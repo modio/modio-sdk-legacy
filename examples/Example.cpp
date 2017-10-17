@@ -208,13 +208,13 @@ int main(void)
   }
 
 
-  modio::ModHandler* add_mod_handler = new modio::ModHandler();
-  add_mod_handler->setLogoPath("logo.png");
-  add_mod_handler->setName("New sdk add method");
-  add_mod_handler->setHomepage("http://www.webpage.com");
-  add_mod_handler->setSummary("new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method");
-  add_mod_handler->addTag("Easy");
-  add_mod_handler->addTag("Medium");
+  modio::ModHandler* add_mod_handler = new modio::ModHandler;
+  setLogoPath(add_mod_handler, "logo.png");
+  setName(add_mod_handler, "New sdk add method");
+  setHomepage(add_mod_handler, "http://www.webpage.com");
+  setSummary(add_mod_handler, "new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method new sdk method");
+  addTag(add_mod_handler, "Easy");
+  addTag(add_mod_handler, "Medium");
 
   modio::addMod(add_mod_handler, &onModAdded);
 /**/
