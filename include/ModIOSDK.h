@@ -16,10 +16,11 @@ extern "C"
 {
   void MODIO_DLL modioInit(int game_id, char* api_key);
   //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
-  //void MODIO_DLL setDebugMode(DebugMode debug_mode);
   void MODIO_DLL modioShutdown();
   //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();
   void MODIO_DLL modioPauseCurrentDownload();
+  void MODIO_DLL modioSetDebugLevel(unsigned int debug_level);
 }
+
 
 #endif

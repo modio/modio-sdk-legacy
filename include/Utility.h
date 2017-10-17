@@ -45,16 +45,19 @@
 using namespace std;
 using json = nlohmann::json;
 
+// NOTE(@jackson): Debug "Severity"? (Steamworks uses "spew level")
+#define MODIO_DEBUGLEVEL_LOG      2
+#define MODIO_DEBUGLEVEL_WARNING  1
+#define MODIO_DEBUGLEVEL_ERROR    0
+
 namespace modio
 {
-  enum DebugMode : unsigned int { verbose, error };
-
   string dataToJsonString(char* data, size_t size);
   string dataToJsonString(string data);
   string toString(int number);
   void createDirectory(string directory);
   void clearLog();
-  void writeLogLine(string text, DebugMode debug_mode);
+  void writeLogLine(string text, unsigned int debug_level);
   vector<string> getFilenames(string directory);
   string getModIODirectory();
   bool hasKey(json json_object, string key);

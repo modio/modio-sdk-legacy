@@ -3,17 +3,7 @@
 
 #include "Globals.h"
 
-#ifdef WINDOWS
-#  ifdef BUILDING_MODIO_DLL
-#    define MODIO_DLL __declspec(dllexport)
-#  else
-#    define MODIO_DLL __declspec(dllimport)
-#  endif
-#else
-#  define MODIO_DLL
-#endif
-
-namespace modio
+extern "C"
 {
   struct ModfileHandler
   {

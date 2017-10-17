@@ -50,8 +50,8 @@ namespace modio
     add_file_thread.detach();
   }
 
-
-  void MODIO_DLL editModfile(Modfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, Modfile* modfile)> callback)
+  //NOTE(@turupawn): Do we need the MODIO_DLL declaration here?
+  MODIO_DLL void editModfile(Modfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, Modfile* modfile)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
