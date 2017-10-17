@@ -24,10 +24,10 @@ namespace modio
       current_download_info.download_total = 0;
       current_download_info.download_progress = 0;
 
-      if(curl_global_init(CURL_GLOBAL_ALL))
-        writeLogLine("Curl initialized", verbose);
+      if(curl_global_init(CURL_GLOBAL_ALL) == 0)
+        writeLogLine("Curl initialized", MODIO_DEBUGLEVEL_LOG);
       else
-        writeLogLine("Error initializing curl", error);
+        writeLogLine("Error initializing curl", MODIO_DEBUGLEVEL_ERROR);
     }
 
     int getCallCount()
@@ -98,7 +98,7 @@ namespace modio
       }
       catch (json::parse_error &e)
       {
-        writeLogLine(string("Error parsing json: ") + e.what(), error);
+        writeLogLine(string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
         json_response = "{}"_json;
       }
       return json_response;
@@ -106,7 +106,7 @@ namespace modio
 
     void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, string message, json response)> callback)
     {
-      writeLogLine("getJsonCall call to " + url, verbose);
+      writeLogLine("getJsonCall call to " + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
       CURL *curl;
       CURLcode res;
@@ -135,7 +135,7 @@ namespace modio
         }
         else
         {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
           response_code = 0;
         }
 
@@ -157,10 +157,10 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-      
+
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
-      writeLogLine("getJsonCall call to " + url + "finished", verbose);
+      writeLogLine("getJsonCall call to " + url + "finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
@@ -251,7 +251,7 @@ namespace modio
 
     void download(int call_number, string url, string path, function< void(int call_number, int response_code, string message, string url, string path) > callback)
     {
-      writeLogLine("downloadFile call to " + url, verbose);
+      writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
       CURL *curl;
       CURLcode res;
@@ -298,7 +298,7 @@ namespace modio
         }
         else
         {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
           response_code = 0;
         }
 
@@ -322,12 +322,12 @@ namespace modio
 
       callback(call_number, response_code, "", url, path);
       advanceOngoingCall();
-      writeLogLine("getJsonCall call to " + url + " finished", verbose);
+      writeLogLine("getJsonCall call to " + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
-    void postForm(int call_number, string url, vector<string> headers, map<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, string message, json response)> callback)
+    void postForm(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, string message, json response)> callback)
     {
-      writeLogLine(string("postForm call to ") + url, verbose);
+      writeLogLine(string("postForm call to ") + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
       CURL *curl;
       CURLcode res;
@@ -392,7 +392,7 @@ namespace modio
         }
         else
         {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
           response_code = 0;
         }
 
@@ -408,15 +408,15 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-
+      
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
-      writeLogLine(string("postForm call to ") + url + " finished", verbose);
+      writeLogLine(string("postForm call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     void post(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
     {
-      writeLogLine(string("post call to ") + url, verbose);
+      writeLogLine(string("post call to ") + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
 
       CURL *curl;
@@ -442,8 +442,6 @@ namespace modio
           str_data += (*i).first + "=" + (*i).second;
         }
 
-        cout<<str_data<<endl;
-
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
 
         setVerifies(curl);
@@ -457,7 +455,7 @@ namespace modio
         }
         else
         {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
           response_code = 0;
         }
 
@@ -473,12 +471,12 @@ namespace modio
 
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
-      writeLogLine(string("post call to ") + url + " finished", verbose);
+      writeLogLine(string("post call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
-    void put(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
+    void put(int call_number, string url, vector<string> headers, multimap<string, string> data, function<void(int call_number, int response_code, string message, json response)> callback)
     {
-      writeLogLine(string("put call to ") + url, verbose);
+      writeLogLine(string("put call to ") + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
       CURL *curl;
       CURLcode res;
@@ -514,7 +512,7 @@ namespace modio
         }
         else
         {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
           response_code = 0;
         }
 
@@ -530,12 +528,12 @@ namespace modio
 
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
-      writeLogLine(string("put call to ") + url + " finished", verbose);
+      writeLogLine(string("put call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     void deleteCall(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, string message, json response)> callback)
     {
-      writeLogLine(string("delete call to ") + url, verbose);
+      writeLogLine(string("delete call to ") + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
       CURL *curl;
       CURLcode res;
@@ -563,7 +561,7 @@ namespace modio
         }
         else
         {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), error);
+          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
           response_code = 0;
         }
 
@@ -579,7 +577,7 @@ namespace modio
 
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
-      writeLogLine(string("delete call to ") + url + " finished", verbose);
+      writeLogLine(string("delete call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
   }

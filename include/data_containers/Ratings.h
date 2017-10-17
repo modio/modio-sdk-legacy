@@ -7,12 +7,10 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modio
+extern "C"
 {
-  class Ratings
+  struct Ratings
   {
-  public:
-    Ratings(json ratings_json);
     int total;
     int positive;
     int negative;
@@ -21,6 +19,9 @@ namespace modio
     int stars;
     string text;
   };
+
+  void initRatings(Ratings* ratings, json ratings_json);
+  void freeRatings(Ratings* ratings);
 }
 
 #endif

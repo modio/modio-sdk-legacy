@@ -1,19 +1,24 @@
 #include "data_containers/Image.h"
 
-namespace modio
+extern "C"
 {
-  Image::Image(json image_json)
+  void initImage(Image* image, json image_json)
   {
-    this->full = "";
-    if(hasKey(image_json, "full"))
-      this->full = image_json["full"];
+    image->full = "";
+    if(modio::hasKey(image_json, "full"))
+      image->full = image_json["full"];
 
-    this->thumbnail = "";
-    if(hasKey(image_json, "thumbnail"))
-      this->thumbnail = image_json["thumbnail"];
+    image->thumbnail = "";
+    if(modio::hasKey(image_json, "thumbnail"))
+      image->thumbnail = image_json["thumbnail"];
 
-    this->filename = "";
-    if(hasKey(image_json, "filename"))
-      this->filename = image_json["filename"];
+    image->filename = "";
+    if(modio::hasKey(image_json, "filename"))
+      image->filename = image_json["filename"];
+  }
+
+  void freeImage(Image* image)
+  {
+    delete image;
   }
 }

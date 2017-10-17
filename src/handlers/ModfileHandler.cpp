@@ -2,23 +2,23 @@
 
 namespace modio
 {
-  void ModfileHandler::setVersion(string version)
+  void setVersion(ModfileHandler* modfile_handler, string version)
   {
-    this->curlform_copycontents["version"] = version;
+    modfile_handler->curlform_copycontents.insert(pair<string,string>("version",version));
   }
 
-  void ModfileHandler::setChangelog(string changelog)
+  void setChangelog(ModfileHandler* modfile_handler, string changelog)
   {
-    this->curlform_copycontents["changelog"] = changelog;
+    modfile_handler->curlform_copycontents.insert(pair<string,string>("changelog",changelog));
   }
 
-  void ModfileHandler::setPath(string path)
+  void setPath(ModfileHandler* modfile_handler, string path)
   {
-    this->path = path;
+    modfile_handler->path = path;
   }
 
-  void ModfileHandler::setActive(string active)
+  void setActive(ModfileHandler* modfile_handler, string active)
   {
-    this->curlform_copycontents["active"] = active;
+    modfile_handler->curlform_copycontents.insert(pair<string,string>("active",active));
   }
 }

@@ -7,16 +7,17 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace modio
+extern "C"
 {
-  class Image
+  struct Image
   {
-  public:
-    Image(json image_json);
     string full;
     string thumbnail;
     string filename;
   };
+
+  void initImage(Image* image, json image_json);
+  void freeImage(Image* image);
 }
 
 #endif

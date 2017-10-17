@@ -1,54 +1,59 @@
 #include "handlers/ModHandler.h"
 
-namespace modio
+extern "C"
 {
-  void ModHandler::setLogoPath(string logo_path)
+  void setLogoPath(ModHandler* mod_handler, string logo_path)
   {
-    this->curlform_files["logo"] = logo_path;
+    mod_handler->curlform_files["logo"] = logo_path;
   }
 
-  void ModHandler::setName(string name)
+  void setName(ModHandler* mod_handler, string name)
   {
-    this->curlform_copycontents["name"] = name;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("name",name));
   }
 
-  void ModHandler::setHomepage(string homepage)
+  void setHomepage(ModHandler* mod_handler, string homepage)
   {
-    this->curlform_copycontents["homepage"] = homepage;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("homepage",homepage));
   }
 
-  void ModHandler::setSummary(string summary)
+  void setSummary(ModHandler* mod_handler, string summary)
   {
-    this->curlform_copycontents["summary"] = summary;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("summary",summary));
   }
 
-  void ModHandler::setPrice(double price)
+  void setPrice(ModHandler* mod_handler, double price)
   {
-    this->curlform_copycontents["price"] = price;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("price", modio::toString(price)));
   }
 
-  void ModHandler::setStock(int stock)
+  void setStock(ModHandler* mod_handler, int stock)
   {
-    this->curlform_copycontents["stock"] = stock;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("stock", modio::toString(stock)));
   }
 
-  void ModHandler::setDescription(string description)
+  void setDescription(ModHandler* mod_handler, string description)
   {
-    this->curlform_copycontents["description"] = description;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("description",description));
   }
 
-  void ModHandler::setMetadata(string metadata)
+  void setMetadata(ModHandler* mod_handler, string metadata)
   {
-    this->curlform_copycontents["metadata"] = metadata;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("metadata",metadata));
   }
 
-  void ModHandler::setNameid(string nameid)
+  void setNameid(ModHandler* mod_handler, string nameid)
   {
-    this->curlform_copycontents["nameid"] = nameid;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("nameid",nameid));
   }
 
-  void ModHandler::setModfile(int modfile)
+  void setModfile(ModHandler* mod_handler, int modfile)
   {
-    this->curlform_copycontents["modfile"] = modfile;
+    mod_handler->curlform_copycontents.insert(pair<string,string>("modfile", modio::toString(modfile)));
+  }
+
+  void addTag(ModHandler* mod_handler, string tag)
+  {
+    mod_handler->curlform_copycontents.insert(pair<string,string>("tags[]",tag));
   }
 }

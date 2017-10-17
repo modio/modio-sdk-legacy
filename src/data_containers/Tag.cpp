@@ -1,23 +1,28 @@
 #include "data_containers/Tag.h"
 
-namespace modio
+extern "C"
 {
-  Tag::Tag(json tag_json)
+  void initTag(Tag* tag, json tag_json)
   {
-    this->game = -1;
-    if(hasKey(tag_json, "game"))
-      this->game = tag_json["game"];
+    tag->game = -1;
+    if(modio::hasKey(tag_json, "game"))
+      tag->game = tag_json["game"];
 
-    this->mod = -1;
-    if(hasKey(tag_json, "mod"))
-      this->mod = tag_json["mod"];
+    tag->mod = -1;
+    if(modio::hasKey(tag_json, "mod"))
+      tag->mod = tag_json["mod"];
 
-    this->date = -1;
-    if(hasKey(tag_json, "date"))
-      this->date = tag_json["date"];
+    tag->date = -1;
+    if(modio::hasKey(tag_json, "date"))
+      tag->date = tag_json["date"];
 
-    this->tag = "";
-    if(hasKey(tag_json, "tag"))
-      this->tag = tag_json["tag"];
+    tag->tag = "";
+    if(modio::hasKey(tag_json, "tag"))
+      tag->tag = tag_json["tag"];
+  }
+
+  void freeTag(Tag* tag)
+  {
+    delete tag;
   }
 }

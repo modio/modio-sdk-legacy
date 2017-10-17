@@ -13,24 +13,25 @@
 #  define MODIO_DLL
 #endif
 
-namespace modio
+extern "C"
 {
-  class ModHandler
+  struct ModHandler
   {
-  public:
-    map<string, string> curlform_copycontents;
+    multimap<string, string> curlform_copycontents;
     map<string, string> curlform_files;
-    void MODIO_DLL setLogoPath(string logo_path);
-    void MODIO_DLL setName(string name);
-    void MODIO_DLL setHomepage(string homepage);
-    void MODIO_DLL setSummary(string summary);
-    void MODIO_DLL setPrice(double price);
-    void MODIO_DLL setStock(int stock);
-    void MODIO_DLL setDescription(string description);
-    void MODIO_DLL setMetadata(string metadata);
-    void MODIO_DLL setNameid(string nameid);
-    void MODIO_DLL setModfile(int modfile);
   };
+
+  void MODIO_DLL setLogoPath(ModHandler* mod_handler, string logo_path);
+  void MODIO_DLL setName(ModHandler* mod_handler, string name);
+  void MODIO_DLL setHomepage(ModHandler* mod_handler, string homepage);
+  void MODIO_DLL setSummary(ModHandler* mod_handler, string summary);
+  void MODIO_DLL setPrice(ModHandler* mod_handler, double price);
+  void MODIO_DLL setStock(ModHandler* mod_handler, int stock);
+  void MODIO_DLL setDescription(ModHandler* mod_handler, string description);
+  void MODIO_DLL setMetadata(ModHandler* mod_handler, string metadata);
+  void MODIO_DLL setNameid(ModHandler* mod_handler, string nameid);
+  void MODIO_DLL setModfile(ModHandler* mod_handler, int modfile);
+  void MODIO_DLL addTag(ModHandler* mod_handler, string tag);
 }
 
 #endif

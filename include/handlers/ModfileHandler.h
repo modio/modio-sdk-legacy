@@ -3,28 +3,18 @@
 
 #include "Globals.h"
 
-#ifdef WINDOWS
-#  ifdef BUILDING_MODIO_DLL
-#    define MODIO_DLL __declspec(dllexport)
-#  else
-#    define MODIO_DLL __declspec(dllimport)
-#  endif
-#else
-#  define MODIO_DLL
-#endif
-
-namespace modio
+extern "C"
 {
-  class ModfileHandler
+  struct ModfileHandler
   {
-  public:
-    map<string, string> curlform_copycontents;
+    multimap<string, string> curlform_copycontents;
     string path;
-    void MODIO_DLL setPath(string path);
-    void MODIO_DLL setVersion(string version);
-    void MODIO_DLL setChangelog(string changelog);
-    void MODIO_DLL setActive(string active);
   };
+
+  void MODIO_DLL setModfilePath(ModfileHandler* modfile_handler, string path);
+  void MODIO_DLL setModfileVersion(ModfileHandler* modfile_handler, string version);
+  void MODIO_DLL setModfileChangelog(ModfileHandler* modfile_handler, string changelog);
+  void MODIO_DLL setModfileActive(ModfileHandler* modfile_handler, string active);
 }
 
 #endif

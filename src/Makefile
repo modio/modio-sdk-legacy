@@ -11,7 +11,7 @@ LIBRARY = modio.so
 	$(CC) $(CFLAGS) $< -o $@ -I ../include
 
 $(LIBRARY): $(OBJECTS)
-	$(CC) -shared -o $@ $^ ../lib/libz.a
+	$(CC) -fPIC -shared -o $@ $^ ../lib/libz.a
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;
