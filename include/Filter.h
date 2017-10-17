@@ -19,7 +19,7 @@ using namespace std;
 
 extern "C"
 {
-  struct Filter
+  struct ModioFilter
   {
     char* sort;
     char* limit;
@@ -37,23 +37,26 @@ extern "C"
     char* not_equal;
   };
 
-  string getFilterString(Filter* filter);
+  void MODIO_DLL modioInitFilter(ModioFilter* filter);
+  void MODIO_DLL modioSetFilterSort(ModioFilter* filter, char* field, bool ascending);
+  void MODIO_DLL modioSetFilterLimit(ModioFilter* filter, int limit);
+  void MODIO_DLL modioSetFilterOffset(ModioFilter* filter, int offset);
+  void MODIO_DLL modioSetFilterCursor(ModioFilter* filter, int cursor);
+  void MODIO_DLL modioSetFilterFullTextSearch(ModioFilter* filter, char* text);
+  void MODIO_DLL modioAddFilterLikeField(ModioFilter* filter, char* field, char* value);
+  void MODIO_DLL modioAddFilterNotLikeField(ModioFilter* filter, char* field, char* value);
+  void MODIO_DLL modioAddFilterInField(ModioFilter* filter, char* field, char* value);
+  void MODIO_DLL modioAddFilterNotInField(ModioFilter* filter, char* field, char* value);
+  void MODIO_DLL modioAddFilterMinField(ModioFilter* filter, char* field, double value);
+  void MODIO_DLL modioAddFilterMaxField(ModioFilter* filter, char* field, double value);
+  void MODIO_DLL modioAddFilterSmallerThanField(ModioFilter* filter, char* field, double value);
+  void MODIO_DLL modioAddFilterGreaterThanField(ModioFilter* filter, char* field, double value);
+  void MODIO_DLL modioAddFilterNotEqualField(ModioFilter* filter, char* field, char* value);
+}
 
-  void MODIO_DLL initFilter(Filter* filter);
-  void MODIO_DLL setFilterSort(Filter* filter, char* field, bool ascending);
-  void MODIO_DLL setFilterLimit(Filter* filter, int limit);
-  void MODIO_DLL setFilterOffset(Filter* filter, int offset);
-  void MODIO_DLL setFilterCursor(Filter* filter, int cursor);
-  void MODIO_DLL setFilterFullTextSearch(Filter* filter, char* text);
-  void MODIO_DLL addFilterLikeField(Filter* filter, char* field, char* value);
-  void MODIO_DLL addFilterNotLikeField(Filter* filter, char* field, char* value);
-  void MODIO_DLL addFilterInField(Filter* filter, char* field, char* value);
-  void MODIO_DLL addFilterNotInField(Filter* filter, char* field, char* value);
-  void MODIO_DLL addFilterMinField(Filter* filter, char* field, double value);
-  void MODIO_DLL addFilterMaxField(Filter* filter, char* field, double value);
-  void MODIO_DLL addFilterSmallerThanField(Filter* filter, char* field, double value);
-  void MODIO_DLL addFilterGreaterThanField(Filter* filter, char* field, double value);
-  void MODIO_DLL addFilterNotEqualField(Filter* filter, char* field, char* value);
+namespace modio
+{
+  string getFilterString(ModioFilter* filter);
 }
 
 #endif

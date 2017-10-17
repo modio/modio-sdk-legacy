@@ -26,9 +26,6 @@ void modioInit(int game_id, char* api_key)
   modio::createDirectory(modio::getModIODirectory() + "images/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
-
-  //TODO: Use retrived acess token when server does
-  modio::ACCESS_TOKEN = "turupawn";
 }
 /*
 void init(int game_id, char* api_key, char* root_path)
@@ -40,7 +37,7 @@ void init(int game_id, char* api_key, char* root_path)
 
 void modioSetDebugLevel(unsigned int debug_level)
 {
-  DEBUG_LEVEL = debug_level;
+  modio::DEBUG_LEVEL = debug_level;
 }
 
 void modioShutdown()

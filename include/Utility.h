@@ -55,6 +55,7 @@ namespace modio
   string dataToJsonString(char* data, size_t size);
   string dataToJsonString(string data);
   string toString(int number);
+  string toString(double number);
   void createDirectory(string directory);
   void clearLog();
   void writeLogLine(string text, unsigned int debug_level);

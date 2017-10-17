@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initMod(Mod* mod, json mod_json)
+  void initMod(ModioMod* mod, json mod_json)
   {
     mod->id = -1;
     if(modio::hasKey(mod_json, "id"))
@@ -91,7 +91,7 @@ extern "C"
     }
   }
 
-  void freeMod(Mod* mod)
+  void freeMod(ModioMod* mod)
   {
     if(mod->logo)
       freeImage(mod->logo);

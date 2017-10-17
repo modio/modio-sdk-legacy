@@ -4,8 +4,8 @@ namespace modio
 {
   struct AddModfileParams
   {
-    Mod* mod;
-    function< void(int, string, Mod*) > callback;
+    ModioMod* mod;
+    function< void(int, string, ModioMod*) > callback;
   };
 
   struct EditModfileParams
@@ -29,7 +29,7 @@ namespace modio
     edit_modfile_callbacks.erase(call_number);
   }
 
-  void addModfile(Mod *mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, Mod* mod)> callback)
+  void addModfile(ModioMod *mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, ModioMod* mod)> callback)
   {
     minizipwrapper::compress(add_mod_file_handler->path, getModIODirectory() + "tmp/modfile.zip");
     vector<string> headers;

@@ -22,6 +22,14 @@ namespace modio
       return returnvalue;
   }
 
+  string toString(double number)
+  {
+    ostringstream string_stream;
+    string_stream << number;
+    string return_value = string_stream.str();
+    return return_value;
+  }
+
   void createDirectory(string directory)
   {
     #ifdef LINUX

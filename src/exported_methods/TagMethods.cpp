@@ -4,20 +4,20 @@ namespace modio
 {
   struct EditTagsParams
   {
-    Mod* mod;
-    function<void(int, string, Mod*)> callback;
+    ModioMod* mod;
+    function<void(int, string, ModioMod*)> callback;
   };
 
   struct DeleteTagsParams
   {
-    Mod* mod;
-    function<void(int, string, Mod*)> callback;
+    ModioMod* mod;
+    function<void(int, string, ModioMod*)> callback;
   };
 
   struct GetTagsParams
   {
-    Mod* mod;
-    function<void(int, string, Mod*, vector<string>)> callback;
+    ModioMod* mod;
+    function<void(int, string, ModioMod*, vector<string>)> callback;
   };
 
   map< int, GetTagsParams* > get_tags_callbacks;
@@ -40,7 +40,7 @@ namespace modio
     get_tags_callbacks.erase(call_number);
   }
 
-  void getTags(Mod* mod, function<void(int response_code, string message, Mod* mod, vector<string> tags)> callback)
+  void getTags(ModioMod* mod, function<void(int response_code, string message, ModioMod* mod, vector<string> tags)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -63,7 +63,7 @@ namespace modio
     add_tags_callbacks.erase(call_number);
   }
 
-  void MODIO_DLL addTags(Mod* mod, vector<string> tags, function<void(int response_code, string message, Mod* mod)> callback)
+  void MODIO_DLL addTags(ModioMod* mod, vector<string> tags, function<void(int response_code, string message, ModioMod* mod)> callback)
   {
     map<string, string> data;
 
@@ -99,7 +99,7 @@ namespace modio
     delete_tags_callbacks.erase(call_number);
   }
 
-  void MODIO_DLL deleteTags(Mod* mod, vector<string> tags, function<void(int response_code, string message, Mod* mod)> callback)
+  void MODIO_DLL deleteTags(ModioMod* mod, vector<string> tags, function<void(int response_code, string message, ModioMod* mod)> callback)
   {
     map<string, string> data;
 

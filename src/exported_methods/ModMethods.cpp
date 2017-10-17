@@ -4,18 +4,18 @@ extern "C"
 {
   struct GetModsParams
   {
-    void (*callback)(int response_code, char* message, Mod* mods, int mods_size);
+    void (*callback)(int response_code, char* message, ModioMod* mods, int mods_size);
   };
 
   struct AddModParams
   {
-    void (*callback)(int response_code, char* message, Mod* mod);
+    void (*callback)(int response_code, char* message, ModioMod* mod);
   };
 
   struct DeleteModParams
   {
-    Mod* mod;
-    void (*callback)(int response_code, char* message, Mod* mod);
+    ModioMod* mod;
+    void (*callback)(int response_code, char* message, ModioMod* mod);
   };
 
 /*
@@ -53,12 +53,12 @@ extern "C"
 
   void onGetMods(int call_number, int response_code, string message, json response)
   {
-    Mod* mods = NULL;
+    ModioMod* mods = NULL;
     int mods_size = 0;
     if(response_code == 200)
     {
       mods_size = (int)response["data"].size();
-      mods = new Mod[mods_size];
+      mods = new ModioMod[mods_size];
       for(int i=0;i<mods_size;i++)
       {
         initMod(&mods[i], response["data"][i]);
@@ -68,9 +68,9 @@ extern "C"
     get_mods_callbacks.erase(call_number);
   }
 
-  void getMods(Filter* filter, void (*callback)(int response_code, char* message, Mod* mods, int mods_size))
+  void getMods(ModioFilter* filter, void (*callback)(int response_code, char* message, ModioMod* mods, int mods_size))
   {
-    string filter_string = getFilterString(filter);
+    string filter_string = modio::getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret";
@@ -87,13 +87,13 @@ extern "C"
 
   void onModAdded(int call_number, int response_code, string message, json response)
   {
-    Mod* mod = new Mod;
+    ModioMod* mod = new ModioMod;
     initMod(mod, response);
     add_mod_callback[call_number]->callback(response_code, (char*)message.c_str(), mod);
     add_mod_callback.erase(call_number);
   }
 
-  void editMod(Mod* mod, ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, Mod* mod))
+  void editMod(ModioMod* mod, ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -110,7 +110,7 @@ extern "C"
     email_exchage_thread.detach();
   }
 
-  void addMod(ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, Mod* mod))
+  void addMod(ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -129,13 +129,13 @@ extern "C"
 
   void onModDeleted(int call_number, int response_code, string message, json response)
   {
-    Mod* mod = new Mod;
+    ModioMod* mod = new ModioMod;
     initMod(mod, response);
     delete_mod_callbacks[call_number]->callback(response_code, (char*)message.c_str(), mod);
     delete_mod_callbacks.erase(call_number);
   }
 
-  void MODIO_DLL deleteMod(Mod* mod, void (*callback)(int response_code, char* message, Mod* mod))
+  void MODIO_DLL deleteMod(ModioMod* mod, void (*callback)(int response_code, char* message, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);

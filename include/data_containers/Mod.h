@@ -17,7 +17,7 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Mod
+  struct ModioMod
   {
     int id;
     int game;
@@ -38,8 +38,8 @@ extern "C"
     Tag* tag;
   };
 
-  void initMod(Mod* mod, json mod_json);
-  void freeMod(Mod* mod);
+  void initMod(ModioMod* mod, json mod_json);
+  void freeMod(ModioMod* mod);
 }
 
 #endif
