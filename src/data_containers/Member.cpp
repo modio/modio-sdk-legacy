@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initMember(Member* member, json member_json)
+  void modioInitMember(ModioMember* member, json member_json)
   {
     member->id = -1;
     if(modio::hasKey(member_json, "id"))
@@ -19,7 +19,7 @@ extern "C"
     member->avatar = NULL;
     if(modio::hasKey(member_json, "avatar"))
     {
-      member->avatar = new Image;
+      member->avatar = new ModioImage;
       initImage(member->avatar, member_json["avatar"]);
     }
 
@@ -32,7 +32,7 @@ extern "C"
       member->language = member_json["language"];
   }
 
-  void freeMember(Member* member)
+  void modioFreeMember(ModioMember* member)
   {
     if(member->avatar)
       freeImage(member->avatar);

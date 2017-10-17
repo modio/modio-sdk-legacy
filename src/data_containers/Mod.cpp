@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initMod(ModioMod* mod, json mod_json)
+  void modioInitMod(ModioMod* mod, json mod_json)
   {
     mod->id = -1;
     if(modio::hasKey(mod_json, "id"))
@@ -15,7 +15,7 @@ extern "C"
     mod->member = NULL;
     if(modio::hasKey(mod_json, "member"))
     {
-      mod->member = new Member;
+      mod->member = new ModioMember;
       initMember(mod->member, mod_json["member"]);
     }
 
@@ -34,7 +34,7 @@ extern "C"
     mod->logo = NULL;
     if(modio::hasKey(mod_json, "logo"))
     {
-      mod->logo = new Image;
+      mod->logo = new ModioImage;
       initImage(mod->logo, mod_json["logo"]);
     }
 
@@ -65,33 +65,33 @@ extern "C"
     mod->media = NULL;
     if(modio::hasKey(mod_json, "media"))
     {
-      mod->media = new Media;
+      mod->media = new ModioMedia;
       initMedia(mod->media, mod_json["media"]);
     }
 
     mod->modfile = NULL;
     if(modio::hasKey(mod_json, "modfile"))
     {
-      mod->modfile = new Modfile;
+      mod->modfile = new ModioModfile;
       initModfile(mod->modfile, mod_json["modfile"]);
     }
 
     mod->ratings = NULL;
     if(modio::hasKey(mod_json, "ratings"))
     {
-      mod->ratings = new Ratings;
+      mod->ratings = new ModioRatings;
       initRatings(mod->ratings, mod_json["ratings"]);
     }
 
     mod->tag = NULL;
     if(modio::hasKey(mod_json, "tag"))
     {
-      mod->tag = new Tag;
+      mod->tag = new ModioTag;
       initTag(mod->tag, mod_json["tag"]);
     }
   }
 
-  void freeMod(ModioMod* mod)
+  void modioFreeMod(ModioMod* mod)
   {
     if(mod->logo)
       freeImage(mod->logo);

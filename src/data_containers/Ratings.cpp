@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initRatings(Ratings* ratings, json ratings_json)
+  void modioInitRatings(ModioRatings* ratings, json ratings_json)
   {
     ratings->total = -1;
     if(modio::hasKey(ratings_json, "total"))
@@ -33,7 +33,7 @@ extern "C"
       ratings->text = ratings_json["text"];
   }
 
-  void freeRatings(Ratings* ratings)
+  void modioFreeRatings(ModioRatings* ratings)
   {
     delete ratings;
   }

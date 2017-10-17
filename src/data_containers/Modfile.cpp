@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initModfile(Modfile* modfile, json modfile_json)
+  void modioInitModfile(ModioModfile* modfile, json modfile_json)
   {
     modfile->id = -1;
     if(modio::hasKey(modfile_json, "id"))
@@ -15,7 +15,7 @@ extern "C"
     modfile->member = NULL;
     if(modio::hasKey(modfile_json, "member"))
     {
-      modfile->member = new Member;
+      modfile->member = new ModioMember;
       initMember(modfile->member, modfile_json["member"]);
     }
 
@@ -60,7 +60,7 @@ extern "C"
       modfile->download = modfile_json["download"];
   }
 
-  void freeModfile(Modfile* modfile)
+  void modioFreeModfile(ModioModfile* modfile)
   {
     delete modfile;
   }

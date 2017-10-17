@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initTag(Tag* tag, json tag_json)
+  void modioInitTag(ModioTag* tag, json tag_json)
   {
     tag->game = -1;
     if(modio::hasKey(tag_json, "game"))
@@ -21,7 +21,7 @@ extern "C"
       tag->tag = tag_json["tag"];
   }
 
-  void freeTag(Tag* tag)
+  void modioFreeTag(ModioTag* tag)
   {
     delete tag;
   }

@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initImage(Image* image, json image_json)
+  void modioInitImage(ModioImage* image, json image_json)
   {
     image->full = "";
     if(modio::hasKey(image_json, "full"))
@@ -17,7 +17,7 @@ extern "C"
       image->filename = image_json["filename"];
   }
 
-  void freeImage(Image* image)
+  void modioFreeImage(ModioImage* image)
   {
     delete image;
   }

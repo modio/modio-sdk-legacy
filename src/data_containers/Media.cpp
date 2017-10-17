@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initMedia(Media* media, json media_json)
+  void modioInitMedia(ModioMedia* media, json media_json)
   {
     if(modio::hasKey(media_json, "youtube"))
     {
@@ -34,7 +34,7 @@ extern "C"
     }
   }
 
-  void freeMedia(Media* media)
+  void modioFreeMedia(ModioMedia* media)
   {
     for(int i=0; i<(int)media->images.size(); i++)
     {
