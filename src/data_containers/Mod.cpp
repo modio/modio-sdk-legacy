@@ -16,7 +16,7 @@ extern "C"
     if(modio::hasKey(mod_json, "member"))
     {
       mod->member = new ModioMember;
-      initMember(mod->member, mod_json["member"]);
+      modioInitMember(mod->member, mod_json["member"]);
     }
 
     mod->price = -1;
@@ -35,73 +35,97 @@ extern "C"
     if(modio::hasKey(mod_json, "logo"))
     {
       mod->logo = new ModioImage;
-      initImage(mod->logo, mod_json["logo"]);
+      modioInitImage(mod->logo, mod_json["logo"]);
     }
 
-    mod->homepage = "";
+    mod->homepage = NULL;
     if(modio::hasKey(mod_json, "homepage"))
-      mod->homepage = mod_json["homepage"];
+    {
+      string homepage_str = mod_json["homepage"];
+      mod->homepage = new char[homepage_str.size() + 1];
+      strcpy(mod->homepage, homepage_str.c_str());
+    }
 
-    mod->name = "";
+    mod->name = NULL;
     if(modio::hasKey(mod_json, "name"))
-      mod->name = mod_json["name"];
+    {
+      string name_str = mod_json["name"];
+      mod->name = new char[name_str.size() + 1];
+      strcpy(mod->name, name_str.c_str());
+    }
 
-    mod->nameid = "";
+    mod->nameid = NULL;
     if(modio::hasKey(mod_json, "nameid"))
-      mod->nameid = mod_json["nameid"];
+    {
+      string nameid_str = mod_json["nameid"];
+      mod->nameid = new char[nameid_str.size() + 1];
+      strcpy(mod->nameid, nameid_str.c_str());
+    }
 
-    mod->summary = "";
+    mod->summary = NULL;
     if(modio::hasKey(mod_json, "summary"))
-      mod->summary = mod_json["summary"];
+    {
+      string summary_str = mod_json["summary"];
+      mod->summary = new char[summary_str.size() + 1];
+      strcpy(mod->summary, summary_str.c_str());
+    }
 
-    mod->description = "";
+    mod->description = NULL;
     if(modio::hasKey(mod_json, "description"))
-      mod->description = mod_json["description"];
+    {
+      string description_str = mod_json["description"];
+      mod->description = new char[description_str.size() + 1];
+      strcpy(mod->description, description_str.c_str());
+    }
 
-    mod->metadata = "";
+    mod->metadata = NULL;
     if(modio::hasKey(mod_json, "metadata"))
-      mod->metadata = mod_json["metadata"];
+    {
+      string metadata_str = mod_json["metadata"];
+      mod->metadata = new char[metadata_str.size() + 1];
+      strcpy(mod->metadata, metadata_str.c_str());
+    }
 
     mod->media = NULL;
     if(modio::hasKey(mod_json, "media"))
     {
       mod->media = new ModioMedia;
-      initMedia(mod->media, mod_json["media"]);
+      modioInitMedia(mod->media, mod_json["media"]);
     }
 
     mod->modfile = NULL;
     if(modio::hasKey(mod_json, "modfile"))
     {
       mod->modfile = new ModioModfile;
-      initModfile(mod->modfile, mod_json["modfile"]);
+      modioInitModfile(mod->modfile, mod_json["modfile"]);
     }
 
     mod->ratings = NULL;
     if(modio::hasKey(mod_json, "ratings"))
     {
       mod->ratings = new ModioRatings;
-      initRatings(mod->ratings, mod_json["ratings"]);
+      modioInitRatings(mod->ratings, mod_json["ratings"]);
     }
 
     mod->tag = NULL;
     if(modio::hasKey(mod_json, "tag"))
     {
       mod->tag = new ModioTag;
-      initTag(mod->tag, mod_json["tag"]);
+      modioInitTag(mod->tag, mod_json["tag"]);
     }
   }
 
   void modioFreeMod(ModioMod* mod)
   {
     if(mod->logo)
-      freeImage(mod->logo);
+      modioFreeImage(mod->logo);
     if(mod->media)
-      freeMedia(mod->media);
+      modioFreeMedia(mod->media);
     if(mod->modfile)
-      freeModfile(mod->modfile);
+      modioFreeModfile(mod->modfile);
     if(mod->ratings)
-      freeRatings(mod->ratings);
+      modioFreeRatings(mod->ratings);
     if(mod->tag)
-      freeTag(mod->tag);
+      modioFreeTag(mod->tag);
   }
 }

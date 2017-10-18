@@ -61,14 +61,14 @@ extern "C"
       mods = new ModioMod[mods_size];
       for(int i=0;i<mods_size;i++)
       {
-        initMod(&mods[i], response["data"][i]);
+        modioInitMod(&mods[i], response["data"][i]);
       }
     }
     get_mods_callbacks[call_number]->callback(response_code, (char*)message.c_str(), mods, mods_size);
     get_mods_callbacks.erase(call_number);
   }
 
-  void getMods(ModioFilter* filter, void (*callback)(int response_code, char* message, ModioMod* mods, int mods_size))
+  void modioGetMods(ModioFilter* filter, void (*callback)(int response_code, char* message, ModioMod* mods, int mods_size))
   {
     string filter_string = modio::getFilterString(filter);
     vector<string> headers;
@@ -88,7 +88,7 @@ extern "C"
   void onModAdded(int call_number, int response_code, string message, json response)
   {
     ModioMod* mod = new ModioMod;
-    initMod(mod, response);
+    modioInitMod(mod, response);
     add_mod_callback[call_number]->callback(response_code, (char*)message.c_str(), mod);
     add_mod_callback.erase(call_number);
   }
@@ -130,7 +130,7 @@ extern "C"
   void onModDeleted(int call_number, int response_code, string message, json response)
   {
     ModioMod* mod = new ModioMod;
-    initMod(mod, response);
+    modioInitMod(mod, response);
     delete_mod_callbacks[call_number]->callback(response_code, (char*)message.c_str(), mod);
     delete_mod_callbacks.erase(call_number);
   }

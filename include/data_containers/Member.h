@@ -20,8 +20,8 @@ extern "C"
     char* language;
   };
 
-  void initMember(ModioMember* member, json member_json);
-  void freeMember(ModioMember* member);
+  void modioInitMember(ModioMember* member, json member_json);
+  void modioFreeMember(ModioMember* member);
 }
 
 #endif

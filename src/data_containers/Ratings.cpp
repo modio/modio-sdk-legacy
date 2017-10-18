@@ -28,9 +28,13 @@ extern "C"
     if(modio::hasKey(ratings_json, "stars"))
       ratings->stars = ratings_json["stars"];
 
-    ratings->text = "";
+    ratings->text = NULL;
     if(modio::hasKey(ratings_json, "text"))
-      ratings->text = ratings_json["text"];
+    {
+      string text_str = ratings_json["text"];
+      ratings->text = new char[text_str.size() + 1];
+      strcpy(ratings->text, text_str.c_str());
+    }
   }
 
   void modioFreeRatings(ModioRatings* ratings)

@@ -17,7 +17,7 @@ int files_to_download = 5;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onModEdited(int response_code, string message, modio::Mod* mod)
+void onModEdited(int response_code, string message, ModioMod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
@@ -27,7 +27,7 @@ void onModEdited(int response_code, string message, modio::Mod* mod)
   }
 }
 
-void onModDeleted(int response_code, string message, modio::Mod* mod)
+void onModDeleted(int response_code, string message, ModioMod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
 
@@ -37,7 +37,7 @@ void onModDeleted(int response_code, string message, modio::Mod* mod)
   }
 }
 
-void onEmailRequest(int response_code, string message)
+void onEmailRequest(int response_code, char* message)
 {
   if(response_code == 200)
   {
@@ -49,7 +49,7 @@ void onEmailRequest(int response_code, string message)
   email_request_finished = true;
 }
 
-void onExchange(int response_code, string message)
+void onExchange(int response_code, char* message)
 {
   if(response_code == 200)
   {
@@ -61,7 +61,7 @@ void onExchange(int response_code, string message)
   email_exchange_finished = true;
 }
 
-void onImageDownloaded(int response_code, string message, modio::Mod* mod, string path)
+void onImageDownloaded(int response_code, string message, ModioMod* mod, string path)
 {
   if(response_code == 200)
   {
@@ -70,7 +70,7 @@ void onImageDownloaded(int response_code, string message, modio::Mod* mod, strin
   files_downloaded++;
 }
 
-void onModInstalled(int response_code, string message, modio::Mod* mod, string path)
+void onModInstalled(int response_code, string message, ModioMod* mod, string path)
 {
   if(response_code == 200)
   {
@@ -79,7 +79,7 @@ void onModInstalled(int response_code, string message, modio::Mod* mod, string p
   files_downloaded++;
 }
 
-void onMediaImagesDownloaded(int response_code, string message, modio::Mod* mod, vector<string> images)
+void onMediaImagesDownloaded(int response_code, string message, ModioMod* mod, vector<string> images)
 {
   if(response_code == 200)
   {
@@ -90,17 +90,17 @@ void onMediaImagesDownloaded(int response_code, string message, modio::Mod* mod,
   files_downloaded++;
 }
 
-void onModfileAdded(int response_code, string message, modio::Mod* mod)
+void onModfileAdded(int response_code, string message, ModioMod* mod)
 {
   cout<<"Response: "<<response_code<<endl;
 }
 
-void onModfileEdited(int response_code, string message, modio::Modfile* modfile)
+void onModfileEdited(int response_code, string message, ModioModfile* modfile)
 {
   cout<<"Response: "<<response_code<<endl;
 }
 
-void onTagsGet(int response_code, string message, modio::Mod* mod, vector<string> tags)
+void onTagsGet(int response_code, string message, ModioMod* mod, vector<string> tags)
 {
   cout<<"Response: "<<response_code<<endl;
   cout<<"Message: "<<message<<endl;
@@ -113,13 +113,13 @@ void onTagsGet(int response_code, string message, modio::Mod* mod, vector<string
   }
 }
 
-void onTagsAdded(int response_code, string message, modio::Mod* mod)
+void onTagsAdded(int response_code, string message, ModioMod* mod)
 {
   cout<<"Response: "<<response_code<<endl;
   cout<<"Message: "<<message<<endl;
 }
 
-void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
+void onModsGet(int response_code, char* message, ModioMod* mods, int mods_size)
 {
   cout<<"Listing mods"<<endl;
   cout<<"============"<<endl;
@@ -142,12 +142,12 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
   editModfile(mods[0]->modfile, edit_mod_file_handler, &onModfileEdited);
 */
 
-  for(int i=0;i<(int)mods.size();i++)
+  for(int i=0;i<(int)mods_size;i++)
   {
     //vector<string> tags;
     //tags.push_back("Easy");
     //tags.push_back("Medium");
-    cout<<mods[i]->name<<endl;
+    cout<<mods[i].name<<endl;
     //modio::getTags(mods[0], &onTagsGet);
   }
 
@@ -167,7 +167,7 @@ void onModsGet(int response_code, string message, vector<modio::Mod*> mods)
 */
 }
 
-void onModAdded(int response_code, string message, modio::Mod* mod)
+void onModAdded(int response_code, char* message, ModioMod* mod)
 {
   cout<<"Response code: "<<response_code<<endl;
   cout<<"Message: "<<message<<endl;
@@ -189,26 +189,26 @@ void onModAdded(int response_code, string message, modio::Mod* mod)
 
 int main(void)
 {
-  modio::init(/*game_id*/7, /*api_key*/"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
-  modio::setDebugMode(modio::verbose);
+  modioInit(/*game_id*/7, /*api_key*/(char*)"e91c01b8882f4affeddd56c96111977b"/*, "other_dir"*/);
+  //modioSetDebugMode(modio::verbose);
 
-  if(!modio::isLoggedIn())
+  if(!modioIsLoggedIn())
   {
     string email;
     cout<<"Enter your email: "<<endl;
     cin>>email;
-    modio::emailRequest(email,&onEmailRequest);
+    modioEmailRequest((char*)email.c_str(),&onEmailRequest);
     while(!email_request_finished);
     string security_code;
     cout<<"Please enter the 5 digit security code: ";
     cin>>security_code;
     cout<<"Sending code"<<endl;
-    modio::emailExchange(security_code,&onExchange);
+    modioEmailExchange((char*)security_code.c_str(),&onExchange);
     while(!email_exchange_finished);
   }
 
-
-  modio::ModHandler* add_mod_handler = new modio::ModHandler;
+/*
+  ModHandler* add_mod_handler = new ModHandler;
   setLogoPath(add_mod_handler, "logo.png");
   setName(add_mod_handler, "New sdk add method");
   setHomepage(add_mod_handler, "http://www.webpage.com");
@@ -216,18 +216,20 @@ int main(void)
   addTag(add_mod_handler, "Easy");
   addTag(add_mod_handler, "Medium");
 
-  modio::addMod(add_mod_handler, &onModAdded);
-/**/
+  addMod(add_mod_handler, &onModAdded);
+*/
 
 
-  modio::Filter* filter = new modio::Filter;
-  modio::addFilterInField(filter,"id","24");
-  modio::getMods(filter, &onModsGet);
+  ModioFilter* filter = new ModioFilter;
+  modioInitFilter(filter);
+  modioSetFilterLimit(filter,3);
+  //modioAddFilterInField(filter,(char*)"id",(char*)"24");
+  getMods(filter, &onModsGet);
 
 
   while(true);
 
-  modio::shutdown();
+  modioShutdown();
 
   cout<<"Process finished"<<endl;
 

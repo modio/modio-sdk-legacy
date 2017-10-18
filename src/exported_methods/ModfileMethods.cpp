@@ -10,8 +10,8 @@ namespace modio
 
   struct EditModfileParams
   {
-    Modfile* modfile;
-    function< void(int, string, Modfile*) > callback;
+    ModioModfile* modfile;
+    function< void(int, string, ModioModfile*) > callback;
   };
 
   map< int, AddModfileParams* > add_modfile_callbacks;
@@ -51,7 +51,7 @@ namespace modio
   }
 
   //NOTE(@turupawn): Do we need the MODIO_DLL declaration here?
-  MODIO_DLL void editModfile(Modfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, Modfile* modfile)> callback)
+  MODIO_DLL void editModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, ModioModfile* modfile)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
