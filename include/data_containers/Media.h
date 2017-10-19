@@ -16,7 +16,7 @@ extern "C"
     int youtube_size;
     char** sketchfab_array;
     int sketchfab_size;
-    ModioImage** images_array;
+    ModioImage* images_array;
     int images_size;
   };
 

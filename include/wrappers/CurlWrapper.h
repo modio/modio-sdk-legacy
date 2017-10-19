@@ -7,6 +7,7 @@
 #include "dependencies/json/json.hpp"
 #include "dependencies/curl/curl.h"
 #include "wrappers/MinizipWrapper.h"
+#include "data_containers/Response.h"
 #include "Utility.h"
 
 #define SKIP_PEER_VERIFICATION

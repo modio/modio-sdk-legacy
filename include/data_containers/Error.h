@@ -13,8 +13,8 @@ extern "C"
   {
     int code;
     char* message;
-    char* errors;
-    int errors_size;
+    char** errors_array;
+    int errors_array_size;
   };
 
   void modioInitError(ModioError* response, json image_json);

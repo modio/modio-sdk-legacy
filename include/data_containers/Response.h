@@ -3,6 +3,8 @@
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
+#include "data_containers/Error.h"
+#include "data_containers/Cursor.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -13,10 +15,10 @@ extern "C"
   {
     int code;
     ModioError* error;
-    ModioMetaCursor* meta_cursor;
+    ModioCursor* cursor;
   };
 
-  void modioInitResponse(ModioResponse* response, json image_json);
+  void modioInitResponse(ModioResponse* response, json response_json);
   void modioFreeResponse(ModioResponse* response);
 }
 

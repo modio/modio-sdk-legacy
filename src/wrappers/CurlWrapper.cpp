@@ -158,6 +158,10 @@ namespace modio
       if(hasKey(json_response, "message"))
         message = json_response["message"];
 
+      ModioResponse* response = new ModioResponse;
+      modioInitResponse(response, json_response);
+      response->code = response_code;
+
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + "finished", MODIO_DEBUGLEVEL_LOG);
@@ -408,7 +412,7 @@ namespace modio
       string message = "";
       if(hasKey(json_response, "message"))
         message = json_response["message"];
-      
+
       callback(call_number, response_code, message, json_response);
       advanceOngoingCall();
       writeLogLine(string("postForm call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);

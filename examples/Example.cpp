@@ -121,6 +121,7 @@ void onTagsAdded(int response_code, string message, ModioMod* mod)
 
 void onModsGet(int response_code, char* message, ModioMod* mods, int mods_size)
 {
+  cout<<"Response: "<<response_code<<endl;
   cout<<"Listing mods"<<endl;
   cout<<"============"<<endl;
 
@@ -222,9 +223,10 @@ int main(void)
 
   ModioFilter* filter = new ModioFilter;
   modioInitFilter(filter);
-  modioSetFilterLimit(filter,3);
+  modioSetFilterCursor(filter,29);
+  modioSetFilterLimit(filter,4);
   //modioAddFilterInField(filter,(char*)"id",(char*)"24");
-  getMods(filter, &onModsGet);
+  modioGetMods(filter, &onModsGet);
 
 
   while(true);

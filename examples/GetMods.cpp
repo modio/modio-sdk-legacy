@@ -1,13 +1,6 @@
 #include "ModIOSDK.h"
 #include "Filter.h"
 
-#ifdef _WIN32
-#define WINDOWS
-#endif
-#ifdef _WIN64
-#define WINDOWS
-#endif
-
 bool mods_get_finished = false;
 
 void onModsGet(int response_code, char* message, ModioMod* mods, int mods_size)
