@@ -119,9 +119,9 @@ void onTagsAdded(int response_code, string message, ModioMod* mod)
   cout<<"Message: "<<message<<endl;
 }
 
-void onModsGet(int response_code, char* message, ModioMod* mods, int mods_size)
+void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
 {
-  cout<<"Response: "<<response_code<<endl;
+  cout<<"Response: "<<response->code<<endl;
   cout<<"Listing mods"<<endl;
   cout<<"============"<<endl;
 

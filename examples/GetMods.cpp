@@ -3,10 +3,10 @@
 
 bool mods_get_finished = false;
 
-void onModsGet(int response_code, char* message, ModioMod* mods, int mods_size)
+void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
 {
-  cout<<"On mod get response: "<<response_code<<endl;
-  if(response_code == 200)
+  cout<<"On mod get response: "<<response->code<<endl;
+  if(response->code == 200)
   {
     cout<<"Listing mods"<<endl;
     cout<<"============"<<endl;

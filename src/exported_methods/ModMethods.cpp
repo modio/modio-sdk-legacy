@@ -4,7 +4,7 @@ extern "C"
 {
   struct GetModsParams
   {
-    void (*callback)(int response_code, char* message, ModioMod* mods, int mods_size);
+    void (*callback)(ModioResponse* response, ModioMod* mods, int mods_size);
   };
 
   struct AddModParams
@@ -51,24 +51,24 @@ extern "C"
   map< int, DownloadModfileParams* > download_modfile_callbacks;
 */
 
-  void onGetMods(int call_number, int response_code, string message, json response)
+  void onGetMods(int call_number, ModioResponse* response, json response_json)
   {
     ModioMod* mods = NULL;
     int mods_size = 0;
-    if(response_code == 200)
+    if(response->code == 200)
     {
-      mods_size = (int)response["data"].size();
+      mods_size = (int)response_json["data"].size();
       mods = new ModioMod[mods_size];
       for(int i=0;i<mods_size;i++)
       {
-        modioInitMod(&mods[i], response["data"][i]);
+        modioInitMod(&mods[i], response_json["data"][i]);
       }
     }
-    get_mods_callbacks[call_number]->callback(response_code, (char*)message.c_str(), mods, mods_size);
+    get_mods_callbacks[call_number]->callback(response, mods, mods_size);
     get_mods_callbacks.erase(call_number);
   }
 
-  void modioGetMods(ModioFilter* filter, void (*callback)(int response_code, char* message, ModioMod* mods, int mods_size))
+  void modioGetMods(ModioFilter* filter, void (*callback)(ModioResponse* response, ModioMod* mods, int mods_size))
   {
     string filter_string = modio::getFilterString(filter);
     vector<string> headers;

@@ -104,7 +104,7 @@ namespace modio
       return json_response;
     }
 
-    void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, string message, json response)> callback)
+    void get(int call_number, string url, vector<string> headers, function<void(int call_number, ModioResponse* modio_response, json response_json)> callback)
     {
       writeLogLine("getJsonCall call to " + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
@@ -147,22 +147,22 @@ namespace modio
       curl_global_cleanup();
       //ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
 
-      json json_response = parseJsonResonse(ongoing_calls[curl]->response);
+      json response_json = parseJsonResonse(ongoing_calls[curl]->response);
 
-      if(json_response.is_array())
+      if(response_json.is_array())
       {
-        json_response = "{}"_json;
+        response_json = "{}"_json;
       }
 
       string message = "";
-      if(hasKey(json_response, "message"))
-        message = json_response["message"];
+      if(hasKey(response_json, "message"))
+        message = response_json["message"];
 
       ModioResponse* response = new ModioResponse;
-      modioInitResponse(response, json_response);
+      modioInitResponse(response, response_json);
       response->code = response_code;
 
-      callback(call_number, response_code, message, json_response);
+      callback(call_number, response, response_json);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + "finished", MODIO_DEBUGLEVEL_LOG);
     }

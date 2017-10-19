@@ -17,30 +17,30 @@ namespace modio
   struct GetTagsParams
   {
     ModioMod* mod;
-    function<void(int, string, ModioMod*, vector<string>)> callback;
+    function<void(ModioResponse* response, ModioMod*, vector<string>)> callback;
   };
 
   map< int, GetTagsParams* > get_tags_callbacks;
   map< int, EditTagsParams* > add_tags_callbacks;
   map< int, DeleteTagsParams* > delete_tags_callbacks;
 
-  void onGetTags(int call_number, int response_code, string message, json response)
+  void onGetTags(int call_number, ModioResponse* response, json response_json)
   {
     vector<string> tags;
 
-    if(response_code == 200)
+    if(response->code == 200)
     {
-      for(int i=0;i<(int)response["data"].size();i++)
+      for(int i=0;i<(int)response_json["data"].size();i++)
       {
-        tags.push_back(response["data"][i]["tag"]);
+        tags.push_back(response_json["data"][i]["tag"]);
       }
     }
 
-    get_tags_callbacks[call_number]->callback(response_code, message, get_tags_callbacks[call_number]->mod, tags);
+    get_tags_callbacks[call_number]->callback(response, get_tags_callbacks[call_number]->mod, tags);
     get_tags_callbacks.erase(call_number);
   }
 
-  void getTags(ModioMod* mod, function<void(int response_code, string message, ModioMod* mod, vector<string> tags)> callback)
+  void getTags(ModioMod* mod, function<void(ModioResponse* response, ModioMod* mod, vector<string> tags)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
