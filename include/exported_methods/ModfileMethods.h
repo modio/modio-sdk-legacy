@@ -9,8 +9,8 @@
 
 namespace modio
 {
-  MODIO_DLL void addModfile(ModioMod* mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, ModioMod* mod)> callback);
-  MODIO_DLL void editModfile(Modfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, Modfile* modfile)> callback);
+  MODIO_DLL void addModfile(ModioMod* mod, ModfileHandler* add_mod_file_handler, function<void(ModioResponse* response, ModioMod* mod)> callback);
+  MODIO_DLL void editModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, function<void(ModioResponse* response, ModioModfile* modfile)> callback);
 }
 
 #endif

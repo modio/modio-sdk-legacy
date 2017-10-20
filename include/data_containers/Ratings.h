@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Ratings
+  struct ModioRatings
   {
     int total;
     int positive;
@@ -17,11 +17,11 @@ extern "C"
     double weighted;
     int percentage;
     int stars;
-    string text;
+    char* text;
   };
 
-  void initRatings(Ratings* ratings, json ratings_json);
-  void freeRatings(Ratings* ratings);
+  void modioInitRatings(ModioRatings* ratings, json ratings_json);
+  void modioFreeRatings(ModioRatings* ratings);
 }
 
 #endif

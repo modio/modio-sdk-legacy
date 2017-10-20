@@ -21,25 +21,25 @@ extern "C"
   {
     int id;
     int game;
-    Member* member;
+    ModioMember* member;
     double price;
     int datereg;
     int dateup;
-    Image* logo;
-    string homepage;
-    string name;
-    string nameid;
-    string summary;
-    string description;
-    string metadata;
-    Media* media;
-    Modfile* modfile;
-    Ratings* ratings;
-    Tag* tag;
+    ModioImage* logo;
+    char* homepage;
+    char* name;
+    char* nameid;
+    char* summary;
+    char* description;
+    char* metadata;
+    ModioMedia* media;
+    ModioModfile* modfile;
+    ModioRatings* ratings;
+    ModioTag* tag;
   };
 
-  void initMod(ModioMod* mod, json mod_json);
-  void freeMod(ModioMod* mod);
+  void modioInitMod(ModioMod* mod, json mod_json);
+  void modioFreeMod(ModioMod* mod);
 }
 
 #endif

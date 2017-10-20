@@ -18,8 +18,8 @@
 
 extern "C"
 {
-  void MODIO_DLL modioEmailRequest(char* email, void (*callback)(int response_code, char* message));
-  void MODIO_DLL modioEmailExchange(char* security_code, void (*callback)(int response_code, char* message));
+  void MODIO_DLL modioEmailRequest(char* email, void (*callback)(ModioResponse* response));
+  void MODIO_DLL modioEmailExchange(char* security_code, void (*callback)(ModioResponse* response));
   bool MODIO_DLL modioIsLoggedIn();
   void MODIO_DLL modioLogout();
 }

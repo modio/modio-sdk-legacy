@@ -6,17 +6,24 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
 
-all: $(SOURCES) $(EXECUTABLE)
+all: Example Authentication GetMods
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) $(LIBRARIES) -o $@
+Example: Example.cpp
+	$(CC) $(CFLAGS) Example.cpp -o Example.o -I ../include
+	$(CC) $(LDFLAGS) Example.o $(LIBRARIES) -o Example
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@ -I ../include
+Authentication: Authentication.cpp
+	$(CC) $(CFLAGS) Authentication.cpp -o Authentication.o -I ../include
+	$(CC) $(LDFLAGS) Authentication.o $(LIBRARIES) -o Authentication
+
+GetMods: GetMods.cpp
+	$(CC) $(CFLAGS) GetMods.cpp -o GetMods.o -I ../include
+	$(CC) $(LDFLAGS) GetMods.o $(LIBRARIES) -o GetMods
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;
-	-rm -f $(EXECUTABLE)
+	-rm -f Example
+	-rm -f Authentication
 
 run:
 	$ ./$(EXECUTABLE)

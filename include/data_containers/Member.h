@@ -10,18 +10,18 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Member
+  struct ModioMember
   {
     int id;
-    string username;
+    char* username;
     int online;
-    Image* avatar;
-    string timezone;
-    string language;
+    ModioImage* avatar;
+    char* timezone;
+    char* language;
   };
 
-  void initMember(Member* member, json member_json);
-  void freeMember(Member* member);
+  void modioInitMember(ModioMember* member, json member_json);
+  void modioFreeMember(ModioMember* member);
 }
 
 #endif
