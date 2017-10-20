@@ -11,9 +11,9 @@
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onEmailRequest(int response_code, char* message)
+void onEmailRequest(ModioResponse* response)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
     cout<<"Code sent!"<<endl;
   }else
@@ -23,9 +23,9 @@ void onEmailRequest(int response_code, char* message)
   email_request_finished = true;
 }
 
-void onExchange(int response_code, char* message)
+void onExchange(ModioResponse* response)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
     cout<<"Code exchanged!"<<endl;
   }else

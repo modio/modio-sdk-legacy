@@ -9,8 +9,8 @@
 namespace modio
 {
   void MODIO_DLL getTags(ModioMod* mod, function<void(ModioResponse* response, ModioMod* mod, vector<string> tags)> callback);
-  void MODIO_DLL addTags(ModioMod* mod, vector<string> tags, function<void(int response_code, string message, ModioMod* mod)> callback);
-  void MODIO_DLL deleteTags(ModioMod* mod, vector<string> tags, function<void(int response_code, string message, ModioMod* mod)> callback);
+  void MODIO_DLL addTags(ModioMod* mod, vector<string> tags, function<void(ModioResponse* response, ModioMod* mod)> callback);
+  void MODIO_DLL deleteTags(ModioMod* mod, vector<string> tags, function<void(ModioResponse* response, ModioMod* mod)> callback);
 }
 
 #endif

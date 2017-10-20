@@ -5,13 +5,13 @@ namespace modio
   struct EditTagsParams
   {
     ModioMod* mod;
-    function<void(int, string, ModioMod*)> callback;
+    function<void(ModioResponse* response, ModioMod*)> callback;
   };
 
   struct DeleteTagsParams
   {
     ModioMod* mod;
-    function<void(int, string, ModioMod*)> callback;
+    function<void(ModioResponse* response, ModioMod*)> callback;
   };
 
   struct GetTagsParams
@@ -57,13 +57,13 @@ namespace modio
     get_tags_thread.detach();
   }
 
-  void onTagsAdded(int call_number, int response_code, string message, json response)
+  void onTagsAdded(int call_number, ModioResponse* response, json response_json)
   {
-    add_tags_callbacks[call_number]->callback(response_code, message, add_tags_callbacks[call_number]->mod);
+    add_tags_callbacks[call_number]->callback(response, add_tags_callbacks[call_number]->mod);
     add_tags_callbacks.erase(call_number);
   }
 
-  void MODIO_DLL addTags(ModioMod* mod, vector<string> tags, function<void(int response_code, string message, ModioMod* mod)> callback)
+  void MODIO_DLL addTags(ModioMod* mod, vector<string> tags, function<void(ModioResponse* response, ModioMod* mod)> callback)
   {
     map<string, string> data;
 
@@ -93,13 +93,13 @@ namespace modio
     add_tags_thread.detach();
   }
 
-  void onTagsDeleted(int call_number, int response_code, string message, json response)
+  void onTagsDeleted(int call_number, ModioResponse* response, json response_json)
   {
-    delete_tags_callbacks[call_number]->callback(response_code, message, delete_tags_callbacks[call_number]->mod);
+    delete_tags_callbacks[call_number]->callback(response, delete_tags_callbacks[call_number]->mod);
     delete_tags_callbacks.erase(call_number);
   }
 
-  void MODIO_DLL deleteTags(ModioMod* mod, vector<string> tags, function<void(int response_code, string message, ModioMod* mod)> callback)
+  void MODIO_DLL deleteTags(ModioMod* mod, vector<string> tags, function<void(ModioResponse* response, ModioMod* mod)> callback)
   {
     map<string, string> data;
 

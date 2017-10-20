@@ -5,31 +5,31 @@ namespace modio
   struct AddModfileParams
   {
     ModioMod* mod;
-    function< void(int, string, ModioMod*) > callback;
+    function< void(ModioResponse* response, ModioMod*) > callback;
   };
 
   struct EditModfileParams
   {
     ModioModfile* modfile;
-    function< void(int, string, ModioModfile*) > callback;
+    function< void(ModioResponse* response, ModioModfile*) > callback;
   };
 
   map< int, AddModfileParams* > add_modfile_callbacks;
   map< int, EditModfileParams* > edit_modfile_callbacks;
 
-  void onModfileAdded(int call_number, int response_code, string message, json response)
+  void onModfileAdded(int call_number, ModioResponse* response, json response_json)
   {
-    add_modfile_callbacks[call_number]->callback(200, message, add_modfile_callbacks[call_number]->mod);
+    add_modfile_callbacks[call_number]->callback(response, add_modfile_callbacks[call_number]->mod);
     add_modfile_callbacks.erase(call_number);
   }
 
-  void onModfileEdited(int call_number, int response_code, string message, json response)
+  void onModfileEdited(int call_number, ModioResponse* response, json response_json)
   {
-    edit_modfile_callbacks[call_number]->callback(200, message, edit_modfile_callbacks[call_number]->modfile);
+    edit_modfile_callbacks[call_number]->callback(response, edit_modfile_callbacks[call_number]->modfile);
     edit_modfile_callbacks.erase(call_number);
   }
 
-  void addModfile(ModioMod *mod, ModfileHandler* add_mod_file_handler, function<void(int response_code, string message, ModioMod* mod)> callback)
+  void addModfile(ModioMod *mod, ModfileHandler* add_mod_file_handler, function<void(ModioResponse* response, ModioMod* mod)> callback)
   {
     minizipwrapper::compress(add_mod_file_handler->path, getModIODirectory() + "tmp/modfile.zip");
     vector<string> headers;
@@ -50,8 +50,7 @@ namespace modio
     add_file_thread.detach();
   }
 
-  //NOTE(@turupawn): Do we need the MODIO_DLL declaration here?
-  MODIO_DLL void editModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, function<void(int response_code, string message, ModioModfile* modfile)> callback)
+  void editModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, function<void(ModioResponse* response, ModioModfile* modfile)> callback)
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);

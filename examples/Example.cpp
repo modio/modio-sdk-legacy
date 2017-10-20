@@ -17,29 +17,29 @@ int files_to_download = 5;
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onModEdited(int response_code, string message, ModioMod* mod)
+void onModEdited(ModioResponse* response, ModioMod* mod)
 {
-  cout<<"Response code: "<<response_code<<endl;
+  cout<<"Response code: "<<response->code<<endl;
 
-  if(response_code == 201)
+  if(response->code == 201)
   {
     cout<<"Mod edited!"<<endl;
   }
 }
 
-void onModDeleted(int response_code, string message, ModioMod* mod)
+void onModDeleted(ModioResponse* response, ModioMod* mod)
 {
-  cout<<"Response code: "<<response_code<<endl;
+  cout<<"Response code: "<<response->code<<endl;
 
-  if(response_code == 204)
+  if(response->code == 204)
   {
     cout<<"Mod deleted!"<<endl;
   }
 }
 
-void onEmailRequest(int response_code, char* message)
+void onEmailRequest(ModioResponse* response)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
     cout<<"Code sent!"<<endl;
   }else
@@ -49,9 +49,9 @@ void onEmailRequest(int response_code, char* message)
   email_request_finished = true;
 }
 
-void onExchange(int response_code, char* message)
+void onExchange(ModioResponse* response)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
     cout<<"Code exchanged!"<<endl;
   }else
@@ -61,27 +61,27 @@ void onExchange(int response_code, char* message)
   email_exchange_finished = true;
 }
 
-void onImageDownloaded(int response_code, string message, ModioMod* mod, string path)
+void onImageDownloaded(ModioResponse* response, ModioMod* mod, string path)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
     cout<<mod->name<<" thumb downloaded at "<<path<<endl;
   }
   files_downloaded++;
 }
 
-void onModInstalled(int response_code, string message, ModioMod* mod, string path)
+void onModInstalled(ModioResponse* response, ModioMod* mod, string path)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
     cout<<mod->name<<" installed at "<<path<<endl;
   }
   files_downloaded++;
 }
 
-void onMediaImagesDownloaded(int response_code, string message, ModioMod* mod, vector<string> images)
+void onMediaImagesDownloaded(ModioResponse* response, ModioMod* mod, vector<string> images)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
     cout<<"Media images downloaded:"<<endl;
     for(int i=0;i<(int)images.size();i++)
@@ -90,20 +90,19 @@ void onMediaImagesDownloaded(int response_code, string message, ModioMod* mod, v
   files_downloaded++;
 }
 
-void onModfileAdded(int response_code, string message, ModioMod* mod)
+void onModfileAdded(ModioResponse* response, ModioMod* mod)
 {
-  cout<<"Response: "<<response_code<<endl;
+  cout<<"Response: "<<response->code<<endl;
 }
 
-void onModfileEdited(int response_code, string message, ModioModfile* modfile)
+void onModfileEdited(ModioResponse* response, ModioModfile* modfile)
 {
-  cout<<"Response: "<<response_code<<endl;
+  cout<<"Response: "<<response->code<<endl;
 }
 
-void onTagsGet(int response_code, string message, ModioMod* mod, vector<string> tags)
+void onTagsGet(ModioResponse* response, ModioMod* mod, vector<string> tags)
 {
-  cout<<"Response: "<<response_code<<endl;
-  cout<<"Message: "<<message<<endl;
+  cout<<"Response: "<<response->code<<endl;
 
   cout<<"Listing tags:"<<endl;
   cout<<"============="<<endl;
@@ -113,10 +112,9 @@ void onTagsGet(int response_code, string message, ModioMod* mod, vector<string> 
   }
 }
 
-void onTagsAdded(int response_code, string message, ModioMod* mod)
+void onTagsAdded(ModioResponse* response, ModioMod* mod)
 {
-  cout<<"Response: "<<response_code<<endl;
-  cout<<"Message: "<<message<<endl;
+  cout<<"Response: "<<response->code<<endl;
 }
 
 void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
@@ -168,12 +166,11 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
 */
 }
 
-void onModAdded(int response_code, char* message, ModioMod* mod)
+void onModAdded(ModioResponse* response, ModioMod* mod)
 {
-  cout<<"Response code: "<<response_code<<endl;
-  cout<<"Message: "<<message<<endl;
+  cout<<"Response code: "<<response->code<<endl;
 
-  if(response_code == 201)
+  if(response->code == 201)
   {
     cout<<"Mod added!"<<endl;
     cout<<"name: "<<mod->name<<endl;

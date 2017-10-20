@@ -20,10 +20,10 @@
 
 extern "C"
 {
-  void modioGetMods(ModioFilter* filter, void (*callback)(ModioResponse* response, ModioMod* mods, int mods_size));
-  void MODIO_DLL addMod(ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, ModioMod* mod));
-  void MODIO_DLL editMod(ModioMod* mod, ModHandler* add_mod_handler, void (*callback)(int response_code, char* message, ModioMod* mod));
-  void MODIO_DLL deleteMod(ModioMod* mod, void (*callback)(int response_code, char* message, ModioMod* mod));
+  void MODIO_DLL modioGetMods(ModioFilter* filter, void (*callback)(ModioResponse* response, ModioMod* mods, int mods_size));
+  void MODIO_DLL addMod(ModHandler* add_mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod));
+  void MODIO_DLL editMod(ModioMod* mod, ModHandler* add_mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod));
+  void MODIO_DLL deleteMod(ModioMod* mod, void (*callback)(ModioResponse* response, ModioMod* mod));
 /*
   void MODIO_DLL downloadModLogoThumbnail(Mod *mod, function< void(int response_code, string message, Mod* mod, string path) > callback);
   void MODIO_DLL downloadModLogoFull(Mod *mod, function< void(int response_code, string message, Mod* mod, string path) > callback);
