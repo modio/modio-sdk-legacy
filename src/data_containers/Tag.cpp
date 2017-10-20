@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initTag(Tag* tag, json tag_json)
+  void modioInitTag(ModioTag* tag, json tag_json)
   {
     tag->game = -1;
     if(modio::hasKey(tag_json, "game"))
@@ -16,12 +16,16 @@ extern "C"
     if(modio::hasKey(tag_json, "date"))
       tag->date = tag_json["date"];
 
-    tag->tag = "";
+    tag->tag = NULL;
     if(modio::hasKey(tag_json, "tag"))
-      tag->tag = tag_json["tag"];
+    {
+      string tag_str = tag_json["tag"];
+      tag->tag = new char[tag_str.size() + 1];
+      strcpy(tag->tag, tag_str.c_str());
+    }
   }
 
-  void freeTag(Tag* tag)
+  void modioFreeTag(ModioTag* tag)
   {
     delete tag;
   }

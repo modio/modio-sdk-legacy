@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void initRatings(Ratings* ratings, json ratings_json)
+  void modioInitRatings(ModioRatings* ratings, json ratings_json)
   {
     ratings->total = -1;
     if(modio::hasKey(ratings_json, "total"))
@@ -28,12 +28,16 @@ extern "C"
     if(modio::hasKey(ratings_json, "stars"))
       ratings->stars = ratings_json["stars"];
 
-    ratings->text = "";
+    ratings->text = NULL;
     if(modio::hasKey(ratings_json, "text"))
-      ratings->text = ratings_json["text"];
+    {
+      string text_str = ratings_json["text"];
+      ratings->text = new char[text_str.size() + 1];
+      strcpy(ratings->text, text_str.c_str());
+    }
   }
 
-  void freeRatings(Ratings* ratings)
+  void modioFreeRatings(ModioRatings* ratings)
   {
     delete ratings;
   }

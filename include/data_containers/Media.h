@@ -10,15 +10,18 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Media
+  struct ModioMedia
   {
-    vector<string> youtube;
-    vector<string> sketchfab;
-    vector<Image*> images;
+    char** youtube_array;
+    int youtube_size;
+    char** sketchfab_array;
+    int sketchfab_size;
+    ModioImage* images_array;
+    int images_size;
   };
 
-  void initMedia(Media* media, json media_json);
-  void freeMedia(Media* media);
+  void modioInitMedia(ModioMedia* media, json media_json);
+  void modioFreeMedia(ModioMedia* media);
 }
 
 #endif

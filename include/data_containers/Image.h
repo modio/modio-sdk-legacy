@@ -9,15 +9,15 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Image
+  struct ModioImage
   {
-    string full;
-    string thumbnail;
-    string filename;
+    char* full;
+    char* thumbnail;
+    char* filename;
   };
 
-  void initImage(Image* image, json image_json);
-  void freeImage(Image* image);
+  void modioInitImage(ModioImage* image, json image_json);
+  void modioFreeImage(ModioImage* image);
 }
 
 #endif

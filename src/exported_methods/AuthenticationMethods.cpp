@@ -2,16 +2,16 @@
 
 typedef void (*ScriptFunction)(void);
 
-map< int,void (*)(int, char*) > email_request_callbacks;
-map< int,void (*)(int, char*) > email_exchange_callbacks;
+map< int,void (*)(ModioResponse* response) > email_request_callbacks;
+map< int,void (*)(ModioResponse* response) > email_exchange_callbacks;
 
-void onEmailRequested(int call_number, int response_code, string message, json response)
+void onEmailRequested(int call_number, ModioResponse* response, json response_json)
 {
-  email_request_callbacks[call_number](response_code, (char*)message.c_str());
+  email_request_callbacks[call_number](response);
   email_request_callbacks.erase(call_number);
 }
 
-void modioEmailRequest(char* email, void (*callback)(int response_code, char* message))
+void modioEmailRequest(char* email, void (*callback)(ModioResponse* response))
 {
   map<string, string> data;
   data["api_key"] = modio::API_KEY;
@@ -28,23 +28,23 @@ void modioEmailRequest(char* email, void (*callback)(int response_code, char* me
   email_request_thread.detach();
 }
 
-void onEmailExchanged(int call_number, int response_code, string message, json response)
+void onEmailExchanged(int call_number, ModioResponse* response, json response_json)
 {
-  if(response_code == 200)
+  if(response->code == 200)
   {
-    modio::ACCESS_TOKEN = response["access_token"];
+    modio::ACCESS_TOKEN = response_json["access_token"];
     json token_json;
-    token_json["access_token"] = response["access_token"];
+    token_json["access_token"] = response_json["access_token"];
     std::ofstream out(modio::getModIODirectory() + "token.json");
     out<<setw(4)<<token_json<<endl;
     out.close();
   }
 
-  email_exchange_callbacks[call_number](response_code, (char*)message.c_str());
+  email_exchange_callbacks[call_number](response);
   email_exchange_callbacks.erase(call_number);
 }
 
-void modioEmailExchange(char* security_code, void (*callback)(int response_code, char* message))
+void modioEmailExchange(char* security_code, void (*callback)(ModioResponse* response))
 {
   map<string, string> data;
   data["api_key"] = modio::API_KEY;

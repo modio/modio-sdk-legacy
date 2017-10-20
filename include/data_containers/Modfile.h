@@ -10,25 +10,25 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Modfile
+  struct ModioModfile
   {
     int id;
     int mod;
-    Member* member;
+    ModioMember* member;
     int datevirus;
     int virusstatus;
     int viruspositive;
     long filesize;
-    string filehash;
-    string filename;
-    string version;
-    string virustotal;
-    string changelog;
-    string download;
+    char* filehash;
+    char* filename;
+    char* version;
+    char* virustotal;
+    char* changelog;
+    char* download;
   };
 
-  void initModfile(Modfile* modfile, json modfile_json);
-  void freeModfile(Modfile* modfile);
+  void modioInitModfile(ModioModfile* modfile, json modfile_json);
+  void modioFreeModfile(ModioModfile* modfile);
 }
 
 #endif

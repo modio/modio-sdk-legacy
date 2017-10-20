@@ -9,16 +9,16 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Tag
+  struct ModioTag
   {
     int game;
     int mod;
     int date;
-    string tag;
+    char* tag;
   };
 
-  void initTag(Tag* tag, json tag_json);
-  void freeTag(Tag* tag);
+  void modioInitTag(ModioTag* tag, json tag_json);
+  void modioFreeTag(ModioTag* tag);
 }
 
 #endif
