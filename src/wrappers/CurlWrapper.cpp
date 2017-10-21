@@ -253,7 +253,7 @@ namespace modio
       return current_download_info;
     }
 
-    void download(int call_number, string url, string path, function< void(int call_number, int response_code, string message, string url, string path) > callback)
+    void download(int call_number, string url, string path, function< void(int call_number, ModioResponse* response, string url, string path) > callback)
     {
       writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
@@ -324,7 +324,11 @@ namespace modio
       current_download_info.download_total = 0;
       current_download_info.download_progress = 0;
 
-      callback(call_number, response_code, "", url, path);
+      ModioResponse* response = new ModioResponse;
+      modioInitResponse(response, "{}"_json);
+      response->code = response_code;
+
+      callback(call_number, response, url, path);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }

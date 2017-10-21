@@ -11,6 +11,7 @@
 #include "exported_methods/ModMethods.h"
 #include "exported_methods/ModfileMethods.h"
 #include "exported_methods/TagMethods.h"
+#include "exported_methods/ImageMethods.h"
 
 extern "C"
 {
