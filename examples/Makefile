@@ -6,27 +6,31 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
 
-all: Example Authentication GetMods InstallMod DownloadImages
+all: 1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_InstallMod 6_CreateMod
 
-Example: Example.cpp
-	$(CC) $(CFLAGS) Example.cpp -o Example.o -I ../include
-	$(CC) $(LDFLAGS) Example.o $(LIBRARIES) -o Example
+1_Authentication: 1_Authentication.cpp
+	$(CC) $(CFLAGS) 1_Authentication.cpp -o 1_Authentication.o -I ../include
+	$(CC) $(LDFLAGS) 1_Authentication.o $(LIBRARIES) -o 1_Authentication
 
-Authentication: Authentication.cpp
-	$(CC) $(CFLAGS) Authentication.cpp -o Authentication.o -I ../include
-	$(CC) $(LDFLAGS) Authentication.o $(LIBRARIES) -o Authentication
+2_BrowseMods: 2_BrowseMods.cpp
+	$(CC) $(CFLAGS) 2_BrowseMods.cpp -o 2_BrowseMods.o -I ../include
+	$(CC) $(LDFLAGS) 2_BrowseMods.o $(LIBRARIES) -o 2_BrowseMods
 
-GetMods: GetMods.cpp
-	$(CC) $(CFLAGS) GetMods.cpp -o GetMods.o -I ../include
-	$(CC) $(LDFLAGS) GetMods.o $(LIBRARIES) -o GetMods
+3_ErrorResponse: 3_ErrorResponse.cpp
+	$(CC) $(CFLAGS) 3_ErrorResponse.cpp -o 3_ErrorResponse.o -I ../include
+	$(CC) $(LDFLAGS) 3_ErrorResponse.o $(LIBRARIES) -o 3_ErrorResponse
 
-InstallMod: InstallMod.cpp
-	$(CC) $(CFLAGS) InstallMod.cpp -o InstallMod.o -I ../include
-	$(CC) $(LDFLAGS) InstallMod.o $(LIBRARIES) -o InstallMod
+4_DownloadImages: 4_DownloadImages.cpp
+	$(CC) $(CFLAGS) 4_DownloadImages.cpp -o 4_DownloadImages.o -I ../include
+	$(CC) $(LDFLAGS) 4_DownloadImages.o $(LIBRARIES) -o 4_DownloadImages
 
-DownloadImages: DownloadImages.cpp
-	$(CC) $(CFLAGS) DownloadImages.cpp -o DownloadImages.o -I ../include
-	$(CC) $(LDFLAGS) DownloadImages.o $(LIBRARIES) -o DownloadImages
+5_InstallMod: 5_InstallMod.cpp
+	$(CC) $(CFLAGS) 5_InstallMod.cpp -o 5_InstallMod.o -I ../include
+	$(CC) $(LDFLAGS) 5_InstallMod.o $(LIBRARIES) -o 5_InstallMod
+
+6_CreateMod: 6_CreateMod.cpp
+	$(CC) $(CFLAGS) 6_CreateMod.cpp -o 6_CreateMod.o -I ../include
+	$(CC) $(LDFLAGS) 6_CreateMod.o $(LIBRARIES) -o 6_CreateMod
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;

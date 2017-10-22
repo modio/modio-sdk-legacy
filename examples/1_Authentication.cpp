@@ -3,11 +3,11 @@
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onEmailRequest(ModioResponse* response)
+void onEmailRequest(ModioResponse* response, char* message)
 {
   if(response->code == 200)
   {
-    cout<<"Code sent!"<<endl;
+    cout<<"Message: "<<message<<endl;
   }else
   {
     cout<<"Error sending code"<<endl;

@@ -7,10 +7,10 @@
 #include "Globals.h"
 #include "handlers/ModfileHandler.h"
 
-namespace modio
+extern "C"
 {
-  MODIO_DLL void addModfile(ModioMod* mod, ModfileHandler* add_mod_file_handler, function<void(ModioResponse* response, ModioMod* mod)> callback);
-  MODIO_DLL void editModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, function<void(ModioResponse* response, ModioModfile* modfile)> callback);
+  void MODIO_DLL modioAddModfile(ModioMod* mod, ModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile));
+  void MODIO_DLL modioEditModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile));
 }
 
 #endif

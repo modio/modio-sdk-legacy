@@ -162,6 +162,8 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
+      cout<<response_json<<endl;
+
       callback(call_number, response, response_json);
       advanceOngoingCall();
       writeLogLine("getJsonCall call to " + url + "finished", MODIO_DEBUGLEVEL_LOG);
@@ -421,6 +423,8 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
+      cout<<response_json<<endl;
+
       callback(call_number, response, response_json);
       advanceOngoingCall();
       writeLogLine(string("postForm call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
@@ -485,6 +489,8 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
+      cout<<response_json<<endl;
+
       callback(call_number, response, response_json);
       advanceOngoingCall();
       writeLogLine(string("post call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
@@ -546,6 +552,8 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
+      cout<<response_json<<endl;
+
       callback(call_number, response, response_json);
       advanceOngoingCall();
       writeLogLine(string("put call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
@@ -598,6 +606,8 @@ namespace modio
       ModioResponse* response = new ModioResponse;
       modioInitResponse(response, response_json);
       response->code = response_code;
+
+      cout<<response_json<<endl;
 
       callback(call_number, response, response_json);
       advanceOngoingCall();

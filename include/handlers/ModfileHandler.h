@@ -14,7 +14,7 @@ extern "C"
   void MODIO_DLL setModfilePath(ModfileHandler* modfile_handler, string path);
   void MODIO_DLL setModfileVersion(ModfileHandler* modfile_handler, string version);
   void MODIO_DLL setModfileChangelog(ModfileHandler* modfile_handler, string changelog);
-  void MODIO_DLL setModfileActive(ModfileHandler* modfile_handler, string active);
+  void MODIO_DLL setModfileActive(ModfileHandler* modfile_handler, bool active);
 }
 
 #endif
