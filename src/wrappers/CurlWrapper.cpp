@@ -162,7 +162,7 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
-      cout<<response_json<<endl;
+      //cout<<response_json<<endl;
 
       callback(call_number, response, response_json);
       advanceOngoingCall();
@@ -423,7 +423,7 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
-      cout<<response_json<<endl;
+      //cout<<response_json<<endl;
 
       callback(call_number, response, response_json);
       advanceOngoingCall();
@@ -489,7 +489,7 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
-      cout<<response_json<<endl;
+      //cout<<response_json<<endl;
 
       callback(call_number, response, response_json);
       advanceOngoingCall();
@@ -556,7 +556,7 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
-      cout<<response_json<<endl;
+      //cout<<response_json<<endl;
 
       callback(call_number, response, response_json);
       advanceOngoingCall();
@@ -611,7 +611,7 @@ namespace modio
       modioInitResponse(response, response_json);
       response->code = response_code;
 
-      cout<<response_json<<endl;
+      //cout<<response_json<<endl;
 
       callback(call_number, response, response_json);
       advanceOngoingCall();

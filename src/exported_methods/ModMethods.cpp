@@ -96,7 +96,7 @@ extern "C"
     add_mod_callback.erase(call_number);
   }
 
-  void modioEditMod(ModioMod* mod, ModHandler* add_mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
+  void modioEditMod(ModioMod* mod, ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -109,11 +109,11 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod->id);
 
-    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
+    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, mod_handler->curlform_copycontents, &onModAdded);
     email_exchage_thread.detach();
   }
 
-  void modioAddMod(ModHandler* add_mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
+  void modioAddMod(ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -126,7 +126,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
 
-    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, add_mod_handler->curlform_copycontents, add_mod_handler->curlform_files, &onModAdded);
+    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, mod_handler->curlform_copycontents, mod_handler->curlform_files, &onModAdded);
     add_mod_thread.detach();
   }
 

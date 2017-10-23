@@ -23,13 +23,13 @@ void onModAdded(ModioResponse* response, ModioMod* mod)
     cout<<"Mod added!"<<endl;
     cout<<"Mod id: "<<mod->id<<endl;
 
-    ModfileHandler* modfile_handler = new ModfileHandler();
+    ModioModfileHandler* modfile_handler = new ModioModfileHandler();
     //Required
-    setModfilePath(modfile_handler, "ModExample/modfile/");
-    setModfileVersion(modfile_handler, "v1.1.1");
-    setModfileChangelog(modfile_handler, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+    modioSetModfilePath(modfile_handler, "ModExample/modfile/");
+    modioSetModfileVersion(modfile_handler, "v1.1.1");
+    modioSetModfileChangelog(modfile_handler, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
     //Optional
-    setModfileActive(modfile_handler, true);
+    modioSetModfileActive(modfile_handler, true);
 
     add_modfile_finished = false;
     modioAddModfile(mod, modfile_handler, &onModfileAdded);
@@ -48,19 +48,19 @@ int main(void)
     return 0;
   }
 
-  ModHandler* mod_handler = new ModHandler;
+  ModioModHandler* mod_handler = new ModioModHandler;
   //Required fields
-  setLogoPath(mod_handler, "ModExample/logo.png");
-  setName(mod_handler, "Example Mod");
-  setHomepage(mod_handler, "http://www.webpage.com");
-  setSummary(mod_handler, "Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
-  addTag(mod_handler, "Easy");
-  addTag(mod_handler, "Medium");
+  modioSetLogoPath(mod_handler, "ModExample/logo.png");
+  modioSetName(mod_handler, "Example Mod");
+  modioSetHomepage(mod_handler, "http://www.webpage.com");
+  modioSetSummary(mod_handler, "Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
+  modioAddTag(mod_handler, "Easy");
+  modioAddTag(mod_handler, "Medium");
   //Optional fields
-  setPrice(mod_handler, 1.99);
-  setStock(mod_handler, 25);
-  setDescription(mod_handler, "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
-  setMetadata(mod_handler, "Optional metadata");
+  modioSetPrice(mod_handler, 1.99);
+  modioSetStock(mod_handler, 25);
+  modioSetDescription(mod_handler, "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+  modioSetMetadata(mod_handler, "Optional metadata");
   //setNameid(mod_handler, "my-example-mod"); //Name id must be unique
   //setModfile(mod_handler, int modfile); //Modfile should exist
 

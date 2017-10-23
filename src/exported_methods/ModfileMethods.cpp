@@ -31,9 +31,9 @@ extern "C"
     edit_modfile_callbacks.erase(call_number);
   }
 
-  void modioAddModfile(ModioMod *mod, ModfileHandler* add_mod_file_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile))
+  void modioAddModfile(ModioMod *mod, ModioModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile))
   {
-    modio::minizipwrapper::compress(add_mod_file_handler->path, modio::getModIODirectory() + "tmp/modfile.zip");
+    modio::minizipwrapper::compress(modfile_handler->path, modio::getModIODirectory() + "tmp/modfile.zip");
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod->id) + "/files";
@@ -48,11 +48,11 @@ extern "C"
     map<string, string> curlform_files;
     curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
 
-    std::thread add_file_thread(modio::curlwrapper::postForm, call_number, url, headers, add_mod_file_handler->curlform_copycontents, curlform_files, &onModfileAdded);
+    std::thread add_file_thread(modio::curlwrapper::postForm, call_number, url, headers, modfile_handler->curlform_copycontents, curlform_files, &onModfileAdded);
     add_file_thread.detach();
   }
 
-  void modioEditModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile))
+  void modioEditModfile(ModioModfile* modfile, ModioModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);

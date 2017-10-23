@@ -9,8 +9,8 @@
 
 extern "C"
 {
-  void MODIO_DLL modioAddModfile(ModioMod* mod, ModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile));
-  void MODIO_DLL modioEditModfile(ModioModfile* modfile, ModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile));
+  void MODIO_DLL modioAddModfile(ModioMod* mod, ModioModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile));
+  void MODIO_DLL modioEditModfile(ModioModfile* modfile, ModioModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, ModioModfile* modfile));
 }
 
 #endif
