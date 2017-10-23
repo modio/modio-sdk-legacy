@@ -2,16 +2,21 @@
 
 typedef void (*ScriptFunction)(void);
 
-map< int,void (*)(ModioResponse* response) > email_request_callbacks;
+map< int,void (*)(ModioResponse* response, char* message) > email_request_callbacks;
 map< int,void (*)(ModioResponse* response) > email_exchange_callbacks;
 
 void onEmailRequested(int call_number, ModioResponse* response, json response_json)
 {
-  email_request_callbacks[call_number](response);
+  string message_str = "";
+  if(modio::hasKey(response_json,"message"))
+    message_str = response_json["message"];
+  char* message = new char[message_str.size() + 1];
+  strcpy(message, message_str.c_str());
+  email_request_callbacks[call_number](response, message);
   email_request_callbacks.erase(call_number);
 }
 
-void modioEmailRequest(char* email, void (*callback)(ModioResponse* response))
+void modioEmailRequest(char* email, void (*callback)(ModioResponse* response, char* message))
 {
   map<string, string> data;
   data["api_key"] = modio::API_KEY;

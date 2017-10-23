@@ -1,5 +1,4 @@
 #include "ModIOSDK.h"
-#include "Filter.h"
 
 #ifdef _WIN32
 #define WINDOWS

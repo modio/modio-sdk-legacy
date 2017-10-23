@@ -16,6 +16,17 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       cout<<"Id: \t"<<mods[i].id<<endl;
       cout<<"Name:\t"<<mods[i].name<<endl;
     }
+  }else
+  {
+    cout<<"Error message: "<<response->error->message<<endl;
+    if(response->error->errors_array_size > 0)
+    {
+      cout<<"Errors:"<<endl;
+      for(int i=0; i<response->error->errors_array_size; i++)
+      {
+        cout<<response->error->errors_array[i]<<endl;
+      }
+    }
   }
 
   mods_get_finished = true;

@@ -15,23 +15,23 @@
 
 extern "C"
 {
-  struct ModHandler
+  struct ModioModHandler
   {
     multimap<string, string> curlform_copycontents;
     map<string, string> curlform_files;
   };
 
-  void MODIO_DLL setLogoPath(ModHandler* mod_handler, string logo_path);
-  void MODIO_DLL setName(ModHandler* mod_handler, string name);
-  void MODIO_DLL setHomepage(ModHandler* mod_handler, string homepage);
-  void MODIO_DLL setSummary(ModHandler* mod_handler, string summary);
-  void MODIO_DLL setPrice(ModHandler* mod_handler, double price);
-  void MODIO_DLL setStock(ModHandler* mod_handler, int stock);
-  void MODIO_DLL setDescription(ModHandler* mod_handler, string description);
-  void MODIO_DLL setMetadata(ModHandler* mod_handler, string metadata);
-  void MODIO_DLL setNameid(ModHandler* mod_handler, string nameid);
-  void MODIO_DLL setModfile(ModHandler* mod_handler, int modfile);
-  void MODIO_DLL addTag(ModHandler* mod_handler, string tag);
+  void MODIO_DLL modioSetLogoPath(ModioModHandler* mod_handler, string logo_path);
+  void MODIO_DLL modioSetName(ModioModHandler* mod_handler, string name);
+  void MODIO_DLL modioSetHomepage(ModioModHandler* mod_handler, string homepage);
+  void MODIO_DLL modioSetSummary(ModioModHandler* mod_handler, string summary);
+  void MODIO_DLL modioSetPrice(ModioModHandler* mod_handler, double price);
+  void MODIO_DLL modioSetStock(ModioModHandler* mod_handler, int stock);
+  void MODIO_DLL modioSetDescription(ModioModHandler* mod_handler, string description);
+  void MODIO_DLL modioSetMetadata(ModioModHandler* mod_handler, string metadata);
+  void MODIO_DLL modioSetNameid(ModioModHandler* mod_handler, string nameid);
+  void MODIO_DLL modioSetModfile(ModioModHandler* mod_handler, int modfile);
+  void MODIO_DLL modioAddTag(ModioModHandler* mod_handler, string tag);
 }
 
 #endif

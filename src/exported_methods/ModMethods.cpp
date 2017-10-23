@@ -18,6 +18,13 @@ extern "C"
     void (*callback)(ModioResponse* response, ModioMod* mod);
   };
 
+  struct DownloadModfileParams
+  {
+    ModioMod* mod;
+    char* destination_path;
+    void (*callback)(ModioResponse* response, char*);
+  };
+
 /*
   struct DownloadImageParams
   {
@@ -33,22 +40,18 @@ extern "C"
     void (*)(int, char*, Mod*, char**, int) callback;
   };
 
-  struct DownloadModfileParams
-  {
-    Mod* mod;
-    string destination_path;
-    void (*)(int, char*, Mod*, string) callback;
-  };
+
 */
 
   map< int,AddModParams* > add_mod_callback;
   map< int,DeleteModParams* > delete_mod_callbacks;
   map< int,GetModsParams* > get_mods_callbacks;
+  map< int, DownloadModfileParams* > download_modfile_callbacks;
 
 /*
   map< int, DownloadImageParams* > download_image_callbacks;
   map< int, DownloadImagesParams* > download_images_callbacks;
-  map< int, DownloadModfileParams* > download_modfile_callbacks;
+
 */
 
   void onGetMods(int call_number, ModioResponse* response, json response_json)
@@ -73,7 +76,7 @@ extern "C"
     string filter_string = modio::getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret";
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret" + "&api_key=" + modio::API_KEY;
 
     int call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -93,7 +96,7 @@ extern "C"
     add_mod_callback.erase(call_number);
   }
 
-  void editMod(ModioMod* mod, ModHandler* add_mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
+  void modioEditMod(ModioMod* mod, ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -106,11 +109,11 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod->id);
 
-    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, add_mod_handler->curlform_copycontents, &onModAdded);
+    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, mod_handler->curlform_copycontents, &onModAdded);
     email_exchage_thread.detach();
   }
 
-  void addMod(ModHandler* add_mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
+  void modioAddMod(ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -123,7 +126,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
 
-    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, add_mod_handler->curlform_copycontents, add_mod_handler->curlform_files, &onModAdded);
+    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, mod_handler->curlform_copycontents, mod_handler->curlform_files, &onModAdded);
     add_mod_thread.detach();
   }
 
@@ -135,7 +138,7 @@ extern "C"
     delete_mod_callbacks.erase(call_number);
   }
 
-  void MODIO_DLL deleteMod(ModioMod* mod, void (*callback)(ModioResponse* response, ModioMod* mod))
+  void modioDeleteMod(ModioMod* mod, void (*callback)(ModioResponse* response, ModioMod* mod))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -150,6 +153,32 @@ extern "C"
 
     std::thread delete_mod_thread(modio::curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
     delete_mod_thread.detach();
+  }
+
+  void onModfileDownloaded(int call_number, ModioResponse* response, string url, string path)
+  {
+    char* destintation_path = download_modfile_callbacks[call_number]->destination_path;
+    modio::createDirectory(destintation_path);
+    modio::minizipwrapper::extract(path, destintation_path);
+    modio::removeFile(path);
+    download_modfile_callbacks[call_number]->callback(response, destintation_path);
+    download_modfile_callbacks.erase(call_number);
+  }
+
+  void modioInstallMod(ModioMod *mod, char* destination_path, void (*callback)(ModioResponse* response, char* path))
+  {
+    string file_path = string(modio::getModIODirectory() + "tmp/") + modio::toString(mod->modfile->id) + "_modfile.zip";
+
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    download_modfile_callbacks[call_number] = new DownloadModfileParams;
+    download_modfile_callbacks[call_number]->mod = mod;
+    download_modfile_callbacks[call_number]->destination_path = destination_path;
+    download_modfile_callbacks[call_number]->callback = callback;
+
+    std::thread download_thread(modio::curlwrapper::download, call_number, string(mod->modfile->download) + "?shhh=secret", file_path, &onModfileDownloaded);
+    download_thread.detach();
   }
 
 /*
@@ -237,32 +266,6 @@ extern "C"
       std::thread download_image_thread(curlwrapper::download, call_number, mod->media->images[i]->full, file_path, &onImageFromVectorDownloaded);
       download_image_thread.detach();
     }
-  }
-
-  void onModfileDownloaded(int call_number, int response_code, string message, string url, string path)
-  {
-    string destintation_path = download_modfile_callbacks[call_number]->destination_path;
-    createDirectory(destintation_path);
-    minizipwrapper::extract(path, destintation_path);
-    removeFile(path);
-    download_modfile_callbacks[call_number]->callback(response_code, message, download_modfile_callbacks[call_number]->mod, path);
-    download_modfile_callbacks.erase(call_number);
-  }
-
-  void installMod(Mod *mod, string destination_path, function< void(int response_code, string message, Mod* mod, string path) > callback)
-  {
-    string file_path = string(getModIODirectory() + "tmp/") + toString(mod->modfile->id) + "_modfile.zip";
-
-    int call_number = curlwrapper::getCallCount();
-    curlwrapper::advanceCallCount();
-
-    download_modfile_callbacks[call_number] = new DownloadModfileParams;
-    download_modfile_callbacks[call_number]->mod = mod;
-    download_modfile_callbacks[call_number]->destination_path = destination_path;
-    download_modfile_callbacks[call_number]->callback = callback;
-
-    std::thread download_thread(curlwrapper::download, call_number, mod->modfile->download + "?shhh=secret", file_path, &onModfileDownloaded);
-    download_thread.detach();
   }
 */
 
