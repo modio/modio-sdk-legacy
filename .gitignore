@@ -45,3 +45,5 @@ examples/3_ErrorResponse
 examples/4_DownloadImages
 examples/5_InstallMod
 examples/6_CreateMod
+examples/7_UpdateMod
+examples/8_DeleteMod

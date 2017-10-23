@@ -5,8 +5,9 @@ SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
+EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_InstallMod 6_CreateMod 7_UpdateMod 8_DeleteMod
 
-all: 1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_InstallMod 6_CreateMod
+all: $(EXAMPLES)
 
 1_Authentication: 1_Authentication.cpp
 	$(CC) $(CFLAGS) 1_Authentication.cpp -o 1_Authentication.o -I ../include
@@ -32,13 +33,17 @@ all: 1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_InstallMod
 	$(CC) $(CFLAGS) 6_CreateMod.cpp -o 6_CreateMod.o -I ../include
 	$(CC) $(LDFLAGS) 6_CreateMod.o $(LIBRARIES) -o 6_CreateMod
 
+7_UpdateMod: 7_UpdateMod.cpp
+	$(CC) $(CFLAGS) 7_UpdateMod.cpp -o 7_UpdateMod.o -I ../include
+	$(CC) $(LDFLAGS) 7_UpdateMod.o $(LIBRARIES) -o 7_UpdateMod
+
+8_DeleteMod: 8_DeleteMod.cpp
+	$(CC) $(CFLAGS) 8_DeleteMod.cpp -o 8_DeleteMod.o -I ../include
+	$(CC) $(LDFLAGS) 8_DeleteMod.o $(LIBRARIES) -o 8_DeleteMod
+
 clean:
 	-find . -name '*.o' -exec rm -r {} \;
-	-rm -f Example
-	-rm -f Authentication
-	-rm -f GetMods
-	-rm -f InstallMod
-	-rm -f DownloadImages
+	-rm -f $(EXAMPLES)
 
 run:
 	$ ./$(EXECUTABLE)

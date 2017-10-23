@@ -496,7 +496,7 @@ namespace modio
       writeLogLine(string("post call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
-    void put(int call_number, string url, vector<string> headers, multimap<string, string> data, function<void(int call_number, ModioResponse* response, json response_json)> callback)
+    void put(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, function<void(int call_number, ModioResponse* response, json response_json)> callback)
     {
       writeLogLine(string("put call to ") + url, MODIO_DEBUGLEVEL_LOG);
       lockCall(call_number);
@@ -505,6 +505,7 @@ namespace modio
       long response_code = 0;
 
       curl_global_init(CURL_GLOBAL_ALL);
+
       curl = curl_easy_init();
 
       ongoing_calls[curl] = new JsonResponseHandler();
@@ -513,11 +514,14 @@ namespace modio
       {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+
+        headers.push_back("Content-Type: application/x-www-form-urlencoded");
         setHeaders(headers, curl);
+
         string str_data = "";
-        for(map<string, string>::iterator i = data.begin(); i!=data.end(); i++)
+        for(map<string, string>::iterator i = curlform_copycontents.begin(); i!=curlform_copycontents.end(); i++)
         {
-          if(i!=data.begin())
+          if(str_data!="")
             str_data += "&";
           str_data += (*i).first + "=" + (*i).second;
         }
