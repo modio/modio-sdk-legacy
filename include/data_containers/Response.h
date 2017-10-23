@@ -16,6 +16,10 @@ extern "C"
     int code;
     ModioError* error;
     ModioCursor* cursor;
+    int cursor_id;
+    int prev_id;
+    int next_id;
+    int result_count;
   };
 
   void modioInitResponse(ModioResponse* response, json response_json);
