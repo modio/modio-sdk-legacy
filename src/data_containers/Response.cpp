@@ -38,7 +38,6 @@ extern "C"
   void modioFreeResponse(ModioResponse* response)
   {
     modioFreeError(response->error);
-    modioFreeCursor(response->cursor);
     delete response;
   }
 }
