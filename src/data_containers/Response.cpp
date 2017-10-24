@@ -13,18 +13,31 @@ extern "C"
       modioInitError(response->error,response_json["error"]);
     }
 
-    response->cursor = NULL;
-    if(modio::hasKey(response_json, "meta") && modio::hasKey(response_json["meta"], "cursor"))
+    response->cursor_id = -1;
+    if(modio::hasKey(response_json,"cursor_id"))
     {
-      response->cursor = new ModioCursor;
-      modioInitCursor(response->cursor,response_json["meta"]["cursor"]);
+      response->cursor_id = response_json["cursor_id"];
+    }
+    response->prev_id = -1;
+    if(modio::hasKey(response_json,"prev_id"))
+    {
+      response->prev_id = response_json["prev_id"];
+    }
+    response->next_id = -1;
+    if(modio::hasKey(response_json,"next_id"))
+    {
+      response->next_id = response_json["next_id"];
+    }
+    response->result_count = -1;
+    if(modio::hasKey(response_json,"result_count"))
+    {
+      response->result_count = response_json["result_count"];
     }
   }
 
   void modioFreeResponse(ModioResponse* response)
   {
     modioFreeError(response->error);
-    modioFreeCursor(response->cursor);
     delete response;
   }
 }

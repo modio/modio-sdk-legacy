@@ -149,11 +149,6 @@ namespace modio
 
       json response_json = parseJsonResonse(ongoing_calls[curl]->response);
 
-      if(response_json.is_array())
-      {
-        response_json = "{}"_json;
-      }
-
       string message = "";
       if(hasKey(response_json, "message"))
         message = response_json["message"];
