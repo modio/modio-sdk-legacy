@@ -23,7 +23,7 @@ extern "C"
   void modioSetFilterSort(ModioFilter* filter, char* field, bool ascending)
   {
     if(filter->sort)
-      delete filter->sort;
+      delete[] filter->sort;
     string ascending_str = "";
     if(!ascending)
       ascending_str = "-";
@@ -35,7 +35,7 @@ extern "C"
   void modioSetFilterLimit(ModioFilter* filter, int limit)
   {
     if(filter->limit)
-      delete filter->limit;
+      delete[] filter->limit;
     string limit_str = string("_limit=") + modio::toString(limit);
     filter->limit = new char[limit_str.size() + 1];
     strcpy(filter->limit, limit_str.c_str());
@@ -44,7 +44,7 @@ extern "C"
   void modioSetFilterOffset(ModioFilter* filter, int offset)
   {
     if(filter->offset)
-      delete filter->offset;
+      delete[] filter->offset;
     string offset_str = string("_offset=") + modio::toString(offset);
     filter->offset = new char[offset_str.size() + 1];
     strcpy(filter->offset, offset_str.c_str());
@@ -53,7 +53,7 @@ extern "C"
   void modioSetFilterCursor(ModioFilter* filter, int cursor)
   {
     if(filter->cursor)
-      delete filter->cursor;
+      delete[] filter->cursor;
     string cursor_str = string("_cursor=") + modio::toString(cursor);
     filter->cursor = new char[cursor_str.size() + 1];
     strcpy(filter->cursor, cursor_str.c_str());
@@ -62,7 +62,7 @@ extern "C"
   void modioSetFilterFullTextSearch(ModioFilter* filter, char* text)
   {
     if(filter->full_text_search)
-      delete filter->full_text_search;
+      delete[] filter->full_text_search;
     string full_text_search_str = string("_q=") + text;
     filter->full_text_search = new char[full_text_search_str.size() + 1];
     strcpy(filter->full_text_search, full_text_search_str.c_str());
@@ -71,7 +71,7 @@ extern "C"
   void modioAddFilterLikeField(ModioFilter* filter, char* field, char* value)
   {
     if(filter->like)
-      delete filter->like;
+      delete[] filter->like;
     string like_str = string(field) + "-lk=" + value;
     filter->like = new char[like_str.size() + 1];
     strcpy(filter->like, like_str.c_str());
@@ -80,7 +80,7 @@ extern "C"
   void modioAddFilterNotLikeField(ModioFilter* filter, char* field, char* value)
   {
     if(filter->not_like)
-      delete filter->not_like;
+      delete[] filter->not_like;
     string not_like_str = string(field) + "-not-lk=" + value;
     filter->not_like = new char[not_like_str.size() + 1];
     strcpy(filter->not_like, not_like_str.c_str());
@@ -89,7 +89,7 @@ extern "C"
   void modioAddFilterInField(ModioFilter* filter, char* field, char* value)
   {
     if(filter->in)
-      delete filter->in;
+      delete[] filter->in;
 
     if(strcmp(filter->in,"")==0)
     {
@@ -107,7 +107,7 @@ extern "C"
   void modioAddFilterNotInField(ModioFilter* filter, char* field, char* value)
   {
     if(filter->not_in)
-      delete filter->not_in;
+      delete[] filter->not_in;
 
     if(strcmp(filter->not_in,"")==0)
     {
@@ -125,7 +125,7 @@ extern "C"
   void modioAddFilterMinField(ModioFilter* filter, char* field, double value)
   {
     if(filter->min)
-      delete filter->min;
+      delete[] filter->min;
 
     string min_str = string(field) + "-min=" + modio::toString(value);
     filter->min = new char[min_str.size() + 1];
@@ -135,7 +135,7 @@ extern "C"
   void modioAddFilterMaxField(ModioFilter* filter, char* field, double value)
   {
     if(filter->max)
-      delete filter->max;
+      delete[] filter->max;
 
     string max_str = string(field) + "-max=" + modio::toString(value);
     filter->max = new char[max_str.size() + 1];
@@ -145,7 +145,7 @@ extern "C"
   void modioAddFilterSmallerThanField(ModioFilter* filter, char* field, double value)
   {
     if(filter->smaller_than)
-      delete filter->smaller_than;
+      delete[] filter->smaller_than;
 
     string smaller_than_str = string(field) + "-st=" + modio::toString(value);
     filter->smaller_than = new char[smaller_than_str.size() + 1];
@@ -155,7 +155,7 @@ extern "C"
   void modioAddFilterGreaterThanField(ModioFilter* filter, char* field, double value)
   {
     if(filter->greater_than)
-      delete filter->greater_than;
+      delete[] filter->greater_than;
 
     string greater_than_str = string(field) + "-gt=" + modio::toString(value);
     filter->greater_than = new char[greater_than_str.size() + 1];
@@ -165,7 +165,7 @@ extern "C"
   void modioAddFilterNotEqualField(ModioFilter* filter, char* field, char* value)
   {
     if(filter->not_equal)
-      delete filter->not_equal;
+      delete[] filter->not_equal;
 
     string not_equal_str = string(field) + "-not=" + value;
     filter->not_equal = new char[not_equal_str.size() + 1];

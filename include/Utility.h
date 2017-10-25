@@ -52,8 +52,13 @@ using json = nlohmann::json;
 
 namespace modio
 {
-  string dataToJsonString(char* data, size_t size);
-  string dataToJsonString(string data);
+  struct PairNode
+  {
+    char* first;
+    char* second;
+    PairNode* next;
+  };
+
   string toString(int number);
   string toString(double number);
   void createDirectory(string directory);
