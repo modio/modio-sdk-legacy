@@ -109,7 +109,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod->id);
 
-    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, mod_handler->curlform_copycontents, &onModAdded);
+    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(mod_handler), &onModAdded);
     email_exchage_thread.detach();
   }
 
@@ -126,7 +126,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
 
-    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, mod_handler->curlform_copycontents, mod_handler->curlform_files, &onModAdded);
+    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(mod_handler), modio::getModfileCurlFormFilesParams(mod_handler), &onModAdded);
     add_mod_thread.detach();
   }
 
