@@ -2,6 +2,12 @@
 
 namespace modio
 {
+  void initNode(Node* node)
+  {
+    node->value = NULL;
+    node->next = NULL;
+  }
+
   string toString(int number)
   {
       if (number == 0)

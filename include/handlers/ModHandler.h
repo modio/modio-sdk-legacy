@@ -28,7 +28,7 @@ extern "C"
     char* metadata;
     char* nameid;
     char* modfile;
-    modio::PairNode* tags;
+    modio::Node* tags;
   };
 
   void MODIO_DLL modioInitModHandler(ModioModHandler* mod_handler);

@@ -52,12 +52,14 @@ using json = nlohmann::json;
 
 namespace modio
 {
-  struct PairNode
+  struct Node
   {
-    char* first;
-    char* second;
-    PairNode* next;
+    char* value;
+    Node* next;
   };
+
+  void initNode(Node* node);
+
 
   string toString(int number);
   string toString(double number);

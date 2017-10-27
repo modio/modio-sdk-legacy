@@ -109,8 +109,23 @@ extern "C"
 
   void modioAddTag(ModioModHandler* mod_handler, char* tag)
   {
-    //mod_handler->curlform_copycontents.insert(pair<string,string>("tags[]",tag));
-    //TODO
+    modio::Node* new_tag = new modio::Node;
+    initNode(new_tag);
+    new_tag->value = new char[strlen(tag) + 1];
+    strcpy(new_tag->value, tag);
+
+    if(!mod_handler->tags)
+    {
+      mod_handler->tags = new_tag;
+    }else
+    {
+      modio::Node* last_tag = mod_handler->tags;
+      while(last_tag->next)
+      {
+        last_tag = last_tag->next;
+      }
+      last_tag->next = new_tag;
+    }
   }
 
   void modioFreeModHandler(ModioModHandler* mod_handler)
@@ -169,7 +184,15 @@ namespace modio
     if(mod_handler->modfile)
       result.insert(pair<string,string>("modfile",mod_handler->modfile));
 
-    //mod_handler->tags//TODO
+    if(mod_handler->tags)
+    {
+      Node* current_tag = mod_handler->tags;
+      while(current_tag)
+      {
+        result.insert(pair<string,string>("tags[]",current_tag->value));
+        current_tag = current_tag->next;
+      }
+    }
 
     return result;
   }
