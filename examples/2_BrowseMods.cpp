@@ -35,6 +35,8 @@ int main(void)
   ModioFilter* filter = new ModioFilter;
   modioInitFilter(filter);
   modioSetFilterLimit(filter,3);
+  modioAddFilterLikeField(filter, (char*)"name", (char*)"Example Mod");
+  modioAddFilterLikeField(filter, (char*)"description", (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
 
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);

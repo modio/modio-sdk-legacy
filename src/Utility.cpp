@@ -1,13 +1,25 @@
 #include "Utility.h"
 
-namespace modio
+extern "C"
 {
-  void initNode(Node* node)
+  void modioInitNode(Node* node)
   {
     node->value = NULL;
     node->next = NULL;
   }
 
+  void modioFreeNode(Node* node)
+  {
+    if(node->value)
+      delete node->value;
+
+    if(node->next)
+      modioFreeNode(node->next);
+  }
+}
+
+namespace modio
+{
   string toString(int number)
   {
       if (number == 0)

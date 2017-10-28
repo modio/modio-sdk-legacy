@@ -109,8 +109,8 @@ extern "C"
 
   void modioAddTag(ModioModHandler* mod_handler, char* tag)
   {
-    modio::Node* new_tag = new modio::Node;
-    initNode(new_tag);
+    Node* new_tag = new Node;
+    modioInitNode(new_tag);
     new_tag->value = new char[strlen(tag) + 1];
     strcpy(new_tag->value, tag);
 
@@ -119,7 +119,7 @@ extern "C"
       mod_handler->tags = new_tag;
     }else
     {
-      modio::Node* last_tag = mod_handler->tags;
+      Node* last_tag = mod_handler->tags;
       while(last_tag->next)
       {
         last_tag = last_tag->next;
