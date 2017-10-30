@@ -50,10 +50,20 @@ using json = nlohmann::json;
 #define MODIO_DEBUGLEVEL_WARNING  1
 #define MODIO_DEBUGLEVEL_ERROR    0
 
+extern "C"
+{
+  struct Node
+  {
+    char* value;
+    Node* next;
+  };
+
+  void modioInitNode(Node* node);
+  void modioFreeNodeList(Node* node_list);
+}
+
 namespace modio
 {
-  string dataToJsonString(char* data, size_t size);
-  string dataToJsonString(string data);
   string toString(int number);
   string toString(double number);
   void createDirectory(string directory);

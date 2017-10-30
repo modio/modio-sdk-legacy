@@ -48,7 +48,7 @@ extern "C"
     map<string, string> curlform_files;
     curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
 
-    std::thread add_file_thread(modio::curlwrapper::postForm, call_number, url, headers, modfile_handler->curlform_copycontents, curlform_files, &onModfileAdded);
+    std::thread add_file_thread(modio::curlwrapper::postForm, call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), curlform_files, &onModfileAdded);
     add_file_thread.detach();
   }
 
@@ -66,7 +66,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(modfile->mod) + "/files/" + modio::toString(modfile->id);
 
-    std::thread edit_modfile_thread(modio::curlwrapper::put, call_number, url, headers, modfile_handler->curlform_copycontents, &onModfileEdited);
+    std::thread edit_modfile_thread(modio::curlwrapper::put, call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), &onModfileEdited);
     edit_modfile_thread.detach();
   }
 }

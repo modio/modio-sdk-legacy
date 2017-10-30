@@ -2,27 +2,91 @@
 
 extern "C"
 {
-  void modioSetModfileVersion(ModioModfileHandler* modfile_handler, string version)
+  void modioInitModfileHandler(ModioModfileHandler* modfile_handler)
   {
-    modfile_handler->curlform_copycontents.insert(pair<string,string>("version",version));
+    modfile_handler->path = NULL;
+    modfile_handler->version = NULL;
+    modfile_handler->changelog = NULL;
+    modfile_handler->active = NULL;
   }
 
-  void modioSetModfileChangelog(ModioModfileHandler* modfile_handler, string changelog)
+  void modioSetModfileVersion(ModioModfileHandler* modfile_handler, char* version)
   {
-    modfile_handler->curlform_copycontents.insert(pair<string,string>("changelog",changelog));
+    if(modfile_handler->version)
+      delete[] modfile_handler->version;
+
+    modfile_handler->version = new char[strlen(version) + 1];
+    strcpy(modfile_handler->version, version);
   }
 
-  void modioSetModfilePath(ModioModfileHandler* modfile_handler, string path)
+  void modioSetModfileChangelog(ModioModfileHandler* modfile_handler, char* changelog)
   {
-    modfile_handler->path = path;
+    if(modfile_handler->changelog)
+      delete[] modfile_handler->changelog;
+
+    modfile_handler->changelog = new char[strlen(changelog) + 1];
+    strcpy(modfile_handler->changelog, changelog);
+  }
+
+  void modioSetModfilePath(ModioModfileHandler* modfile_handler, char* path)
+  {
+    if(modfile_handler->path)
+      delete[] modfile_handler->path;
+
+    modfile_handler->path = new char[strlen(path) + 1];
+    strcpy(modfile_handler->path, path);
   }
 
   void modioSetModfileActive(ModioModfileHandler* modfile_handler, bool active)
   {
-    string active_str = "0";
-    if(active)
-      active_str = "1";
+    if(modfile_handler->active)
+      delete[] modfile_handler->active;
 
-    modfile_handler->curlform_copycontents.insert(pair<string,string>("active",active_str));
+    modfile_handler->active = new char[2];
+
+    if(active)
+      strcpy(modfile_handler->active, "1");
+    else
+      strcpy(modfile_handler->active, "0");
+  }
+
+  void modioDeleteModfileHandler(ModioModfileHandler* modfile_handler)
+  {
+    if(modfile_handler->path)
+      delete modfile_handler->path;
+
+    if(modfile_handler->path)
+      delete modfile_handler->path;
+
+    if(modfile_handler->version)
+      delete modfile_handler->version;
+
+    if(modfile_handler->changelog)
+      delete modfile_handler->changelog;
+
+    if(modfile_handler->active)
+      delete modfile_handler->active;
+  }
+}
+
+namespace modio
+{
+  multimap<string, string> modfileHandlerToMultimap(ModioModfileHandler* modfile_handler)
+  {
+    multimap<string, string> result;
+
+    if(modfile_handler->path)
+      result.insert(pair<string,string>("path",modfile_handler->path));
+
+    if(modfile_handler->version)
+      result.insert(pair<string,string>("version",modfile_handler->version));
+
+    if(modfile_handler->changelog)
+      result.insert(pair<string,string>("changelog",modfile_handler->changelog));
+
+    if(modfile_handler->active)
+      result.insert(pair<string,string>("active",modfile_handler->active));
+
+    return result;
   }
 }

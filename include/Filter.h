@@ -26,15 +26,15 @@ extern "C"
     char* offset;
     char* cursor;
     char* full_text_search;
-    char* like;
-    char* not_like;
-    char* in;
-    char* not_in;
-    char* min;
-    char* max;
-    char* smaller_than;
-    char* greater_than;
-    char* not_equal;
+    Node* like_list;
+    Node* not_like_list;
+    Node* in_list;
+    Node* not_in_list;
+    Node* min_list;
+    Node* max_list;
+    Node* smaller_than_list;
+    Node* greater_than_list;
+    Node* not_equal_list;
   };
 
   void MODIO_DLL modioInitFilter(ModioFilter* filter);
@@ -52,6 +52,7 @@ extern "C"
   void MODIO_DLL modioAddFilterSmallerThanField(ModioFilter* filter, char* field, double value);
   void MODIO_DLL modioAddFilterGreaterThanField(ModioFilter* filter, char* field, double value);
   void MODIO_DLL modioAddFilterNotEqualField(ModioFilter* filter, char* field, char* value);
+  void MODIO_DLL modioFreeFilter(ModioFilter* filter);
 }
 
 namespace modio

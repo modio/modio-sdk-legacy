@@ -25,9 +25,9 @@ void onModAdded(ModioResponse* response, ModioMod* mod)
 
     ModioModfileHandler* modfile_handler = new ModioModfileHandler();
     //Required
-    modioSetModfilePath(modfile_handler, "ModExample/modfile/");
-    modioSetModfileVersion(modfile_handler, "v1.1.1");
-    modioSetModfileChangelog(modfile_handler, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+    modioSetModfilePath(modfile_handler, (char*)"ModExample/modfile/");
+    modioSetModfileVersion(modfile_handler, (char*)"v1.1.1");
+    modioSetModfileChangelog(modfile_handler, (char*)"This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
     //Optional
     modioSetModfileActive(modfile_handler, true);
 
@@ -49,18 +49,19 @@ int main(void)
   }
 
   ModioModHandler* mod_handler = new ModioModHandler;
+  modioInitModHandler(mod_handler);
   //Required fields
-  modioSetLogoPath(mod_handler, "ModExample/logo.png");
-  modioSetName(mod_handler, "Example Mod");
-  modioSetHomepage(mod_handler, "http://www.webpage.com");
-  modioSetSummary(mod_handler, "Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
-  modioAddTag(mod_handler, "Easy");
-  modioAddTag(mod_handler, "Medium");
+  modioSetLogoPath(mod_handler, (char*)"ModExample/logo.png");
+  modioSetName(mod_handler, (char*)"Example Mod12");
+  modioSetHomepage(mod_handler, (char*)"http://www.webpage.com");
+  modioSetSummary(mod_handler, (char*)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
+  modioAddTag(mod_handler, (char*)"Easy");
+  modioAddTag(mod_handler, (char*)"Medium");
   //Optional fields
   modioSetPrice(mod_handler, 1.99);
   modioSetStock(mod_handler, 25);
-  modioSetDescription(mod_handler, "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
-  modioSetMetadata(mod_handler, "Optional metadata");
+  modioSetDescription(mod_handler, (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+  modioSetMetadata(mod_handler, (char*)"Optional metadata");
   //setNameid(mod_handler, "my-example-mod"); //Name id must be unique
   //setModfile(mod_handler, int modfile); //Modfile should exist
 
