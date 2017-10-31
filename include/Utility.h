@@ -58,8 +58,8 @@ extern "C"
     Node* next;
   };
 
-  void modioInitNode(Node* node);
-  void modioFreeNodeList(Node* node_list);
+  void MODIO_DLL modioInitNode(Node* node);
+  void MODIO_DLL modioFreeNodeList(Node* node_list);
 }
 
 namespace modio

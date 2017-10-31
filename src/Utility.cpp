@@ -8,13 +8,13 @@ extern "C"
     node->next = NULL;
   }
 
-  void modioFreeNode(Node* node)
+  void modioFreeNodeList(Node* node)
   {
     if(node->value)
       delete node->value;
 
     if(node->next)
-      modioFreeNode(node->next);
+      modioFreeNodeList(node->next);
   }
 }
 
