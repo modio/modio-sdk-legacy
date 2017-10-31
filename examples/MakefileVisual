@@ -4,7 +4,14 @@ SOURCES = 1_Authentication.cpp
 LIBRARIES = ../src/modio.lib
 
 build:
- $(CC) $(CFLAGS) $(SOURCES) /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 1_Authentication.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 2_BrowseMods.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 3_ErrorResponse.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 4_DownloadImages.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 5_DownloadMod.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 6_CreateMod.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 7_EditMod.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+ $(CC) $(CFLAGS) 8_DeleteMod.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
 
 clean:
  del *.obj
