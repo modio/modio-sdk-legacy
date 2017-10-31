@@ -1,6 +1,6 @@
 CC = cl.exe
 CFLAGS = /EHsc /MD
-SOURCES = Example.cpp
+SOURCES = 1_Authentication.cpp
 LIBRARIES = ../src/modio.lib
 
 build:

@@ -23,6 +23,16 @@
 #define WINDOWS
 #endif
 
+#ifdef WINDOWS
+#  ifdef BUILDING_MODIO_DLL
+#    define MODIO_DLL __declspec(dllexport)
+#  else
+#    define MODIO_DLL __declspec(dllimport)
+#  endif
+#else
+#  define MODIO_DLL
+#endif
+
 #ifdef LINUX
 #include <sys/stat.h>
 #include <dirent.h>

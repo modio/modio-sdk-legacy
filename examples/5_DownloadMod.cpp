@@ -27,7 +27,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       cout<<"Id: \t"<<mods[i].id<<endl;
       cout<<"Name:\t"<<mods[i].name<<endl;
       cout<<"Installing..."<<endl;
-      string instalation_path_str = string("mods_dir/") + mods[i].name + "_" + modio::toString(mods[i].id);
+      string instalation_path_str = string("mods_dir/") + mods[i].nameid;
       char* instalation_path = new char[instalation_path_str.size() + 1];
       strcpy(instalation_path, instalation_path_str.c_str());
       modioInstallMod(&(mods[i]), instalation_path, &onModInstalled);

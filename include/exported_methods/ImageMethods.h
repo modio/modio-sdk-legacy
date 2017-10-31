@@ -7,16 +7,6 @@
 #include "Globals.h"
 #include "Filter.h"
 
-#ifdef WINDOWS
-#  ifdef BUILDING_MODIO_DLL
-#    define MODIO_DLL __declspec(dllexport)
-#  else
-#    define MODIO_DLL __declspec(dllimport)
-#  endif
-#else
-#  define MODIO_DLL
-#endif
-
 extern "C"
 {
   void MODIO_DLL modioDownloadImageThumbnail(ModioImage *image, string path, void (*callback)(ModioResponse* response, char* path));

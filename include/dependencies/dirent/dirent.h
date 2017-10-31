@@ -1,6 +1,9 @@
 #ifndef DIRENT_INCLUDED
 #define DIRENT_INCLUDED
 
+#include <iostream>
+using namespace std;
+
 /*
 
     Declaration of POSIX directory browsing functions and types for Win32.

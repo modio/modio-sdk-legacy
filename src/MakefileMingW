@@ -2,7 +2,7 @@ include Sources.mk
 
 CC = g++
 CFLAGS = -c -Wall -std=c++11
-SOURCES = $(MODIO_SOURCES)
+SOURCES = $(MODIO_SOURCES) dependencies/dirent/dirent.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/libz.a
 IMPORT_LIBRARY = modio.a

@@ -33,11 +33,14 @@
 
 src/modio.so
 src/modio.dylib
-examples/.modio/
-examples/mod_directory/
 src/modio.dll
 src/modio.lib
+src/modio.a
+examples/.modio/
+examples/mod_directory/
 examples/modio.dll
+examples/modio.lib
+examples/modio.a
 
 examples/1_Authentication
 examples/2_BrowseMods
