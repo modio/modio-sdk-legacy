@@ -8,13 +8,13 @@ extern "C"
     node->next = NULL;
   }
 
-  void modioFreeNode(Node* node)
+  void modioFreeNodeList(Node* node)
   {
     if(node->value)
       delete node->value;
 
     if(node->next)
-      modioFreeNode(node->next);
+      modioFreeNodeList(node->next);
   }
 }
 
@@ -87,10 +87,9 @@ namespace modio
     vector<string> filenames;
     struct dirent *ent;
     DIR *dir;
-
     if(directory[directory.size()-1]!='/')
       directory += '/';
-
+  
     if ((dir = opendir (directory.c_str())) != NULL)
     {
       while ((ent = readdir (dir)) != NULL)
@@ -109,7 +108,6 @@ namespace modio
         {
           filenames.push_back(ent->d_name);
         }
-
       }
       closedir (dir);
     }
