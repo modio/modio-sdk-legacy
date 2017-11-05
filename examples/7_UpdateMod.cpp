@@ -30,16 +30,16 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
 
       ModioModHandler* mod_handler = new ModioModHandler;
       //Required fields
-      modioSetLogoPath(mod_handler, "ModExample/logo.png");
-      modioSetName(mod_handler, "Update Example");
-      modioSetHomepage(mod_handler, "http://www.updated.com");
-      modioSetSummary(mod_handler, "Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
-      modioAddTag(mod_handler, "Easy");
+      modioSetLogoPath(mod_handler, (char*)"ModExample/logo.png");
+      modioSetName(mod_handler, (char*)"Update Example");
+      modioSetHomepage(mod_handler, (char*)"http://www.updated.com");
+      modioSetSummary(mod_handler, (char*)"Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
+      modioAddTag(mod_handler, (char*)"Easy");
       //Optional fields
       modioSetPrice(mod_handler, 2.99);
       //setStock(mod_handler, 50);//The developer should allow mods to control mod supply and scarcity
-      modioSetDescription(mod_handler, "This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
-      modioSetMetadata(mod_handler, "Optional updated metadata");
+      modioSetDescription(mod_handler, (char*)"This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
+      modioSetMetadata(mod_handler, (char*)"Optional updated metadata");
       //setNameid(mod_handler, "my-example-mod"); //Name id must be unique
       //setModfile(mod_handler, int modfile); //Modfile should exist
 
