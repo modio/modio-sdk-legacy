@@ -30,7 +30,7 @@ extern "C"
 
         string errors_str = it.key();// + ": " + string(i.value());
         errors_str += ": ";
-        errors_str += it.value();
+        //errors_str += string(it.value());
         error->errors_array[i]= new char[errors_str.size() + 1];
         strcpy(error->errors_array[i], errors_str.c_str());
         i++;

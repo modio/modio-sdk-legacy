@@ -27,7 +27,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       cout<<"Id: \t"<<mods[i].id<<endl;
       cout<<"Name:\t"<<mods[i].name<<endl;
       cout<<"Image download queued..."<<endl;
-      string download_path_str = string("mods_dir/") + mods[i].name + "_" + modio::toString(mods[i].id) + ".png";
+      string download_path_str = string("mods_dir/") + mods[i].nameid + ".png";
       char* download_path = new char[download_path_str.size() + 1];
       strcpy(download_path, download_path_str.c_str());
       modioDownloadImageThumbnail(mods[i].logo, download_path, &onImageDownloaded);

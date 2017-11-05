@@ -1,21 +1,53 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++11
-SOURCES=Example.cpp
+SOURCES=1_Authentication.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.a
+	
+EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_DownloadMod 6_CreateMod 7_EditMod 8_DeleteMod
 
-all: $(SOURCES) $(EXECUTABLE)
+all: $(EXAMPLES)
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LIBRARIES) -o $@
+1_Authentication: 1_Authentication.cpp
+	$(CC) $(CFLAGS) 1_Authentication.cpp -o 1_Authentication.o -I ../include
+	$(CC) 1_Authentication.o $(LIBRARIES) -o 1_Authentication
 
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@ -I ../include
+2_BrowseMods: 2_BrowseMods.cpp
+	$(CC) $(CFLAGS) 2_BrowseMods.cpp -o 2_BrowseMods.o -I ../include
+	$(CC) $(LDFLAGS) 2_BrowseMods.o $(LIBRARIES) -o 2_BrowseMods
+
+3_ErrorResponse: 3_ErrorResponse.cpp
+	$(CC) $(CFLAGS) 3_ErrorResponse.cpp -o 3_ErrorResponse.o -I ../include
+	$(CC) $(LDFLAGS) 3_ErrorResponse.o $(LIBRARIES) -o 3_ErrorResponse
+
+4_DownloadImages: 4_DownloadImages.cpp
+	$(CC) $(CFLAGS) 4_DownloadImages.cpp -o 4_DownloadImages.o -I ../include
+	$(CC) $(LDFLAGS) 4_DownloadImages.o $(LIBRARIES) -o 4_DownloadImages
+
+5_DownloadMod: 5_DownloadMod.cpp
+	$(CC) $(CFLAGS) 5_DownloadMod.cpp -o 5_DownloadMod.o -I ../include
+	$(CC) $(LDFLAGS) 5_DownloadMod.o $(LIBRARIES) -o 5_DownloadMod
+
+6_CreateMod: 6_CreateMod.cpp
+	$(CC) $(CFLAGS) 6_CreateMod.cpp -o 6_CreateMod.o -I ../include
+	$(CC) $(LDFLAGS) 6_CreateMod.o $(LIBRARIES) -o 6_CreateMod
+
+7_EditMod: 7_EditMod.cpp
+	$(CC) $(CFLAGS) 7_EditMod.cpp -o 7_EditMod.o -I ../include
+	$(CC) $(LDFLAGS) 7_EditMod.o $(LIBRARIES) -o 7_EditMod
+
+8_DeleteMod: 8_DeleteMod.cpp
+	$(CC) $(CFLAGS) 8_DeleteMod.cpp -o 8_DeleteMod.o -I ../include
+	$(CC) $(LDFLAGS) 8_DeleteMod.o $(LIBRARIES) -o 8_DeleteMod
+	
+	
+	
+	
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;
-	-rm -f $(EXECUTABLE)
+	-rm -f 1_Authentication.exe 2_BrowseMods.exe 3_ErrorResponse.exe 4_DownloadImages.exe 5_DownloadMod.exe 6_CreateMod.exe 7_EditMod.exe 8_DeleteMod.exe
 
 run:
 	$ ./$(EXECUTABLE)

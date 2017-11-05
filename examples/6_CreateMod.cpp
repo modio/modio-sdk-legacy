@@ -3,6 +3,10 @@
 bool add_mod_finished = false;
 bool add_modfile_finished = true;
 
+string modfile_path = "ModExample/modfile/";
+string modfile_version = "v1.1.x";
+string modfile_changelog = "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog";
+
 void onModfileAdded(ModioResponse* response, ModioModfile* modfile)
 {
   cout<<"Add Modfile Response: "<<response->code<<endl;
@@ -24,10 +28,11 @@ void onModAdded(ModioResponse* response, ModioMod* mod)
     cout<<"Mod id: "<<mod->id<<endl;
 
     ModioModfileHandler* modfile_handler = new ModioModfileHandler();
+	modioInitModfileHandler(modfile_handler);
     //Required
-    modioSetModfilePath(modfile_handler, (char*)"ModExample/modfile/");
-    modioSetModfileVersion(modfile_handler, (char*)"v1.1.1");
-    modioSetModfileChangelog(modfile_handler, (char*)"This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+    modioSetModfilePath(modfile_handler, (char*)modfile_path.c_str());
+    modioSetModfileVersion(modfile_handler, (char*)modfile_version.c_str());
+    modioSetModfileChangelog(modfile_handler, (char*)modfile_changelog.c_str());
     //Optional
     modioSetModfileActive(modfile_handler, true);
 
@@ -52,7 +57,7 @@ int main(void)
   modioInitModHandler(mod_handler);
   //Required fields
   modioSetLogoPath(mod_handler, (char*)"ModExample/logo.png");
-  modioSetName(mod_handler, (char*)"Example Mod12");
+  modioSetName(mod_handler, (char*)"Example Mod Test30");
   modioSetHomepage(mod_handler, (char*)"http://www.webpage.com");
   modioSetSummary(mod_handler, (char*)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
   modioAddTag(mod_handler, (char*)"Easy");

@@ -9,7 +9,7 @@ void onModEdited(ModioResponse* response, ModioMod* mod)
   cout<<"Mod Edit response: "<<response->code<<endl;
   if(response->code == 200)
   {
-    cout<<"Mod edited downloaded successfully!"<<endl;
+    cout<<"Mod edited successfully!"<<endl;
   }
   mods_downloaded++;
 }
@@ -29,6 +29,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       cout<<"Editing mod..."<<endl;
 
       ModioModHandler* mod_handler = new ModioModHandler;
+	  modioInitModHandler(mod_handler);
       //Required fields
       modioSetLogoPath(mod_handler, (char*)"ModExample/logo.png");
       modioSetName(mod_handler, (char*)"Update Example");
@@ -54,7 +55,6 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
 int main(void)
 {
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
-
   ModioFilter* filter = new ModioFilter;
   modioInitFilter(filter);
   modioSetFilterLimit(filter,1);

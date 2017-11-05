@@ -8,16 +8,6 @@
 #include "Filter.h"
 #include "handlers/ModHandler.h"
 
-#ifdef WINDOWS
-#  ifdef BUILDING_MODIO_DLL
-#    define MODIO_DLL __declspec(dllexport)
-#  else
-#    define MODIO_DLL __declspec(dllimport)
-#  endif
-#else
-#  define MODIO_DLL
-#endif
-
 extern "C"
 {
   void MODIO_DLL modioGetMods(ModioFilter* filter, void (*callback)(ModioResponse* response, ModioMod* mods, int mods_size));
