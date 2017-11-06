@@ -5,7 +5,7 @@ SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
-EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_DownloadMod 6_CreateMod 7_UpdateMod 8_DeleteMod 9_HandleTags
+EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_HandleModfiles 6_CreateMod 7_EditMod 8_DeleteMod 9_HandleTags
 
 all: $(EXAMPLES)
 
@@ -25,17 +25,17 @@ all: $(EXAMPLES)
 	$(CC) $(CFLAGS) 4_DownloadImages.cpp -o 4_DownloadImages.o -I ../include
 	$(CC) $(LDFLAGS) 4_DownloadImages.o $(LIBRARIES) -o 4_DownloadImages
 
-5_DownloadMod: 5_DownloadMod.cpp
-	$(CC) $(CFLAGS) 5_DownloadMod.cpp -o 5_DownloadMod.o -I ../include
-	$(CC) $(LDFLAGS) 5_DownloadMod.o $(LIBRARIES) -o 5_DownloadMod
+5_HandleModfiles: 5_HandleModfiles.cpp
+	$(CC) $(CFLAGS) 5_HandleModfiles.cpp -o 5_HandleModfiles.o -I ../include
+	$(CC) $(LDFLAGS) 5_HandleModfiles.o $(LIBRARIES) -o 5_HandleModfiles
 
 6_CreateMod: 6_CreateMod.cpp
 	$(CC) $(CFLAGS) 6_CreateMod.cpp -o 6_CreateMod.o -I ../include
 	$(CC) $(LDFLAGS) 6_CreateMod.o $(LIBRARIES) -o 6_CreateMod
 
-7_UpdateMod: 7_UpdateMod.cpp
-	$(CC) $(CFLAGS) 7_UpdateMod.cpp -o 7_UpdateMod.o -I ../include
-	$(CC) $(LDFLAGS) 7_UpdateMod.o $(LIBRARIES) -o 7_UpdateMod
+7_EditMod: 7_EditMod.cpp
+	$(CC) $(CFLAGS) 7_EditMod.cpp -o 7_EditMod.o -I ../include
+	$(CC) $(LDFLAGS) 7_EditMod.o $(LIBRARIES) -o 7_EditMod
 
 8_DeleteMod: 8_DeleteMod.cpp
 	$(CC) $(CFLAGS) 8_DeleteMod.cpp -o 8_DeleteMod.o -I ../include

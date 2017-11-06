@@ -18,13 +18,6 @@ extern "C"
     void (*callback)(ModioResponse* response, ModioMod* mod);
   };
 
-  struct DownloadModfileParams
-  {
-    ModioMod* mod;
-    char* destination_path;
-    void (*callback)(ModioResponse* response, char*);
-  };
-
 /*
   struct DownloadImageParams
   {
@@ -46,7 +39,6 @@ extern "C"
   map< int,AddModParams* > add_mod_callback;
   map< int,DeleteModParams* > delete_mod_callbacks;
   map< int,GetModsParams* > get_mods_callbacks;
-  map< int, DownloadModfileParams* > download_modfile_callbacks;
 
 /*
   map< int, DownloadImageParams* > download_image_callbacks;
@@ -153,32 +145,6 @@ extern "C"
 
     std::thread delete_mod_thread(modio::curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
     delete_mod_thread.detach();
-  }
-
-  void onModfileDownloaded(int call_number, ModioResponse* response, string url, string path)
-  {
-    char* destintation_path = download_modfile_callbacks[call_number]->destination_path;
-    modio::createDirectory(destintation_path);
-    modio::minizipwrapper::extract(path, destintation_path);
-    modio::removeFile(path);
-    download_modfile_callbacks[call_number]->callback(response, destintation_path);
-    download_modfile_callbacks.erase(call_number);
-  }
-
-  void modioInstallMod(ModioMod *mod, char* destination_path, void (*callback)(ModioResponse* response, char* path))
-  {
-    string file_path = string(modio::getModIODirectory() + "tmp/") + modio::toString(mod->modfile->id) + "_modfile.zip";
-
-    int call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
-
-    download_modfile_callbacks[call_number] = new DownloadModfileParams;
-    download_modfile_callbacks[call_number]->mod = mod;
-    download_modfile_callbacks[call_number]->destination_path = destination_path;
-    download_modfile_callbacks[call_number]->callback = callback;
-
-    std::thread download_thread(modio::curlwrapper::download, call_number, string(mod->modfile->download) + "?shhh=secret", file_path, &onModfileDownloaded);
-    download_thread.detach();
   }
 
 /*

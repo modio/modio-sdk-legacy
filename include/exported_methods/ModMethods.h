@@ -14,7 +14,6 @@ extern "C"
   void MODIO_DLL modioAddMod(ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod));
   void MODIO_DLL modioEditMod(ModioMod* mod, ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod));
   void MODIO_DLL modioDeleteMod(ModioMod* mod, void (*callback)(ModioResponse* response, ModioMod* mod));
-  void MODIO_DLL modioInstallMod(ModioMod *mod, char* destination_path, void (*callback)(ModioResponse* response, char* path));
 }
 
 #endif
