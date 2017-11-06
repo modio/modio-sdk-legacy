@@ -8,7 +8,7 @@ bool tags_delete_finished = false;
 
 ModioMod* global_mod = NULL;
 
-void onTagsGet(ModioResponse* response, ModioTag* tags_array, int tags_array_size)
+void onTagsGet(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size)
 {
   cout<<"Listing tags:"<<endl;
   for(int i=0; i<tags_array_size; i++)
@@ -19,13 +19,13 @@ void onTagsGet(ModioResponse* response, ModioTag* tags_array, int tags_array_siz
   tags_get_finished = true;
 }
 
-void onTagsAdded(ModioResponse* response, ModioTag* tags_array, int tags_array_size)
+void onTagsAdded(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size)
 {
   cout<<"Tags added!"<<endl;
   tags_add_finished = true;
 }
 
-void onTagsDeleted(ModioResponse* response, ModioTag* tags_array, int tags_array_size)
+void onTagsDeleted(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size)
 {
   cout<<"Tags deleted!"<<endl;
   tags_delete_finished = true;
@@ -63,7 +63,7 @@ int main(void)
   while(!mod_get_finished);
 
   cout<<"Getting mod tags"<<endl;
-  modioGetTags(global_mod, &onTagsGet);
+  modioGetTags(global_mod->id, &onTagsGet);
 
   while(!tags_get_finished);
 
@@ -73,23 +73,23 @@ int main(void)
   tags_array[0] = new char[50];
   strcpy(tags_array[0],"Hard");
   int tags_array_size = 1;
-  modioAddTags(global_mod, tags_array, tags_array_size, &onTagsAdded);
+  modioAddTags(global_mod->id, tags_array, tags_array_size, &onTagsAdded);
 
   while(!tags_add_finished);
 
   cout<<"Getting mod tags"<<endl;
-  modioGetTags(global_mod, &onTagsGet);
+  modioGetTags(global_mod->id, &onTagsGet);
 
   tags_get_finished = false;
   while(!tags_get_finished);
 
   cout<<"Deleting tag..."<<endl;
 
-  modioDeleteTags(global_mod, tags_array, tags_array_size, &onTagsDeleted);
+  modioDeleteTags(global_mod->id, tags_array, tags_array_size, &onTagsDeleted);
   while(!tags_delete_finished);
 
   cout<<"Getting mod tags"<<endl;
-  modioGetTags(global_mod, &onTagsGet);
+  modioGetTags(global_mod->id, &onTagsGet);
 
   tags_get_finished = false;
   while(!tags_get_finished);

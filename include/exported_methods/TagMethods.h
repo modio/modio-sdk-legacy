@@ -8,9 +8,9 @@
 
 extern "C"
 {
-  void MODIO_DLL modioGetTags(ModioMod* mod, void (*callback)(ModioResponse* response, ModioTag* tags_array, int tags_array_size));
-  void MODIO_DLL modioAddTags(ModioMod* mod, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, ModioTag* tags_array, int tags_array_size));
-  void MODIO_DLL modioDeleteTags(ModioMod* mod, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, ModioTag* tags_array, int tags_array_size));
+  void MODIO_DLL modioGetTags(int mod_id, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size));
+  void MODIO_DLL modioAddTags(int mod_id, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size));
+  void MODIO_DLL modioDeleteTags(int mod_id, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size));
 }
 
 #endif

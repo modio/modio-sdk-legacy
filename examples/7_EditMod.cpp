@@ -44,7 +44,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       //setNameid(mod_handler, "my-example-mod"); //Name id must be unique
       //setModfile(mod_handler, int modfile); //Modfile should exist
 
-      modioEditMod(&(mods[i]), mod_handler, &onModEdited);
+      modioEditMod(mods[i].id, mod_handler, &onModEdited);
     }
     mods_to_download = mods_size;
   }
