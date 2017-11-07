@@ -28,7 +28,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       cout<<"Name:\t"<<mods[i].name<<endl;
       cout<<"Deleting mod..."<<endl;
 
-      modioDeleteMod(&(mods[i]), &onModDeleted);
+      modioDeleteMod(mods[i].id, &onModDeleted);
     }
     mods_to_download = mods_size;
   }

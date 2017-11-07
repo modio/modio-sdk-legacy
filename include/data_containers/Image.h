@@ -11,9 +11,11 @@ extern "C"
 {
   struct ModioImage
   {
-    char* full;
-    char* thumbnail;
     char* filename;
+    char* full;
+    char* thumb_1280x720;
+    char* thumb_640x360;
+    char* thumb_320x180;
   };
 
   void modioInitImage(ModioImage* image, json image_json);

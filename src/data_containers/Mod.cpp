@@ -107,11 +107,16 @@ extern "C"
       modioInitRatings(mod->ratings, mod_json["ratings"]);
     }
 
-    mod->tag = NULL;
-    if(modio::hasKey(mod_json, "tag"))
+    mod->tags_array = NULL;
+    mod->tags_array_size = 0;
+    if(modio::hasKey(mod_json, "tags"))
     {
-      mod->tag = new ModioTag;
-      modioInitTag(mod->tag, mod_json["tag"]);
+      mod->tags_array_size = mod_json["tags"].size();
+      mod->tags_array = new ModioTag[mod->tags_array_size];
+      for(int i=0; i<mod->tags_array_size; i++)
+      {
+        modioInitTag(&(mod->tags_array[i]), mod_json["tags"][i]);
+      }
     }
   }
 
@@ -125,7 +130,7 @@ extern "C"
       modioFreeModfile(mod->modfile);
     if(mod->ratings)
       modioFreeRatings(mod->ratings);
-    if(mod->tag)
-      modioFreeTag(mod->tag);
+    for(int i=0;i<mod->tags_array_size; i++)
+      modioFreeTag(&(mod->tags_array[i]));
   }
 }

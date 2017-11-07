@@ -38,7 +38,8 @@ src/modio.lib
 src/modio.exp
 src/modio.a
 examples/.modio/
-examples/mod_directory/
+examples/mods_dir/*
+!examples/mods_dir/readme.txt
 examples/modio.dll
 examples/modio.lib
 examples/modio.a
@@ -48,7 +49,8 @@ examples/1_Authentication
 examples/2_BrowseMods
 examples/3_ErrorResponse
 examples/4_DownloadImages
-examples/5_InstallMod
+examples/5_HandleModfiles
 examples/6_CreateMod
-examples/7_UpdateMod
+examples/7_EditMod
 examples/8_DeleteMod
+examples/9_HandleTags

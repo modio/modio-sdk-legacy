@@ -35,7 +35,8 @@ extern "C"
     ModioMedia* media;
     ModioModfile* modfile;
     ModioRatings* ratings;
-    ModioTag* tag;
+    ModioTag* tags_array;
+    int tags_array_size;
   };
 
   void modioInitMod(ModioMod* mod, json mod_json);

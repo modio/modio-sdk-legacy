@@ -9,10 +9,7 @@
 
 extern "C"
 {
-  void MODIO_DLL modioDownloadImageThumbnail(ModioImage *image, string path, void (*callback)(ModioResponse* response, char* path));
-  void MODIO_DLL modioDownloadImageFull(ModioImage *image, string path, void (*callback)(ModioResponse* response, char* path));
-  //void MODIO_DLL downloadModMediaImagesThumbnail(Mod *mod, function< void(int response_code, string message, Mod* mod, vector<string> paths) > callback);
-  //void MODIO_DLL downloadModMediaImagesFull(Mod *mod, function< void(int response_code, string message, Mod* mod, vector<string> paths) > callback);
+  void MODIO_DLL modioDownloadImage(char* image_url, char* path, void (*callback)(ModioResponse* response, char* path));
 }
 
 #endif

@@ -1,16 +1,16 @@
-#ifndef MODIO_MOD_METHODS_H
-#define MODIO_MOD_METHODS_H
+#ifndef MODIO_TAG_METHODS_H
+#define MODIO_TAG_METHODS_H
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
 #include "data_containers/Mod.h"
 #include "Globals.h"
 
-namespace modio
+extern "C"
 {
-  void MODIO_DLL getTags(ModioMod* mod, function<void(ModioResponse* response, ModioMod* mod, vector<string> tags)> callback);
-  void MODIO_DLL addTags(ModioMod* mod, vector<string> tags, function<void(ModioResponse* response, ModioMod* mod)> callback);
-  void MODIO_DLL deleteTags(ModioMod* mod, vector<string> tags, function<void(ModioResponse* response, ModioMod* mod)> callback);
+  void MODIO_DLL modioGetTags(int mod_id, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size));
+  void MODIO_DLL modioAddTags(int mod_id, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size));
+  void MODIO_DLL modioDeleteTags(int mod_id, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size));
 }
 
 #endif
