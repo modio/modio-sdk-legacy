@@ -28,7 +28,7 @@ void onModAdded(ModioResponse* response, ModioMod* mod)
     cout<<"Mod id: "<<mod->id<<endl;
 
     ModioModfileHandler* modfile_handler = new ModioModfileHandler();
-	modioInitModfileHandler(modfile_handler);
+    modioInitModfileHandler(modfile_handler);
     //Required
     modioSetModfilePath(modfile_handler, (char*)modfile_path.c_str());
     modioSetModfileVersion(modfile_handler, (char*)modfile_version.c_str());
@@ -37,7 +37,7 @@ void onModAdded(ModioResponse* response, ModioMod* mod)
     modioSetModfileActive(modfile_handler, true);
 
     add_modfile_finished = false;
-    modioAddModfile(mod, modfile_handler, &onModfileAdded);
+    modioAddModfile(mod->id, modfile_handler, &onModfileAdded);
   }
 
   add_mod_finished = true;

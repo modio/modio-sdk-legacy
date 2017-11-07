@@ -16,7 +16,7 @@ void onModfileInstalled(ModioResponse* response, char* path)
   modfile_installed = true;
 }
 
-void onModfileEdited(ModioResponse* response, ModioModfile* modfile)
+void onModfileEdited(ModioResponse* response, int modfile_id)
 {
   cout<<"Edit Mod response: "<<response->code<<endl;
   if(response->code == 200)
@@ -67,7 +67,7 @@ int main(void)
   modioSetModfileActive(modfile_handler,false);
   modioSetModfileChangelog(modfile_handler,(char*)"Stuff was changed on this mod via the examples.");
 
-  modioEditModfile(global_modfile, modfile_handler, &onModfileEdited);
+  modioEditModfile(global_modfile->mod, global_modfile->id, modfile_handler, &onModfileEdited);
 
   while(!modfile_edited);
 
