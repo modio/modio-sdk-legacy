@@ -17,7 +17,7 @@ extern "C"
     download_image_callbacks.erase(call_number);
   }
 
-  void modioDownloadImageThumbnail(ModioImage *image, string path, void (*callback)(ModioResponse* response, char* path))
+  void modioDownloadImage(char* image_url, char* path, void (*callback)(ModioResponse* response, char* path))
   {
     int call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -25,19 +25,7 @@ extern "C"
     download_image_callbacks[call_number] = new DownloadImageParams;
     download_image_callbacks[call_number]->callback = callback;
 
-    std::thread download_image_thread(modio::curlwrapper::download, call_number, image->thumbnail, path, &onImageDownloaded);
-    download_image_thread.detach();
-  }
-
-  void modioDownloadImageFull(ModioImage *image, string path, void (*callback)(ModioResponse* response, char* path))
-  {
-    int call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
-
-    download_image_callbacks[call_number] = new DownloadImageParams;
-    download_image_callbacks[call_number]->callback = callback;
-
-    std::thread download_image_thread(modio::curlwrapper::download, call_number, image->full, path, &onImageDownloaded);
+    std::thread download_image_thread(modio::curlwrapper::download, call_number, image_url, path, &onImageDownloaded);
     download_image_thread.detach();
   }
 }

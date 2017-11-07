@@ -30,7 +30,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       string download_path_str = string("mods_dir/") + mods[i].nameid + ".png";
       char* download_path = new char[download_path_str.size() + 1];
       strcpy(download_path, download_path_str.c_str());
-      modioDownloadImageThumbnail(mods[i].logo, download_path, &onImageDownloaded);
+      modioDownloadImage(mods[i].logo->full, download_path, &onImageDownloaded);
     }
     mods_to_download = mods_size;
   }
