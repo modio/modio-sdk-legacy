@@ -24,7 +24,6 @@ extern "C"
 
   void onGetMods(int call_number, ModioResponse* response, json response_json)
   {
-    cout<<"GETT:"<<response_json<<endl;
     ModioMod* mods = NULL;
     int mods_size = 0;
     if(response->code == 200)

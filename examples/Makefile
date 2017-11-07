@@ -5,7 +5,7 @@ SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
-EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_DownloadImages 5_HandleModfiles 6_CreateMod 7_EditMod 8_DeleteMod 9_HandleTags
+EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_HandleImages 5_HandleModfiles 6_CreateMod 7_EditMod 8_DeleteMod 9_HandleTags
 
 all: $(EXAMPLES)
 
@@ -21,9 +21,9 @@ all: $(EXAMPLES)
 	$(CC) $(CFLAGS) 3_ErrorResponse.cpp -o 3_ErrorResponse.o -I ../include
 	$(CC) $(LDFLAGS) 3_ErrorResponse.o $(LIBRARIES) -o 3_ErrorResponse
 
-4_DownloadImages: 4_DownloadImages.cpp
-	$(CC) $(CFLAGS) 4_DownloadImages.cpp -o 4_DownloadImages.o -I ../include
-	$(CC) $(LDFLAGS) 4_DownloadImages.o $(LIBRARIES) -o 4_DownloadImages
+4_HandleImages: 4_HandleImages.cpp
+	$(CC) $(CFLAGS) 4_HandleImages.cpp -o 4_HandleImages.o -I ../include
+	$(CC) $(LDFLAGS) 4_HandleImages.o $(LIBRARIES) -o 4_HandleImages
 
 5_HandleModfiles: 5_HandleModfiles.cpp
 	$(CC) $(CFLAGS) 5_HandleModfiles.cpp -o 5_HandleModfiles.o -I ../include
