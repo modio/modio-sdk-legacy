@@ -29,7 +29,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       cout<<"Editing mod..."<<endl;
 
       ModioModHandler* mod_handler = new ModioModHandler;
-	  modioInitModHandler(mod_handler);
+      modioInitModHandler(mod_handler);
       //Required fields
       modioSetLogoPath(mod_handler, (char*)"ModExample/logo.png");
       modioSetName(mod_handler, (char*)"Update Example");

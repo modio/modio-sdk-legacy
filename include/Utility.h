@@ -83,6 +83,7 @@ namespace modio
   string getModIODirectory();
   bool hasKey(json json_object, string key);
   void removeFile(string filename);
+  string addSlashIfNeeded(string directory_path);
 }
 
 #endif

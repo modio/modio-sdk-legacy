@@ -89,7 +89,7 @@ namespace modio
     DIR *dir;
     if(directory[directory.size()-1]!='/')
       directory += '/';
-  
+
     if ((dir = opendir (directory.c_str())) != NULL)
     {
       while ((ent = readdir (dir)) != NULL)
@@ -134,5 +134,13 @@ namespace modio
       writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
     else
       writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
+  }
+
+  string addSlashIfNeeded(string directory_path)
+  {
+    if(directory_path!= "" && directory_path[directory_path.size()-1] != '/')
+      directory_path += "/";
+
+    return directory_path;
   }
 }

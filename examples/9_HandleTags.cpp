@@ -10,24 +10,35 @@ ModioMod* global_mod = NULL;
 
 void onTagsGet(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size)
 {
-  cout<<"Listing tags:"<<endl;
-  for(int i=0; i<tags_array_size; i++)
+  cout<<"Get tags response: "<<response->code<<endl;
+  if(response->code == 200)
   {
-    cout<<tags_array[i].tag<<endl;
+    cout<<"Listing tags:"<<endl;
+    for(int i=0; i<tags_array_size; i++)
+    {
+      cout<<tags_array[i].tag<<endl;
+    }
   }
-
   tags_get_finished = true;
 }
 
 void onTagsAdded(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size)
 {
-  cout<<"Tags added!"<<endl;
+  cout<<"Add tags response: "<<response->code<<endl;
+  if(response->code == 201)
+  {
+    cout<<"Tags added!"<<endl;
+  }
   tags_add_finished = true;
 }
 
 void onTagsDeleted(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size)
 {
-  cout<<"Tags deleted!"<<endl;
+  cout<<"Delete tags response: "<<response->code<<endl;
+  if(response->code == 204)
+  {
+    cout<<"Tags deleted!"<<endl;
+  }
   tags_delete_finished = true;
 }
 
