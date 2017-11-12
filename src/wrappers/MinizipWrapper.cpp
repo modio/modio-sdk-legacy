@@ -155,6 +155,8 @@ namespace modio
       vector<string> filenames = getFilenames(directory);
       for(int i=0;i<(int)filenames.size();i++)
       {
+        if(filenames[i] == "modio.json")
+          continue;
         string filename = filenames[i];
         string complete_file_path = directory + filename;
         FILE *fin = NULL;

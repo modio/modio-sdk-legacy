@@ -78,7 +78,15 @@ int main(void)
   strcpy(instalation_path, instalation_path_str.c_str());
   modioInstallModfile(global_modfile, instalation_path, &onModfileInstalled);
 
-  while(!modfile_installed);
+  while(!modfile_installed)
+  {
+    if(modioGetModfileState(global_modfile->id) == MODIO_MODFILE_INSTALLING)
+    {
+      double modfile_download_progress = modioGetModfileDownloadPercentage(global_modfile->id);
+      if(modfile_download_progress != 0)
+        cout<<"Download progress: "<<modfile_download_progress<<"%"<<endl;
+    }
+  }
 
   modioShutdown();
 

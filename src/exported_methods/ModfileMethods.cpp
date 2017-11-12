@@ -147,4 +147,47 @@ extern "C"
     std::thread download_thread(modio::curlwrapper::download, call_number, string(modfile->download) + "?shhh=secret", file_path, &onModfileDownloaded);
     download_thread.detach();
   }
+
+  int modioGetModfileState(int modfile_id)
+  {
+    if(modioGetModfileDownloadPercentage(modfile_id))
+    {
+      return MODIO_MODFILE_INSTALLING;
+    }
+    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
+    if(modfiles_file.is_open())
+    {
+      json modfiles_json;
+      json resulting_json;
+      modfiles_file >> modfiles_json;
+      modfiles_json = modfiles_json["modfiles"];
+      for(int i=0; i<(int)modfiles_json.size(); i++)
+      {
+        if(modfile_id == modfiles_json[i]["id"])
+        {
+          return MODIO_MODFILE_INSTALLED;
+        }
+      }
+    }
+    return MODIO_MODFILE_NOT_INSTALLED;
+  }
+
+  double modioGetModfileDownloadPercentage(int modfile_id)
+  {
+    if(install_modfile_callbacks.find(modio::curlwrapper::getOngoingCall()) != install_modfile_callbacks.end())
+    {
+      InstallModfileParams* install_modfile_params = install_modfile_callbacks[modio::curlwrapper::getOngoingCall()];
+
+      if(install_modfile_params->modfile_id == modfile_id)
+      {
+        modio::CurrentDownloadInfo current_download_info = modio::curlwrapper::getCurrentDownloadInfo();
+        if(current_download_info.download_progress == 0)
+          return 0;
+        double result = current_download_info.download_progress;
+        result /= current_download_info.download_total;
+        return result * 100;
+      }
+    }
+    return -1;
+  }
 }
