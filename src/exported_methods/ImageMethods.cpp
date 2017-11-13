@@ -38,7 +38,6 @@ extern "C"
 
   void onModLogoEdited(int call_number, ModioResponse* response, json response_json)
   {
-    cout<<response_json<<endl;
     edit_mod_logo_callbacks[call_number]->callback(response, edit_mod_logo_callbacks[call_number]->mod_id);
     edit_mod_logo_callbacks.erase(call_number);
   }

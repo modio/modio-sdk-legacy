@@ -158,15 +158,20 @@ extern "C"
     if(modfiles_file.is_open())
     {
       json modfiles_json;
-      json resulting_json;
-      modfiles_file >> modfiles_json;
-      modfiles_json = modfiles_json["modfiles"];
-      for(int i=0; i<(int)modfiles_json.size(); i++)
+      try
       {
-        if(modfile_id == modfiles_json[i]["id"])
+        modfiles_file >> modfiles_json;
+        modfiles_json = modfiles_json["modfiles"];
+        for(int i=0; i<(int)modfiles_json.size(); i++)
         {
-          return MODIO_MODFILE_INSTALLED;
+          if(modfile_id == modfiles_json[i]["id"])
+          {
+            return MODIO_MODFILE_INSTALLED;
+          }
         }
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
       }
     }
     return MODIO_MODFILE_NOT_INSTALLED;
