@@ -27,21 +27,26 @@ extern "C"
   void onGetTags(int call_number, ModioResponse* response, json response_json)
   {
     vector<string> tags;
-
     ModioTag* tags_array = NULL;
     int tags_array_size = 0;
-
     if(response->code == 200)
     {
-      tags_array_size = (int)response_json["data"].size();
-      tags_array = new ModioTag[tags_array_size];
-
-      for(int i=0; i<tags_array_size; i++)
+      try
       {
-        modioInitTag(&(tags_array[i]), response_json["data"][i]);
+        if(modio::hasKey(response_json, "data"))
+        {
+          tags_array_size = (int)response_json["data"].size();
+          tags_array = new ModioTag[tags_array_size];
+          for(int i=0; i<tags_array_size; i++)
+          {
+            modioInitTag(&(tags_array[i]), response_json["data"][i]);
+          }
+        }
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
       }
     }
-
     get_tags_callbacks[call_number]->callback(response, get_tags_callbacks[call_number]->mod_id, tags_array, tags_array_size);
     get_tags_callbacks.erase(call_number);
   }

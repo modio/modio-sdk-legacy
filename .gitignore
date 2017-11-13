@@ -48,7 +48,7 @@ examples/*.dll
 examples/1_Authentication
 examples/2_BrowseMods
 examples/3_ErrorResponse
-examples/4_DownloadImages
+examples/4_HandleImages
 examples/5_HandleModfiles
 examples/6_CreateMod
 examples/7_EditMod

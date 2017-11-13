@@ -60,6 +60,10 @@ using json = nlohmann::json;
 #define MODIO_DEBUGLEVEL_WARNING  1
 #define MODIO_DEBUGLEVEL_ERROR    0
 
+#define MODIO_MODFILE_NOT_INSTALLED 0
+#define MODIO_MODFILE_INSTALLED     1
+#define MODIO_MODFILE_INSTALLING    2
+
 extern "C"
 {
   struct Node
@@ -83,6 +87,7 @@ namespace modio
   string getModIODirectory();
   bool hasKey(json json_object, string key);
   void removeFile(string filename);
+  string addSlashIfNeeded(string directory_path);
 }
 
 #endif
