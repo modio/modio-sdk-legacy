@@ -2,13 +2,13 @@
 
 extern "C"
 {
-  void modioInitNode(Node* node)
+  void modioInitNode(ModioListNode* node)
   {
     node->value = NULL;
     node->next = NULL;
   }
 
-  void modioFreeNodeList(Node* node)
+  void modioFreeNodeList(ModioListNode* node)
   {
     if(node->value)
       delete node->value;

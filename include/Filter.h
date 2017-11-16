@@ -26,15 +26,15 @@ extern "C"
     char* offset;
     char* cursor;
     char* full_text_search;
-    Node* like_list;
-    Node* not_like_list;
-    Node* in_list;
-    Node* not_in_list;
-    Node* min_list;
-    Node* max_list;
-    Node* smaller_than_list;
-    Node* greater_than_list;
-    Node* not_equal_list;
+    ModioListNode* like_list;
+    ModioListNode* not_like_list;
+    ModioListNode* in_list;
+    ModioListNode* not_in_list;
+    ModioListNode* min_list;
+    ModioListNode* max_list;
+    ModioListNode* smaller_than_list;
+    ModioListNode* greater_than_list;
+    ModioListNode* not_equal_list;
   };
 
   void MODIO_DLL modioInitFilter(ModioFilter* filter);

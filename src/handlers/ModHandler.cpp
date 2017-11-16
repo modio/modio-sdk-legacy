@@ -109,7 +109,7 @@ extern "C"
 
   void modioAddTag(ModioModHandler* mod_handler, char* tag)
   {
-    Node* new_tag = new Node;
+    ModioListNode* new_tag = new ModioListNode;
     modioInitNode(new_tag);
     new_tag->value = new char[strlen(tag) + 1];
     strcpy(new_tag->value, tag);
@@ -119,7 +119,7 @@ extern "C"
       mod_handler->tags = new_tag;
     }else
     {
-      Node* last_tag = mod_handler->tags;
+      ModioListNode* last_tag = mod_handler->tags;
       while(last_tag->next)
       {
         last_tag = last_tag->next;
@@ -186,7 +186,7 @@ namespace modio
 
     if(mod_handler->tags)
     {
-      Node* current_tag = mod_handler->tags;
+      ModioListNode* current_tag = mod_handler->tags;
       while(current_tag)
       {
         result.insert(pair<string,string>("tags[]",current_tag->value));
