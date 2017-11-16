@@ -1,5 +1,5 @@
-#ifndef MODIO_MEMBER_H
-#define MODIO_MEMBER_H
+#ifndef MODIO_USER_H
+#define MODIO_USER_H
 
 #include "dependencies/json/json.hpp"
 #include "data_containers/Image.h"
@@ -10,7 +10,7 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct ModioMember
+  struct ModioUser
   {
     int id;
     char* username;
@@ -20,8 +20,8 @@ extern "C"
     char* language;
   };
 
-  void modioInitMember(ModioMember* member, json member_json);
-  void modioFreeMember(ModioMember* member);
+  void modioInitUser(ModioUser* user, json user_json);
+  void modioFreeUser(ModioUser* user);
 }
 
 #endif
