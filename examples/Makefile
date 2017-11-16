@@ -5,7 +5,7 @@ SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
-EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_HandleImages 5_HandleModfiles 6_CreateMod 7_EditMod 8_DeleteMod 9_HandleTags
+EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_HandleImages 5_HandleModfiles 6_CreateMod 7_EditMod 8_DeleteMod 9_HandleTags 10_SetUserRating
 
 all: $(EXAMPLES)
 
@@ -44,6 +44,10 @@ all: $(EXAMPLES)
 9_HandleTags: 9_HandleTags.cpp
 	$(CC) $(CFLAGS) 9_HandleTags.cpp -o 9_HandleTags.o -I ../include
 	$(CC) 9_HandleTags.o $(LIBRARIES) -o 9_HandleTags $(LDFLAGS)
+
+10_SetUserRating: 10_SetUserRating.cpp
+	$(CC) $(CFLAGS) 10_SetUserRating.cpp -o 10_SetUserRating.o -I ../include
+	$(CC) 10_SetUserRating.o $(LIBRARIES) -o 10_SetUserRating $(LDFLAGS)
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;

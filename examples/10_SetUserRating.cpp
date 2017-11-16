@@ -1,7 +1,22 @@
 #include "ModIOSDK.h"
 #include "Filter.h"
 
+int global_mod_id = -1;
 bool mods_get_finished = false;
+bool set_user_mod_vote_finished = false;
+
+void onSetUserModVote(ModioResponse* response, int mod_id)
+{
+  cout<<"On user vote response: "<<response->code<<endl;
+  if(response->code == 201)
+  {
+    cout<<"Vote successfully set"<<endl;
+  }else
+  {
+    cout<<response->error->message<<endl;
+  }
+  set_user_mod_vote_finished = true;
+}
 
 void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
 {
@@ -15,14 +30,8 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
       cout<<"Mod["<<i<<"]"<<endl;
       cout<<"Id: \t"<<mods[i].id<<endl;
       cout<<"Name:\t"<<mods[i].name<<endl;
+      global_mod_id = mods[i].id;
     }
-
-    cout<<endl;
-    cout<<"Cursor data:"<<endl;
-    cout<<"Cursor id: "<<response->cursor_id<<endl;
-    cout<<"Prev id: "<<response->prev_id<<endl;
-    cout<<"Next id: "<<response->next_id<<endl;
-    cout<<"Result count: "<<response->result_count<<endl;
   }
 
   mods_get_finished = true;
@@ -34,14 +43,17 @@ int main(void)
 
   ModioFilter* filter = new ModioFilter;
   modioInitFilter(filter);
-  modioSetFilterLimit(filter,3);
-  modioAddFilterLikeField(filter, (char*)"name", (char*)"Example Mod");
-  modioAddFilterLikeField(filter, (char*)"description", (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+  modioSetFilterLimit(filter,1);
 
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
   while(!mods_get_finished);
+
+  cout<<"Setting vote..."<<endl;
+  modioSetUserModVote(global_mod_id, true, &onSetUserModVote);
+
+  while(!set_user_mod_vote_finished);
 
   modioShutdown();
 
