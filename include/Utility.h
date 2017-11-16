@@ -48,6 +48,10 @@
 #include <dirent.h>
 #endif
 
+#ifdef MINGW
+#include "dependencies/mingw_threads/mingw.threads.h"
+#endif
+
 #include <fstream>
 #include "dependencies/json/json.hpp"
 #include "Globals.h"

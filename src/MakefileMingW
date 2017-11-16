@@ -7,9 +7,10 @@ OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/libz.a
 IMPORT_LIBRARY = modio.a
 LIBRARY = modio.dll
+VARIABLES_DEFINITION=-DMINGW
 
 .cpp.o:
-	$(CC) -DBUILDING_MODIO_DLL $(CFLAGS) $< -o $@ -I ../include
+	$(CC) -DBUILDING_MODIO_DLL $(CFLAGS) $< -o $@ -I ../include $(VARIABLES_DEFINITION)
 
 $(LIBRARY): $(OBJECTS)
 	$(CC) -shared -o $(LIBRARY) $(OBJECTS) -Wl,--out-implib,$(IMPORT_LIBRARY) $(LIBRARIES)

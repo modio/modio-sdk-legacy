@@ -1,3 +1,4 @@
+#include <string>
 #include "ModIOSDK.h"
 
 bool mods_get_finished = false;
@@ -73,7 +74,7 @@ int main(void)
 
   cout<<"Installing modfile..."<<endl;
 
-  string instalation_path_str = string("mods_dir/modfile_") + modio::toString(global_modfile->id);
+  string instalation_path_str = string("mods_dir/modfile_") + std::to_string(global_modfile->id);
   char* instalation_path = new char[instalation_path_str.size() + 1];
   strcpy(instalation_path, instalation_path_str.c_str());
   modioInstallModfile(global_modfile, instalation_path, &onModfileInstalled);
