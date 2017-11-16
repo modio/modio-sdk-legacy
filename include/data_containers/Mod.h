@@ -5,7 +5,7 @@
 #include "dependencies/json/json.hpp"
 #include "wrappers/CurlWrapper.h"
 #include "data_containers/Image.h"
-#include "data_containers/Member.h"
+#include "data_containers/User.h"
 #include "data_containers/Media.h"
 #include "data_containers/Modfile.h"
 #include "data_containers/Ratings.h"
@@ -21,7 +21,7 @@ extern "C"
   {
     int id;
     int game;
-    ModioMember* member;
+    ModioUser* submitted_by;
     double price;
     int datereg;
     int dateup;
