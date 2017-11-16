@@ -29,7 +29,9 @@ void modioEmailRequest(char* email, void (*callback)(ModioResponse* response, ch
 
   email_request_callbacks[call_number] = callback;
 
-  std::thread email_request_thread(modio::curlwrapper::post, call_number, modio::MODIO_URL + "oauth/emailrequest?shhh=secret", headers, data, &onEmailRequested);
+  string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailrequest";
+
+  std::thread email_request_thread(modio::curlwrapper::post, call_number, url, headers, data, &onEmailRequested);
   email_request_thread.detach();
 }
 
@@ -62,7 +64,9 @@ void modioEmailExchange(char* security_code, void (*callback)(ModioResponse* res
 
   email_exchange_callbacks[call_number] = callback;
 
-  std::thread email_exchage_thread(modio::curlwrapper::post, call_number, modio::MODIO_URL + "oauth/emailexchange?shhh=secret", headers, data, &onEmailExchanged);
+  string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailexchange";
+
+  std::thread email_exchage_thread(modio::curlwrapper::post, call_number, url, headers, data, &onEmailExchanged);
   email_exchage_thread.detach();
 }
 

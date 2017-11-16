@@ -44,7 +44,7 @@ extern "C"
     string filter_string = modio::getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret" + "&api_key=" + modio::API_KEY;
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&api_key=" + modio::API_KEY;
 
     int call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();

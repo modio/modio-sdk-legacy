@@ -5,6 +5,7 @@ bool email_exchange_finished = false;
 
 void onEmailRequest(ModioResponse* response, char* message)
 {
+  cout<<"Response code: "<<response->code<<endl;
   if(response->code == 200)
   {
     cout<<"Message: "<<message<<endl;
@@ -17,6 +18,7 @@ void onEmailRequest(ModioResponse* response, char* message)
 
 void onExchange(ModioResponse* response)
 {
+  cout<<"Response code: "<<response->code<<endl;
   if(response->code == 200)
   {
     cout<<"Code exchanged!"<<endl;
