@@ -8,9 +8,9 @@ namespace modio
     return str.substr(0,str.find("="));
   }
 
-  bool appendIfExists(Node* list, string field, string value)
+  bool appendIfExists(ModioListNode* list, string field, string value)
   {
-    for(Node* iterator = list; iterator != NULL; iterator = iterator->next)
+    for(ModioListNode* iterator = list; iterator != NULL; iterator = iterator->next)
     {
       if(getField(iterator->value) == field)
       {
@@ -25,9 +25,9 @@ namespace modio
     return false;
   }
 
-  bool replaceIfExists(Node* list, string field, string value)
+  bool replaceIfExists(ModioListNode* list, string field, string value)
   {
-    for(Node* iterator = list; iterator != NULL; iterator = iterator->next)
+    for(ModioListNode* iterator = list; iterator != NULL; iterator = iterator->next)
     {
       if(getField(iterator->value) == field)
       {
@@ -42,9 +42,9 @@ namespace modio
     return false;
   }
 
-  Node* addNewNode(Node* list, string value)
+  ModioListNode* addNewNode(ModioListNode* list, string value)
   {
-    Node* node = new Node;
+    ModioListNode* node = new ModioListNode;
     node->value = new char[value.size() + 1];
     strcpy(node->value, value.c_str());
     node->next = list;
@@ -226,9 +226,9 @@ namespace modio
     return filter_string;
   }
 
-  string addParam(string filter_string, Node* param_list)
+  string addParam(string filter_string, ModioListNode* param_list)
   {
-    for(Node* iterator = param_list; iterator != NULL; iterator = iterator->next)
+    for(ModioListNode* iterator = param_list; iterator != NULL; iterator = iterator->next)
     {
       if(filter_string != "")
         filter_string += "&";

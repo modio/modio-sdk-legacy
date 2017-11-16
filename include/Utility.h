@@ -70,14 +70,14 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct Node
+  struct ModioListNode
   {
     char* value;
-    Node* next;
+    ModioListNode* next;
   };
 
-  void MODIO_DLL modioInitNode(Node* node);
-  void MODIO_DLL modioFreeNodeList(Node* node_list);
+  void MODIO_DLL modioInitNode(ModioListNode* node);
+  void MODIO_DLL modioFreeNodeList(ModioListNode* node_list);
 }
 
 namespace modio
