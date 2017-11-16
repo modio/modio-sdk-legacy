@@ -12,13 +12,6 @@ extern "C"
     if(modio::hasKey(modfile_json, "mod"))
       modfile->mod = modfile_json["mod"];
 
-    modfile->member = NULL;
-    if(modio::hasKey(modfile_json, "member"))
-    {
-      modfile->member = new ModioMember;
-      modioInitMember(modfile->member, modfile_json["member"]);
-    }
-
     modfile->datevirus = -1;
     if(modio::hasKey(modfile_json, "datevirus"))
       modfile->datevirus = modfile_json["datevirus"];

@@ -2,7 +2,7 @@
 #define MODIO_MODFILE_H
 
 #include "dependencies/json/json.hpp"
-#include "data_containers/Member.h"
+#include "data_containers/User.h"
 #include "Utility.h"
 
 using namespace std;
@@ -14,7 +14,6 @@ extern "C"
   {
     int id;
     int mod;
-    ModioMember* member;
     int datevirus;
     int virusstatus;
     int viruspositive;

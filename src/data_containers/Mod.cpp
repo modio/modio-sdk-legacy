@@ -12,11 +12,11 @@ extern "C"
     if(modio::hasKey(mod_json, "game"))
       mod->game = mod_json["game"];
 
-    mod->member = NULL;
-    if(modio::hasKey(mod_json, "member"))
+    mod->submitted_by = NULL;
+    if(modio::hasKey(mod_json, "submitted_by"))
     {
-      mod->member = new ModioMember;
-      modioInitMember(mod->member, mod_json["member"]);
+      mod->submitted_by = new ModioUser;
+      modioInitUser(mod->submitted_by, mod_json["submitted_by"]);
     }
 
     mod->price = -1;
