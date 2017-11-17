@@ -18,9 +18,16 @@ extern "C"
     void (*callback)(ModioResponse* response, ModioMod* mod);
   };
 
+  struct SetUserModVoteParams
+  {
+    int mod_id;
+    void (*callback)(ModioResponse* response, int mod_id);
+  };
+
   map< int,AddModParams* > add_mod_callback;
   map< int,DeleteModParams* > delete_mod_callbacks;
   map< int,GetModsParams* > get_mods_callbacks;
+  map< int,SetUserModVoteParams* > set_user_mod_vote_callbacks;
 
   void onGetMods(int call_number, ModioResponse* response, json response_json)
   {
@@ -44,7 +51,7 @@ extern "C"
     string filter_string = modio::getFilterString(filter);
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&shhh=secret" + "&api_key=" + modio::API_KEY;
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&api_key=" + modio::API_KEY;
 
     int call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -121,5 +128,33 @@ extern "C"
 
     std::thread delete_mod_thread(modio::curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
     delete_mod_thread.detach();
+  }
+
+  void onSetUserModVote(int call_number, ModioResponse* response, json response_json)
+  {
+    set_user_mod_vote_callbacks[call_number]->callback(response, set_user_mod_vote_callbacks[call_number]->mod_id);
+    set_user_mod_vote_callbacks.erase(call_number);
+  }
+
+  void modioSetUserModVote(int mod_id, bool vote_up, void (*callback)(ModioResponse* response, int mod_id))
+  {
+    map<string, string> data;
+    data["rating"] = "-1";
+    if(vote_up)
+      data["rating"] = "1";
+
+    vector<string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    set_user_mod_vote_callbacks[call_number] = new SetUserModVoteParams;
+    set_user_mod_vote_callbacks[call_number]->callback = callback;
+
+    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/ratings";
+
+    std::thread set_user_mod_vote_thread(modio::curlwrapper::post, call_number, url, headers, data, &onSetUserModVote);
+    set_user_mod_vote_thread.detach();
   }
 }

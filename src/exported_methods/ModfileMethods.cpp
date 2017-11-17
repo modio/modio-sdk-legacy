@@ -144,7 +144,7 @@ extern "C"
     install_modfile_callbacks[call_number]->callback = callback;
     install_modfile_callbacks[call_number]->modfile_id = modfile->id;
 
-    std::thread download_thread(modio::curlwrapper::download, call_number, string(modfile->download) + "?shhh=secret", file_path, &onModfileDownloaded);
+    std::thread download_thread(modio::curlwrapper::download, call_number, string(modfile->download), file_path, &onModfileDownloaded);
     download_thread.detach();
   }
 
