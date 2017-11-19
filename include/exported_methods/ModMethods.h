@@ -15,6 +15,8 @@ extern "C"
   void MODIO_DLL modioEditMod(int mod_id, ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod));
   void MODIO_DLL modioDeleteMod(int mod_id, void (*callback)(ModioResponse* response, ModioMod* mod));
   void MODIO_DLL modioSetUserModVote(int mod_id, bool vote_up, void (*callback)(ModioResponse* response, int mod_id));
+  void MODIO_DLL modioSubscribeMod(int mod_id, void (*callback)(ModioResponse* response, int mod_id));
+  void MODIO_DLL modioUnsubscribeMod(int mod_id, void (*callback)(ModioResponse* response, int mod_id));
 }
 
 #endif
