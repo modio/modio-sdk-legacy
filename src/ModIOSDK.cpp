@@ -94,3 +94,8 @@ void modioPauseCurrentDownload()
 {
   modio::curlwrapper::pauseCurrentDownload();
 }
+
+void modioProcess()
+{
+  modio::curlwrapper::process();
+}

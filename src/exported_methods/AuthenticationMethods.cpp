@@ -31,8 +31,7 @@ void modioEmailRequest(char* email, void (*callback)(ModioResponse* response, ch
 
   string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailrequest";
 
-  std::thread email_request_thread(modio::curlwrapper::post, call_number, url, headers, data, &onEmailRequested);
-  email_request_thread.detach();
+  modio::curlwrapper::post(call_number, url, headers, data, &onEmailRequested);
 }
 
 void onEmailExchanged(int call_number, ModioResponse* response, json response_json)
@@ -66,8 +65,7 @@ void modioEmailExchange(char* security_code, void (*callback)(ModioResponse* res
 
   string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailexchange";
 
-  std::thread email_exchage_thread(modio::curlwrapper::post, call_number, url, headers, data, &onEmailExchanged);
-  email_exchage_thread.detach();
+  modio::curlwrapper::post(call_number, url, headers, data, &onEmailExchanged);
 }
 
 bool modioIsLoggedIn()

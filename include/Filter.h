@@ -26,6 +26,7 @@ extern "C"
     char* offset;
     char* cursor;
     char* full_text_search;
+    ModioListNode* field_value_list;
     ModioListNode* like_list;
     ModioListNode* not_like_list;
     ModioListNode* in_list;
@@ -43,6 +44,7 @@ extern "C"
   void MODIO_DLL modioSetFilterOffset(ModioFilter* filter, int offset);
   void MODIO_DLL modioSetFilterCursor(ModioFilter* filter, int cursor);
   void MODIO_DLL modioSetFilterFullTextSearch(ModioFilter* filter, char* text);
+  void MODIO_DLL modioAddFilterFieldValue(ModioFilter* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterLikeField(ModioFilter* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterNotLikeField(ModioFilter* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterInField(ModioFilter* filter, char* field, char* value);

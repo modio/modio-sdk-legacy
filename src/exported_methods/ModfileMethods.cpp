@@ -16,7 +16,9 @@ extern "C"
   struct InstallModfileParams
   {
     int modfile_id;
+    string zip_path;
     string destination_path;
+    FILE* file;
     void (*callback)(ModioResponse* response, char*);
   };
 
@@ -54,8 +56,7 @@ extern "C"
     map<string, string> curlform_files;
     curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
 
-    std::thread add_file_thread(modio::curlwrapper::postForm, call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), curlform_files, &onModfileAdded);
-    add_file_thread.detach();
+    modio::curlwrapper::postForm(call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), curlform_files, &onModfileAdded);
   }
 
   void modioEditModfile(int mod_id, int modfile_id, ModioModfileHandler* modfile_handler, void (*callback)(ModioResponse* response, int modfile_id))
@@ -72,8 +73,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id);
 
-    std::thread edit_modfile_thread(modio::curlwrapper::put, call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), &onModfileEdited);
-    edit_modfile_thread.detach();
+    modio::curlwrapper::put(call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), &onModfileEdited);
   }
 
   void addToModfilesJson(int modfile_id, string path)
@@ -112,19 +112,23 @@ extern "C"
     out.close();
   }
 
-  void onModfileDownloaded(int call_number, ModioResponse* response, string url, string path)
+  void onModfileDownloaded(int call_number, ModioResponse* modio_response, json response)
   {
+    fclose(install_modfile_callbacks[call_number]->file);
     string destination_path_str = install_modfile_callbacks[call_number]->destination_path;
     modio::createDirectory(destination_path_str);
-    modio::minizipwrapper::extract(path, destination_path_str);
-    modio::removeFile(path);
+    modio::minizipwrapper::extract(install_modfile_callbacks[call_number]->zip_path, destination_path_str);
+    modio::removeFile(install_modfile_callbacks[call_number]->zip_path);
 
-    createModfileJson(install_modfile_callbacks[call_number]->modfile_id, install_modfile_callbacks[call_number]->destination_path + string("modio.json"));
-    addToModfilesJson(install_modfile_callbacks[call_number]->modfile_id, install_modfile_callbacks[call_number]->destination_path);
+    if(destination_path_str[destination_path_str.size()-1] != '/')
+      destination_path_str += "/";
+
+    createModfileJson(install_modfile_callbacks[call_number]->modfile_id, destination_path_str + string("modio.json"));
+    addToModfilesJson(install_modfile_callbacks[call_number]->modfile_id, destination_path_str);
 
     char* destintation_path = new char[destination_path_str.size()+1];
     strcpy(destintation_path, destination_path_str.c_str());
-    install_modfile_callbacks[call_number]->callback(response, destintation_path);
+    install_modfile_callbacks[call_number]->callback(modio_response, destintation_path);
     install_modfile_callbacks.erase(call_number);
   }
 
@@ -139,13 +143,23 @@ extern "C"
 
     string destination_path_str = destination_path;
     destination_path_str = modio::addSlashIfNeeded(destination_path_str);
-    install_modfile_callbacks[call_number]->destination_path = destination_path_str;
-
+    install_modfile_callbacks[call_number]->destination_path = destination_path;
+    install_modfile_callbacks[call_number]->zip_path = file_path;
     install_modfile_callbacks[call_number]->callback = callback;
     install_modfile_callbacks[call_number]->modfile_id = modfile->id;
 
-    std::thread download_thread(modio::curlwrapper::download, call_number, string(modfile->download), file_path, &onModfileDownloaded);
-    download_thread.detach();
+    FILE* file;
+    curl_off_t progress = modio::curlwrapper::getProgressIfStored(file_path);
+    if(progress != 0)
+    {
+      file = fopen(file_path.c_str(),"ab");
+    }else
+    {
+      file = fopen(file_path.c_str(),"wb");
+    }
+    install_modfile_callbacks[call_number]->file = file;
+
+    modio::curlwrapper::download(call_number, string(modfile->download) + "?shhh=secret", file_path, file, progress, &onModfileDownloaded);
   }
 
   int modioGetModfileState(int modfile_id)

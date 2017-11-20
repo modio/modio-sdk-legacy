@@ -62,9 +62,15 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mods_get_finished);
+  while(!mods_get_finished)
+  {
+    modioProcess();
+  }
 
-  while(mods_downloaded < mods_to_download);
+  while(mods_downloaded < mods_to_download)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 

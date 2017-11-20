@@ -4,6 +4,8 @@ extern "C"
 {
   struct DownloadImageParams
   {
+    string destination_path;
+    FILE* file;
     void (*callback)(ModioResponse* response, char* path);
   };
 
@@ -16,10 +18,11 @@ extern "C"
   map< int, DownloadImageParams* > download_image_callbacks;
   map< int, EditModLogoParams* > edit_mod_logo_callbacks;
 
-  void onImageDownloaded(int call_number, ModioResponse* response, string url, string path)
+  void onImageDownloaded(int call_number, ModioResponse* response, json response_json)
   {
-    char* path_char = new char[path.size() +1];
-    strcpy(path_char, path.c_str());
+    char* path_char = new char[download_image_callbacks[call_number]->destination_path.size() +1];
+    strcpy(path_char, download_image_callbacks[call_number]->destination_path.c_str());
+    fclose(download_image_callbacks[call_number]->file);
     download_image_callbacks[call_number]->callback(response, path_char);
     download_image_callbacks.erase(call_number);
   }
@@ -31,9 +34,20 @@ extern "C"
 
     download_image_callbacks[call_number] = new DownloadImageParams;
     download_image_callbacks[call_number]->callback = callback;
+    download_image_callbacks[call_number]->destination_path = path;
 
-    std::thread download_image_thread(modio::curlwrapper::download, call_number, image_url, path, &onImageDownloaded);
-    download_image_thread.detach();
+    FILE* file;
+    curl_off_t progress = modio::curlwrapper::getProgressIfStored(path);
+    if(progress != 0)
+    {
+      file = fopen(path,"ab");
+    }else
+    {
+      file = fopen(path,"wb");
+    }
+    download_image_callbacks[call_number]->file = file;
+
+    modio::curlwrapper::download(call_number, image_url, path, file, progress, &onImageDownloaded);
   }
 
   void onModLogoEdited(int call_number, ModioResponse* response, json response_json)
@@ -60,7 +74,6 @@ extern "C"
     map<string, string> curlform_files;
     curlform_files["logo"] = path;
 
-    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, curlform_copycontents, curlform_files, &onModLogoEdited);
-    add_mod_thread.detach();
+    modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &onModLogoEdited);
   }
 }

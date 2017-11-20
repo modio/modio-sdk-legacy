@@ -59,7 +59,10 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mods_get_finished);
+  while(!mods_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Editing modfile..."<<endl;
 
@@ -70,7 +73,10 @@ int main(void)
 
   modioEditModfile(global_modfile->mod, global_modfile->id, modfile_handler, &onModfileEdited);
 
-  while(!modfile_edited);
+  while(!modfile_edited)
+  {
+    modioProcess();
+  }
 
   cout<<"Installing modfile..."<<endl;
 
@@ -81,6 +87,7 @@ int main(void)
 
   while(!modfile_installed)
   {
+    modioProcess();
     if(modioGetModfileState(global_modfile->id) == MODIO_MODFILE_INSTALLING)
     {
       double modfile_download_progress = modioGetModfileDownloadPercentage(global_modfile->id);

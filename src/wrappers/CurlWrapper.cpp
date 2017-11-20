@@ -4,6 +4,8 @@ namespace modio
 {
   namespace curlwrapper
   {
+    CURLM *curl_multi_handle;
+
     map<CURL*, JsonResponseHandler*> ongoing_calls;
 
     CurrentDownloadHandle* current_download_handle;
@@ -23,6 +25,8 @@ namespace modio
       current_download_info.url = "";
       current_download_info.download_total = 0;
       current_download_info.download_progress = 0;
+
+      curl_multi_handle = curl_multi_init();
 
       if(curl_global_init(CURL_GLOBAL_ALL) == 0)
         writeLogLine("Curl initialized", MODIO_DEBUGLEVEL_LOG);
@@ -55,9 +59,11 @@ namespace modio
       while(call_number!=getOngoingCall());
     }
 
-    JsonResponseHandler::JsonResponseHandler()
+    JsonResponseHandler::JsonResponseHandler(int call_number, function<void(int call_number, ModioResponse* response, json response_json)> callback)
     {
       this->response = "";
+      this->call_number = call_number;
+      this->callback = callback;
     }
 
     size_t get_data(char *ptr, size_t size, size_t nmemb, void *userdata)
@@ -91,6 +97,9 @@ namespace modio
 
     json parseJsonResonse(string response)
     {
+      if(response == "")
+        return "{}"_json;
+
       json response_json;
       try
       {
@@ -107,16 +116,14 @@ namespace modio
     void get(int call_number, string url, vector<string> headers, function<void(int call_number, ModioResponse* modio_response, json response_json)> callback)
     {
       writeLogLine("getJsonCall call to " + url, MODIO_DEBUGLEVEL_LOG);
-      lockCall(call_number);
+      //lockCall(call_number);
       CURL *curl;
-      CURLcode res;
-      long response_code = 0;
 
       curl_global_init(CURL_GLOBAL_DEFAULT);
 
       curl = curl_easy_init();
 
-      ongoing_calls[curl] = new JsonResponseHandler();
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, callback);
       if(curl)
       {
         setHeaders(headers, curl);
@@ -126,42 +133,8 @@ namespace modio
         setVerifies(curl);
         setJsonResponseWrite(curl);
 
-        /* Perform the request, res will get the return code */
-        res = curl_easy_perform(curl);
-        /* Check for errors */
-        if(res == CURLE_OK)
-        {
-          curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-        }
-        else
-        {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
-          response_code = 0;
-        }
-
-        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-        /* always cleanup */
-        curl_easy_cleanup(curl);
+        curl_multi_add_handle(curl_multi_handle, curl);
       }
-
-      curl_global_cleanup();
-      //ongoing_calls[curl]->response = dataToJsonString(ongoing_calls[curl]->response);
-
-      json response_json = parseJsonResonse(ongoing_calls[curl]->response);
-
-      string message = "";
-      if(hasKey(response_json, "message"))
-        message = response_json["message"];
-
-      ModioResponse* response = new ModioResponse;
-      modioInitResponse(response, response_json);
-      response->code = response_code;
-
-      //cout<<response_json<<endl;
-
-      callback(call_number, response, response_json);
-      advanceOngoingCall();
-      writeLogLine("getJsonCall call to " + url + "finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
@@ -195,6 +168,20 @@ namespace modio
         std::ofstream o(file_path);
         o << std::setw(4) << paused_download_json << std::endl;
         return -1;
+      }
+
+      if(dltotal != 0 && dltotal == dlnow)
+      {
+        if(current_download_handle)
+        {
+          current_download_handle->path = "";
+          current_download_handle->pause_flag = false;
+          current_download_handle->curl = NULL;
+        }
+
+        current_download_info.url = "";
+        current_download_info.download_total = 0;
+        current_download_info.download_progress = 0;
       }
 
       return 0;
@@ -250,14 +237,11 @@ namespace modio
       return current_download_info;
     }
 
-    void download(int call_number, string url, string path, function< void(int call_number, ModioResponse* response, string url, string path) > callback)
+    void download(int call_number, string url, string path, FILE* file, curl_off_t progress, function<void(int call_number, ModioResponse* modio_response, json response)> callback)
     {
       writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
-      lockCall(call_number);
+      //lockCall(call_number);
       CURL *curl;
-      CURLcode res;
-      FILE *file;
-      long response_code = 0;
       curl = curl_easy_init();
 
       current_download_handle->path = path;
@@ -266,20 +250,16 @@ namespace modio
 
       current_download_info.url = url;
 
-      curl_off_t progress = getProgressIfStored(path);
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, callback);
+
+      if(progress!=0)
+      {
+        curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, progress);
+      }
 
       if(curl)
       {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-        if(progress != 0)
-        {
-          file = fopen(path.c_str(),"ab");
-          curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, progress);
-        }else
-        {
-          file = fopen(path.c_str(),"wb");
-        }
 
         setVerifies(curl);
 
@@ -291,52 +271,15 @@ namespace modio
         curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
-        res = curl_easy_perform(curl);
-
-        if(res == CURLE_OK)
-        {
-          curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-        }
-        else
-        {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
-          response_code = 0;
-        }
-
-        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-
-        curl_easy_cleanup(curl);
-
-        fclose(file);
+        curl_multi_add_handle(curl_multi_handle, curl);
       }
-
-      if(current_download_handle)
-      {
-        current_download_handle->path = "";
-        current_download_handle->pause_flag = false;
-        current_download_handle->curl = NULL;
-      }
-
-      current_download_info.url = "";
-      current_download_info.download_total = 0;
-      current_download_info.download_progress = 0;
-
-      ModioResponse* response = new ModioResponse;
-      modioInitResponse(response, "{}"_json);
-      response->code = response_code;
-
-      callback(call_number, response, url, path);
-      advanceOngoingCall();
-      writeLogLine("getJsonCall call to " + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     void postForm(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, ModioResponse* modio_response, json response)> callback)
     {
       writeLogLine(string("postForm call to ") + url, MODIO_DEBUGLEVEL_LOG);
-      lockCall(call_number);
+      //lockCall(call_number);
       CURL *curl;
-      CURLcode res;
-      long response_code = 0;
 
       struct curl_httppost *formpost=NULL;
       struct curl_httppost *lastptr=NULL;
@@ -370,7 +313,7 @@ namespace modio
 
       curl = curl_easy_init();
 
-      ongoing_calls[curl] = new JsonResponseHandler();
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, callback);
 
       setHeaders(headers, curl);
 
@@ -389,55 +332,26 @@ namespace modio
           /* only disable 100-continue header if explicitly requested */
           //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
         curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
-        res = curl_easy_perform(curl);
 
-        if(res == CURLE_OK)
-        {
-          curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-        }
-        else
-        {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
-          response_code = 0;
-        }
+        curl_multi_add_handle(curl_multi_handle, curl);
 
-        curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-
-        curl_easy_cleanup(curl);
-        curl_formfree(formpost);
-        curl_slist_free_all(headerlist);
+        //curl_easy_cleanup(curl);
+        //curl_formfree(formpost);
+        //curl_slist_free_all(headerlist);
       }
-
-      json response_json = parseJsonResonse(ongoing_calls[curl]->response);
-
-      string message = "";
-      if(hasKey(response_json, "message"))
-        message = response_json["message"];
-
-      ModioResponse* response = new ModioResponse;
-      modioInitResponse(response, response_json);
-      response->code = response_code;
-
-      //cout<<response_json<<endl;
-
-      callback(call_number, response, response_json);
-      advanceOngoingCall();
-      writeLogLine(string("postForm call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     void post(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, ModioResponse* response, json response_json)> callback)
     {
       writeLogLine(string("post call to ") + url, MODIO_DEBUGLEVEL_LOG);
-      lockCall(call_number);
+      //lockCall(call_number);
 
       CURL *curl;
-      CURLcode res;
-      long response_code = 0;
 
       curl_global_init(CURL_GLOBAL_ALL);
       curl = curl_easy_init();
 
-      ongoing_calls[curl] = new JsonResponseHandler();
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, callback);
 
       if(curl)
       {
@@ -458,52 +372,21 @@ namespace modio
         setVerifies(curl);
         setJsonResponseWrite(curl);
 
-        res = curl_easy_perform(curl);
-
-        if(res == CURLE_OK)
-        {
-          curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-        }
-        else
-        {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
-          response_code = 0;
-        }
-
-        curl_easy_cleanup(curl);
+        curl_multi_add_handle(curl_multi_handle, curl);
       }
-      curl_global_cleanup();
-
-      json response_json = parseJsonResonse(ongoing_calls[curl]->response);
-
-      string message = "";
-      if(hasKey(response_json, "message"))
-        message = response_json["message"];
-
-      ModioResponse* response = new ModioResponse;
-      modioInitResponse(response, response_json);
-      response->code = response_code;
-
-      //cout<<response_json<<endl;
-
-      callback(call_number, response, response_json);
-      advanceOngoingCall();
-      writeLogLine(string("post call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     void put(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, function<void(int call_number, ModioResponse* response, json response_json)> callback)
     {
       writeLogLine(string("put call to ") + url, MODIO_DEBUGLEVEL_LOG);
-      lockCall(call_number);
+      //lockCall(call_number);
       CURL *curl;
-      CURLcode res;
-      long response_code = 0;
 
       curl_global_init(CURL_GLOBAL_ALL);
 
       curl = curl_easy_init();
 
-      ongoing_calls[curl] = new JsonResponseHandler();
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, callback);
 
       if(curl)
       {
@@ -526,50 +409,20 @@ namespace modio
         setVerifies(curl);
         setJsonResponseWrite(curl);
 
-        res = curl_easy_perform(curl);
-        if(res == CURLE_OK)
-        {
-          curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-        }
-        else
-        {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
-          response_code = 0;
-        }
-
-        curl_easy_cleanup(curl);
+        curl_multi_add_handle(curl_multi_handle, curl);
       }
-      curl_global_cleanup();
-
-      json response_json = parseJsonResonse(ongoing_calls[curl]->response);
-
-      string message = "";
-      if(hasKey(response_json, "message"))
-        message = response_json["message"];
-
-      ModioResponse* response = new ModioResponse;
-      modioInitResponse(response, response_json);
-      response->code = response_code;
-
-      //cout<<response_json<<endl;
-
-      callback(call_number, response, response_json);
-      advanceOngoingCall();
-      writeLogLine(string("put call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
     void deleteCall(int call_number, string url, vector<string> headers, function<void(int call_number, ModioResponse* response, json response_json)> callback)
     {
       writeLogLine(string("delete call to ") + url, MODIO_DEBUGLEVEL_LOG);
-      lockCall(call_number);
+      //lockCall(call_number);
       CURL *curl;
-      CURLcode res;
-      long response_code = 0;
 
       curl_global_init(CURL_GLOBAL_ALL);
       curl = curl_easy_init();
 
-      ongoing_calls[curl] = new JsonResponseHandler();
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, callback);
 
       if(curl)
       {
@@ -581,37 +434,39 @@ namespace modio
         setVerifies(curl);
         setJsonResponseWrite(curl);
 
-        res = curl_easy_perform(curl);
-        if(res == CURLE_OK)
-        {
-          curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &response_code);
-        }
-        else
-        {
-          writeLogLine(string("curl_easy_perform() failed: ") + curl_easy_strerror(res), MODIO_DEBUGLEVEL_ERROR);
-          response_code = 0;
-        }
-
-        curl_easy_cleanup(curl);
+        curl_multi_add_handle(curl_multi_handle, curl);
       }
-      curl_global_cleanup();
-
-      json response_json = parseJsonResonse(ongoing_calls[curl]->response);
-
-      string message = "";
-      if(hasKey(response_json, "message"))
-        message = response_json["message"];
-
-      ModioResponse* response = new ModioResponse;
-      modioInitResponse(response, response_json);
-      response->code = response_code;
-
-      //cout<<response_json<<endl;
-
-      callback(call_number, response, response_json);
-      advanceOngoingCall();
-      writeLogLine(string("delete call to ") + url + " finished", MODIO_DEBUGLEVEL_LOG);
     }
 
+    void process()
+    {
+      CURLMcode code;
+      int handle_count;
+      code = curl_multi_perform(curl_multi_handle, &handle_count);
+
+      struct CURLMsg *curl_message;
+
+      do
+      {
+        int msgq = 0;
+        curl_message = curl_multi_info_read(curl_multi_handle, &msgq);
+        if(curl_message && (curl_message->msg == CURLMSG_DONE)) {
+          CURL *curl_handle = curl_message->easy_handle;
+
+          if(ongoing_calls.find(curl_handle) != ongoing_calls.end())
+          {
+            json response_json = parseJsonResonse(ongoing_calls[curl_handle]->response);
+            ModioResponse* response = new ModioResponse;
+            modioInitResponse(response, response_json);
+            curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &(response->code));
+            ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response, response_json);
+            advanceOngoingCall();
+          }
+
+          curl_multi_remove_handle(curl_multi_handle, curl_handle);
+          curl_easy_cleanup(curl_handle);
+        }
+      } while(curl_message);
+    }
   }
 }

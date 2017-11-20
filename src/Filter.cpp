@@ -62,6 +62,7 @@ extern "C"
     filter->offset = NULL;
     filter->cursor = NULL;
     filter->full_text_search = NULL;
+    filter->field_value_list = NULL;
     filter->like_list = NULL;
     filter->not_like_list = NULL;
     filter->in_list = NULL;
@@ -119,6 +120,14 @@ extern "C"
     string full_text_search_str = string("_q=") + text;
     filter->full_text_search = new char[full_text_search_str.size() + 1];
     strcpy(filter->full_text_search, full_text_search_str.c_str());
+  }
+
+  void modioAddFilterFieldValue(ModioFilter* filter, char* field, char* value)
+  {
+    if(modio::replaceIfExists(filter->field_value_list, string(field) , value))
+      return;
+    else
+      filter->field_value_list = modio::addNewNode(filter->field_value_list, string(field) + "=" + value);
   }
 
   void modioAddFilterLikeField(ModioFilter* filter, char* field, char* value)
@@ -246,6 +255,7 @@ namespace modio
     filter_string = addParam(filter_string, filter->cursor);
     filter_string = addParam(filter_string, filter->full_text_search);
 
+    filter_string = addParam(filter_string, filter->field_value_list);
     filter_string = addParam(filter_string, filter->like_list);
     filter_string = addParam(filter_string, filter->not_like_list);
     filter_string = addParam(filter_string, filter->in_list);

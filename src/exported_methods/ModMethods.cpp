@@ -59,8 +59,7 @@ extern "C"
     get_mods_callbacks[call_number] = new GetModsParams;
     get_mods_callbacks[call_number]->callback = callback;
 
-    std::thread get_mods_thread(modio::curlwrapper::get, call_number, url, headers, &onGetMods);
-    get_mods_thread.detach();
+    modio::curlwrapper::get(call_number, url, headers, &onGetMods);
   }
 
   void onModAdded(int call_number, ModioResponse* response, json response_json)
@@ -84,8 +83,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 
-    std::thread email_exchage_thread(modio::curlwrapper::put, call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(mod_handler), &onModAdded);
-    email_exchage_thread.detach();
+    modio::curlwrapper::put(call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(mod_handler), &onModAdded);
   }
 
   void modioAddMod(ModioModHandler* mod_handler, void (*callback)(ModioResponse* response, ModioMod* mod))
@@ -101,8 +99,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
 
-    std::thread add_mod_thread(modio::curlwrapper::postForm, call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(mod_handler), modio::getModfileCurlFormFilesParams(mod_handler), &onModAdded);
-    add_mod_thread.detach();
+    modio::curlwrapper::postForm(call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(mod_handler), modio::getModfileCurlFormFilesParams(mod_handler), &onModAdded);
   }
 
   void onModDeleted(int call_number, ModioResponse* response, json response_json)
@@ -126,8 +123,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 
-    std::thread delete_mod_thread(modio::curlwrapper::deleteCall, call_number, url, headers, &onModDeleted);
-    delete_mod_thread.detach();
+    modio::curlwrapper::deleteCall(call_number, url, headers, &onModDeleted);
   }
 
   void onReturnIdCallback(int call_number, ModioResponse* response, json response_json)
@@ -139,12 +135,10 @@ extern "C"
   void modioSetUserModVote(int mod_id, bool vote_up, void (*callback)(ModioResponse* response, int mod_id))
   {
     map<string, string> data;
-    data["rating"] = "-1";
-    if(vote_up)
-      data["rating"] = "1";
 
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+    headers.push_back("Content-Type: application/x-www-form-urlencoded");
 
     int call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -155,8 +149,15 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/ratings";
 
-    std::thread set_user_mod_vote_thread(modio::curlwrapper::post, call_number, url, headers, data, &onReturnIdCallback);
-    set_user_mod_vote_thread.detach();
+    if(vote_up)
+    {
+      url += "?rating=1";
+    }else
+    {
+      url += "?rating=-1";
+    }
+
+    modio::curlwrapper::post(call_number, url, headers, data, &onReturnIdCallback);
   }
 
   void MODIO_DLL modioSubscribeMod(int mod_id, void (*callback)(ModioResponse* response, int mod_id))
@@ -175,8 +176,7 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/subscribe";
 
-    std::thread subscribe_mod_thread(modio::curlwrapper::post, call_number, url, headers, data, &onReturnIdCallback);
-    subscribe_mod_thread.detach();
+    modio::curlwrapper::post(call_number, url, headers, data, &onReturnIdCallback);
   }
 
   void MODIO_DLL modioUnsubscribeMod(int mod_id, void (*callback)(ModioResponse* response, int mod_id))
@@ -193,7 +193,6 @@ extern "C"
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/subscribe";
 
-    std::thread delete_mod_thread(modio::curlwrapper::deleteCall, call_number, url, headers, &onReturnIdCallback);
-    delete_mod_thread.detach();
+    modio::curlwrapper::deleteCall(call_number, url, headers, &onReturnIdCallback);
   }
 }

@@ -39,13 +39,19 @@ int main(void)
     cout<<"Enter your email: "<<endl;
     cin>>email;
     modioEmailRequest((char*)email.c_str(),&onEmailRequest);
-    while(!email_request_finished);
+    while(!email_request_finished)
+    {
+      modioProcess();
+    }
     string security_code;
     cout<<"Please enter the 5 digit security code: ";
     cin>>security_code;
     cout<<"Sending code"<<endl;
     modioEmailExchange((char*)security_code.c_str(),&onExchange);
-    while(!email_exchange_finished);
+    while(!email_exchange_finished)
+    {
+      modioProcess();
+    }
   }else
   {
     cout<<"You are already logged in. Do you want to logout? (y/n)"<<endl;

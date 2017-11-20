@@ -21,6 +21,7 @@ extern "C"
   //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();
   void MODIO_DLL modioPauseCurrentDownload();
   void MODIO_DLL modioSetDebugLevel(unsigned int debug_level);
+  void MODIO_DLL modioProcess();
 }
 
 

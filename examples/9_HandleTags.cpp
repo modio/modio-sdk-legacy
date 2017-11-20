@@ -71,12 +71,18 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mod_get_finished);
+  while(!mod_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Getting mod tags"<<endl;
   modioGetTags(global_mod->id, &onTagsGet);
 
-  while(!tags_get_finished);
+  while(!tags_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Adding tag..."<<endl;
 
@@ -86,24 +92,36 @@ int main(void)
   int tags_array_size = 1;
   modioAddTags(global_mod->id, tags_array, tags_array_size, &onTagsAdded);
 
-  while(!tags_add_finished);
+  while(!tags_add_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Getting mod tags"<<endl;
   modioGetTags(global_mod->id, &onTagsGet);
 
   tags_get_finished = false;
-  while(!tags_get_finished);
+  while(!tags_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Deleting tag..."<<endl;
 
   modioDeleteTags(global_mod->id, tags_array, tags_array_size, &onTagsDeleted);
-  while(!tags_delete_finished);
+  while(!tags_delete_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Getting mod tags"<<endl;
   modioGetTags(global_mod->id, &onTagsGet);
 
   tags_get_finished = false;
-  while(!tags_get_finished);
+  while(!tags_get_finished)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 

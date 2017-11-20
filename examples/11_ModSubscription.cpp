@@ -56,17 +56,26 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mods_get_finished);
+  while(!mods_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Subscribing..."<<endl;
   modioSubscribeMod(global_mod_id, &onSubscribed);
 
-  while(!subscribed_finished);
+  while(!subscribed_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Unsubscribing..."<<endl;
   modioUnsubscribeMod(global_mod_id, &onUnsubscribed);
 
-  while(!unsubscribed_finished);
+  while(!unsubscribed_finished)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 

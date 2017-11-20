@@ -64,8 +64,7 @@ extern "C"
     get_tags_callbacks[call_number]->callback = callback;
     get_tags_callbacks[call_number]->mod_id = mod_id;
 
-    std::thread get_tags_thread(modio::curlwrapper::get, call_number, url, headers, &onGetTags);
-    get_tags_thread.detach();
+    modio::curlwrapper::get(call_number, url, headers, &onGetTags);
   }
 
   void onTagsAdded(int call_number, ModioResponse* response, json response_json)
@@ -100,8 +99,7 @@ extern "C"
       url += string("tags[]=") + tags_array[i];
     }
 
-    std::thread add_tags_thread(modio::curlwrapper::post, call_number, url, headers, data, &onTagsAdded);
-    add_tags_thread.detach();
+    modio::curlwrapper::post(call_number, url, headers, data, &onTagsAdded);
   }
 
   void onTagsDeleted(int call_number, ModioResponse* response, json response_json)
@@ -136,7 +134,6 @@ extern "C"
       url += string("tags[]=") + tags_array[i];
     }
 
-    std::thread delete_tags_thread(modio::curlwrapper::deleteCall, call_number, url, headers, &onTagsDeleted);
-    delete_tags_thread.detach();
+    modio::curlwrapper::deleteCall(call_number, url, headers, &onTagsDeleted);
   }
 }

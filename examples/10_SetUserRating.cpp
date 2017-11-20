@@ -48,12 +48,18 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mods_get_finished);
+  while(!mods_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Setting vote..."<<endl;
   modioSetUserModVote(global_mod_id, true, &onSetUserModVote);
 
-  while(!set_user_mod_vote_finished);
+  while(!set_user_mod_vote_finished)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 

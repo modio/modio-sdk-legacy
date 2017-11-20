@@ -57,7 +57,7 @@ int main(void)
   modioInitModHandler(mod_handler);
   //Required fields
   modioSetLogoPath(mod_handler, (char*)"ModExample/logo.png");
-  modioSetName(mod_handler, (char*)"Example Mod Test30");
+  modioSetName(mod_handler, (char*)"Example Mod Test25");
   modioSetHomepage(mod_handler, (char*)"http://www.webpage.com");
   modioSetSummary(mod_handler, (char*)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
   modioAddTag(mod_handler, (char*)"Easy");
@@ -72,8 +72,15 @@ int main(void)
 
   modioAddMod(mod_handler, &onModAdded);
 
-  while(!add_mod_finished);
-  while(!add_modfile_finished);
+  while(!add_mod_finished)
+  {
+    modioProcess();
+  }
+
+  while(!add_modfile_finished)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 

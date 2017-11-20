@@ -57,20 +57,29 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mods_get_finished);
+  while(!mods_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Editing mod logo..."<<endl;
   modioEditModLogo(global_mod->id, (char*)"ModExample/logo.png", &onModLogoEdited);
 
-  while(!mod_logo_edited);
+  while(!mod_logo_edited)
+  {
+    modioProcess();
+  }
 
-  cout<<"Downloading log image..."<<endl;
+  cout<<"Downloading logo image..."<<endl;
   modioDownloadImage(global_mod->logo->full, (char*)"mods_dir/full.png", &onImageDownloaded);
   modioDownloadImage(global_mod->logo->thumb_1280x720, (char*)"mods_dir/thumb_1280x720.png", &onImageDownloaded);
   modioDownloadImage(global_mod->logo->thumb_640x360, (char*)"mods_dir/thumb_640x360.png", &onImageDownloaded);
   modioDownloadImage(global_mod->logo->thumb_320x180, (char*)"mods_dir/thumb_320x180.png", &onImageDownloaded);
 
-  while(images_downloaded<4);
+  while(images_downloaded<4)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 
