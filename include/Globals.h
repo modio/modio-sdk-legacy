@@ -5,6 +5,8 @@
 #include <thread>
 #include "Utility.h"
 
+typedef unsigned int u32;
+
 using namespace std;
 
 namespace modio

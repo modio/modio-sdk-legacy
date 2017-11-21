@@ -4,32 +4,39 @@ extern "C"
 {
   struct EditTagsParams
   {
+    void* object;
     int mod_id;
-    void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size);
+    void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size);
   };
 
   struct DeleteTagsParams
   {
+    void* object;
     int mod_id;
-    void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size);
+    void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size);
   };
 
   struct GetTagsParams
   {
+    void* object;
     int mod_id;
-    void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size);
+    void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size);
   };
 
   map< int, GetTagsParams* > get_tags_callbacks;
   map< int, EditTagsParams* > add_tags_callbacks;
   map< int, DeleteTagsParams* > delete_tags_callbacks;
 
-  void onGetTags(int call_number, ModioResponse* response, json response_json)
+  void onGetTags(int call_number, int response_code, json response_json)
   {
+    ModioResponse response;
+    modioInitResponse(&response, response_json);
+    response.code = response_code;
+
     vector<string> tags;
     ModioTag* tags_array = NULL;
     int tags_array_size = 0;
-    if(response->code == 200)
+    if(response.code == 200)
     {
       try
       {
@@ -47,11 +54,11 @@ extern "C"
         modio::writeLogLine(string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
       }
     }
-    get_tags_callbacks[call_number]->callback(response, get_tags_callbacks[call_number]->mod_id, tags_array, tags_array_size);
+    get_tags_callbacks[call_number]->callback(get_tags_callbacks[call_number]->object, response, get_tags_callbacks[call_number]->mod_id, tags_array, tags_array_size);
     get_tags_callbacks.erase(call_number);
   }
 
-  void modioGetTags(int mod_id, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size))
+  void modioGetTags(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size))
   {
     vector<string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -63,17 +70,22 @@ extern "C"
     get_tags_callbacks[call_number] = new GetTagsParams;
     get_tags_callbacks[call_number]->callback = callback;
     get_tags_callbacks[call_number]->mod_id = mod_id;
+    get_tags_callbacks[call_number]->object = object;
 
     modio::curlwrapper::get(call_number, url, headers, &onGetTags);
   }
 
-  void onTagsAdded(int call_number, ModioResponse* response, json response_json)
+  void onTagsAdded(int call_number, int response_code, json response_json)
   {
-    add_tags_callbacks[call_number]->callback(response, add_tags_callbacks[call_number]->mod_id, NULL, 0);
+    ModioResponse response;
+    modioInitResponse(&response, response_json);
+    response.code = response_code;
+
+    add_tags_callbacks[call_number]->callback(add_tags_callbacks[call_number]->object, response, add_tags_callbacks[call_number]->mod_id, NULL, 0);
     add_tags_callbacks.erase(call_number);
   }
 
-  void modioAddTags(int mod_id, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size))
+  void modioAddTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size))
   {
     map<string, string> data;
 
@@ -87,6 +99,7 @@ extern "C"
     add_tags_callbacks[call_number] = new EditTagsParams;
     add_tags_callbacks[call_number]->callback = callback;
     add_tags_callbacks[call_number]->mod_id = mod_id;
+    add_tags_callbacks[call_number]->object = object;
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags";
 
@@ -102,13 +115,17 @@ extern "C"
     modio::curlwrapper::post(call_number, url, headers, data, &onTagsAdded);
   }
 
-  void onTagsDeleted(int call_number, ModioResponse* response, json response_json)
+  void onTagsDeleted(int call_number, int response_code, json response_json)
   {
-    delete_tags_callbacks[call_number]->callback(response, delete_tags_callbacks[call_number]->mod_id, NULL, 0);
+    ModioResponse response;
+    modioInitResponse(&response, response_json);
+    response.code = response_code;
+
+    delete_tags_callbacks[call_number]->callback(delete_tags_callbacks[call_number]->object, response, delete_tags_callbacks[call_number]->mod_id, NULL, 0);
     delete_tags_callbacks.erase(call_number);
   }
 
-  void modioDeleteTags(int mod_id, char** tags_array, int tags_array_size, void (*callback)(ModioResponse* response, int mod_id, ModioTag* tags_array, int tags_array_size))
+  void modioDeleteTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size))
   {
     map<string, string> data;
 
@@ -122,6 +139,7 @@ extern "C"
     delete_tags_callbacks[call_number] = new DeleteTagsParams;
     delete_tags_callbacks[call_number]->callback = callback;
     delete_tags_callbacks[call_number]->mod_id = mod_id;
+    delete_tags_callbacks[call_number]->object = object;
 
     string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags";
 

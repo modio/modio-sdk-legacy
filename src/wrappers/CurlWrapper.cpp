@@ -59,7 +59,7 @@ namespace modio
       while(call_number!=getOngoingCall());
     }
 
-    JsonResponseHandler::JsonResponseHandler(int call_number, function<void(int call_number, ModioResponse* response, json response_json)> callback)
+    JsonResponseHandler::JsonResponseHandler(int call_number, function<void(int call_number, int response_code, json response_json)> callback)
     {
       this->response = "";
       this->call_number = call_number;
@@ -113,7 +113,7 @@ namespace modio
       return response_json;
     }
 
-    void get(int call_number, string url, vector<string> headers, function<void(int call_number, ModioResponse* modio_response, json response_json)> callback)
+    void get(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response_json)> callback)
     {
       writeLogLine("getJsonCall call to " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -237,7 +237,7 @@ namespace modio
       return current_download_info;
     }
 
-    void download(int call_number, string url, string path, FILE* file, curl_off_t progress, function<void(int call_number, ModioResponse* modio_response, json response)> callback)
+    void download(int call_number, string url, string path, FILE* file, curl_off_t progress, function<void(int call_number, int response_code, json response)> callback)
     {
       writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -275,7 +275,7 @@ namespace modio
       }
     }
 
-    void postForm(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, ModioResponse* modio_response, json response)> callback)
+    void postForm(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, map<string, string> curlform_files, function<void(int call_number, int response_code, json response)> callback)
     {
       writeLogLine(string("postForm call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -341,7 +341,7 @@ namespace modio
       }
     }
 
-    void post(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, ModioResponse* response, json response_json)> callback)
+    void post(int call_number, string url, vector<string> headers, map<string, string> data, function<void(int call_number, int response_code, json response_json)> callback)
     {
       writeLogLine(string("post call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -376,7 +376,7 @@ namespace modio
       }
     }
 
-    void put(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, function<void(int call_number, ModioResponse* response, json response_json)> callback)
+    void put(int call_number, string url, vector<string> headers, multimap<string, string> curlform_copycontents, function<void(int call_number, int response_code, json response_json)> callback)
     {
       writeLogLine(string("put call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -413,7 +413,7 @@ namespace modio
       }
     }
 
-    void deleteCall(int call_number, string url, vector<string> headers, function<void(int call_number, ModioResponse* response, json response_json)> callback)
+    void deleteCall(int call_number, string url, vector<string> headers, function<void(int call_number, int response_code, json response_json)> callback)
     {
       writeLogLine(string("delete call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -456,10 +456,9 @@ namespace modio
           if(ongoing_calls.find(curl_handle) != ongoing_calls.end())
           {
             json response_json = parseJsonResonse(ongoing_calls[curl_handle]->response);
-            ModioResponse* response = new ModioResponse;
-            modioInitResponse(response, response_json);
-            curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &(response->code));
-            ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response, response_json);
+            int response_code;
+            curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
+            ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response_code, response_json);
             advanceOngoingCall();
           }
 
