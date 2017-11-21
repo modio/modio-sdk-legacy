@@ -3,9 +3,9 @@
 bool add_mod_finished = false;
 bool add_modfile_finished = true;
 
-string modfile_path = "ModExample/modfile/";
-string modfile_version = "v1.1.x";
-string modfile_changelog = "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog";
+std::string modfile_path = "ModExample/modfile/";
+std::string modfile_version = "v1.1.x";
+std::string modfile_changelog = "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog";
 
 void onModfileAdded(ModioResponse* response, ModioModfile* modfile)
 {

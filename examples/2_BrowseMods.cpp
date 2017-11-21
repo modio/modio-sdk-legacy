@@ -1,54 +1,61 @@
-#include "ModIOSDK.h"
-#include "Filter.h"
-
-bool mods_get_finished = false;
-
-void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
-{
-  cout<<"On mod get response: "<<response->code<<endl;
-  if(response->code == 200)
-  {
-    cout<<"Listing mods"<<endl;
-    cout<<"============"<<endl;
-    for(int i=0;i<(int)mods_size;i++)
-    {
-      cout<<"Mod["<<i<<"]"<<endl;
-      cout<<"Id: \t"<<mods[i].id<<endl;
-      cout<<"Name:\t"<<mods[i].name<<endl;
-    }
-
-    cout<<endl;
-    cout<<"Cursor data:"<<endl;
-    cout<<"Cursor id: "<<response->cursor_id<<endl;
-    cout<<"Prev id: "<<response->prev_id<<endl;
-    cout<<"Next id: "<<response->next_id<<endl;
-    cout<<"Result count: "<<response->result_count<<endl;
-  }
-
-  mods_get_finished = true;
-}
+#include "ModIOInstance.h"
 
 int main(void)
 {
-  modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modio::Instance mod(7, "e91c01b8882f4affeddd56c96111977b");
 
-  ModioFilter* filter = new ModioFilter;
-  modioInitFilter(filter);
-  modioSetFilterLimit(filter,3);
-  modioAddFilterLikeField(filter, (char*)"name", (char*)"Example Mod");
-  modioAddFilterLikeField(filter, (char*)"description", (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+  volatile static bool finished = false;
 
-  cout<<"Getting mods..."<<endl;
-  modioGetMods(filter, &onModsGet);
-
-  while(!mods_get_finished)
+  auto wait = [&]()
   {
-    modioProcess();
-  }
+    while (!finished)
+    {
+      modio::sleep(100);
+      modioProcess();
+    }
+  };
+
+  auto finish = [&]()
+  {
+    finished = true;
+  };
+
+  modio::Filter* filter = new modio::Filter();
+  filter->setFilterLimit(3);
+  filter->addFilterLikeField("name", "Example Mod");
+  filter->addFilterLikeField("description", "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+
+  std::cout <<"Getting mods..." << std::endl;
+
+  mod.getMods(NULL, *filter, [&](void* object, const ModioResponse& response, const std::vector<ModioMod*> & mods)
+  {
+    std::cout << "On mod get response: " << response.code << std::endl;
+    if(response.code == 200)
+    {
+      std::cout << "Listing mods" << std::endl;
+      std::cout << "============" << std::endl;
+      for(int i=0; i < (int)mods.size(); i++)
+      {
+        std::cout << "Mod[" << i << "]" << std::endl;
+        std::cout << "Id: \t" << mods[i]->id << std::endl;
+        std::cout << "Name:\t" << mods[i]->name << std::endl;
+      }
+
+      std::cout << std::endl;
+      std::cout << "Cursor data:" << std::endl;
+      std::cout << "Cursor id: " << response.cursor_id << std::endl;
+      std::cout << "Prev id: " << response.prev_id << std::endl;
+      std::cout << "Next id: " << response.next_id << std::endl;
+      std::cout << "Result count: " << response.result_count << std::endl;
+    }
+    finish();
+  });
+
+  wait();
 
   modioShutdown();
 
-  cout<<"Process finished"<<endl;
+  std::cout << "Process finished" << std::endl;
 
   return 0;
 }

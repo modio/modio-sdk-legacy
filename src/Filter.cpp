@@ -3,19 +3,19 @@
 
 namespace modio
 {
-  string getField(string str)
+  std::string getField(std::string str)
   {
     return str.substr(0,str.find("="));
   }
 
-  bool appendIfExists(ModioListNode* list, string field, string value)
+  bool appendIfExists(ModioListNode* list, std::string field, std::string value)
   {
     for(ModioListNode* iterator = list; iterator != NULL; iterator = iterator->next)
     {
       if(getField(iterator->value) == field)
       {
         char* old_value = iterator->value;
-        string appended_value = string(iterator->value) + "," + value;
+        std::string appended_value = std::string(iterator->value) + "," + value;
         iterator->value = new char[appended_value.size() + 1];
         strcpy(iterator->value,appended_value.c_str());
         delete old_value;
@@ -25,14 +25,14 @@ namespace modio
     return false;
   }
 
-  bool replaceIfExists(ModioListNode* list, string field, string value)
+  bool replaceIfExists(ModioListNode* list, std::string field, std::string value)
   {
     for(ModioListNode* iterator = list; iterator != NULL; iterator = iterator->next)
     {
       if(getField(iterator->value) == field)
       {
         char* old_value = iterator->value;
-        string replaced_value = field + "=" + value;
+        std::string replaced_value = field + "=" + value;
         iterator->value = new char[replaced_value.size() + 1];
         strcpy(iterator->value,replaced_value.c_str());
         delete old_value;
@@ -42,7 +42,7 @@ namespace modio
     return false;
   }
 
-  ModioListNode* addNewNode(ModioListNode* list, string value)
+  ModioListNode* addNewNode(ModioListNode* list, std::string value)
   {
     ModioListNode* node = new ModioListNode;
     node->value = new char[value.size() + 1];
@@ -78,10 +78,10 @@ extern "C"
   {
     if(filter->sort)
       delete[] filter->sort;
-    string ascending_str = "";
+    std::string ascending_str = "";
     if(!ascending)
       ascending_str = "-";
-    string sort_str = string("_sort=") + ascending_str + field;
+    std::string sort_str = std::string("_sort=") + ascending_str + field;
     filter->sort = new char[sort_str.size() + 1];
     strcpy(filter->sort, sort_str.c_str());
   }
@@ -90,7 +90,7 @@ extern "C"
   {
     if(filter->limit)
       delete[] filter->limit;
-    string limit_str = string("_limit=") + modio::toString(limit);
+    std::string limit_str = std::string("_limit=") + modio::toString(limit);
     filter->limit = new char[limit_str.size() + 1];
     strcpy(filter->limit, limit_str.c_str());
   }
@@ -99,7 +99,7 @@ extern "C"
   {
     if(filter->offset)
       delete[] filter->offset;
-    string offset_str = string("_offset=") + modio::toString(offset);
+    std::string offset_str = std::string("_offset=") + modio::toString(offset);
     filter->offset = new char[offset_str.size() + 1];
     strcpy(filter->offset, offset_str.c_str());
   }
@@ -108,7 +108,7 @@ extern "C"
   {
     if(filter->cursor)
       delete[] filter->cursor;
-    string cursor_str = string("_cursor=") + modio::toString(cursor);
+    std::string cursor_str = std::string("_cursor=") + modio::toString(cursor);
     filter->cursor = new char[cursor_str.size() + 1];
     strcpy(filter->cursor, cursor_str.c_str());
   }
@@ -117,89 +117,89 @@ extern "C"
   {
     if(filter->full_text_search)
       delete[] filter->full_text_search;
-    string full_text_search_str = string("_q=") + text;
+    std::string full_text_search_str = std::string("_q=") + text;
     filter->full_text_search = new char[full_text_search_str.size() + 1];
     strcpy(filter->full_text_search, full_text_search_str.c_str());
   }
 
   void modioAddFilterFieldValue(ModioFilter* filter, char* field, char* value)
   {
-    if(modio::replaceIfExists(filter->field_value_list, string(field) , value))
+    if(modio::replaceIfExists(filter->field_value_list, std::string(field) , value))
       return;
     else
-      filter->field_value_list = modio::addNewNode(filter->field_value_list, string(field) + "=" + value);
+      filter->field_value_list = modio::addNewNode(filter->field_value_list, std::string(field) + "=" + value);
   }
 
   void modioAddFilterLikeField(ModioFilter* filter, char* field, char* value)
   {
-    if(modio::replaceIfExists(filter->like_list, string(field) + "-lk" , value))
+    if(modio::replaceIfExists(filter->like_list, std::string(field) + "-lk" , value))
       return;
     else
-      filter->like_list = modio::addNewNode(filter->like_list, string(field) + "-lk=" + value);
+      filter->like_list = modio::addNewNode(filter->like_list, std::string(field) + "-lk=" + value);
   }
 
   void modioAddFilterNotLikeField(ModioFilter* filter, char* field, char* value)
   {
-    if(modio::replaceIfExists(filter->not_like_list, string(field) + "-not-lk" , value))
+    if(modio::replaceIfExists(filter->not_like_list, std::string(field) + "-not-lk" , value))
       return;
     else
-      filter->not_like_list = modio::addNewNode(filter->not_like_list, string(field) + "-not-lk=" + value);
+      filter->not_like_list = modio::addNewNode(filter->not_like_list, std::string(field) + "-not-lk=" + value);
   }
 
   void modioAddFilterInField(ModioFilter* filter, char* field, char* value)
   {
-    if(modio::appendIfExists(filter->in_list, string(field) + "-in" , value))
+    if(modio::appendIfExists(filter->in_list, std::string(field) + "-in" , value))
       return;
     else
-      filter->in_list = modio::addNewNode(filter->in_list, string(field) + "-in=" + value);
+      filter->in_list = modio::addNewNode(filter->in_list, std::string(field) + "-in=" + value);
   }
 
   void modioAddFilterNotInField(ModioFilter* filter, char* field, char* value)
   {
-    if(modio::appendIfExists(filter->not_in_list, string(field) + "-not-in" , value))
+    if(modio::appendIfExists(filter->not_in_list, std::string(field) + "-not-in" , value))
       return;
     else
-      filter->not_in_list = modio::addNewNode(filter->not_in_list, string(field) + "-not-in=" + value);
+      filter->not_in_list = modio::addNewNode(filter->not_in_list, std::string(field) + "-not-in=" + value);
   }
 
   void modioAddFilterMinField(ModioFilter* filter, char* field, double value)
   {
-    if(modio::replaceIfExists(filter->min_list, string(field) + "-min" , modio::toString(value)))
+    if(modio::replaceIfExists(filter->min_list, std::string(field) + "-min" , modio::toString(value)))
       return;
     else
-      filter->min_list = modio::addNewNode(filter->min_list, string(field) + "-min=" + modio::toString(value));
+      filter->min_list = modio::addNewNode(filter->min_list, std::string(field) + "-min=" + modio::toString(value));
   }
 
   void modioAddFilterMaxField(ModioFilter* filter, char* field, double value)
   {
-    if(modio::replaceIfExists(filter->max_list, string(field) + "-max" , modio::toString(value)))
+    if(modio::replaceIfExists(filter->max_list, std::string(field) + "-max" , modio::toString(value)))
       return;
     else
-      filter->max_list = modio::addNewNode(filter->max_list, string(field) + "-max=" + modio::toString(value));
+      filter->max_list = modio::addNewNode(filter->max_list, std::string(field) + "-max=" + modio::toString(value));
   }
 
   void modioAddFilterSmallerThanField(ModioFilter* filter, char* field, double value)
   {
-    if(modio::replaceIfExists(filter->smaller_than_list, string(field) + "-st" , modio::toString(value)))
+    if(modio::replaceIfExists(filter->smaller_than_list, std::string(field) + "-st" , modio::toString(value)))
       return;
     else
-      filter->smaller_than_list = modio::addNewNode(filter->smaller_than_list, string(field) + "-st=" + modio::toString(value));
+      filter->smaller_than_list = modio::addNewNode(filter->smaller_than_list, std::string(field) + "-st=" + modio::toString(value));
   }
 
   void modioAddFilterGreaterThanField(ModioFilter* filter, char* field, double value)
   {
-    if(modio::replaceIfExists(filter->greater_than_list, string(field) + "-gt" , modio::toString(value)))
+    if(modio::replaceIfExists(filter->greater_than_list, std::string(field) + "-gt" , modio::toString(value)))
       return;
     else
-      filter->greater_than_list = modio::addNewNode(filter->greater_than_list, string(field) + "-gt=" + modio::toString(value));
+      filter->greater_than_list = modio::addNewNode(filter->greater_than_list, std::string(field) + "-gt=" + modio::toString(value));
   }
 
   void modioAddFilterNotEqualField(ModioFilter* filter, char* field, char* value)
   {
-    if(modio::replaceIfExists(filter->not_equal_list, string(field) + "-not" , value))
+    if(modio::replaceIfExists(filter->not_equal_list, std::string(field) + "-not" , value))
       return;
     else
-      filter->not_equal_list = modio::addNewNode(filter->not_equal_list, string(field) + "-not=" + value);
+      filter->not_equal_list = modio::addNewNode(filter->not_equal_list, std::string(field) + "-not=" + value);
   }
 
   void modioFreeFilter(ModioFilter* filter)
@@ -224,7 +224,7 @@ extern "C"
 
 namespace modio
 {
-  string addParam(string filter_string, char* param)
+  std::string addParam(std::string filter_string, char* param)
   {
     if(param)
     {
@@ -235,7 +235,7 @@ namespace modio
     return filter_string;
   }
 
-  string addParam(string filter_string, ModioListNode* param_list)
+  std::string addParam(std::string filter_string, ModioListNode* param_list)
   {
     for(ModioListNode* iterator = param_list; iterator != NULL; iterator = iterator->next)
     {
@@ -246,9 +246,9 @@ namespace modio
     return filter_string;
   }
 
-  string getFilterString(ModioFilter* filter)
+  std::string getFilterString(ModioFilter* filter)
   {
-    string filter_string = "";
+    std::string filter_string = "";
     filter_string = addParam(filter_string, filter->sort);
     filter_string = addParam(filter_string, filter->limit);
     filter_string = addParam(filter_string, filter->offset);

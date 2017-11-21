@@ -41,7 +41,7 @@ extern "C"
     mod->homepage = NULL;
     if(modio::hasKey(mod_json, "homepage"))
     {
-      string homepage_str = mod_json["homepage"];
+      std::string homepage_str = mod_json["homepage"];
       mod->homepage = new char[homepage_str.size() + 1];
       strcpy(mod->homepage, homepage_str.c_str());
     }
@@ -49,7 +49,7 @@ extern "C"
     mod->name = NULL;
     if(modio::hasKey(mod_json, "name"))
     {
-      string name_str = mod_json["name"];
+      std::string name_str = mod_json["name"];
       mod->name = new char[name_str.size() + 1];
       strcpy(mod->name, name_str.c_str());
     }
@@ -57,7 +57,7 @@ extern "C"
     mod->nameid = NULL;
     if(modio::hasKey(mod_json, "nameid"))
     {
-      string nameid_str = mod_json["nameid"];
+      std::string nameid_str = mod_json["nameid"];
       mod->nameid = new char[nameid_str.size() + 1];
       strcpy(mod->nameid, nameid_str.c_str());
     }
@@ -65,7 +65,7 @@ extern "C"
     mod->summary = NULL;
     if(modio::hasKey(mod_json, "summary"))
     {
-      string summary_str = mod_json["summary"];
+      std::string summary_str = mod_json["summary"];
       mod->summary = new char[summary_str.size() + 1];
       strcpy(mod->summary, summary_str.c_str());
     }
@@ -73,7 +73,7 @@ extern "C"
     mod->description = NULL;
     if(modio::hasKey(mod_json, "description"))
     {
-      string description_str = mod_json["description"];
+      std::string description_str = mod_json["description"];
       mod->description = new char[description_str.size() + 1];
       strcpy(mod->description, description_str.c_str());
     }
@@ -81,7 +81,7 @@ extern "C"
     mod->metadata = NULL;
     if(modio::hasKey(mod_json, "metadata"))
     {
-      string metadata_str = mod_json["metadata"];
+      std::string metadata_str = mod_json["metadata"];
       mod->metadata = new char[metadata_str.size() + 1];
       strcpy(mod->metadata, metadata_str.c_str());
     }

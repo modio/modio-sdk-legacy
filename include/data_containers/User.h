@@ -5,7 +5,6 @@
 #include "data_containers/Image.h"
 #include "Utility.h"
 
-using namespace std;
 using json = nlohmann::json;
 
 extern "C"

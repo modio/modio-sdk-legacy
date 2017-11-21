@@ -5,7 +5,6 @@
 #include "Utility.h"
 #include "data_containers/Error.h"
 
-using namespace std;
 using json = nlohmann::json;
 
 extern "C"

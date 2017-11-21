@@ -23,7 +23,7 @@ extern "C"
 
 namespace modio
 {
-  multimap<string, string> modfileHandlerToMultimap(ModioModfileHandler* modfile_handler);
+  std::multimap<std::string, std::string> modfileHandlerToMultimap(ModioModfileHandler* modfile_handler);
 }
 
 #endif

@@ -1,8 +1,8 @@
 #include "ModIOSDK.h"
 
-bool checkIfModIsStillInstalled(string path, int modfile_id)
+bool checkIfModIsStillInstalled(std::string path, int modfile_id)
 {
-  string modfile_json_path = path + "modio.json";
+  std::string modfile_json_path = path + "modio.json";
   std::ifstream modfile_file(modfile_json_path.c_str());
   if(!modfile_file.is_open())
   {
@@ -31,7 +31,7 @@ void updateModfilesJson()
       }
     }
     std::ofstream out(modio::getModIODirectory() + "modfiles.json");
-    out<<setw(4)<<resulting_json<<endl;
+    out<<std::setw(4)<<resulting_json<<std::endl;
     out.close();
   }
 }

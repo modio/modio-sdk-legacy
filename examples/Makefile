@@ -5,7 +5,8 @@ SOURCES=Example.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
-EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_HandleImages 5_HandleModfiles 6_CreateMod 7_EditMod 8_DeleteMod 9_HandleTags 10_SetUserRating 11_ModSubscription
+#EXAMPLES=1_Authentication 2_BrowseMods 3_ErrorResponse 4_HandleImages 5_HandleModfiles 6_CreateMod 7_EditMod 8_DeleteMod 9_HandleTags 10_SetUserRating 11_ModSubscription
+EXAMPLES=2_BrowseMods
 
 all: $(EXAMPLES)
 

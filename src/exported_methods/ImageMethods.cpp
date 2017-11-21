@@ -5,7 +5,7 @@ extern "C"
   struct DownloadImageParams
   {
     void* object;
-    string destination_path;
+    std::string destination_path;
     FILE* file;
     void (*callback)(void* object, ModioResponse response, char* path);
   };
@@ -17,8 +17,8 @@ extern "C"
     void (*callback)(void* object, ModioResponse response, int mod_id);
   };
 
-  map< int, DownloadImageParams* > download_image_callbacks;
-  map< int, EditModLogoParams* > edit_mod_logo_callbacks;
+  std::map< int, DownloadImageParams* > download_image_callbacks;
+  std::map< int, EditModLogoParams* > edit_mod_logo_callbacks;
 
   void onImageDownloaded(int call_number, int response_code, json response_json)
   {
@@ -69,7 +69,7 @@ extern "C"
 
   void modioEditModLogo(void* object, int mod_id, char* path, void (*callback)(void* object, ModioResponse response, int mod_id))
   {
-    vector<string> headers;
+    std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
     int call_number = modio::curlwrapper::getCallCount();
@@ -80,10 +80,10 @@ extern "C"
     edit_mod_logo_callbacks[call_number]->mod_id = mod_id;
     edit_mod_logo_callbacks[call_number]->object = object;
 
-    string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
 
-    multimap<string, string> curlform_copycontents;
-    map<string, string> curlform_files;
+    std::multimap<std::string, std::string> curlform_copycontents;
+    std::map<std::string, std::string> curlform_files;
     curlform_files["logo"] = path;
 
     modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &onModLogoEdited);

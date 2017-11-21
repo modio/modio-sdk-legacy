@@ -13,7 +13,7 @@ extern "C"
     user->username = NULL;
     if(modio::hasKey(user_json, "username"))
     {
-      string username_str = user_json["username"];
+      std::string username_str = user_json["username"];
       user->username = new char[username_str.size() + 1];
       strcpy(user->username, username_str.c_str());
     }
@@ -34,7 +34,7 @@ extern "C"
     user->timezone = NULL;
     if(modio::hasKey(user_json, "timezone"))
     {
-      string timezone_str = user_json["timezone"];
+      std::string timezone_str = user_json["timezone"];
       user->timezone = new char[timezone_str.size() + 1];
       strcpy(user->timezone, timezone_str.c_str());
     }
@@ -42,7 +42,7 @@ extern "C"
     user->language = NULL;
     if(modio::hasKey(user_json, "language"))
     {
-      string language_str = user_json["language"];
+      std::string language_str = user_json["language"];
       user->language = new char[language_str.size() + 1];
       strcpy(user->language, language_str.c_str());
     }

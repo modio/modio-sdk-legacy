@@ -2,7 +2,6 @@
 #define DIRENT_INCLUDED
 
 #include <iostream>
-using namespace std;
 
 /*
 
@@ -11,7 +10,7 @@ using namespace std;
     Author:  Kevlin Henney (kevlin@acm.org, kevlin@curbralan.com)
     History: Created March 1997. Updated June 2003.
     Rights:  See end of file.
-    
+
 */
 
 #ifdef __cplusplus
@@ -39,7 +38,7 @@ void          rewinddir(DIR *);
     documentation for any purpose is hereby granted without fee, provided
     that this copyright and permissions notice appear in all copies and
     derivatives.
-    
+
     This software is supplied "as is" without express or implied warranty.
 
     But that said, if there are any problems please get in touch.
@@ -51,4 +50,3 @@ void          rewinddir(DIR *);
 #endif
 
 #endif
-

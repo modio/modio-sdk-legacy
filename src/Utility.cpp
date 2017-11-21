@@ -20,7 +20,7 @@ extern "C"
 
 namespace modio
 {
-  string toString(int number)
+  std::string toString(int number)
   {
       if (number == 0)
           return "0";
@@ -40,15 +40,15 @@ namespace modio
       return returnvalue;
   }
 
-  string toString(double number)
+  std::string toString(double number)
   {
-    ostringstream string_stream;
+    std::ostringstream string_stream;
     string_stream << number;
-    string return_value = string_stream.str();
+    std::string return_value = string_stream.str();
     return return_value;
   }
 
-  void createDirectory(string directory)
+  void createDirectory(std::string directory)
   {
     #ifdef LINUX
       mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -65,26 +65,26 @@ namespace modio
 
   void clearLog()
   {
-    ofstream log_file(getModIODirectory() + "log");
+    std::ofstream log_file(getModIODirectory() + "log");
     log_file.close();
   }
 
-  void writeLogLine(string text, unsigned int debug_level)
+  void writeLogLine(std::string text, unsigned int debug_level)
   {
     // NOTE(@jackson): Lower value is higher severity (error == 0)
     if(DEBUG_LEVEL < debug_level)
       return;
 
-    ofstream log_file(getModIODirectory() + "log", ios::app);
+    std::ofstream log_file(getModIODirectory() + "log", std::ios::app);
     if(debug_level == MODIO_DEBUGLEVEL_ERROR) { log_file<<"Error: "; }
     else if(debug_level == MODIO_DEBUGLEVEL_WARNING) { log_file<<"Warning: "; }
     log_file<<text.c_str()<<"\n";
     log_file.close();
   }
 
-  vector<string> getFilenames(string directory)
+  std::vector<std::string> getFilenames(std::string directory)
   {
-    vector<string> filenames;
+    std::vector<std::string> filenames;
     struct dirent *ent;
     DIR *dir;
     if(directory[directory.size()-1]!='/')
@@ -95,13 +95,13 @@ namespace modio
       while ((ent = readdir (dir)) != NULL)
       {
         DIR* current_dir;
-        string current_file_path = directory + ent->d_name;
+        std::string current_file_path = directory + ent->d_name;
         if ((current_dir = opendir( current_file_path.c_str() )) != NULL && strcmp(ent->d_name,".") != 0 && strcmp(ent->d_name,"..") != 0)
         {
-          vector<string> subdirectories_filenames = getFilenames(directory + ent->d_name);
+          std::vector<std::string> subdirectories_filenames = getFilenames(directory + ent->d_name);
           for(int i=0;i<(int)subdirectories_filenames.size();i++)
           {
-            filenames.push_back(string(ent->d_name) + "/" + subdirectories_filenames[i]);
+            filenames.push_back(std::string(ent->d_name) + "/" + subdirectories_filenames[i]);
           }
           closedir(current_dir);
         }else if(strcmp(ent->d_name,".") != 0 && strcmp(ent->d_name,"..") != 0)
@@ -114,7 +114,7 @@ namespace modio
     return filenames;
   }
 
-  string getModIODirectory()
+  std::string getModIODirectory()
   {
     // TODO(@turupawn): Can we handle paths passed as C:\ rather than C:/ ?
     //  (re: windows programmers like myself)
@@ -123,12 +123,12 @@ namespace modio
     return ROOT_PATH + ".modio/";
   }
 
-  bool hasKey(json json_object, string key)
+  bool hasKey(json json_object, std::string key)
   {
     return json_object.find(key) != json_object.end() && !json_object[key].is_null();
   }
 
-  void removeFile(string filename)
+  void removeFile(std::string filename)
   {
     if(remove(filename.c_str()) != 0)
       writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
@@ -136,11 +136,16 @@ namespace modio
       writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
   }
 
-  string addSlashIfNeeded(string directory_path)
+  std::string addSlashIfNeeded(std::string directory_path)
   {
     if(directory_path!= "" && directory_path[directory_path.size()-1] != '/')
       directory_path += "/";
 
     return directory_path;
+  }
+
+  void sleep(int milliseconds)
+  {
+    usleep(milliseconds * 1000);
   }
 }

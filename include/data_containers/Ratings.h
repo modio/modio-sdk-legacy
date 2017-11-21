@@ -3,8 +3,7 @@
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
-
-using namespace std;
+;
 using json = nlohmann::json;
 
 extern "C"

@@ -71,21 +71,21 @@ extern "C"
 
 namespace modio
 {
-  multimap<string, string> modfileHandlerToMultimap(ModioModfileHandler* modfile_handler)
+  std::multimap<std::string, std::string> modfileHandlerToMultimap(ModioModfileHandler* modfile_handler)
   {
-    multimap<string, string> result;
+    std::multimap<std::string, std::string> result;
 
     if(modfile_handler->path)
-      result.insert(pair<string,string>("path",modfile_handler->path));
+      result.insert(std::pair<std::string,std::string>("path",modfile_handler->path));
 
     if(modfile_handler->version)
-      result.insert(pair<string,string>("version",modfile_handler->version));
+      result.insert(std::pair<std::string,std::string>("version",modfile_handler->version));
 
     if(modfile_handler->changelog)
-      result.insert(pair<string,string>("changelog",modfile_handler->changelog));
+      result.insert(std::pair<std::string,std::string>("changelog",modfile_handler->changelog));
 
     if(modfile_handler->active)
-      result.insert(pair<string,string>("active",modfile_handler->active));
+      result.insert(std::pair<std::string,std::string>("active",modfile_handler->active));
 
     return result;
   }

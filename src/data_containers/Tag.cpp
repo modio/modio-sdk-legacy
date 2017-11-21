@@ -19,7 +19,7 @@ extern "C"
     tag->tag = NULL;
     if(modio::hasKey(tag_json, "tag"))
     {
-      string tag_str = tag_json["tag"];
+      std::string tag_str = tag_json["tag"];
       tag->tag = new char[tag_str.size() + 1];
       strcpy(tag->tag, tag_str.c_str());
     }

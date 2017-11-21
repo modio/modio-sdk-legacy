@@ -5,8 +5,6 @@
 #include "Globals.h"
 #include "Utility.h"
 
-using namespace std;
-
 #ifdef WINDOWS
 #  ifdef BUILDING_MODIO_DLL
 #    define MODIO_DLL __declspec(dllexport)
@@ -59,7 +57,7 @@ extern "C"
 
 namespace modio
 {
-  string getFilterString(ModioFilter* filter);
+  std::string getFilterString(ModioFilter* filter);
 }
 
 #endif

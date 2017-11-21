@@ -14,14 +14,12 @@
 #define MAX_FILENAME 512
 #define READ_SIZE 8192
 
-using namespace std;
-
 namespace modio
 {
   namespace minizipwrapper
   {
-    void extract(string zip_path, string directory_path);
-    void compress(string directory, string zip_path);
+    void extract(std::string zip_path, std::string directory_path);
+    void compress(std::string directory, std::string zip_path);
   }
 }
 

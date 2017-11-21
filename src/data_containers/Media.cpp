@@ -13,7 +13,7 @@ extern "C"
       media->youtube_array = new char*[media->youtube_size];
       for(int i=0; i<(int)media->youtube_size; i++)
       {
-        string youtube_str = youtube_json[i];
+        std::string youtube_str = youtube_json[i];
         media->youtube_array[i]= new char[media->youtube_size + 1];
         strcpy(media->youtube_array[i], youtube_str.c_str());
       }
@@ -28,7 +28,7 @@ extern "C"
       media->sketchfab_array = new char*[media->sketchfab_size];
       for(int i=0; i<(int)media->sketchfab_size; i++)
       {
-        string sketchfab_str = sketchfab_json[i];
+        std::string sketchfab_str = sketchfab_json[i];
         media->sketchfab_array[i]= new char[media->sketchfab_size + 1];
         strcpy(media->sketchfab_array[i], sketchfab_str.c_str());
       }

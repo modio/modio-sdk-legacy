@@ -11,7 +11,7 @@ extern "C"
     error->message = NULL;
     if(modio::hasKey(error_json, "message"))
     {
-      string message_str = error_json["message"];
+      std::string message_str = error_json["message"];
       error->message = new char[message_str.size() + 1];
       strcpy(error->message, message_str.c_str());
     }
@@ -28,9 +28,9 @@ extern "C"
       for(auto it=errors_json.begin(); it!=errors_json.end(); it++)
       {
 
-        string errors_str = it.key();// + ": " + string(i.value());
+        std::string errors_str = it.key();// + ": " + std::string(i.value());
         errors_str += ": ";
-        //errors_str += string(it.value());
+        //errors_str += std::string(it.value());
         error->errors_array[i]= new char[errors_str.size() + 1];
         strcpy(error->errors_array[i], errors_str.c_str());
         i++;

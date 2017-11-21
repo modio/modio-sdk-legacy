@@ -48,8 +48,8 @@ extern "C"
 
 namespace modio
 {
-  map<string, string> getModfileCurlFormFilesParams(ModioModHandler* mod_handler);
-  multimap<string, string> getModfileCurlFormCopyContentsParams(ModioModHandler* mod_handler);
+  std::map<std::string, std::string> getModfileCurlFormFilesParams(ModioModHandler* mod_handler);
+  std::multimap<std::string, std::string> getModfileCurlFormCopyContentsParams(ModioModHandler* mod_handler);
 }
 
 #endif

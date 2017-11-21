@@ -31,7 +31,7 @@ extern "C"
     modfile->filehash = NULL;
     if(modio::hasKey(modfile_json, "filehash"))
     {
-      string filehash_str = modfile_json["filehash"];
+      std::string filehash_str = modfile_json["filehash"];
       modfile->filehash = new char[filehash_str.size() + 1];
       strcpy(modfile->filehash, filehash_str.c_str());
     }
@@ -39,7 +39,7 @@ extern "C"
     modfile->filename = NULL;
     if(modio::hasKey(modfile_json, "filename"))
     {
-      string filename_str = modfile_json["filename"];
+      std::string filename_str = modfile_json["filename"];
       modfile->filename = new char[filename_str.size() + 1];
       strcpy(modfile->filename, filename_str.c_str());
     }
@@ -47,7 +47,7 @@ extern "C"
     modfile->version = NULL;
     if(modio::hasKey(modfile_json, "version"))
     {
-      string version_str = modfile_json["version"];
+      std::string version_str = modfile_json["version"];
       modfile->version = new char[version_str.size() + 1];
       strcpy(modfile->version, version_str.c_str());
     }
@@ -55,7 +55,7 @@ extern "C"
     modfile->virustotal = NULL;
     if(modio::hasKey(modfile_json, "virustotal"))
     {
-      string virustotal_str = modfile_json["virustotal"];
+      std::string virustotal_str = modfile_json["virustotal"];
       modfile->virustotal = new char[virustotal_str.size() + 1];
       strcpy(modfile->virustotal, virustotal_str.c_str());
     }
@@ -63,7 +63,7 @@ extern "C"
     modfile->changelog = NULL;
     if(modio::hasKey(modfile_json, "changelog"))
     {
-      string changelog_str = modfile_json["changelog"];
+      std::string changelog_str = modfile_json["changelog"];
       modfile->changelog = new char[changelog_str.size() + 1];
       strcpy(modfile->changelog, changelog_str.c_str());
     }
@@ -71,7 +71,7 @@ extern "C"
     modfile->download = NULL;
     if(modio::hasKey(modfile_json, "download"))
     {
-      string download_str = modfile_json["download"];
+      std::string download_str = modfile_json["download"];
       modfile->download = new char[download_str.size() + 1];
       strcpy(modfile->download, download_str.c_str());
     }

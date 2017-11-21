@@ -4,9 +4,9 @@ namespace modio
 {
   namespace minizipwrapper
   {
-    void extract(string zip_path, string directory_path)
+    void extract(std::string zip_path, std::string directory_path)
     {
-      writeLogLine(string("Extracting ") + zip_path, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine(std::string("Extracting ") + zip_path, MODIO_DEBUGLEVEL_LOG);
       unzFile zipfile = unzOpen( zip_path.c_str() );
 
       if(zipfile == NULL)
@@ -55,16 +55,16 @@ namespace modio
 
           if(err != UNZ_OK)
           {
-            writeLogLine(string("Cannot open ") + filename, MODIO_DEBUGLEVEL_ERROR);
+            writeLogLine(std::string("Cannot open ") + filename, MODIO_DEBUGLEVEL_ERROR);
             return;
           }
 
-          string new_file_path = filename;
+          std::string new_file_path = filename;
           FILE *out = fopen( final_filename, "wb" );
 
           if(!out)
           {
-            writeLogLine(string("error opening ") + final_filename, MODIO_DEBUGLEVEL_ERROR);
+            writeLogLine(std::string("error opening ") + final_filename, MODIO_DEBUGLEVEL_ERROR);
           }
 
           err = UNZ_OK;
@@ -110,9 +110,9 @@ namespace modio
       writeLogLine(zip_path + " extracted", MODIO_DEBUGLEVEL_LOG);
     }
 
-    void compress(string directory, string zip_path)
+    void compress(std::string directory, std::string zip_path)
     {
-      writeLogLine(string("Compressing ") + directory + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine(std::string("Compressing ") + directory + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
       if(directory[directory.size()-1]!='/')
         directory += '/';
 
@@ -145,20 +145,20 @@ namespace modio
 
       if (zf == NULL)
       {
-        writeLogLine(string("Could not open ") + zipfilename, MODIO_DEBUGLEVEL_ERROR);
+        writeLogLine(std::string("Could not open ") + zipfilename, MODIO_DEBUGLEVEL_ERROR);
       }
       else
       {
-        writeLogLine(string("Creating ") + zipfilename, MODIO_DEBUGLEVEL_LOG);
+        writeLogLine(std::string("Creating ") + zipfilename, MODIO_DEBUGLEVEL_LOG);
       }
 
-      vector<string> filenames = getFilenames(directory);
+      std::vector<std::string> filenames = getFilenames(directory);
       for(int i=0;i<(int)filenames.size();i++)
       {
         if(filenames[i] == "modio.json")
           continue;
-        string filename = filenames[i];
-        string complete_file_path = directory + filename;
+        std::string filename = filenames[i];
+        std::string complete_file_path = directory + filename;
         FILE *fin = NULL;
         int size_read = 0;
         const char* filenameinzip = filename.c_str();
@@ -203,13 +203,13 @@ namespace modio
                       password, crcFile, zip64);
 
         if (err != ZIP_OK)
-          writeLogLine(string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
+          writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
         else
         {
           fin = FOPEN_FUNC(complete_file_path.c_str(), "rb");
           if (fin == NULL)
           {
-            writeLogLine(string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);
+            writeLogLine(std::string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);
           }
         }
 
@@ -221,14 +221,14 @@ namespace modio
             size_read = (int)fread(buf, 1, size_buf, fin);
             if ((size_read < size_buf) && (feof(fin) == 0))
             {
-              writeLogLine(string("Error in reading ") + filenameinzip, MODIO_DEBUGLEVEL_ERROR);
+              writeLogLine(std::string("Error in reading ") + filenameinzip, MODIO_DEBUGLEVEL_ERROR);
             }
 
             if (size_read > 0)
             {
               err = zipWriteInFileInZip(zf, buf, size_read);
               if (err < 0)
-                writeLogLine(string("Error in writing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
+                writeLogLine(std::string("Error in writing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
             }
           }
           while ((err == ZIP_OK) && (size_read > 0));
@@ -243,14 +243,14 @@ namespace modio
         {
           err = zipCloseFileInZip(zf);
           if (err != ZIP_OK)
-            writeLogLine(string("Error in closing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
+            writeLogLine(std::string("Error in closing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
         }
       }
 
       errclose = zipClose(zf, NULL);
 
       if (errclose != ZIP_OK)
-        writeLogLine(string("Error in closing ") + zipfilename + ", zlib error: " + toString(errclose), MODIO_DEBUGLEVEL_ERROR);
+        writeLogLine(std::string("Error in closing ") + zipfilename + ", zlib error: " + toString(errclose), MODIO_DEBUGLEVEL_ERROR);
 
       free(buf);
     }
