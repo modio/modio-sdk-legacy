@@ -204,21 +204,35 @@ extern "C"
 
   void modioFreeFilter(ModioFilter* filter)
   {
-    delete filter->sort;
-    delete filter->limit;
-    delete filter->offset;
-    delete filter->cursor;
-    delete filter->full_text_search;
+    if(filter->sort)
+      delete filter->sort;
+    if(filter->limit)
+      delete filter->limit;
+    if(filter->offset)
+      delete filter->offset;
+    if(filter->cursor)
+      delete filter->cursor;
+    if(filter->full_text_search)
+      delete filter->full_text_search;
 
-    modioFreeNodeList(filter->like_list);
-    modioFreeNodeList(filter->not_like_list);
-    modioFreeNodeList(filter->in_list);
-    modioFreeNodeList(filter->not_in_list);
-    modioFreeNodeList(filter->min_list);
-    modioFreeNodeList(filter->max_list);
-    modioFreeNodeList(filter->smaller_than_list);
-    modioFreeNodeList(filter->greater_than_list);
-    modioFreeNodeList(filter->not_equal_list);
+    if(filter->like_list)
+      modioFreeNodeList(filter->like_list);
+    if(filter->not_like_list)
+      modioFreeNodeList(filter->not_like_list);
+    if(filter->in_list)
+      modioFreeNodeList(filter->in_list);
+    if(filter->not_in_list)
+      modioFreeNodeList(filter->not_in_list);
+    if(filter->min_list)
+      modioFreeNodeList(filter->min_list);
+    if(filter->max_list)
+      modioFreeNodeList(filter->max_list);
+    if(filter->smaller_than_list)
+      modioFreeNodeList(filter->smaller_than_list);
+    if(filter->greater_than_list)
+      modioFreeNodeList(filter->greater_than_list);
+    if(filter->not_equal_list)
+      modioFreeNodeList(filter->not_equal_list);
   }
 }
 

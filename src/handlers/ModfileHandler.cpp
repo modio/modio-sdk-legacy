@@ -55,9 +55,6 @@ extern "C"
     if(modfile_handler->path)
       delete modfile_handler->path;
 
-    if(modfile_handler->path)
-      delete modfile_handler->path;
-
     if(modfile_handler->version)
       delete modfile_handler->version;
 

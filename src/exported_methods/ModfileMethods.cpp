@@ -5,14 +5,14 @@ extern "C"
   struct AddModfileParams
   {
     void* object;
-    void (*callback)(void* object, ModioResponse response, ModioModfile* modfile);
+    void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile);
   };
 
   struct EditModfileParams
   {
     void* object;
     int modfile_id;
-    void (*callback)(void* object, ModioResponse response, int modfile_id);
+    void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile);
   };
 
   struct InstallModfileParams
@@ -35,13 +35,14 @@ extern "C"
     modioInitResponse(&response, response_json);
     response.code = response_code;
 
-    ModioModfile* modfile = new ModioModfile;
-    modioInitModfile(modfile, response_json);
+    ModioModfile modfile;
+    modioInitModfile(&modfile, response_json);
+
     add_modfile_callbacks[call_number]->callback(add_modfile_callbacks[call_number]->object, response, modfile);
     add_modfile_callbacks.erase(call_number);
   }
 
-  void modioAddModfile(void* object, int mod_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile* modfile))
+  void modioAddModfile(void* object, int mod_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile))
   {
     modio::minizipwrapper::compress(modfile_handler->path, modio::getModIODirectory() + "tmp/modfile.zip");
     std::vector<std::string> headers;
@@ -67,11 +68,14 @@ extern "C"
     modioInitResponse(&response, response_json);
     response.code = response_code;
 
-    edit_modfile_callbacks[call_number]->callback(edit_modfile_callbacks[call_number]->object, response, edit_modfile_callbacks[call_number]->modfile_id);
+    ModioModfile modfile;
+    modioInitModfile(&modfile, response_json);
+
+    edit_modfile_callbacks[call_number]->callback(edit_modfile_callbacks[call_number]->object, response, modfile);
     edit_modfile_callbacks.erase(call_number);
   }
 
-  void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, int modfile_id))
+  void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile))
   {
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
