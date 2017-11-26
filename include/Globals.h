@@ -1,11 +1,11 @@
 #ifndef MODIO_GLOBALS_H
 #define MODIO_GLOBALS_H
 
+typedef unsigned int u32;
+
 #include <iostream>
 #include <thread>
 #include "Utility.h"
-
-typedef unsigned int u32;
 
 namespace modio
 {

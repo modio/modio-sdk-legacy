@@ -33,7 +33,7 @@ extern "C"
     download_image_callbacks.erase(call_number);
   }
 
-  void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response, char* path))
+  void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse modioresponse, char* path))
   {
     int call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();

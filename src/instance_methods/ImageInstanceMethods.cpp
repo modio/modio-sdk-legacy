@@ -5,23 +5,26 @@ namespace modio
   struct DownloadImageCall
   {
     void* object;
-    const std::function<void(void* object, const ModioResponse&, const std::string& path)> callback;
+    const std::function<void(void* object, const modio::Response&, const std::string& path)> callback;
   };
 
   struct EditModLogoCall
   {
     void* object;
-    const std::function<void(void* object, const ModioResponse&, const int& mod_id)>& callback;
+    const std::function<void(void* object, const modio::Response&, u32 mod_id)> callback;
   };
 
   std::map<int, DownloadImageCall*> download_image_calls;
   std::map<int, EditModLogoCall*> edit_mod_logo_calls;
 
-  void onDownloadImage(void* object, ModioResponse response, char* path)
+  void onDownloadImage(void* object, ModioResponse modio_response, char* path)
   {
     int call_id = *((int*)object);
 
-    download_image_calls[call_id]->callback(download_image_calls[call_id]->object, (const ModioResponse&)response, path);
+    modio::Response response;
+    response.initialize(modio_response);
+
+    download_image_calls[call_id]->callback(download_image_calls[call_id]->object, response, path);
 
     delete[] path;
     delete (int*)object;
@@ -29,7 +32,21 @@ namespace modio
     download_image_calls.erase(call_id);
   }
 
-  bool Instance::downloadImage(void* object, const std::string& image_url, const std::string& path, const std::function<void(void* object, const ModioResponse&, const std::string& path)>& callback)
+  void onEditModLogo(void* object, ModioResponse modio_response, int mod_id)
+  {
+    int call_id = *((int*)object);
+
+    modio::Response response;
+    response.initialize(modio_response);
+
+    edit_mod_logo_calls[call_id]->callback(edit_mod_logo_calls[call_id]->object, response, mod_id);
+
+    delete (int*)object;
+    delete edit_mod_logo_calls[call_id];
+    edit_mod_logo_calls.erase(call_id);
+  }
+
+  bool Instance::downloadImage(void* object, const std::string& image_url, const std::string& path, const std::function<void(void* object, const modio::Response&, const std::string& path)>& callback)
   {
     const struct DownloadImageCall* download_image_call = new DownloadImageCall{object, callback};
     download_image_calls[this->current_call_id] = (DownloadImageCall*)download_image_call;
@@ -41,18 +58,7 @@ namespace modio
     return true;
   }
 
-  void onEditModLogo(void* object, ModioResponse response, int mod_id)
-  {
-    int call_id = *((int*)object);
-
-    edit_mod_logo_calls[call_id]->callback(edit_mod_logo_calls[call_id]->object, (const ModioResponse&)response, mod_id);
-
-    delete (int*)object;
-    delete edit_mod_logo_calls[call_id];
-    edit_mod_logo_calls.erase(call_id);
-  }
-
-  bool Instance::editModLogo(void* object, u32 mod_id, const std::string& path, const std::function<void(void* object, const ModioResponse&, const int& mod_id)>& callback)
+  bool Instance::editModLogo(void* object, u32 mod_id, const std::string& path, const std::function<void(void* object, const modio::Response&, u32 mod_id)>& callback)
   {
     const struct EditModLogoCall* edit_mod_logo_call = new EditModLogoCall{object, callback};
     edit_mod_logo_calls[this->current_call_id] = (EditModLogoCall*)edit_mod_logo_call;

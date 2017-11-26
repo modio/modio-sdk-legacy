@@ -3,7 +3,7 @@
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
-#include "data_containers/Image.h"
+#include "data_containers/ModioImage.h"
 #include "Globals.h"
 #include "Filter.h"
 

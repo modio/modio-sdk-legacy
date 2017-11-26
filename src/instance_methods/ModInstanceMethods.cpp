@@ -5,67 +5,99 @@ namespace modio
   struct GetModsCall
   {
     void* object;
-    const std::function<void(void* object, const ModioResponse&, std::vector<ModioMod*> mods)> callback;
+    const std::function<void(void* object, const modio::Response&, std::vector<modio::Mod>& mods)> callback;
+  };
+
+  struct AddModCall
+  {
+    void* object;
+    const std::function<void(void* object, const modio::Response& response, const modio::Mod& mod)> callback;
   };
 
   struct EditModCall
   {
     void* object;
-    const std::function<void(void* object, const ModioResponse& response, const ModioMod& mod)> callback;
+    const std::function<void(void* object, const modio::Response& response, const modio::Mod& mod)> callback;
   };
 
   struct DeleteModCall
   {
     void* object;
-    const std::function<void(void* object, const ModioResponse& response, const ModioMod& mod)> callback;
+    const std::function<void(void* object, const modio::Response& response, u32 mod_id)> callback;
   };
 
   std::map<int, GetModsCall*> get_mods_calls;
+  std::map<int, AddModCall*> add_mod_calls;
   std::map<int, EditModCall*> edit_mod_calls;
   std::map<int, DeleteModCall*> delete_mod_calls;
 
-  void onGetMods(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+  void onGetMods(void* object, ModioResponse modio_response, ModioMod* mods, int mods_size)
   {
     int call_id = *((int*)object);
 
-    std::vector<ModioMod*> mods_vector;
-    for(int i=0; i<mods_size; i++)
+    modio::Response response;
+    response.initialize(modio_response);
+
+    std::vector<modio::Mod> mods_vector;
+    mods_vector.resize(mods_size);
+    for(int i=0; i < mods_size; i++)
     {
-      mods_vector.push_back(&(mods[i]));
+      mods_vector[i].initialize(mods[i]);
+      delete &mods[i];
     }
 
-    get_mods_calls[call_id]->callback(get_mods_calls[call_id]->object, (const ModioResponse&)response, mods_vector);
+    get_mods_calls[call_id]->callback(get_mods_calls[call_id]->object, (const Response&)response, mods_vector);
 
     delete (int*)object;
     delete get_mods_calls[call_id];
     get_mods_calls.erase(call_id);
   }
 
-  void onEditMod(void* object, ModioResponse response, ModioMod* mod)
+  void onAddMod(void* object, ModioResponse modio_response, ModioMod* mod)
   {
     int call_id = *((int*)object);
 
-    ModioMod modio_mod;
-    edit_mod_calls[call_id]->callback(edit_mod_calls[call_id]->object, (const ModioResponse&)response, modio_mod);
+    modio::Response response;
+    response.initialize(modio_response);
+
+    modio::Mod modio_mod;
+    add_mod_calls[call_id]->callback(add_mod_calls[call_id]->object, (const Response&)response, modio_mod);
+
+    delete (int*)object;
+    delete add_mod_calls[call_id];
+    add_mod_calls.erase(call_id);
+  }
+
+  void onEditMod(void* object, ModioResponse modio_response, ModioMod* mod)
+  {
+    int call_id = *((int*)object);
+
+    modio::Response response;
+    response.initialize(modio_response);
+
+    modio::Mod modio_mod;
+    edit_mod_calls[call_id]->callback(edit_mod_calls[call_id]->object, (const Response&)response, modio_mod);
 
     delete (int*)object;
     delete edit_mod_calls[call_id];
     edit_mod_calls.erase(call_id);
   }
 
-  void onDeleteMod(void* object, ModioResponse response, ModioMod* mod)
+  void onDeleteMod(void* object, ModioResponse modio_response, int mod_id)
   {
     int call_id = *((int*)object);
 
-    ModioMod modio_mod;
-    delete_mod_calls[call_id]->callback(delete_mod_calls[call_id]->object, (const ModioResponse&)response, modio_mod);
+    modio::Response response;
+    response.initialize(modio_response);
+
+    delete_mod_calls[call_id]->callback(delete_mod_calls[call_id]->object, (const modio::Response&)response, mod_id);
 
     delete (int*)object;
     delete delete_mod_calls[call_id];
     delete_mod_calls.erase(call_id);
   }
 
-  bool Instance::getMods(void* object, modio::Filter& filter, const std::function<void(void* object, const ModioResponse&, const std::vector<ModioMod*> & mods)>& callback)
+  bool Instance::getMods(void* object, modio::Filter& filter, const std::function<void(void* object, const modio::Response&, const std::vector<modio::Mod> & mods)>& callback)
   {
     const struct GetModsCall* get_mods_call = new GetModsCall{object, callback};
     get_mods_calls[this->current_call_id] = (GetModsCall*)get_mods_call;
@@ -76,7 +108,17 @@ namespace modio
     return true;
   }
 
-  void Instance::editMod(void* object, u32 mod_id, modio::ModHandler& mod_handler, const std::function<void(void* object, const ModioResponse& response, const ModioMod& mod)>& callback)
+  void Instance::addMod(void* object, modio::ModHandler& mod_handler, const std::function<void(void* object, const modio::Response& response, const modio::Mod& mod)>& callback)
+  {
+    const struct AddModCall* add_mod_call = new AddModCall{object, callback};
+    add_mod_calls[this->current_call_id] = (AddModCall*)add_mod_call;
+
+    modioAddMod((void*)new int(this->current_call_id), mod_handler.getModioModHandler(), &onAddMod);
+
+    this->current_call_id++;
+  }
+
+  void Instance::editMod(void* object, u32 mod_id, modio::ModHandler& mod_handler, const std::function<void(void* object, const modio::Response& response, const modio::Mod& mod)>& callback)
   {
     const struct EditModCall* edit_mod_call = new EditModCall{object, callback};
     edit_mod_calls[this->current_call_id] = (EditModCall*)edit_mod_call;
@@ -86,7 +128,7 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::deleteMod(void* object, u32 mod_id, const std::function<void(void* object, const ModioResponse& response, const ModioMod& mod)>& callback)
+  void Instance::deleteMod(void* object, u32 mod_id, const std::function<void(void* object, const modio::Response& response, u32 mod_id)>& callback)
   {
     const struct DeleteModCall* delete_mod_call = new DeleteModCall{object, callback};
     delete_mod_calls[this->current_call_id] = (DeleteModCall*)delete_mod_call;

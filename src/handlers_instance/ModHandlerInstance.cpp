@@ -4,6 +4,7 @@ namespace modio
 {
   ModHandler::ModHandler()
   {
+    this->mod_handler = new ModioModHandler;
     modioInitModHandler(this->mod_handler);
   }
 

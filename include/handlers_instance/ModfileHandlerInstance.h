@@ -11,6 +11,7 @@ namespace modio
     void setModfileVersion(const std::string& version);
     void setModfileChangelog(const std::string& changelog);
     void setModfileActive(bool active);
+    ModioModfileHandler* getModioModfileHandler();
     ~ModfileHandler();
   };
 }

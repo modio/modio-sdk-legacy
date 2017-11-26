@@ -26,6 +26,7 @@ void onEmailRequested(int call_number, int response_code, json response_json)
   std::string message_str = "";
   if(modio::hasKey(response_json,"message"))
     message_str = response_json["message"];
+
   char* message = new char[message_str.size() + 1];
   strcpy(message, message_str.c_str());
   email_request_params[call_number]->callback(email_request_params[call_number]->object, response, message);

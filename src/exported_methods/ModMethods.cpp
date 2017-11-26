@@ -17,8 +17,8 @@ extern "C"
   struct DeleteModParams
   {
     void* object;
-    ModioMod* mod;
-    void (*callback)(void* object, ModioResponse response, ModioMod* mod);
+    int mod_id;
+    void (*callback)(void* object, ModioResponse response, int mod_id);
   };
 
   struct CallbackParamReturnsId
@@ -79,6 +79,7 @@ extern "C"
 
     ModioMod* mod = new ModioMod;
     modioInitMod(mod, response_json);
+
     add_mod_callback[call_number]->callback(add_mod_callback[call_number]->object, response, mod);
     add_mod_callback.erase(call_number);
   }
@@ -97,7 +98,17 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 
-    modio::curlwrapper::put(call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(mod_handler), &onModAdded);
+    std::multimap<std::string,std::string> mod_params = modio::getModfileCurlFormCopyContentsParams(mod_handler);
+    for(std::multimap<std::string,std::string>::iterator i = mod_params.begin(); i != mod_params.end(); i++)
+    {
+      if(i==mod_params.begin())
+        url+="?";
+      else
+        url+="&";
+      url+=(*i).first + "=" + (*i).second;
+    }
+
+    modio::curlwrapper::put(call_number, url, headers, mod_params, &onModAdded);
   }
 
   void modioAddMod(void* object, ModioModHandler* mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod* mod))
@@ -123,13 +134,11 @@ extern "C"
     modioInitResponse(&response, response_json);
     response.code = response_code;
 
-    ModioMod* mod = new ModioMod;
-    modioInitMod(mod, response_json);
-    delete_mod_callbacks[call_number]->callback(delete_mod_callbacks[call_number]->object, response, mod);
+    delete_mod_callbacks[call_number]->callback(delete_mod_callbacks[call_number]->object, response, delete_mod_callbacks[call_number]->mod_id);
     delete_mod_callbacks.erase(call_number);
   }
 
-  void modioDeleteMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, ModioMod* mod))
+  void modioDeleteMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id))
   {
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -140,6 +149,7 @@ extern "C"
     delete_mod_callbacks[call_number] = new DeleteModParams;
     delete_mod_callbacks[call_number]->callback = callback;
     delete_mod_callbacks[call_number]->object = object;
+    delete_mod_callbacks[call_number]->mod_id = mod_id;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 

@@ -3,7 +3,7 @@
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
-#include "data_containers/Mod.h"
+#include "data_containers/ModioMod.h"
 #include "Globals.h"
 
 extern "C"

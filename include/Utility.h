@@ -82,6 +82,7 @@ extern "C"
 
 namespace modio
 {
+  std::string toString(u32 number);
   std::string toString(int number);
   std::string toString(double number);
   void createDirectory(std::string directory);
