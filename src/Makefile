@@ -2,7 +2,7 @@ include Sources.mk
 
 CC = g++
 CFLAGS = -c -Wall -std=c++11 -fPIC
-LDFLAGS = -lcurl -pthread -lz
+LDFLAGS = -lcurl -lz
 SOURCES = $(MODIO_SOURCES)
 OBJECTS = $(SOURCES:.cpp=.o)
 LIBRARY = modio.so

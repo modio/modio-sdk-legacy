@@ -2,72 +2,92 @@
 
 typedef void (*ScriptFunction)(void);
 
-map< int,void (*)(ModioResponse* response, char* message) > email_request_callbacks;
-map< int,void (*)(ModioResponse* response) > email_exchange_callbacks;
-
-void onEmailRequested(int call_number, ModioResponse* response, json response_json)
+struct EmailRequestParams
 {
-  string message_str = "";
+  void* object;
+  void (*callback)(void* object, ModioResponse response, char* message);
+};
+
+struct EmailExchangeParams
+{
+  void* object;
+  void (*callback)(void* object, ModioResponse response);
+};
+
+std::map< int,EmailRequestParams* > email_request_params;
+std::map< int,EmailExchangeParams* > email_exchange_params;
+
+void onEmailRequested(int call_number, int response_code, json response_json)
+{
+  ModioResponse response;
+  modioInitResponse(&response, response_json);
+  response.code = response_code;
+
+  std::string message_str = "";
   if(modio::hasKey(response_json,"message"))
     message_str = response_json["message"];
+
   char* message = new char[message_str.size() + 1];
   strcpy(message, message_str.c_str());
-  email_request_callbacks[call_number](response, message);
-  email_request_callbacks.erase(call_number);
+  email_request_params[call_number]->callback(email_request_params[call_number]->object, response, message);
+  email_request_params.erase(call_number);
+  delete email_request_params[call_number];
 }
 
-void modioEmailRequest(char* email, void (*callback)(ModioResponse* response, char* message))
+void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response, char* message))
 {
-  map<string, string> data;
+  std::map<std::string, std::string> data;
   data["api_key"] = modio::API_KEY;
   data["email"] = email;
 
-  vector<string> headers;
+  std::vector<std::string> headers;
 
   int call_number = modio::curlwrapper::getCallCount();
   modio::curlwrapper::advanceCallCount();
 
-  email_request_callbacks[call_number] = callback;
+  email_request_params[call_number] = new EmailRequestParams;
+  email_request_params[call_number]->callback = callback;
+  email_request_params[call_number]->object = object;
 
-  string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailrequest";
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailrequest";
+  url += "?api_key=" + modio::API_KEY;
+  url += "&email=" + std::string(email);
 
-  std::thread email_request_thread(modio::curlwrapper::post, call_number, url, headers, data, &onEmailRequested);
-  email_request_thread.detach();
+  modio::curlwrapper::post(call_number, url, headers, data, &onEmailRequested);
 }
 
-void onEmailExchanged(int call_number, ModioResponse* response, json response_json)
+void onEmailExchanged(int call_number, int response_code, json response_json)
 {
-  if(response->code == 200)
+  ModioResponse response;
+  modioInitResponse(&response, response_json);
+  response.code = response_code;
+  if(response.code == 200)
   {
     modio::ACCESS_TOKEN = response_json["access_token"];
     json token_json;
     token_json["access_token"] = response_json["access_token"];
     std::ofstream out(modio::getModIODirectory() + "token.json");
-    out<<setw(4)<<token_json<<endl;
+    out<<std::setw(4)<<token_json<<std::endl;
     out.close();
   }
-
-  email_exchange_callbacks[call_number](response);
-  email_exchange_callbacks.erase(call_number);
+  email_exchange_params[call_number]->callback(email_exchange_params[call_number]->object, response);
+  email_exchange_params.erase(call_number);
 }
 
-void modioEmailExchange(char* security_code, void (*callback)(ModioResponse* response))
+void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response))
 {
-  map<string, string> data;
-  data["api_key"] = modio::API_KEY;
-  data["security_code"] = security_code;
-
-  vector<string> headers;
+  std::map<std::string, std::string> data;
+  std::vector<std::string> headers;
 
   int call_number = modio::curlwrapper::getCallCount();
   modio::curlwrapper::advanceCallCount();
-
-  email_exchange_callbacks[call_number] = callback;
-
-  string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailexchange";
-
-  std::thread email_exchage_thread(modio::curlwrapper::post, call_number, url, headers, data, &onEmailExchanged);
-  email_exchage_thread.detach();
+  email_exchange_params[call_number] = new EmailExchangeParams;
+  email_exchange_params[call_number]->callback = callback;
+  email_exchange_params[call_number]->object = object;
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailexchange";
+  url += "?api_key=" + modio::API_KEY;
+  url += "&security_code=" + std::string(security_code);
+  modio::curlwrapper::post(call_number, url, headers, data, &onEmailExchanged);
 }
 
 bool modioIsLoggedIn()
@@ -81,6 +101,6 @@ void modioLogout()
 
   json empty_json;
   std::ofstream out(modio::getModIODirectory() + "token.json");
-  out<<setw(4)<<empty_json<<endl;
+  out<<std::setw(4)<<empty_json<<std::endl;
   out.close();
 }

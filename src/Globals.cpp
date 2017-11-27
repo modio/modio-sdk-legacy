@@ -2,11 +2,11 @@
 
 namespace modio
 {
-  string API_KEY;
-  string ACCESS_TOKEN = "";
+  std::string API_KEY;
+  std::string ACCESS_TOKEN = "";
   int GAME_ID;
-  string ROOT_PATH = "";
+  std::string ROOT_PATH = "";
   unsigned int DEBUG_LEVEL = MODIO_DEBUGLEVEL_ERROR;
-  string MODIO_URL = "https://api.mod.io/";
-  string MODIO_VERSION_PATH = "v1/";
+  std::string MODIO_URL = "https://api.mod.io/";
+  std::string MODIO_VERSION_PATH = "v1/";
 }

@@ -146,50 +146,50 @@ extern "C"
 
 namespace modio
 {
-  map<string, string> getModfileCurlFormFilesParams(ModioModHandler* mod_handler)
+  std::map<std::string, std::string> getModfileCurlFormFilesParams(ModioModHandler* mod_handler)
   {
-    map<string, string> result;
+    std::map<std::string, std::string> result;
 
     if(mod_handler->logo)
-      result.insert(pair<string,string>("logo",mod_handler->logo));
+      result.insert(std::pair<std::string,std::string>("logo",mod_handler->logo));
 
     return result;
   }
 
-  multimap<string, string> getModfileCurlFormCopyContentsParams(ModioModHandler* mod_handler)
+  std::multimap<std::string, std::string> getModfileCurlFormCopyContentsParams(ModioModHandler* mod_handler)
   {
-    multimap<string, string> result;
+    std::multimap<std::string, std::string> result;
 
     if(mod_handler->name)
-      result.insert(pair<string,string>("name",mod_handler->name));
+      result.insert(std::pair<std::string,std::string>("name",mod_handler->name));
 
     if(mod_handler->homepage)
-      result.insert(pair<string,string>("homepage",mod_handler->homepage));
+      result.insert(std::pair<std::string,std::string>("homepage",mod_handler->homepage));
 
     if(mod_handler->summary)
-      result.insert(pair<string,string>("summary",mod_handler->summary));
+      result.insert(std::pair<std::string,std::string>("summary",mod_handler->summary));
 
     if(mod_handler->stock)
-      result.insert(pair<string,string>("stock",mod_handler->stock));
+      result.insert(std::pair<std::string,std::string>("stock",mod_handler->stock));
 
     if(mod_handler->price)
-      result.insert(pair<string,string>("price",mod_handler->price));
+      result.insert(std::pair<std::string,std::string>("price",mod_handler->price));
 
     if(mod_handler->description)
-      result.insert(pair<string,string>("description",mod_handler->description));
+      result.insert(std::pair<std::string,std::string>("description",mod_handler->description));
 
     if(mod_handler->nameid)
-      result.insert(pair<string,string>("nameid",mod_handler->nameid));
+      result.insert(std::pair<std::string,std::string>("nameid",mod_handler->nameid));
 
     if(mod_handler->modfile)
-      result.insert(pair<string,string>("modfile",mod_handler->modfile));
+      result.insert(std::pair<std::string,std::string>("modfile",mod_handler->modfile));
 
     if(mod_handler->tags)
     {
       ModioListNode* current_tag = mod_handler->tags;
       while(current_tag)
       {
-        result.insert(pair<string,string>("tags[]",current_tag->value));
+        result.insert(std::pair<std::string,std::string>("tags[]",current_tag->value));
         current_tag = current_tag->next;
       }
     }

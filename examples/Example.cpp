@@ -60,7 +60,7 @@ void onExchange(ModioResponse* response)
   email_exchange_finished = true;
 }
 
-void onImageDownloaded(ModioResponse* response, ModioMod* mod, string path)
+void onImageDownloaded(ModioResponse* response, ModioMod* mod, std::string path)
 {
   if(response->code == 200)
   {
@@ -69,7 +69,7 @@ void onImageDownloaded(ModioResponse* response, ModioMod* mod, string path)
   files_downloaded++;
 }
 
-void onModInstalled(ModioResponse* response, ModioMod* mod, string path)
+void onModInstalled(ModioResponse* response, ModioMod* mod, std::string path)
 {
   if(response->code == 200)
   {
@@ -78,7 +78,7 @@ void onModInstalled(ModioResponse* response, ModioMod* mod, string path)
   files_downloaded++;
 }
 
-void onMediaImagesDownloaded(ModioResponse* response, ModioMod* mod, vector<string> images)
+void onMediaImagesDownloaded(ModioResponse* response, ModioMod* mod, vector<std::string> images)
 {
   if(response->code == 200)
   {
@@ -99,7 +99,7 @@ void onModfileEdited(ModioResponse* response, ModioModfile* modfile)
   cout<<"Response: "<<response->code<<endl;
 }
 
-void onTagsGet(ModioResponse* response, ModioMod* mod, vector<string> tags)
+void onTagsGet(ModioResponse* response, ModioMod* mod, vector<std::string> tags)
 {
   cout<<"Response: "<<response->code<<endl;
 
@@ -142,7 +142,7 @@ void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
 
   for(int i=0;i<(int)mods_size;i++)
   {
-    //vector<string> tags;
+    //vector<std::string> tags;
     //tags.push_back("Easy");
     //tags.push_back("Medium");
     cout<<mods[i].name<<endl;
@@ -191,12 +191,12 @@ int main(void)
 
   if(!modioIsLoggedIn())
   {
-    string email;
+    std::string email;
     cout<<"Enter your email: "<<endl;
     cin>>email;
     modioEmailRequest((char*)email.c_str(),&onEmailRequest);
     while(!email_request_finished);
-    string security_code;
+    std::string security_code;
     cout<<"Please enter the 5 digit security code: ";
     cin>>security_code;
     cout<<"Sending code"<<endl;

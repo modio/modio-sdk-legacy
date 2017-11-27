@@ -36,6 +36,7 @@
 #ifdef LINUX
 #include <sys/stat.h>
 #include <dirent.h>
+#include <unistd.h>
 #endif
 
 #ifdef WINDOWS
@@ -56,7 +57,6 @@
 #include "dependencies/json/json.hpp"
 #include "Globals.h"
 
-using namespace std;
 using json = nlohmann::json;
 
 // NOTE(@jackson): Debug "Severity"? (Steamworks uses "spew level")
@@ -82,16 +82,18 @@ extern "C"
 
 namespace modio
 {
-  string toString(int number);
-  string toString(double number);
-  void createDirectory(string directory);
+  std::string toString(u32 number);
+  std::string toString(int number);
+  std::string toString(double number);
+  void createDirectory(std::string directory);
   void clearLog();
-  void writeLogLine(string text, unsigned int debug_level);
-  vector<string> getFilenames(string directory);
-  string getModIODirectory();
-  bool hasKey(json json_object, string key);
-  void removeFile(string filename);
-  string addSlashIfNeeded(string directory_path);
+  void writeLogLine(std::string text, unsigned int debug_level);
+  std::vector<std::string> getFilenames(std::string directory);
+  std::string getModIODirectory();
+  bool hasKey(json json_object, std::string key);
+  void removeFile(std::string filename);
+  std::string addSlashIfNeeded(std::string directory_path);
+  void sleep(int milliseconds);
 }
 
 #endif
