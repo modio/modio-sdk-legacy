@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,8 @@ int main(void)
     finished = true;
   };
 
+  // Let's start by requesting a single mod
+
   modio::Filter filter;
   filter.setFilterLimit(1);
 
@@ -28,30 +30,26 @@ int main(void)
   mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if(response.code == 200 && mods.size() >= 1)
     {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      modio::Mod requested_mod = mods[0];
+      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+
+      std::cout << "Downloading image" << std::endl;
+
+      // Now let's download the full size logo to the selected path
+      // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
+      mod.downloadImage(NULL, requested_mod.logo.full, "mods_dir/full.png", [&](void* object, const modio::Response& response, const std::string& path)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
-        
-        std::cout << "Downloading image" << std::endl;
+        std::cout << "Download Image response: " << response.code << std::endl;
 
-        mod.downloadImage(NULL, mods[i].logo.full, "mods_dir/full.png", [&](void* object, const modio::Response& response, const std::string& path)
+        if(response.code == 200)
         {
-          std::cout << "Download Image response: " << response.code << std::endl;
+          std::cout << "Image downloaded successfully!" << std::endl;
+        }
 
-          if(response.code == 200)
-          {
-            std::cout << "Image downloaded successfully!" << std::endl;
-          }
-
-          finish();
-        });
-      }
+        finish();
+      });
     }
   });
 

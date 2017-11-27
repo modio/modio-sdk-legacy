@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,15 +20,18 @@ int main(void)
     finished = true;
   };
 
+  // The Mod Handler helps setting up the fields before creating a Mod
   modio::ModHandler mod_handler;
-  //Required fields
+
+  //The logo, name, homepage, summary, and tags are mandatory
   mod_handler.setLogoPath("ModExample/logo.png");
   mod_handler.setName("Example Mod Test30");
   mod_handler.setHomepage("http://www.webpage.com");
   mod_handler.setSummary("Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
   mod_handler.addTag("Easy");
   mod_handler.addTag("Medium");
-  //Optional fields
+
+  // The price, stock, description, metadata blob, nameid and modfile are optional
   mod_handler.setPrice(1.99);
   mod_handler.setStock(25);
   mod_handler.setDescription("This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
@@ -38,6 +41,7 @@ int main(void)
 
   std::cout <<"Creating mod..." << std::endl;
 
+  // Now we can create the new mod. Remember, this mod wont have a Modfile right away, you should be adding one after the mod was created successfully
   mod.addMod(NULL, mod_handler, [&](void* object, const modio::Response& response, const modio::Mod& mod)
   {
     std::cout << "On mod get response: " << response.code << std::endl;

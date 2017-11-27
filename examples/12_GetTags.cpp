@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,7 @@ int main(void)
     finished = true;
   };
 
+  // Let's start by requesting a single mod
   modio::Filter filter;
   filter.setFilterLimit(1);
 
@@ -28,34 +29,29 @@ int main(void)
   mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if(response.code == 200 && mods.size() >= 1)
     {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      modio::Mod requested_mod = mods[0];
+      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+
+      std::cout <<"Getting tags..." << std::endl;
+
+      // We request the list of tags by providing the Mod's id
+      mod.getTags(NULL, requested_mod.id, [&](void* object, const modio::Response& response, std::vector<modio::Tag> tags)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
-
-        std::cout <<"Getting tags..." << std::endl;
-
-        mod.getTags(NULL, mods[i].id, [&](void* object, const modio::Response& response, std::vector<modio::Tag> tags)
+        std::cout << "Get tags response: " << response.code << std::endl;
+        if(response.code == 200)
         {
-          std::cout << "Get tags response: " << response.code << std::endl;
-          if(response.code == 200)
+          std::cout << "Mod delete successfully" << std::endl;
+          std::cout << "Listing Tags" << std::endl;
+          std::cout << "============" << std::endl;
+          for(int i=0; i < (int)tags.size(); i++)
           {
-            std::cout << "Mod delete successfully" << std::endl;
-            std::cout << "Listing Tags" << std::endl;
-            std::cout << "============" << std::endl;
-            for(int i=0; i < (int)tags.size(); i++)
-            {
-              std::cout << tags[i].tag << std::endl;
-            }
+            std::cout << tags[i].tag << std::endl;
           }
-          finish();
-        });
-      }
+        }
+        finish();
+      });
     }
   });
 

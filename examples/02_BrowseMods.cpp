@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,7 @@ int main(void)
     finished = true;
   };
 
+  // Before requesting mods, let's define the query filters
   modio::Filter filter;
   filter.setFilterLimit(3);
   filter.addFilterLikeField("name", "Example Mod");
@@ -27,6 +28,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
+  // Now we finished setting up the filters we are ready to request the mods
   mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
@@ -41,6 +43,7 @@ int main(void)
         std::cout << "Name:\t" << mods[i].name << std::endl;
       }
 
+      // Additionally, we can access cursor data to ease future browsing queries
       std::cout << std::endl;
       std::cout << "Cursor data:" << std::endl;
       std::cout << "Cursor id: " << response.cursor_id << std::endl;

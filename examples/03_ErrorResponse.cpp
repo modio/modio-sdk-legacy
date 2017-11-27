@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,7 @@ int main(void)
     finished = true;
   };
 
+  // Sometimes, mod.io API will return errors. Let's trigger some of them to find out how to interpret them
   modio::Filter filter;
   filter.setFilterLimit(-1);
   filter.addFilterFieldValue("id", "-1");
@@ -35,10 +36,12 @@ int main(void)
       std::cout << "Success!" << std::endl;
     }else
     {
+      // A general error message is returned
       std::cout << "Error message: " << response.error.message << std::endl;
       if(response.error.errors.size() > 0)
       {
         std::cout << "Errors:" << std::endl;
+        // and we can go into details on the error list
         for(int i=0; i< (int)response.error.errors.size(); i++)
         {
           std::cout << response.error.errors[i] << std::endl;

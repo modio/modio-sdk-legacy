@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,7 @@ int main(void)
     finished = true;
   };
 
+  // Let's start by requesting a single mod
   modio::Filter filter;
   filter.setFilterLimit(1);
 
@@ -28,28 +29,23 @@ int main(void)
   mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if(response.code == 200 && mods.size() >= 1)
     {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      modio::Mod requested_mod = mods[0];
+      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+
+      std::cout << "Deleting mod..." << std::endl;
+
+      // We delete a mod providing the Mod id
+      mod.deleteMod(NULL, requested_mod.id, [&](void* object, const modio::Response& response, u32 mod_id)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
-
-        std::cout <<"Deleting mod..." << std::endl;
-
-        mod.deleteMod(NULL, mods[i].id, [&](void* object, const modio::Response& response, u32 mod_id)
+        std::cout << "Mod Delete response: " << response.code << std::endl;
+        if(response.code == 204)
         {
-          std::cout << "Mod Delete response: " << response.code << std::endl;
-          if(response.code == 204)
-          {
-            std::cout << "Mod delete successfully" << std::endl;
-          }
-          finish();
-        });
-      }
+          std::cout << "Mod delete successfully" << std::endl;
+        }
+        finish();
+      });
     }
   });
 

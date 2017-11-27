@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,7 @@ int main(void)
     finished = true;
   };
 
+  // Let's start by requesting a single mod
   modio::Filter filter;
   filter.setFilterLimit(1);
 
@@ -28,43 +29,36 @@ int main(void)
   mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if(response.code == 200 && mods.size() >= 1)
     {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      modio::Mod requested_mod = mods[0];
+      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+
+      // The Mod Handler helps setting up the fields that will be updated
+      modio::ModHandler mod_handler;
+      mod_handler.setLogoPath("ModExample/logo.png");
+      mod_handler.setName("Update Example");
+      mod_handler.setHomepage("http://www.updated.com");
+      mod_handler.setSummary("Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
+      mod_handler.addTag("Easy");
+      mod_handler.setPrice(2.99);
+      //mod_handler.setStock(50);// In order to use Stock features, the game developer should set this up on the mod.io website
+      mod_handler.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
+      mod_handler.setMetadata("Optional updated metadata");
+      //mod_handler.setNameid("my-example-mod"); // The Name id must be unique
+      //mod_handler.setModfile(int modfile); // The Modfile should exist
+
+      std::cout <<"Editing mod..." << std::endl;
+
+      mod.editMod(NULL, requested_mod.id, mod_handler, [&](void* object, const modio::Response& response, const modio::Mod& mod)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
-
-        modio::ModHandler mod_handler;
-        //Required fields
-        mod_handler.setLogoPath("ModExample/logo.png");
-        mod_handler.setName("Update Example");
-        mod_handler.setHomepage("http://www.updated.com");
-        mod_handler.setSummary("Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
-        mod_handler.addTag("Easy");
-        //Optional fields
-        mod_handler.setPrice(2.99);
-        //mod_handler.setStock(50);//The developer should allow mods to control mod supply and scarcity
-        mod_handler.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
-        mod_handler.setMetadata("Optional updated metadata");
-        //mod_handler.setNameid("my-example-mod"); //Name id must be unique
-        //mod_handler.setModfile(int modfile); //Modfile should exist
-
-        std::cout <<"Editing mod..." << std::endl;
-
-        mod.editMod(NULL, mods[i].id, mod_handler, [&](void* object, const modio::Response& response, const modio::Mod& mod)
+        std::cout << "On mod get response: " << response.code << std::endl;
+        if(response.code == 200)
         {
-          std::cout << "On mod get response: " << response.code << std::endl;
-          if(response.code == 200)
-          {
-            std::cout << "Mod created successfully" << std::endl;
-          }
-          finish();
-        });
-      }
+          std::cout << "Mod created successfully" << std::endl;
+        }
+        finish();
+      });
     }
   });
 

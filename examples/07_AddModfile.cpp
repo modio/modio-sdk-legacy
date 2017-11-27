@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,7 @@ int main(void)
     finished = true;
   };
 
+  // Let's start by requesting a single mod
   modio::Filter filter;
   filter.setFilterLimit(1);
 
@@ -27,38 +28,35 @@ int main(void)
 
   mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
-    std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if(response.code == 200 && mods.size() >= 1)
     {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      modio::Mod requested_mod = mods[0];
+      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+
+      // The Modfile Handler helps us setting up the modfile fields and the mod directory that will be zipped and uploaded
+      modio::ModfileHandler modfile_handler;
+
+      // The mod directory path, version and changelog are mandatory fields
+      modfile_handler.setModfilePath("ModExample/modfile/");
+      modfile_handler.setModfileVersion("v1.1.0");
+      modfile_handler.setModfileChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+
+      // The active field is optional
+      modfile_handler.setModfileActive(true);
+
+      std::cout << "Uploading modfile..." << std::endl;
+
+      mod.addModfile(NULL, requested_mod.id, modfile_handler, [&](void* object, const modio::Response& response, const modio::Modfile& modfile)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
+        std::cout << "Add Modfile response: " << response.code << std::endl;
 
-        modio::ModfileHandler modfile_handler;
-        modfile_handler.setModfilePath("ModExample/modfile/");
-        modfile_handler.setModfileVersion("v1.1.0");
-        modfile_handler.setModfileChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
-        //Optional
-        modfile_handler.setModfileActive(true);
-
-        std::cout << "Uploading modfile..." << std::endl;
-
-        mod.addModfile(NULL, mods[i].id, modfile_handler, [&](void* object, const modio::Response& response, const modio::Modfile& modfile)
+        if(response.code == 201)
         {
-          std::cout << "Add Modfile response: " << response.code << std::endl;
+          std::cout << "Modfile added successfully!" << std::endl;
+        }
 
-          if(response.code == 201)
-          {
-            std::cout << "Modfile added successfully!" << std::endl;
-          }
-
-          finish();
-        });
-      }
+        finish();
+      });
     }
   });
 

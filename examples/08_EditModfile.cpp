@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(100);
+      modio::sleep(10);
       modioProcess();
     }
   };
@@ -20,6 +20,7 @@ int main(void)
     finished = true;
   };
 
+  // Let's start by requesting a single mod
   modio::Filter filter;
   filter.setFilterLimit(1);
 
@@ -28,34 +29,30 @@ int main(void)
   mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if(response.code == 200 && mods.size() >= 1)
     {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      modio::Mod requested_mod = mods[0];
+      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+
+      // The Modfile Handler helps setting up the fields that will be edited
+      // Notice that the version field and modfile zip can't be edited, you should be uploading another modfile instead
+      modio::ModfileHandler modfile_handler;
+      modfile_handler.setModfileActive(true);
+      modfile_handler.setModfileChangelog("Stuff was changed on this mod via the examples.");
+
+      std::cout << "Uploading modfile..." << std::endl;
+
+      mod.editModfile(NULL, requested_mod.id, requested_mod.modfile.id, modfile_handler, [&](void* object, const modio::Response& response, const modio::Modfile& modfile)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
+        std::cout << "Add Modfile response: " << response.code << std::endl;
 
-        modio::ModfileHandler modfile_handler;
-        modfile_handler.setModfileActive(true);
-        modfile_handler.setModfileChangelog("Stuff was changed on this mod via the examples.");
-
-        std::cout << "Uploading modfile..." << std::endl;
-
-        mod.editModfile(NULL, mods[i].id, mods[i].modfile.id, modfile_handler, [&](void* object, const modio::Response& response, const modio::Modfile& modfile)
+        if(response.code == 200)
         {
-          std::cout << "Add Modfile response: " << response.code << std::endl;
+          std::cout << "Modfile added successfully!" << std::endl;
+        }
 
-          if(response.code == 200)
-          {
-            std::cout << "Modfile added successfully!" << std::endl;
-          }
-
-          finish();
-        });
-      }
+        finish();
+      });
     }
   });
 
