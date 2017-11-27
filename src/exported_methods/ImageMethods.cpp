@@ -86,6 +86,8 @@ extern "C"
     std::map<std::string, std::string> curlform_files;
     curlform_files["logo"] = path;
 
+    std::cout<<"URLLLL"<<url<<std::endl;
+
     modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &onModLogoEdited);
   }
 }

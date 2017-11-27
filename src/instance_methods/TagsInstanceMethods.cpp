@@ -36,12 +36,11 @@ namespace modio
     for(int i=0; i < tags_array_size; i++)
     {
       tags_vector[i].initialize(tags_array[i]);
-      delete &tags_array[i];
     }
-
     get_tags_calls[call_id]->callback(get_tags_calls[call_id]->object, (const Response&)response, tags_vector);
 
     delete (int*)object;
+    delete[] tags_array;
     delete get_tags_calls[call_id];
     get_tags_calls.erase(call_id);
   }
@@ -58,11 +57,11 @@ namespace modio
     for(int i=0; i < tags_array_size; i++)
     {
       tags_vector[i].initialize(tags_array[i]);
-      delete &tags_array[i];
     }
-    
+
     add_tags_calls[call_id]->callback(add_tags_calls[call_id]->object, (const Response&)response, mod_id, tags_vector);
     delete (int*)object;
+    delete[] tags_array;
     delete add_tags_calls[call_id];
     add_tags_calls.erase(call_id);
   }
@@ -79,12 +78,12 @@ namespace modio
     for(int i=0; i < tags_array_size; i++)
     {
       tags_vector[i].initialize(tags_array[i]);
-      delete &tags_array[i];
     }
 
     delete_tags_calls[call_id]->callback(delete_tags_calls[call_id]->object, (const Response&)response, mod_id, tags_vector);
 
     delete (int*)object;
+    delete[] tags_array;
     delete delete_tags_calls[call_id];
     delete_tags_calls.erase(call_id);
   }
