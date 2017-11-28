@@ -15,7 +15,7 @@
 
 namespace modio
 {
-  class Filter
+  class MODIO_DLL Filter
   {
     ModioFilter* filter;
   public:
@@ -39,7 +39,7 @@ namespace modio
     ~Filter();
   };
 
-  class Instance
+  class MODIO_DLL Instance
   {
     int current_call_id;
 

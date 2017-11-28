@@ -151,6 +151,14 @@ namespace modio
 
   void sleep(int milliseconds)
   {
-    usleep(milliseconds * 1000);
+    #ifdef LINUX
+      usleep(milliseconds * 1000);
+    #endif
+    #ifdef WINDOWS
+      Sleep(milliseconds);
+    #endif
+    #ifdef OSX
+      TODO
+    #endif
   }
 }

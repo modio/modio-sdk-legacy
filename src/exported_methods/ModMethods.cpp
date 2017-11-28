@@ -108,8 +108,6 @@ extern "C"
       url+=(*i).first + "=" + (*i).second;
     }
 
-    std::cout<<"LLLLL"<<url<<std::endl;
-
     modio::curlwrapper::put(call_number, url, headers, mod_params, &onModAdded);
   }
 

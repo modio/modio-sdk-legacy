@@ -37,9 +37,9 @@ int main(void)
 
       std::cout << "Downloading image" << std::endl;
 
-      // Now let's download the full size logo to the selected path
+      // Now let's download the original logo full size to the selected path
       // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
-      mod.downloadImage(NULL, requested_mod.logo.full, "mods_dir/full.png", [&](void* object, const modio::Response& response, const std::string& path)
+      mod.downloadImage(NULL, requested_mod.logo.original, "mods_dir/original.png", [&](void* object, const modio::Response& response, const std::string& path)
       {
         std::cout << "Download Image response: " << response.code << std::endl;
 

@@ -47,7 +47,7 @@ int main(void)
           std::cout << "============" << std::endl;
           for(int i=0; i < (int)tags.size(); i++)
           {
-            std::cout << tags[i].tag << std::endl;
+            std::cout << tags[i].name << std::endl;
           }
         }
         finish();

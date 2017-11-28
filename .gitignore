@@ -50,7 +50,7 @@ examples/02_BrowseMods
 examples/03_ErrorResponse
 examples/04_DownloadImages
 examples/05_EditImage
-examples/06_InstallModfile
+examples/06_DownloadModfile
 examples/07_AddModfile
 examples/08_EditModfile
 examples/09_AddMod

@@ -152,8 +152,6 @@ extern "C"
       url += std::string("tags[]=") + tags_array[i];
     }
 
-    std::cout<<"UUUUUUUURL:"<<url<<std::endl;
-
     modio::curlwrapper::deleteCall(call_number, url, headers, &onTagsDeleted);
   }
 }
