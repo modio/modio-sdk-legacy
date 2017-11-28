@@ -13,9 +13,9 @@ namespace modio
     this->filesize = modio_modfile.filesize;
     this->filename = modio_modfile.filename;
     this->version = modio_modfile.version;
-    this->virustotal = modio_modfile.virustotal;
+    this->virustotal_hash = modio_modfile.virustotal_hash;
     this->changelog = modio_modfile.changelog;
-    this->download = modio_modfile.download;
+    this->download_url = modio_modfile.download_url;
 
     this->filehash.initialize(modio_modfile.filehash);
   }

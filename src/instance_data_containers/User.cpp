@@ -10,7 +10,7 @@ namespace modio
     this->name_id = modio_user.name_id;
     this->timezone = modio_user.timezone;
     this->language = modio_user.language;
-    this->url = modio_user.url;
+    this->profile_url = modio_user.profile_url;
     this->avatar.initialize(modio_user.avatar);
   }
 }

@@ -12,12 +12,12 @@ extern "C"
       strcpy(image->filename, filename_str.c_str());
     }
 
-    image->full = NULL;
-    if(modio::hasKey(image_json, "full"))
+    image->original = NULL;
+    if(modio::hasKey(image_json, "original"))
     {
-      std::string full_str = image_json["full"];
-      image->full = new char[full_str.size() + 1];
-      strcpy(image->full, full_str.c_str());
+      std::string original_str = image_json["original"];
+      image->original = new char[original_str.size() + 1];
+      strcpy(image->original, original_str.c_str());
     }
 
     image->thumb_1280x720 = NULL;
@@ -48,7 +48,7 @@ extern "C"
   void modioFreeImage(ModioImage* image)
   {
     delete[] image->filename;
-    delete[] image->full;
+    delete[] image->original;
     delete[] image->thumb_1280x720;
     delete[] image->thumb_320x180;
     delete[] image->thumb_640x360;

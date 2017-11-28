@@ -17,7 +17,7 @@ extern "C"
     char* name_id;
     char* timezone;
     char* language;
-    char* url;
+    char* profile_url;
     ModioImage avatar;
   };
 

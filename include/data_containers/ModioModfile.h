@@ -21,9 +21,9 @@ extern "C"
     long filesize;
     char* filename;
     char* version;
-    char* virustotal;
+    char* virustotal_hash;
     char* changelog;
-    char* download;
+    char* download_url;
     ModioFilehash filehash;
   };
 

@@ -48,12 +48,12 @@ extern "C"
       strcpy(modfile->version, version_str.c_str());
     }
 
-    modfile->virustotal = NULL;
-    if(modio::hasKey(modfile_json, "virustotal"))
+    modfile->virustotal_hash = NULL;
+    if(modio::hasKey(modfile_json, "virustotal_hash"))
     {
-      std::string virustotal_str = modfile_json["virustotal"];
-      modfile->virustotal = new char[virustotal_str.size() + 1];
-      strcpy(modfile->virustotal, virustotal_str.c_str());
+      std::string virustotal_hash_str = modfile_json["virustotal_hash"];
+      modfile->virustotal_hash = new char[virustotal_hash_str.size() + 1];
+      strcpy(modfile->virustotal_hash, virustotal_hash_str.c_str());
     }
 
     modfile->changelog = NULL;
@@ -64,14 +64,14 @@ extern "C"
       strcpy(modfile->changelog, changelog_str.c_str());
     }
 
-    modfile->download = NULL;
-    if(modio::hasKey(modfile_json, "download"))
+    modfile->download_url = NULL;
+    if(modio::hasKey(modfile_json, "download_url"))
     {
-      std::string download_str = modfile_json["download"];
-      modfile->download = new char[download_str.size() + 1];
-      strcpy(modfile->download, download_str.c_str());
+      std::string download_url_str = modfile_json["download_url"];
+      modfile->download_url = new char[download_url_str.size() + 1];
+      strcpy(modfile->download_url, download_url_str.c_str());
     }
-    
+
     if(modio::hasKey(modfile_json, "filehash"))
     {
       modioInitFilehash(&(modfile->filehash), modfile_json["filehash"]);

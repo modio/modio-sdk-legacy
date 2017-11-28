@@ -5,6 +5,6 @@ namespace modio
   void Tag::initialize(ModioTag modio_tag)
   {
     this->date_added = modio_tag.date_added;
-    this->tag = modio_tag.tag;
+    this->name = modio_tag.name;
   }
 }

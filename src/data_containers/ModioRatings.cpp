@@ -4,32 +4,32 @@ extern "C"
 {
   void modioInitRatings(ModioRatings* ratings, json ratings_json)
   {
-    ratings->total = -1;
-    if(modio::hasKey(ratings_json, "total"))
-      ratings->total = ratings_json["total"];
+    ratings->total_ratings = -1;
+    if(modio::hasKey(ratings_json, "total_ratings"))
+      ratings->total_ratings = ratings_json["total_ratings"];
 
-    ratings->positive = -1;
-    if(modio::hasKey(ratings_json, "positive"))
-      ratings->positive = ratings_json["positive"];
+    ratings->positive_ratings = -1;
+    if(modio::hasKey(ratings_json, "positive_ratings"))
+      ratings->positive_ratings = ratings_json["positive_ratings"];
 
-    ratings->negative = -1;
-    if(modio::hasKey(ratings_json, "negative"))
-      ratings->negative = ratings_json["negative"];
+    ratings->negative_ratings = -1;
+    if(modio::hasKey(ratings_json, "negative_ratings"))
+      ratings->negative_ratings = ratings_json["negative_ratings"];
 
-    ratings->weighted = -1;
-    if(modio::hasKey(ratings_json, "weighted"))
-      ratings->weighted = ratings_json["weighted"];
+      ratings->percentage_positive = -1;
+      if(modio::hasKey(ratings_json, "percentage_positive"))
+      ratings->percentage_positive = ratings_json["percentage_positive"];
 
-    ratings->percentage = -1;
-    if(modio::hasKey(ratings_json, "percentage"))
-      ratings->percentage = ratings_json["percentage"];
+    ratings->weighted_aggregate = -1;
+    if(modio::hasKey(ratings_json, "weighted_aggregate"))
+      ratings->weighted_aggregate = ratings_json["weighted_aggregate"];
 
-    ratings->text = NULL;
-    if(modio::hasKey(ratings_json, "text"))
+    ratings->display_text = NULL;
+    if(modio::hasKey(ratings_json, "display_text"))
     {
-      std::string text_str = ratings_json["text"];
-      ratings->text = new char[text_str.size() + 1];
-      strcpy(ratings->text, text_str.c_str());
+      std::string display_text_str = ratings_json["display_text"];
+      ratings->display_text = new char[display_text_str.size() + 1];
+      strcpy(ratings->display_text, display_text_str.c_str());
     }
   }
 

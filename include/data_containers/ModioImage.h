@@ -11,7 +11,7 @@ extern "C"
   struct ModioImage
   {
     char* filename;
-    char* full;
+    char* original;
     char* thumb_1280x720;
     char* thumb_640x360;
     char* thumb_320x180;

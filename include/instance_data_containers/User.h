@@ -16,7 +16,7 @@ namespace modio
     std::string name_id;
     std::string timezone;
     std::string language;
-    std::string url;
+    std::string profile_url;
     modio::Image avatar;
 
     void initialize(ModioUser modio_user);

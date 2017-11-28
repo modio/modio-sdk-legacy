@@ -12,10 +12,6 @@ extern "C"
     if(modio::hasKey(mod_json, "game_id"))
       mod->game_id = mod_json["game_id"];
 
-    mod->price = 0;
-    if(modio::hasKey(mod_json, "price"))
-      mod->price = mod_json["price"];
-
     mod->date_added = -1;
     if(modio::hasKey(mod_json, "date_added"))
       mod->date_added = mod_json["date_added"];
@@ -76,12 +72,12 @@ extern "C"
       strcpy(mod->metadata_blob, metadata_blob_str.c_str());
     }
 
-    mod->url = NULL;
-    if(modio::hasKey(mod_json, "url"))
+    mod->profile_url = NULL;
+    if(modio::hasKey(mod_json, "profile_url"))
     {
-      std::string url_str = mod_json["url"];
-      mod->url = new char[url_str.size() + 1];
-      strcpy(mod->url, url_str.c_str());
+      std::string profile_url_str = mod_json["profile_url"];
+      mod->profile_url = new char[profile_url_str.size() + 1];
+      strcpy(mod->profile_url, profile_url_str.c_str());
     }
 
     if(modio::hasKey(mod_json, "logo"))
@@ -93,7 +89,7 @@ extern "C"
     {
       modioInitUser(&(mod->submitted_by), mod_json["submitted_by"]);
     }
-    
+
     if(modio::hasKey(mod_json, "media"))
     {
       modioInitMedia(&(mod->media), mod_json["media"]);

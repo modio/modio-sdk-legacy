@@ -17,7 +17,6 @@ namespace modio
   public:
     u32 id;
     u32 game_id;
-    double price;
     long date_added;
     long date_live;
     long date_updated;
@@ -27,7 +26,7 @@ namespace modio
     std::string summary;
     std::string description;
     std::string metadata_blob;
-    std::string url;
+    std::string profile_url;
     Image logo;
     User submitted_by;
     Media media;

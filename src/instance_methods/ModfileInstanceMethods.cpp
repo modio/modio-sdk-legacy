@@ -92,7 +92,7 @@ namespace modio
     const struct InstallModfileCall* install_modfile_call = new InstallModfileCall{object, callback};
     install_modfile_calls[this->current_call_id] = (InstallModfileCall*)install_modfile_call;
 
-    modioInstallModfile((void*)new int(this->current_call_id), modfile.id, (char*)modfile.download.c_str(), (char*)destination_path.c_str(), &onInstallModfile);
+    modioInstallModfile((void*)new int(this->current_call_id), modfile.id, (char*)modfile.download_url.c_str(), (char*)destination_path.c_str(), &onInstallModfile);
 
     this->current_call_id++;
   }

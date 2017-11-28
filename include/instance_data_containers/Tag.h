@@ -10,7 +10,7 @@ namespace modio
   {
   public:
     int date_added;
-    std::string tag;
+    std::string name;
 
     void initialize(ModioTag tag);
   };

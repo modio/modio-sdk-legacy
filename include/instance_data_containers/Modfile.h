@@ -19,9 +19,9 @@ namespace modio
     long filesize;
     std::string filename;
     std::string version;
-    std::string virustotal;
+    std::string virustotal_hash;
     std::string changelog;
-    std::string download;
+    std::string download_url;
     modio::Filehash filehash;
 
     void initialize(ModioModfile modfile);
