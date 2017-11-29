@@ -100,9 +100,9 @@ extern "C"
       modioInitModfile(&(mod->modfile), mod_json["modfile"]);
     }
 
-    if(modio::hasKey(mod_json, "ratings"))
+    if(modio::hasKey(mod_json, "rating_summary"))
     {
-      modioInitRatings(&(mod->ratings), mod_json["ratings"]);
+      modioInitRatings(&(mod->ratings), mod_json["rating_summary"]);
     }
 
     mod->tags_array = NULL;

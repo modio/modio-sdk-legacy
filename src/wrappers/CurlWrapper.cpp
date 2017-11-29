@@ -457,6 +457,7 @@ namespace modio
           {
             json response_json = parseJsonResonse(ongoing_calls[curl_handle]->response);
             int response_code;
+            std::cout<<"JSONN"<<ongoing_calls[curl_handle]->response<<std::endl;
             curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
             ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response_code, response_json);
             advanceOngoingCall();

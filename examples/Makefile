@@ -6,7 +6,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=Example
 LIBRARIES=../src/modio.so
 
-EXAMPLES=01_Authentication 02_BrowseMods 03_ErrorResponse 04_DownloadImages 05_EditImage 06_InstallModfile 07_AddModfile 08_EditModfile 09_AddMod 10_EditMod 11_DeleteMod 12_GetTags 13_AddTags 14_DeleteTags
+EXAMPLES=01_Authentication 02_BrowseMods 03_ErrorResponse 04_DownloadImages 05_EditImage 06_DownloadModfile 07_AddModfile 08_EditModfile 09_AddMod 10_EditMod 11_DeleteMod 12_GetTags 13_AddTags 14_DeleteTags
 
 all: $(EXAMPLES)
 
@@ -30,9 +30,9 @@ all: $(EXAMPLES)
 	$(CC) $(CFLAGS) 05_EditImage.cpp -o 05_EditImage.o -I ../include
 	$(CC) 05_EditImage.o $(LIBRARIES) -o 05_EditImage $(LDFLAGS)
 
-06_InstallModfile: 06_InstallModfile.cpp
-	$(CC) $(CFLAGS) 06_InstallModfile.cpp -o 06_InstallModfile.o -I ../include
-	$(CC) 06_InstallModfile.o $(LIBRARIES) -o 06_InstallModfile $(LDFLAGS)
+06_DownloadModfile: 06_DownloadModfile.cpp
+	$(CC) $(CFLAGS) 06_DownloadModfile.cpp -o 06_DownloadModfile.o -I ../include
+	$(CC) 06_DownloadModfile.o $(LIBRARIES) -o 06_DownloadModfile $(LDFLAGS)
 
 07_AddModfile: 07_AddModfile.cpp
 	$(CC) $(CFLAGS) 07_AddModfile.cpp -o 07_AddModfile.o -I ../include

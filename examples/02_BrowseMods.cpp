@@ -41,6 +41,7 @@ int main(void)
         std::cout << "Mod[" << i << "]" << std::endl;
         std::cout << "Id: \t" << mods[i].id << std::endl;
         std::cout << "Name:\t" << mods[i].name << std::endl;
+        std::cout << "Name:\t" << mods[i].ratings.weighted_aggregate << std::endl;
       }
 
       // Additionally, we can access cursor data to ease future browsing queries
