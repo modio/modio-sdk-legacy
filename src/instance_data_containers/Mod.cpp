@@ -21,7 +21,7 @@ namespace modio
       this->description = modio_mod.description;
     if(modio_mod.metadata_blob)
       this->metadata_blob = modio_mod.metadata_blob;
-      if(modio_mod.profile_url)
+    if(modio_mod.profile_url)
       this->profile_url = modio_mod.profile_url;
     this->logo.initialize(modio_mod.logo);
     this->submitted_by.initialize(modio_mod.submitted_by);
