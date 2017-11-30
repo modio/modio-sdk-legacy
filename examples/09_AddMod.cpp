@@ -42,7 +42,7 @@ int main(void)
   std::cout <<"Creating mod..." << std::endl;
 
   // Now we can create the new mod. Remember, this mod wont have a Modfile right away, you should be adding one after the mod was created successfully
-  mod.addMod(NULL, mod_handler, [&](void* object, const modio::Response& response, const modio::Mod& mod)
+  mod.addMod(mod_handler, [&](const modio::Response& response, const modio::Mod& mod)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 201)

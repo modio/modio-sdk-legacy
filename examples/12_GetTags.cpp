@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -37,7 +37,7 @@ int main(void)
       std::cout <<"Getting tags..." << std::endl;
 
       // We request the list of tags by providing the Mod's id
-      mod.getTags(NULL, requested_mod.id, [&](void* object, const modio::Response& response, std::vector<modio::Tag> tags)
+      mod.getTags(requested_mod.id, [&](const modio::Response& response, std::vector<modio::Tag> tags)
       {
         std::cout << "Get tags response: " << response.code << std::endl;
         if(response.code == 200)

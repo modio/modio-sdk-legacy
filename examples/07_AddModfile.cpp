@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     if(response.code == 200 && mods.size() >= 1)
     {
@@ -46,7 +46,7 @@ int main(void)
 
       std::cout << "Uploading modfile..." << std::endl;
 
-      mod.addModfile(NULL, requested_mod.id, modfile_handler, [&](void* object, const modio::Response& response, const modio::Modfile& modfile)
+      mod.addModfile(requested_mod.id, modfile_handler, [&](const modio::Response& response, const modio::Modfile& modfile)
       {
         std::cout << "Add Modfile response: " << response.code << std::endl;
 

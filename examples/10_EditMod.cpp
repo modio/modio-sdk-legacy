@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -50,7 +50,7 @@ int main(void)
 
       std::cout <<"Editing mod..." << std::endl;
 
-      mod.editMod(NULL, requested_mod.id, mod_handler, [&](void* object, const modio::Response& response, const modio::Mod& mod)
+      mod.editMod(requested_mod.id, mod_handler, [&](const modio::Response& response, const modio::Mod& mod)
       {
         std::cout << "On mod get response: " << response.code << std::endl;
         if(response.code == 200)
