@@ -46,9 +46,9 @@ int main(void)
         if(response.code == 204)
         {
           std::cout << "Tags deleted successfully" << std::endl;
-          for(int i=0; i < (int)tags.size(); i++)
+          for(auto& tag : tags)
           {
-            std::cout << tags[i].name << std::endl;
+            std::cout << tag.name << std::endl;
           }
         }
         finish();

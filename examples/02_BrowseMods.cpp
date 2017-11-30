@@ -36,12 +36,11 @@ int main(void)
     {
       std::cout << "Listing mods" << std::endl;
       std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      for(auto& mod : mods)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
-        std::cout << "Name:\t" << mods[i].ratings.weighted_aggregate << std::endl;
+        std::cout << "Id: \t" << mod.id << std::endl;
+        std::cout << "Name:\t" << mod.name << std::endl;
+        std::cout << "Name:\t" << mod.ratings.weighted_aggregate << std::endl << std::endl;
       }
 
       // Additionally, we can access cursor data to ease future browsing queries

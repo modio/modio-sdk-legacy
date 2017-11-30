@@ -45,9 +45,9 @@ int main(void)
           std::cout << "Mod delete successfully" << std::endl;
           std::cout << "Listing Tags" << std::endl;
           std::cout << "============" << std::endl;
-          for(int i=0; i < (int)tags.size(); i++)
+          for(auto& tag : tags)
           {
-            std::cout << tags[i].name << std::endl;
+            std::cout << tag.name << std::endl;
           }
         }
         finish();
