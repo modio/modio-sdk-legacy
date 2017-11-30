@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -40,15 +40,15 @@ int main(void)
       tags.push_back("Easy");
 
       // We delete tags by providing the selected Mod id and the tag names
-      mod.deleteTags(NULL, requested_mod.id, tags, [&](void* object, const modio::Response& response, u32 mod_id, std::vector<modio::Tag> tags)
+      mod.deleteTags(requested_mod.id, tags, [&](const modio::Response& response, u32 mod_id, std::vector<modio::Tag> tags)
       {
         std::cout << "Add tags response: " << response.code << std::endl;
         if(response.code == 204)
         {
-          std::cout << "Tags added successfully" << std::endl;
-          for(int i=0; i < (int)tags.size(); i++)
+          std::cout << "Tags deleted successfully" << std::endl;
+          for(auto& tag : tags)
           {
-            std::cout << tags[i].tag << std::endl;
+            std::cout << tag.name << std::endl;
           }
         }
         finish();

@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -37,7 +37,7 @@ int main(void)
       std::cout << "Deleting mod..." << std::endl;
 
       // We delete a mod providing the Mod id
-      mod.deleteMod(NULL, requested_mod.id, [&](void* object, const modio::Response& response, u32 mod_id)
+      mod.deleteMod(requested_mod.id, [&](const modio::Response& response, u32 mod_id)
       {
         std::cout << "Mod Delete response: " << response.code << std::endl;
         if(response.code == 204)

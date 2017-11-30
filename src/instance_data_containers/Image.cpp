@@ -6,8 +6,8 @@ namespace modio
   {
     if(modio_image.filename)
       this->filename = modio_image.filename;
-    if(modio_image.full)
-      this->full = modio_image.full;
+    if(modio_image.original)
+      this->original = modio_image.original;
     if(modio_image.thumb_1280x720)
       this->thumb_1280x720 = modio_image.thumb_1280x720;
     if(modio_image.thumb_640x360)

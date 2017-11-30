@@ -6,7 +6,6 @@ namespace modio
   {
     this->id = modio_mod.id;
     this->game_id = modio_mod.game_id;
-    this->price = modio_mod.price;
     this->date_added = modio_mod.date_added;
     this->date_live = modio_mod.date_live;
     this->date_updated = modio_mod.date_updated;
@@ -22,14 +21,13 @@ namespace modio
       this->description = modio_mod.description;
     if(modio_mod.metadata_blob)
       this->metadata_blob = modio_mod.metadata_blob;
-    if(modio_mod.url)
-      this->url = modio_mod.url;
+    if(modio_mod.profile_url)
+      this->profile_url = modio_mod.profile_url;
     this->logo.initialize(modio_mod.logo);
     this->submitted_by.initialize(modio_mod.submitted_by);
     this->media.initialize(modio_mod.media);
     this->modfile.initialize(modio_mod.modfile);
     this->ratings.initialize(modio_mod.ratings);
-
     this->tags.resize(modio_mod.tags_array_size);
     for(int i = 0; i < modio_mod.tags_array_size; i++)
     {

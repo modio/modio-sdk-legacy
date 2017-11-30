@@ -9,12 +9,12 @@ namespace modio
   class Ratings
   {
   public:
-    int total;
-    int positive;
-    int negative;
-    int percentage;
-    double weighted;
-    std::string text;
+    int total_ratings;
+    int positive_ratings;
+    int negative_ratings;
+    int percentage_positive;
+    double weighted_aggregate;
+    std::string display_text;
 
     void initialize(ModioRatings ratings);
   };

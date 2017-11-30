@@ -27,7 +27,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -37,9 +37,9 @@ int main(void)
 
       std::cout << "Downloading image" << std::endl;
 
-      // Now let's download the full size logo to the selected path
+      // Now let's download the original logo full size to the selected path
       // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
-      mod.downloadImage(NULL, requested_mod.logo.full, "mods_dir/full.png", [&](void* object, const modio::Response& response, const std::string& path)
+      mod.downloadImage(requested_mod.logo.original, "mods_dir/original.png", [&](const modio::Response& response, const std::string& path)
       {
         std::cout << "Download Image response: " << response.code << std::endl;
 

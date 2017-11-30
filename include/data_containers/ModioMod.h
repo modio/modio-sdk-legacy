@@ -20,7 +20,6 @@ extern "C"
   {
     u32 id;
     u32 game_id;
-    double price;
     long date_added;
     long date_live;
     long date_updated;
@@ -30,7 +29,7 @@ extern "C"
     char* summary;
     char* description;
     char* metadata_blob;
-    char* url;
+    char* profile_url;
     ModioImage logo;
     ModioUser submitted_by;
     ModioMedia media;

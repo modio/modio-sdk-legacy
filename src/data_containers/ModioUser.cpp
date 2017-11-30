@@ -48,12 +48,12 @@ extern "C"
       strcpy(user->language, language_str.c_str());
     }
 
-    user->url = NULL;
-    if(modio::hasKey(user_json, "url"))
+    user->profile_url = NULL;
+    if(modio::hasKey(user_json, "profile_url"))
     {
-      std::string url_str = user_json["url"];
-      user->url = new char[url_str.size() + 1];
-      strcpy(user->url, url_str.c_str());
+      std::string profile_url_str = user_json["profile_url"];
+      user->profile_url = new char[profile_url_str.size() + 1];
+      strcpy(user->profile_url, profile_url_str.c_str());
     }
 
     if(modio::hasKey(user_json, "avatar"))

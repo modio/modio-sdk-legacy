@@ -11,7 +11,7 @@ extern "C"
   struct ModioTag
   {
     int date_added;
-    char* tag;
+    char* name;
   };
 
   void modioInitTag(ModioTag* tag, json tag_json);

@@ -2,7 +2,7 @@
 
 namespace modio
 {
-  class ModfileHandler
+  class MODIO_DLL ModfileHandler
   {
     ModioModfileHandler* modfile_handler;
   public:

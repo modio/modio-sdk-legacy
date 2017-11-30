@@ -8,12 +8,12 @@ extern "C"
     if(modio::hasKey(tag_json, "date_added"))
       tag->date_added = tag_json["date_added"];
 
-    tag->tag = NULL;
-    if(modio::hasKey(tag_json, "tag"))
+    tag->name = NULL;
+    if(modio::hasKey(tag_json, "name"))
     {
-      std::string tag_str = tag_json["tag"];
-      tag->tag = new char[tag_str.size() + 1];
-      strcpy(tag->tag, tag_str.c_str());
+      std::string name_str = tag_json["name"];
+      tag->name = new char[name_str.size() + 1];
+      strcpy(tag->name, name_str.c_str());
     }
   }
 

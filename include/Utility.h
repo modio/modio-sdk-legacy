@@ -93,7 +93,7 @@ namespace modio
   bool hasKey(json json_object, std::string key);
   void removeFile(std::string filename);
   std::string addSlashIfNeeded(std::string directory_path);
-  void sleep(int milliseconds);
+  void  MODIO_DLL sleep(int milliseconds);
 }
 
 #endif

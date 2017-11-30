@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -37,7 +37,7 @@ int main(void)
       std::cout << "Installing modfile..." << std::endl;
 
       // Now we provide the Modfile id and the local path where the modfile will be installed
-      mod.installModfile(NULL, requested_mod.modfile, "mods_dir/modfile", [&](void* object, const modio::Response& response, const std::string& path)
+      mod.installModfile(requested_mod.modfile, "mods_dir/modfile", [&](const modio::Response& response, const std::string& path)
       {
         std::cout << "Install Modfile response: " << response.code << std::endl;
 

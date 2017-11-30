@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -40,12 +40,16 @@ int main(void)
       tags.push_back("Easy");
 
       // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-      mod.addTags(NULL, requested_mod.id, tags, [&](void* object, const modio::Response& response, u32 mod_id, std::vector<modio::Tag> tags)
+      mod.addTags(requested_mod.id, tags, [&](const modio::Response& response, u32 mod_id, std::vector<modio::Tag> tags)
       {
         std::cout << "Add tags response: " << response.code << std::endl;
         if(response.code == 204)
         {
           std::cout << "Tags added successfully" << std::endl;
+          for(auto& tag : tags)
+          {
+            std::cout << tag.name << std::endl;
+          }
         }
         finish();
       });

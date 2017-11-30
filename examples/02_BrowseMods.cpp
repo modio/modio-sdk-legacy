@@ -29,18 +29,18 @@ int main(void)
   std::cout <<"Getting mods..." << std::endl;
 
   // Now we finished setting up the filters we are ready to request the mods
-  mod.getMods(NULL, filter, [&](void* object, const modio::Response& response, const std::vector<modio::Mod> & mods)
+  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200)
     {
       std::cout << "Listing mods" << std::endl;
       std::cout << "============" << std::endl;
-      for(int i=0; i < (int)mods.size(); i++)
+      for(auto& mod : mods)
       {
-        std::cout << "Mod[" << i << "]" << std::endl;
-        std::cout << "Id: \t" << mods[i].id << std::endl;
-        std::cout << "Name:\t" << mods[i].name << std::endl;
+        std::cout << "Id: \t" << mod.id << std::endl;
+        std::cout << "Name:\t" << mod.name << std::endl;
+        std::cout << "Name:\t" << mod.ratings.weighted_aggregate << std::endl << std::endl;
       }
 
       // Additionally, we can access cursor data to ease future browsing queries

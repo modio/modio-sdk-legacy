@@ -11,12 +11,16 @@ namespace modio
     this->date_added = modio_modfile.date_added;
     this->date_scanned = modio_modfile.date_scanned;
     this->filesize = modio_modfile.filesize;
-    this->filename = modio_modfile.filename;
-    this->version = modio_modfile.version;
-    this->virustotal = modio_modfile.virustotal;
-    this->changelog = modio_modfile.changelog;
-    this->download = modio_modfile.download;
-
+    if(modio_modfile.filename)
+      this->filename = modio_modfile.filename;
+    if(modio_modfile.version)
+      this->version = modio_modfile.version;
+    if(modio_modfile.virustotal_hash)
+      this->virustotal_hash = modio_modfile.virustotal_hash;
+    if(modio_modfile.changelog)
+      this->changelog = modio_modfile.changelog;
+    if(modio_modfile.download_url)
+      this->download_url = modio_modfile.download_url;
     this->filehash.initialize(modio_modfile.filehash);
   }
 }

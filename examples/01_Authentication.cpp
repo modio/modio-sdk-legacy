@@ -29,7 +29,7 @@ int main()
     std::cin >> email;
 
     // Auth works by sending an email with a code. Lets trigger that now
-    mod.emailRequest(NULL, email, [&](void* object, const modio::Response& response, const std::string& message)
+    mod.emailRequest(email, [&](const modio::Response& response, const std::string& message)
     {
       std::cout << "Response code: " << response.code << std::endl;
 
@@ -42,7 +42,7 @@ int main()
         std::cin >> securityCode;
 
         // Finish the auth process by entering the security code
-        mod.emailExchange(NULL, securityCode, [&](void* object, const modio::Response& response)
+        mod.emailExchange(securityCode, [&](const modio::Response& response)
         {
           std::cout << "Response code: " << response.code << std::endl;
           if (response.code == 200)
