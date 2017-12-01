@@ -2,7 +2,7 @@
 
 int main()
 {
-  modio::Instance mod(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
 
@@ -21,7 +21,7 @@ int main()
   };
 
   // Check to see if we have a cookie and are already logged in
-  if (!mod.isLoggedIn())
+  if (!modio_instance.isLoggedIn())
   {
     std::string email;
 
@@ -29,7 +29,7 @@ int main()
     std::cin >> email;
 
     // Auth works by sending an email with a code. Lets trigger that now
-    mod.emailRequest(email, [&](const modio::Response& response, const std::string& message)
+    modio_instance.emailRequest(email, [&](const modio::Response& response, const std::string& message)
     {
       std::cout << "Response code: " << response.code << std::endl;
 
@@ -42,7 +42,7 @@ int main()
         std::cin >> securityCode;
 
         // Finish the auth process by entering the security code
-        mod.emailExchange(securityCode, [&](const modio::Response& response)
+        modio_instance.emailExchange(securityCode, [&](const modio::Response& response)
         {
           std::cout << "Response code: " << response.code << std::endl;
           if (response.code == 200)
@@ -72,7 +72,7 @@ int main()
 
     if (userOption == "y")
     {
-      mod.logout();
+      modio_instance.logout();
     }
   }
 

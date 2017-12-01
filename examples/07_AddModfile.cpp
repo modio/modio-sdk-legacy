@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modio::Instance mod(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
 
@@ -26,12 +26,12 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     if(response.code == 200 && mods.size() >= 1)
     {
-      modio::Mod requested_mod = mods[0];
-      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+      modio::Mod mod = mods[0];
+      std::cout << "Requested mod: " << mod.name << std::endl;
 
       // The Modfile Handler helps us setting up the modfile fields and the mod directory that will be zipped and uploaded
       modio::ModfileHandler modfile_handler;
@@ -46,7 +46,7 @@ int main(void)
 
       std::cout << "Uploading modfile..." << std::endl;
 
-      mod.addModfile(requested_mod.id, modfile_handler, [&](const modio::Response& response, const modio::Modfile& modfile)
+      modio_instance.addModfile(mod.id, modfile_handler, [&](const modio::Response& response, const modio::Modfile& modfile)
       {
         std::cout << "Add Modfile response: " << response.code << std::endl;
 

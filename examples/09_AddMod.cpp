@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modio::Instance mod(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
 
@@ -42,7 +42,7 @@ int main(void)
   std::cout <<"Creating mod..." << std::endl;
 
   // Now we can create the new mod. Remember, this mod wont have a Modfile right away, you should be adding one after the mod was created successfully
-  mod.addMod(mod_handler, [&](const modio::Response& response, const modio::Mod& mod)
+  modio_instance.addMod(mod_handler, [&](const modio::Response& response, const modio::Mod& mod)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 201)
