@@ -21,7 +21,7 @@ int main(void)
   };
 
   // Before requesting mods, let's define the query filters
-  modio::Filter filter;
+  modio::FilterHandler filter;
   filter.setFilterLimit(3);
   filter.addFilterLikeField("name", "Example Mod");
   filter.addFilterLikeField("description", "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");

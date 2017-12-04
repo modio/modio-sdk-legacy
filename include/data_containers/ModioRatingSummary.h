@@ -1,5 +1,5 @@
-#ifndef MODIO_MODIORATINGS_H
-#define MODIO_MODIORATINGS_H
+#ifndef MODIO_MODIORATINGSUMMARY_H
+#define MODIO_MODIORATINGSUMMARY_H
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
@@ -8,7 +8,7 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  struct ModioRatings
+  struct ModioRatingSummary
   {
     u32 total_ratings;
     u32 positive_ratings;
@@ -18,8 +18,8 @@ extern "C"
     char* display_text;
   };
 
-  void modioInitRatings(ModioRatings* ratings, json ratings_json);
-  void modioFreeRatings(ModioRatings* ratings);
+  void modioInitRatingSummary(ModioRatingSummary* ratings, json ratings_json);
+  void modioFreeRatingSummary(ModioRatingSummary* ratings);
 }
 
 #endif

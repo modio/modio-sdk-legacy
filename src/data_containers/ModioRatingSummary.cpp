@@ -1,8 +1,8 @@
-#include "data_containers/ModioRatings.h"
+#include "data_containers/ModioRatingSummary.h"
 
 extern "C"
 {
-  void modioInitRatings(ModioRatings* ratings, json ratings_json)
+  void modioInitRatingSummary(ModioRatingSummary* ratings, json ratings_json)
   {
     ratings->total_ratings = -1;
     if(modio::hasKey(ratings_json, "total_ratings"))
@@ -33,7 +33,7 @@ extern "C"
     }
   }
 
-  void modioFreeRatings(ModioRatings* ratings)
+  void modioFreeRatingSummary(ModioRatingSummary* ratings)
   {
     delete ratings;
   }

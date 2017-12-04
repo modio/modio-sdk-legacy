@@ -8,7 +8,7 @@
 #include "instance_data_containers/Media.h"
 #include "instance_data_containers/Mod.h"
 #include "instance_data_containers/Modfile.h"
-#include "instance_data_containers/Ratings.h"
+#include "instance_data_containers/RatingSummary.h"
 #include "instance_data_containers/Response.h"
 #include "instance_data_containers/Tag.h"
 #include "instance_data_containers/User.h"

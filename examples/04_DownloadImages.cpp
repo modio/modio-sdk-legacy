@@ -22,7 +22,7 @@ int main(void)
 
   // Let's start by requesting a single mod
 
-  modio::Filter filter;
+  modio::FilterHandler filter;
   filter.setFilterLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;

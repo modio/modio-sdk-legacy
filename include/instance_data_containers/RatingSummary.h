@@ -1,12 +1,12 @@
-#ifndef MODIO_RATINGS_H
-#define MODIO_RATINGS_H
+#ifndef MODIO_RATINGSUMMARY_H
+#define MODIO_RATINGSUMMARY_H
 
 #include "Globals.h"
-#include "data_containers/ModioRatings.h"
+#include "data_containers/ModioRatingSummary.h"
 
 namespace modio
 {
-  class Ratings
+  class RatingSummary
   {
   public:
     u32 total_ratings;
@@ -16,7 +16,7 @@ namespace modio
     double weighted_aggregate;
     std::string display_text;
 
-    void initialize(ModioRatings ratings);
+    void initialize(ModioRatingSummary ratings);
   };
 }
 

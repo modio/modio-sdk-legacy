@@ -9,7 +9,7 @@
 #include "data_containers/ModioUser.h"
 #include "data_containers/ModioMedia.h"
 #include "data_containers/ModioModfile.h"
-#include "data_containers/ModioRatings.h"
+#include "data_containers/ModioRatingSummary.h"
 #include "data_containers/ModioTag.h"
 
 using json = nlohmann::json;
@@ -34,9 +34,9 @@ extern "C"
     ModioUser submitted_by;
     ModioMedia media;
     ModioModfile modfile;
-    ModioRatings ratings;
+    ModioRatingSummary ratings;
     ModioTag* tags_array;
-    int tags_array_size;
+    u32 tags_array_size;
   };
 
   void modioInitMod(ModioMod* mod, json mod_json);
