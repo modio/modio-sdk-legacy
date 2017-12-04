@@ -1,7 +1,7 @@
-//#include "handlers_instace/ModfileHandlerInstance.h"
 #include "ModIOSDK.h"
-#include "handlers_instance/ModHandlerInstance.h"
-#include "handlers_instance/ModfileHandlerInstance.h"
+#include "handlers_instance/FilterHandler.h"
+#include "handlers_instance/ModHandler.h"
+#include "handlers_instance/ModfileHandler.h"
 #include "instance_data_containers/Error.h"
 #include "instance_data_containers/Filehash.h"
 #include "instance_data_containers/Image.h"
@@ -15,30 +15,6 @@
 
 namespace modio
 {
-  class MODIO_DLL Filter
-  {
-    ModioFilter* filter;
-  public:
-    Filter();
-    void setFilterSort(const std::string& field, bool ascending);
-    void setFilterLimit(u32 limit);
-    void setFilterOffset(u32 offset);
-    void setFilterCursor(u32 cursor);
-    void setFilterFullTextSearch(const std::string& text);
-    void addFilterFieldValue(const std::string& field, const std::string& value);
-    void addFilterLikeField(const std::string& field, const std::string& value);
-    void addFilterNotLikeField(const std::string& field, const std::string& value);
-    void addFilterInField(const std::string& field, const std::string& value);
-    void addFilterNotInField(const std::string& field, const std::string& value);
-    void addFilterMinField(const std::string& field, double value);
-    void addFilterMaxField(const std::string& field, double value);
-    void addFilterSmallerThanField(const std::string& field, double value);
-    void addFilterGreaterThanField(const std::string& field, double value);
-    void addFilterNotEqualField(const std::string& field, const std::string& value);
-    ModioFilter* getFilter();
-    ~Filter();
-  };
-
   class MODIO_DLL Instance
   {
     int current_call_id;
@@ -58,7 +34,7 @@ namespace modio
 
     //Mod Methods
     void addMod(modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
-    void getMods(modio::Filter& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
+    void getMods(modio::FilterHandler& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
     void editMod(u32 mod_id, modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
 

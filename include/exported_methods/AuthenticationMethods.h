@@ -4,7 +4,7 @@
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
 #include "Globals.h"
-#include <thread>
+#include "data_containers/ModioResponse.h"
 
 extern "C"
 {

@@ -1,4 +1,4 @@
-#include "handlers_instance/ModfileHandlerInstance.h"
+#include "handlers_instance/ModfileHandler.h"
 
 namespace modio
 {

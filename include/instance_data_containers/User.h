@@ -1,8 +1,8 @@
 #ifndef MODIO_USER_H
 #define MODIO_USER_H
 
-#include "data_containers/ModioUser.h"
 #include "Globals.h"
+#include "data_containers/ModioUser.h"
 #include "instance_data_containers/Image.h"
 
 namespace modio

@@ -4,6 +4,10 @@
 #include <iostream>
 #include <vector>
 #include <string.h>
+#include <fstream>
+
+#include "dependencies/json/json.hpp"
+#include "Globals.h"
 
 #ifdef __linux__
 #define LINUX
@@ -52,10 +56,6 @@
 #ifdef MINGW
 #include "dependencies/mingw_threads/mingw.threads.h"
 #endif
-
-#include <fstream>
-#include "dependencies/json/json.hpp"
-#include "Globals.h"
 
 using json = nlohmann::json;
 

@@ -44,7 +44,7 @@ namespace modio
     edit_mod_logo_calls.erase(call_id);
   }
 
-  bool Instance::downloadImage(const std::string& image_url, const std::string& path, const std::function<void(const modio::Response&, const std::string& path)>& callback)
+  void Instance::downloadImage(const std::string& image_url, const std::string& path, const std::function<void(const modio::Response&, const std::string& path)>& callback)
   {
     const struct DownloadImageCall* download_image_call = new DownloadImageCall{callback};
     download_image_calls[this->current_call_id] = (DownloadImageCall*)download_image_call;
@@ -52,11 +52,9 @@ namespace modio
     modioDownloadImage((void*)new int(this->current_call_id), (char*)image_url.c_str(), (char*)path.c_str(), &onDownloadImage);
 
     this->current_call_id++;
-
-    return true;
   }
 
-  bool Instance::editModLogo(u32 mod_id, const std::string& path, const std::function<void(const modio::Response&, u32 mod_id)>& callback)
+  void Instance::editModLogo(u32 mod_id, const std::string& path, const std::function<void(const modio::Response&, u32 mod_id)>& callback)
   {
     const struct EditModLogoCall* edit_mod_logo_call = new EditModLogoCall{callback};
     edit_mod_logo_calls[this->current_call_id] = (EditModLogoCall*)edit_mod_logo_call;
@@ -64,7 +62,5 @@ namespace modio
     modioEditModLogo((void*)new int(this->current_call_id), mod_id, (char*)path.c_str(), &onEditModLogo);
 
     this->current_call_id++;
-
-    return true;
   }
 }

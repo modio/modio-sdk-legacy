@@ -3,9 +3,10 @@
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
-#include "data_containers/ModioMod.h"
+#include "handlers/ModioModfileHandler.h"
 #include "Globals.h"
-#include "handlers/ModfileHandler.h"
+#include "data_containers/ModioMod.h"
+#include "data_containers/ModioResponse.h"
 
 extern "C"
 {

@@ -55,7 +55,7 @@ namespace modio
     email_request_calls.erase(call_id);
   }
 
-  bool Instance::emailRequest(const std::string& email, const std::function<void(const modio::Response&, const std::string&)>& callback)
+  void Instance::emailRequest(const std::string& email, const std::function<void(const modio::Response&, const std::string&)>& callback)
   {
     const struct EmailRequestCall* email_request_call = new EmailRequestCall{callback};
     email_request_calls[this->current_call_id] = (EmailRequestCall*)email_request_call;
@@ -63,11 +63,9 @@ namespace modio
     modioEmailRequest((void*)new int(this->current_call_id), (char*)email.c_str(), &onEmailRequest);
 
     this->current_call_id++;
-
-    return true;
   }
 
-  bool Instance::emailExchange(const std::string& security_code, const std::function<void(const modio::Response&)>& callback)
+  void Instance::emailExchange(const std::string& security_code, const std::function<void(const modio::Response&)>& callback)
   {
     const struct EmailExchangeCall* email_exchange_call = new EmailExchangeCall{callback};
     email_exchange_calls[this->current_call_id] = (EmailExchangeCall*)email_exchange_call;
@@ -75,7 +73,5 @@ namespace modio
     modioEmailExchange((void*)new int(this->current_call_id), (char*)security_code.c_str(), &onEmailExchange);
 
     this->current_call_id++;
-
-    return true;
   }
 }

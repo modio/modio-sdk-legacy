@@ -5,6 +5,7 @@
 #include "wrappers/MinizipWrapper.h"
 #include "data_containers/ModioMod.h"
 #include "Globals.h"
+#include "data_containers/ModioResponse.h"
 
 extern "C"
 {

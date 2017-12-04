@@ -3,9 +3,9 @@
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
-#include "data_containers/ModioImage.h"
 #include "Globals.h"
-#include "Filter.h"
+#include "data_containers/ModioImage.h"
+#include "data_containers/ModioResponse.h"
 
 extern "C"
 {

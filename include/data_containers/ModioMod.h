@@ -3,6 +3,7 @@
 
 #include <thread>
 #include "dependencies/json/json.hpp"
+#include "Utility.h"
 #include "wrappers/CurlWrapper.h"
 #include "data_containers/ModioImage.h"
 #include "data_containers/ModioUser.h"
@@ -10,7 +11,6 @@
 #include "data_containers/ModioModfile.h"
 #include "data_containers/ModioRatings.h"
 #include "data_containers/ModioTag.h"
-#include "Utility.h"
 
 using json = nlohmann::json;
 

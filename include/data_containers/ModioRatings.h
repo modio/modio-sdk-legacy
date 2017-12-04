@@ -10,11 +10,11 @@ extern "C"
 {
   struct ModioRatings
   {
-    int total_ratings;
-    int positive_ratings;
-    int negative_ratings;
+    u32 total_ratings;
+    u32 positive_ratings;
+    u32 negative_ratings;
+    u32 percentage_positive;
     double weighted_aggregate;
-    int percentage_positive;
     char* display_text;
   };
 
