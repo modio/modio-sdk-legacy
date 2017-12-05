@@ -1,4 +1,4 @@
-#include "ModIOInstance.h"
+#include "instance/ModIOInstance.h"
 
 int main(void)
 {
@@ -40,7 +40,6 @@ int main(void)
       {
         std::cout << "Id: \t" << mod.id << std::endl;
         std::cout << "Name:\t" << mod.name << std::endl;
-        std::cout << "Name:\t" << mod.ratings.weighted_aggregate << std::endl << std::endl;
       }
 
       // Additionally, we can access cursor data to ease future browsing queries
