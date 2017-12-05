@@ -2,8 +2,8 @@
 #define MODIO_MEDIA_H
 
 #include "data_containers/ModioMedia.h"
-#include "Globals.h"
 #include "instance_data_containers/Image.h"
+#include "Globals.h"
 
 namespace modio
 {

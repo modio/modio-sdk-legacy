@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modio::Instance mod(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
 
@@ -21,7 +21,7 @@ int main(void)
   };
 
   // Before requesting mods, let's define the query filters
-  modio::Filter filter;
+  modio::FilterHandler filter;
   filter.setFilterLimit(3);
   filter.addFilterLikeField("name", "Example Mod");
   filter.addFilterLikeField("description", "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
@@ -29,7 +29,7 @@ int main(void)
   std::cout <<"Getting mods..." << std::endl;
 
   // Now we finished setting up the filters we are ready to request the mods
-  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200)

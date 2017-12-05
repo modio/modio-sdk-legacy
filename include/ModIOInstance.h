@@ -1,44 +1,20 @@
-//#include "handlers_instace/ModfileHandlerInstance.h"
 #include "ModIOSDK.h"
-#include "handlers_instance/ModHandlerInstance.h"
-#include "handlers_instance/ModfileHandlerInstance.h"
+#include "handlers_instance/FilterHandler.h"
+#include "handlers_instance/ModHandler.h"
+#include "handlers_instance/ModfileHandler.h"
 #include "instance_data_containers/Error.h"
 #include "instance_data_containers/Filehash.h"
 #include "instance_data_containers/Image.h"
 #include "instance_data_containers/Media.h"
 #include "instance_data_containers/Mod.h"
 #include "instance_data_containers/Modfile.h"
-#include "instance_data_containers/Ratings.h"
+#include "instance_data_containers/RatingSummary.h"
 #include "instance_data_containers/Response.h"
 #include "instance_data_containers/Tag.h"
 #include "instance_data_containers/User.h"
 
 namespace modio
 {
-  class MODIO_DLL Filter
-  {
-    ModioFilter* filter;
-  public:
-    Filter();
-    void setFilterSort(const std::string& field, bool ascending);
-    void setFilterLimit(u32 limit);
-    void setFilterOffset(u32 offset);
-    void setFilterCursor(u32 cursor);
-    void setFilterFullTextSearch(const std::string& text);
-    void addFilterFieldValue(const std::string& field, const std::string& value);
-    void addFilterLikeField(const std::string& field, const std::string& value);
-    void addFilterNotLikeField(const std::string& field, const std::string& value);
-    void addFilterInField(const std::string& field, const std::string& value);
-    void addFilterNotInField(const std::string& field, const std::string& value);
-    void addFilterMinField(const std::string& field, double value);
-    void addFilterMaxField(const std::string& field, double value);
-    void addFilterSmallerThanField(const std::string& field, double value);
-    void addFilterGreaterThanField(const std::string& field, double value);
-    void addFilterNotEqualField(const std::string& field, const std::string& value);
-    ModioFilter* getFilter();
-    ~Filter();
-  };
-
   class MODIO_DLL Instance
   {
     int current_call_id;
@@ -49,16 +25,16 @@ namespace modio
     //Authentication Methods
     bool isLoggedIn() const;
     void logout() const;
-    bool emailRequest(const std::string& email, const std::function<void(const modio::Response&, const std::string&)>& callback);
-    bool emailExchange(const std::string& security_code, const std::function<void(const modio::Response&)>& callback);
+    void emailRequest(const std::string& email, const std::function<void(const modio::Response&, const std::string&)>& callback);
+    void emailExchange(const std::string& security_code, const std::function<void(const modio::Response&)>& callback);
 
     //Media Methods
-    bool downloadImage(const std::string& image_url, const std::string& path, const std::function<void(const modio::Response&, const std::string& path)>& callback);
-    bool editModLogo(u32 mod_id, const std::string& path, const std::function<void(const modio::Response&, u32 mod_id)>& callback);
+    void downloadImage(const std::string& image_url, const std::string& path, const std::function<void(const modio::Response&, const std::string& path)>& callback);
+    void editModLogo(u32 mod_id, const std::string& path, const std::function<void(const modio::Response&, u32 mod_id)>& callback);
 
     //Mod Methods
     void addMod(modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
-    bool getMods(modio::Filter& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
+    void getMods(modio::FilterHandler& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
     void editMod(u32 mod_id, modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
 

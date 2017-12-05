@@ -1,14 +1,14 @@
 #ifndef MODIO_MOD_H
 #define MODIO_MOD_H
 
-#include "data_containers/ModioMod.h"
-#include "Globals.h"
 #include "instance_data_containers/Image.h"
 #include "instance_data_containers/User.h"
 #include "instance_data_containers/Media.h"
 #include "instance_data_containers/Modfile.h"
-#include "instance_data_containers/Ratings.h"
+#include "instance_data_containers/RatingSummary.h"
 #include "instance_data_containers/Tag.h"
+#include "data_containers/ModioMod.h"
+#include "Globals.h"
 
 namespace modio
 {
@@ -31,7 +31,7 @@ namespace modio
     User submitted_by;
     Media media;
     Modfile modfile;
-    Ratings ratings;
+    RatingSummary ratings;
     std::vector<Tag> tags;
 
     void initialize(ModioMod mod);

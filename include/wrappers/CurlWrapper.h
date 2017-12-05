@@ -4,11 +4,11 @@
 #include <stdio.h>
 #include <iostream>
 #include <map>
+
 #include "dependencies/json/json.hpp"
 #include "dependencies/curl/curl.h"
-#include "wrappers/MinizipWrapper.h"
-#include "data_containers/ModioResponse.h"
 #include "Utility.h"
+#include "wrappers/MinizipWrapper.h"
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION

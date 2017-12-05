@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modio::Instance mod(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
 
@@ -21,18 +21,18 @@ int main(void)
   };
 
   // Let's start by requesting a single mod
-  modio::Filter filter;
+  modio::FilterHandler filter;
   filter.setFilterLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
     {
-      modio::Mod requested_mod = mods[0];
-      std::cout << "Requested mod: " << requested_mod.name << std::endl;
+      modio::Mod mod = mods[0];
+      std::cout << "Requested mod: " << mod.name << std::endl;
 
       // The Mod Handler helps setting up the fields that will be updated
       modio::ModHandler mod_handler;
@@ -50,7 +50,7 @@ int main(void)
 
       std::cout <<"Editing mod..." << std::endl;
 
-      mod.editMod(requested_mod.id, mod_handler, [&](const modio::Response& response, const modio::Mod& mod)
+      modio_instance.editMod(mod.id, mod_handler, [&](const modio::Response& response, const modio::Mod& mod)
       {
         std::cout << "On mod get response: " << response.code << std::endl;
         if(response.code == 200)

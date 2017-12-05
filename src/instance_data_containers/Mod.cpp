@@ -29,7 +29,7 @@ namespace modio
     this->modfile.initialize(modio_mod.modfile);
     this->ratings.initialize(modio_mod.ratings);
     this->tags.resize(modio_mod.tags_array_size);
-    for(int i = 0; i < modio_mod.tags_array_size; i++)
+    for(u32 i = 0; i < modio_mod.tags_array_size; i++)
     {
       this->tags[i].initialize(modio_mod.tags_array[i]);
     }

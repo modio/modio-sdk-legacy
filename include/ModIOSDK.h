@@ -3,10 +3,10 @@
 
 //#pragma warning(disable : 4503)
 
+#include "Globals.h"
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
 #include "data_containers/ModioMod.h"
-#include "Globals.h"
 #include "exported_methods/AuthenticationMethods.h"
 #include "exported_methods/ModMethods.h"
 #include "exported_methods/ModfileMethods.h"

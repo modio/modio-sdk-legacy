@@ -11,12 +11,12 @@ extern "C"
 {
   struct ModioResponse
   {
-    int code;
+    u32 code;
+    u32 cursor_id;
+    u32 prev_id;
+    u32 next_id;
+    u32 result_count;
     ModioError error;
-    int cursor_id;
-    int prev_id;
-    int next_id;
-    int result_count;
   };
 
   void modioInitResponse(ModioResponse* response, json response_json);

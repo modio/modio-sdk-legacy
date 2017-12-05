@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modio::Instance mod(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
 
@@ -21,13 +21,13 @@ int main(void)
   };
 
   // Sometimes, mod.io API will return errors. Let's trigger some of them to find out how to interpret them
-  modio::Filter filter;
+  modio::FilterHandler filter;
   filter.setFilterLimit(-1);
   filter.addFilterFieldValue("id", "-1");
 
   std::cout <<"Getting mods..." << std::endl;
 
-  mod.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
 

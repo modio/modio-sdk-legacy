@@ -2,8 +2,8 @@
 #define MODIO_MODIOUSER_H
 
 #include "dependencies/json/json.hpp"
-#include "data_containers/ModioImage.h"
 #include "Utility.h"
+#include "data_containers/ModioImage.h"
 
 using json = nlohmann::json;
 

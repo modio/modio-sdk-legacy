@@ -1,8 +1,8 @@
 #ifndef MODIO_MODFILE_H
 #define MODIO_MODFILE_H
 
-#include "data_containers/ModioModfile.h"
 #include "Globals.h"
+#include "data_containers/ModioModfile.h"
 #include "instance_data_containers/Filehash.h"
 
 namespace modio

@@ -1,4 +1,4 @@
-#include "handlers/ModHandler.h"
+#include "handlers/ModioModHandler.h"
 
 extern "C"
 {

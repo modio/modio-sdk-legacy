@@ -10,7 +10,7 @@ extern "C"
 {
   struct ModioTag
   {
-    int date_added;
+    u32 date_added;
     char* name;
   };
 

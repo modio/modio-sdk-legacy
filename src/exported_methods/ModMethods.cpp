@@ -54,7 +54,7 @@ extern "C"
     get_mods_callbacks.erase(call_number);
   }
 
-  void modioGetMods(void* object, ModioFilter* filter, void (*callback)(void* object, ModioResponse response, ModioMod* mods, int mods_size))
+  void modioGetMods(void* object, ModioFilterHandler* filter, void (*callback)(void* object, ModioResponse response, ModioMod* mods, int mods_size))
   {
     std::string filter_string = modio::getFilterString(filter);
     std::vector<std::string> headers;

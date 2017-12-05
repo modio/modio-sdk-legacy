@@ -102,7 +102,7 @@ extern "C"
 
     if(modio::hasKey(mod_json, "rating_summary"))
     {
-      modioInitRatings(&(mod->ratings), mod_json["rating_summary"]);
+      modioInitRatingSummary(&(mod->ratings), mod_json["rating_summary"]);
     }
 
     mod->tags_array = NULL;

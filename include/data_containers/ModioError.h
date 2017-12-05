@@ -10,10 +10,10 @@ extern "C"
 {
   struct ModioError
   {
-    int code;
+    u32 code;
     char* message;
     char** errors_array;
-    int errors_array_size;
+    u32 errors_array_size;
   };
 
   void modioInitError(ModioError* error, json image_json);

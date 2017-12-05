@@ -2,9 +2,9 @@
 #define MODIO_MODIOMODFILE_H
 
 #include "dependencies/json/json.hpp"
+#include "Utility.h"
 #include "data_containers/ModioUser.h"
 #include "data_containers/ModioFilehash.h"
-#include "Utility.h"
 
 using json = nlohmann::json;
 

@@ -2,8 +2,8 @@
 #define MODIO_MODIOMEDIA_H
 
 #include "dependencies/json/json.hpp"
-#include "data_containers/ModioImage.h"
 #include "Utility.h"
+#include "data_containers/ModioImage.h"
 
 using json = nlohmann::json;
 
@@ -12,11 +12,11 @@ extern "C"
   struct ModioMedia
   {
     char** youtube_array;
-    int youtube_size;
+    u32 youtube_size;
     char** sketchfab_array;
-    int sketchfab_size;
+    u32 sketchfab_size;
     ModioImage* images_array;
-    int images_size;
+    u32 images_size;
   };
 
   void modioInitMedia(ModioMedia* media, json media_json);

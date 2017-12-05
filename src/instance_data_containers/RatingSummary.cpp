@@ -1,8 +1,8 @@
-#include "instance_data_containers/Ratings.h"
+#include "instance_data_containers/RatingSummary.h"
 
 namespace modio
 {
-  void Ratings::initialize(ModioRatings modio_ratings)
+  void RatingSummary::initialize(ModioRatingSummary modio_ratings)
   {
     this->total_ratings = modio_ratings.total_ratings;
     this->positive_ratings = modio_ratings.positive_ratings;

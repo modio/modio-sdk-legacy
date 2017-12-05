@@ -93,7 +93,7 @@ namespace modio
     delete_mod_calls.erase(call_id);
   }
 
-  bool Instance::getMods(modio::Filter& filter, const std::function<void(const modio::Response&, const std::vector<modio::Mod> & mods)>& callback)
+  void Instance::getMods(modio::FilterHandler& filter, const std::function<void(const modio::Response&, const std::vector<modio::Mod> & mods)>& callback)
   {
     const struct GetModsCall* get_mods_call = new GetModsCall{callback};
     get_mods_calls[this->current_call_id] = (GetModsCall*)get_mods_call;
@@ -101,7 +101,6 @@ namespace modio
     modioGetMods((void*)new int(this->current_call_id), filter.getFilter(), &onGetMods);
 
     this->current_call_id++;
-    return true;
   }
 
   void Instance::addMod(modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
