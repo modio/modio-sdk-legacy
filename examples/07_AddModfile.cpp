@@ -22,7 +22,7 @@ int main(void)
 
   // Let's start by requesting a single mod
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -37,12 +37,12 @@ int main(void)
       modio::ModfileHandler modfile_handler;
 
       // The mod directory path, version and changelog are mandatory fields
-      modfile_handler.setModfilePath("ModExample/modfile/");
-      modfile_handler.setModfileVersion("v1.1.0");
-      modfile_handler.setModfileChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+      modfile_handler.setPath("ModExample/modfile/");
+      modfile_handler.setVersion("v1.1.0");
+      modfile_handler.setChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
 
       // The active field is optional
-      modfile_handler.setModfileActive(true);
+      modfile_handler.setActive(true);
 
       std::cout << "Uploading modfile..." << std::endl;
 

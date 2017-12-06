@@ -22,8 +22,8 @@ int main(void)
 
   // Sometimes, mod.io API will return errors. Let's trigger some of them to find out how to interpret them
   modio::FilterHandler filter;
-  filter.setFilterLimit(-1);
-  filter.addFilterFieldValue("id", "-1");
+  filter.setLimit(-1);
+  filter.addFieldValue("id", "-1");
 
   std::cout <<"Getting mods..." << std::endl;
 

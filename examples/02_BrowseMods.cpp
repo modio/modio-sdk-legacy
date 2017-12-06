@@ -22,9 +22,9 @@ int main(void)
 
   // Before requesting mods, let's define the query filters
   modio::FilterHandler filter;
-  filter.setFilterLimit(3);
-  filter.addFilterLikeField("name", "Example Mod");
-  filter.addFilterLikeField("description", "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+  filter.setLimit(3);
+  filter.addLikeField("name", "Example Mod");
+  filter.addLikeField("description", "This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
 
   std::cout <<"Getting mods..." << std::endl;
 
