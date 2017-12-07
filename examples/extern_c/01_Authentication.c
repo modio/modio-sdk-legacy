@@ -1,26 +1,4 @@
-#include<stdio.h>
-#include <stdbool.h>
-
-typedef unsigned int u32;
-
-typedef struct
-{
-  u32 code;
-  char* message;
-  char** errors_array;
-  u32 errors_array_size;
-}ModioError;
-
-typedef struct
-{
-  u32 code;
-  u32 cursor_id;
-  u32 prev_id;
-  u32 next_id;
-  u32 result_count;
-  ModioError error;
-}ModioResponse;
-
+#include "schemas.h"
 
 bool email_request_finished = false;
 bool email_exchange_finished = false;
