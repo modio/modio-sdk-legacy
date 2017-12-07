@@ -12,8 +12,8 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
     for(int i=0;i<(int)mods_size;i++)
     {
       printf("Mod[%i]\n",i);
-      printf("Id: %i\n",mods[i].id);
-      printf("Name: %s\n",mods[i].name);
+      printf("Id:\t%i\n",mods[i].id);
+      printf("Name:\t%s\n",mods[i].name);
     }
 
     printf("\nCursor data:\n");

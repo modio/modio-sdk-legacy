@@ -1,5 +1,4 @@
-#include <string>
-#include "ModIOSDK.h"
+#include "schemas.h"
 
 bool mods_get_finished = false;
 bool modfile_installed = false;
@@ -7,7 +6,7 @@ bool modfile_edited = false;
 
 ModioModfile* global_modfile = NULL;
 
-void onModfileInstalled(ModioResponse* response, char* path)
+void onModfileInstalled(void* object, ModioResponse* response, char* path)
 {
   cout<<"Install Mod response: "<<response->code<<endl;
   if(response->code == 200)
@@ -17,7 +16,7 @@ void onModfileInstalled(ModioResponse* response, char* path)
   modfile_installed = true;
 }
 
-void onModfileEdited(ModioResponse* response, int modfile_id)
+void onModfileEdited(void* object, ModioResponse* response, int modfile_id)
 {
   cout<<"Edit Mod response: "<<response->code<<endl;
   if(response->code == 200)
@@ -27,7 +26,7 @@ void onModfileEdited(ModioResponse* response, int modfile_id)
   modfile_edited = true;
 }
 
-void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse* response, ModioMod* mods, int mods_size)
 {
   cout<<"GetMods response: "<<response->code<<endl;
   if(response->code == 200)
@@ -59,7 +58,10 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mods_get_finished);
+  while(!mods_get_finished)
+  {
+    modioProcess();
+  }
 
   cout<<"Editing modfile..."<<endl;
 
@@ -70,7 +72,10 @@ int main(void)
 
   modioEditModfile(global_modfile->mod, global_modfile->id, modfile_handler, &onModfileEdited);
 
-  while(!modfile_edited);
+  while(!modfile_edited)
+  {
+    modioProcess();
+  }
 
   cout<<"Installing modfile..."<<endl;
 
@@ -87,6 +92,7 @@ int main(void)
       if(modfile_download_progress != 0)
         cout<<"Download progress: "<<modfile_download_progress<<"%"<<endl;
     }
+    modioProcess();
   }
 
   modioShutdown();

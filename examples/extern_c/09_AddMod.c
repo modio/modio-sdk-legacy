@@ -1,4 +1,4 @@
-#include "ModIOSDK.h"
+#include "schemas.h"
 
 bool add_mod_finished = false;
 bool add_modfile_finished = true;
@@ -7,7 +7,7 @@ string modfile_path = "ModExample/modfile/";
 string modfile_version = "v1.1.x";
 string modfile_changelog = "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog";
 
-void onModfileAdded(ModioResponse* response, ModioModfile* modfile)
+void onModfileAdded(void* object, ModioResponse* response, ModioModfile* modfile)
 {
   cout<<"Add Modfile Response: "<<response->code<<endl;
   if(response->code == 201)
@@ -18,7 +18,7 @@ void onModfileAdded(ModioResponse* response, ModioModfile* modfile)
   add_modfile_finished = true;
 }
 
-void onModAdded(ModioResponse* response, ModioMod* mod)
+void onModAdded(void* object, ModioResponse* response, ModioMod* mod)
 {
   cout<<"Add Mod Response code: "<<response->code<<endl;
 
@@ -72,8 +72,14 @@ int main(void)
 
   modioAddMod(mod_handler, &onModAdded);
 
-  while(!add_mod_finished);
-  while(!add_modfile_finished);
+  while(!add_mod_finished)
+  {
+    modioProcess();
+  }
+  while(!add_modfile_finished)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 

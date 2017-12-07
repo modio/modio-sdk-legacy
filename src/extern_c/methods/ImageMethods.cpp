@@ -20,7 +20,7 @@ extern "C"
   std::map< int, DownloadImageParams* > download_image_callbacks;
   std::map< int, EditModLogoParams* > edit_mod_logo_callbacks;
 
-  void onImageDownloaded(int call_number, int response_code, json response_json)
+  void modioOnImageDownloaded(int call_number, int response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -54,10 +54,10 @@ extern "C"
     }
     download_image_callbacks[call_number]->file = file;
 
-    modio::curlwrapper::download(call_number, image_url, path, file, progress, &onImageDownloaded);
+    modio::curlwrapper::download(call_number, image_url, path, file, progress, &modioOnImageDownloaded);
   }
 
-  void onModLogoEdited(int call_number, int response_code, json response_json)
+  void modioOnModLogoEdited(int call_number, int response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -86,6 +86,6 @@ extern "C"
     std::map<std::string, std::string> curlform_files;
     curlform_files["logo"] = path;
 
-    modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &onModLogoEdited);
+    modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &modioOnModLogoEdited);
   }
 }

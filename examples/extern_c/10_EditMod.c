@@ -1,10 +1,10 @@
-#include "ModIOSDK.h"
+#include "schemas.h"
 
 bool mods_get_finished = false;
 int mods_to_download = -1;
 int mods_downloaded = 0;
 
-void onModEdited(ModioResponse* response, ModioMod* mod)
+void onModEdited(void* object, ModioResponse* response, ModioMod* mod)
 {
   cout<<"Mod Edit response: "<<response->code<<endl;
   if(response->code == 200)
@@ -14,7 +14,7 @@ void onModEdited(ModioResponse* response, ModioMod* mod)
   mods_downloaded++;
 }
 
-void onModsGet(ModioResponse* response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse* response, ModioMod* mods, int mods_size)
 {
   cout<<"GetMods response: "<<response->code<<endl;
   if(response->code == 200)
@@ -62,9 +62,15 @@ int main(void)
   cout<<"Getting mods..."<<endl;
   modioGetMods(filter, &onModsGet);
 
-  while(!mods_get_finished);
+  while(!mods_get_finished)
+  {
+    modioProcess();
+  }
 
-  while(mods_downloaded < mods_to_download);
+  while(mods_downloaded < mods_to_download)
+  {
+    modioProcess();
+  }
 
   modioShutdown();
 
