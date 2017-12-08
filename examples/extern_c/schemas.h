@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef unsigned int u32;
 
@@ -137,3 +139,108 @@ typedef struct
   ModioListNode* greater_than_list;
   ModioListNode* not_equal_list;
 }ModioFilterHandler;
+
+typedef struct
+{
+  char* path;
+  char* version;
+  char* changelog;
+  char* active;
+}ModioModfileHandler;
+
+typedef struct
+{
+  char* logo;
+  char* name;
+  char* homepage;
+  char* summary;
+  char* price;
+  char* stock;
+  char* description;
+  char* metadata;
+  char* nameid;
+  char* modfile;
+  ModioListNode* tags;
+}ModioModHandler;
+
+void modioInit(int game_id, char* api_key);
+void modioShutdown();
+void modioPauseCurrentDownload();
+void modioSetDebugLevel(unsigned int debug_level);
+void modioProcess();
+
+void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response, char* message));
+void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
+bool modioIsLoggedIn();
+void modioLogout();
+
+void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response, char* path));
+void modioEditModLogo(void* object, int mod_id, char* path, void (*callback)(void* object, ModioResponse response, int mod_id));
+
+void modioAddModfile(void* object, int mod_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response, char* path));
+int modioGetModfileState(int modfile_id);
+double modioGetModfileDownloadPercentage(int modfile_id);
+
+void modioGetMods(void* object, ModioFilterHandler* filter, void (*callback)(void* object, ModioResponse response, ModioMod* mods, int mods_size));
+void modioAddMod(void* object, ModioModHandler* mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod* mod));
+void modioEditMod(void* object, int mod_id, ModioModHandler* mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod* mod));
+void modioDeleteMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id));
+void modioSetUserModVote(void* object, int mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response, int mod_id));
+void modioSubscribeMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id));
+void modioUnsubscribeMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id));
+
+void modioGetTags(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size));
+void modioAddTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size));
+void modioDeleteTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size));
+
+//ModioFilterHandler Methods
+void modioInitFilter(ModioFilterHandler* filter);
+void modioSetFilterSort(ModioFilterHandler* filter, char* field, bool ascending);
+void modioSetFilterLimit(ModioFilterHandler* filter, int limit);
+void modioSetFilterOffset(ModioFilterHandler* filter, int offset);
+void modioSetFilterCursor(ModioFilterHandler* filter, int cursor);
+void modioSetFilterFullTextSearch(ModioFilterHandler* filter, char* text);
+void modioAddFilterFieldValue(ModioFilterHandler* filter, char* field, char* value);
+void modioAddFilterLikeField(ModioFilterHandler* filter, char* field, char* value);
+void modioAddFilterNotLikeField(ModioFilterHandler* filter, char* field, char* value);
+void modioAddFilterInField(ModioFilterHandler* filter, char* field, char* value);
+void modioAddFilterNotInField(ModioFilterHandler* filter, char* field, char* value);
+void modioAddFilterMinField(ModioFilterHandler* filter, char* field, double value);
+void modioAddFilterMaxField(ModioFilterHandler* filter, char* field, double value);
+void modioAddFilterSmallerThanField(ModioFilterHandler* filter, char* field, double value);
+void modioAddFilterGreaterThanField(ModioFilterHandler* filter, char* field, double value);
+void modioAddFilterNotEqualField(ModioFilterHandler* filter, char* field, char* value);
+void modioFreeFilter(ModioFilterHandler* filter);
+
+//ModioModfileHandler Methods
+void modioInitModfileHandler(ModioModfileHandler* modfile_handler);
+void modioSetModfilePath(ModioModfileHandler* modfile_handler, char* path);
+void modioSetModfileVersion(ModioModfileHandler* modfile_handler, char* version);
+void modioSetModfileChangelog(ModioModfileHandler* modfile_handler, char* changelog);
+void modioSetModfileActive(ModioModfileHandler* modfile_handler, bool active);
+void modioDeleteModfileHandler(ModioModfileHandler* modfile_handler);
+
+//ModioModHandler Methods
+void modioInitModHandler(ModioModHandler* mod_handler);
+void modioSetLogoPath(ModioModHandler* mod_handler, char* logo_path);
+void modioSetName(ModioModHandler* mod_handler, char* name);
+void modioSetHomepage(ModioModHandler* mod_handler, char* homepage);
+void modioSetSummary(ModioModHandler* mod_handler, char* summary);
+void modioSetPrice(ModioModHandler* mod_handler, double price);
+void modioSetStock(ModioModHandler* mod_handler, int stock);
+void modioSetDescription(ModioModHandler* mod_handler, char* description);
+void modioSetMetadata(ModioModHandler* mod_handler, char* metadata);
+void modioSetNameid(ModioModHandler* mod_handler, char* nameid);
+void modioSetModfile(ModioModHandler* mod_handler, int modfile);
+void modioAddTag(ModioModHandler* mod_handler, char* tag);
+void modioFreeModHandler(ModioModHandler* mod_handler);
+
+#define MODIO_DEBUGLEVEL_LOG      2
+#define MODIO_DEBUGLEVEL_WARNING  1
+#define MODIO_DEBUGLEVEL_ERROR    0
+
+#define MODIO_MODFILE_NOT_INSTALLED 0
+#define MODIO_MODFILE_INSTALLED     1
+#define MODIO_MODFILE_INSTALLING    2

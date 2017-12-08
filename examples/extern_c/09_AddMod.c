@@ -1,43 +1,16 @@
 #include "schemas.h"
 
 bool add_mod_finished = false;
-bool add_modfile_finished = true;
 
-string modfile_path = "ModExample/modfile/";
-string modfile_version = "v1.1.x";
-string modfile_changelog = "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog";
-
-void onModfileAdded(void* object, ModioResponse* response, ModioModfile* modfile)
+void onModAdded(void* object, ModioResponse response, ModioMod* mod)
 {
-  cout<<"Add Modfile Response: "<<response->code<<endl;
-  if(response->code == 201)
+  printf("Add Mod Response code: %i\n", response.code);
+
+  if(response.code == 201)
   {
-    cout<<"Modfile added!"<<endl;
-    cout<<"Modfile id: "<<modfile->id<<endl;
-  }
-  add_modfile_finished = true;
-}
-
-void onModAdded(void* object, ModioResponse* response, ModioMod* mod)
-{
-  cout<<"Add Mod Response code: "<<response->code<<endl;
-
-  if(response->code == 201)
-  {
-    cout<<"Mod added!"<<endl;
-    cout<<"Mod id: "<<mod->id<<endl;
-
-    ModioModfileHandler* modfile_handler = new ModioModfileHandler();
-    modioInitModfileHandler(modfile_handler);
-    //Required
-    modioSetModfilePath(modfile_handler, (char*)modfile_path.c_str());
-    modioSetModfileVersion(modfile_handler, (char*)modfile_version.c_str());
-    modioSetModfileChangelog(modfile_handler, (char*)modfile_changelog.c_str());
-    //Optional
-    modioSetModfileActive(modfile_handler, true);
-
-    add_modfile_finished = false;
-    modioAddModfile(mod->id, modfile_handler, &onModfileAdded);
+    printf("Mod added!\n");
+    printf("Mod id: %i\n", mod->id);
+    printf("Mod name: %s\n", mod->name);
   }
 
   add_mod_finished = true;
@@ -49,41 +22,39 @@ int main(void)
 
   if(!modioIsLoggedIn())
   {
-    cout<<"You are not logged in, please login before creating a mod."<<endl;
+    printf("You are not logged in, please login before creating a mod.\n");
     return 0;
   }
 
-  ModioModHandler* mod_handler = new ModioModHandler;
-  modioInitModHandler(mod_handler);
+  ModioModHandler mod_handler;
+  modioInitModHandler(&mod_handler);
   //Required fields
-  modioSetLogoPath(mod_handler, (char*)"ModExample/logo.png");
-  modioSetName(mod_handler, (char*)"Example Mod Test30");
-  modioSetHomepage(mod_handler, (char*)"http://www.webpage.com");
-  modioSetSummary(mod_handler, (char*)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
-  modioAddTag(mod_handler, (char*)"Easy");
-  modioAddTag(mod_handler, (char*)"Medium");
+  modioSetLogoPath(&mod_handler, (char*)"ModExample/logo.png");
+  modioSetName(&mod_handler, (char*)"Example Mod Test");
+  modioSetHomepage(&mod_handler, (char*)"http://www.webpage.com");
+  modioSetSummary(&mod_handler, (char*)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
+  modioAddTag(&mod_handler, (char*)"Easy");
+  modioAddTag(&mod_handler, (char*)"Medium");
   //Optional fields
-  modioSetPrice(mod_handler, 1.99);
-  modioSetStock(mod_handler, 25);
-  modioSetDescription(mod_handler, (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
-  modioSetMetadata(mod_handler, (char*)"Optional metadata");
-  //setNameid(mod_handler, "my-example-mod"); //Name id must be unique
-  //setModfile(mod_handler, int modfile); //Modfile should exist
+  modioSetPrice(&mod_handler, 1.99);
+  modioSetStock(&mod_handler, 25);
+  modioSetDescription(&mod_handler, (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+  modioSetMetadata(&mod_handler, (char*)"Optional metadata");
+  //setNameid(&mod_handler, "my-example-mod"); //Name id must be unique
+  //setModfile(&mod_handler, int modfile); //Modfile should exist
 
-  modioAddMod(mod_handler, &onModAdded);
+  printf("Adding mod...\n");
+
+  modioAddMod(NULL, &mod_handler, &onModAdded);
 
   while(!add_mod_finished)
-  {
-    modioProcess();
-  }
-  while(!add_modfile_finished)
   {
     modioProcess();
   }
 
   modioShutdown();
 
-  cout<<"Process finished"<<endl;
+  printf("Process finished\n");
 
   return 0;
 }

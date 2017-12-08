@@ -27,7 +27,7 @@ extern "C"
   std::map< int, EditTagsParams* > add_tags_callbacks;
   std::map< int, DeleteTagsParams* > delete_tags_callbacks;
 
-  void onGetTags(int call_number, int response_code, json response_json)
+  void modioOnGetTags(int call_number, int response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -72,10 +72,10 @@ extern "C"
     get_tags_callbacks[call_number]->mod_id = mod_id;
     get_tags_callbacks[call_number]->object = object;
 
-    modio::curlwrapper::get(call_number, url, headers, &onGetTags);
+    modio::curlwrapper::get(call_number, url, headers, &modioOnGetTags);
   }
 
-  void onTagsAdded(int call_number, int response_code, json response_json)
+  void modioOnTagsAdded(int call_number, int response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -112,10 +112,10 @@ extern "C"
       url += std::string("tags[]=") + tags_array[i];
     }
 
-    modio::curlwrapper::post(call_number, url, headers, data, &onTagsAdded);
+    modio::curlwrapper::post(call_number, url, headers, data, &modioOnTagsAdded);
   }
 
-  void onTagsDeleted(int call_number, int response_code, json response_json)
+  void modioOnTagsDeleted(int call_number, int response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -152,6 +152,6 @@ extern "C"
       url += std::string("tags[]=") + tags_array[i];
     }
 
-    modio::curlwrapper::deleteCall(call_number, url, headers, &onTagsDeleted);
+    modio::curlwrapper::deleteCall(call_number, url, headers, &modioOnTagsDeleted);
   }
 }

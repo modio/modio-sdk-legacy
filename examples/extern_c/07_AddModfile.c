@@ -1,48 +1,35 @@
 #include "schemas.h"
 
-ModioMod* global_mod;
-
 bool mods_get_finished = false;
-int images_downloaded = 0;
-bool mod_logo_edited = false;
+bool add_modfile_finished = false;
 
-void onImageDownloaded(void* object, ModioResponse* response, char* path)
+ModioMod* global_mod = NULL;
+
+void onModfileAdded(void* object, ModioResponse response, ModioModfile modfile)
 {
-  cout<<"Download Image response: "<<response->code<<endl;
-  if(response->code == 200)
+  printf("Add Modfile Response: %i\n", response.code);
+  if(response.code == 201)
   {
-    cout<<"Image downloaded successfully!"<<endl;
+    printf("Modfile added!\n");
   }
-  images_downloaded++;
+  add_modfile_finished = true;
 }
 
-void onModLogoEdited(void* object, ModioResponse* response, int mod_id)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
 {
-  cout<<"Edit mod logo response: "<<response->code<<endl;
-  if(response->code == 200)
+  printf("On mod get response: %i\n",response.code);
+  if(response.code == 200)
   {
-    cout<<"Mod logo edited successfully!"<<endl;
-  }
-  mod_logo_edited = true;
-}
-
-void onModsGet(void* object, ModioResponse* response, ModioMod* mods, int mods_size)
-{
-  cout<<"GetMods response: "<<response->code<<endl;
-  if(response->code == 200)
-  {
-    cout<<"Listing mods"<<endl;
-    cout<<"============"<<endl;
+    printf("Listing mod\n");
+    printf("============\n");
     for(int i=0;i<(int)mods_size;i++)
     {
-      cout<<"Mod["<<i<<"]"<<endl;
-      cout<<"Id: \t"<<mods[i].id<<endl;
-      cout<<"Name:\t"<<mods[i].name<<endl;
-
+      printf("Mod[%i]\n",i);
+      printf("Id:\t%i\n",mods[i].id);
+      printf("Name:\t%s\n",mods[i].name);
       global_mod = &(mods[i]);
     }
   }
-
   mods_get_finished = true;
 }
 
@@ -50,40 +37,43 @@ int main(void)
 {
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
-  ModioFilter* filter = new ModioFilter;
-  modioInitFilter(filter);
-  modioSetFilterLimit(filter,1);
+  if(!modioIsLoggedIn())
+  {
+    printf("You are not logged in, please login before creating a mod.\n");
+    return 0;
+  }
 
-  cout<<"Getting mods..."<<endl;
-  modioGetMods(filter, &onModsGet);
+  ModioFilterHandler filter;
+  modioInitFilter(&filter);
+  modioSetFilterLimit(&filter,1);
+
+  printf("Getting mods...\n");
+  modioGetMods(NULL, &filter, &onModsGet);
 
   while(!mods_get_finished)
   {
     modioProcess();
   }
 
-  cout<<"Editing mod logo..."<<endl;
-  modioEditModLogo(global_mod->id, (char*)"ModExample/logo.png", &onModLogoEdited);
+  ModioModfileHandler modfile_handler;
+  modioInitModfileHandler(&modfile_handler);
+  //Required
+  modioSetModfilePath(&modfile_handler, "ModExample/modfile/");
+  modioSetModfileVersion(&modfile_handler, "v1.1.0");
+  modioSetModfileChangelog(&modfile_handler, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+  //Optional
+  modioSetModfileActive(&modfile_handler, true);
 
-  while(!mod_logo_edited)
-  {
-    modioProcess();
-  }
+  modioAddModfile(NULL, global_mod->id, &modfile_handler, &onModfileAdded);
 
-  cout<<"Downloading log image..."<<endl;
-  modioDownloadImage(global_mod->logo->full, (char*)"mods_dir/full.png", &onImageDownloaded);
-  modioDownloadImage(global_mod->logo->thumb_1280x720, (char*)"mods_dir/thumb_1280x720.png", &onImageDownloaded);
-  modioDownloadImage(global_mod->logo->thumb_640x360, (char*)"mods_dir/thumb_640x360.png", &onImageDownloaded);
-  modioDownloadImage(global_mod->logo->thumb_320x180, (char*)"mods_dir/thumb_320x180.png", &onImageDownloaded);
-
-  while(images_downloaded<4)
+  while(!add_modfile_finished)
   {
     modioProcess();
   }
 
   modioShutdown();
 
-  cout<<"Process finished"<<endl;
+  printf("Process finished\n");
 
   return 0;
 }

@@ -1,38 +1,35 @@
 #include "schemas.h"
 
 bool mods_get_finished = false;
-int mods_to_download = -1;
-int mods_downloaded = 0;
+bool mod_deleted_finished = false;
 
-void onModDeleted(void* object, ModioResponse response, ModioMod* mod)
+ModioMod* global_mod;
+
+void onModDeleted(void* object, ModioResponse response, int mod_id)
 {
-  cout<<"Mod Delete response: "<<response.code<<endl;
+  printf("Mod Delete response: %i\n", response.code);
   if(response.code == 204)
   {
-    cout<<"Mod deleted downloaded successfully!"<<endl;
+    printf("Mod deleted downloaded successfully!\n");
   }
-  mods_downloaded++;
+  mod_deleted_finished = true;
 }
 
 void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
 {
-  cout<<"GetMods response: "<<response.code<<endl;
+  printf("On mod get response: %i\n",response.code);
   if(response.code == 200)
   {
-    cout<<"Listing mods"<<endl;
-    cout<<"============"<<endl;
+    printf("Listing mod\n");
+    printf("============\n");
     for(int i=0;i<(int)mods_size;i++)
     {
-      cout<<"Mod["<<i<<"]"<<endl;
-      cout<<"Id: \t"<<mods[i].id<<endl;
-      cout<<"Name:\t"<<mods[i].name<<endl;
-      cout<<"Deleting mod..."<<endl;
-
-      modioDeleteMod(mods[i].id, &onModDeleted);
+      printf("Mod[%i]\n",i);
+      printf("Id:\t%i\n",mods[i].id);
+      printf("Name:\t%s\n",mods[i].name);
+      global_mod = &(mods[i]);
     }
-    mods_to_download = mods_size;
   }
-
   mods_get_finished = true;
 }
 
@@ -40,26 +37,30 @@ int main(void)
 {
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
-  ModioFilter* filter = new ModioFilter;
-  modioInitFilter(filter);
-  modioSetFilterLimit(filter,1);
+  ModioFilterHandler filter;
+  modioInitFilter(&filter);
+  modioSetFilterLimit(&filter,1);
 
-  cout<<"Getting mods..."<<endl;
-  modioGetMods(filter, &onModsGet);
+  printf("Getting mods...\n");
+  modioGetMods(NULL, &filter, &onModsGet);
 
   while(!mods_get_finished)
   {
     modioProcess();
   }
 
-  while(mods_downloaded < mods_to_download)
+  printf("Deleting mod...\n");
+
+  modioDeleteMod(NULL, global_mod->id, &onModDeleted);
+
+  while(!mod_deleted_finished)
   {
     modioProcess();
   }
 
   modioShutdown();
 
-  cout<<"Process finished"<<endl;
+  printf("Process finished\n");
 
   return 0;
 }
