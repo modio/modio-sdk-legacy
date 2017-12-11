@@ -40,16 +40,12 @@ int main(void)
       tags.push_back("Easy");
 
       // We delete tags by providing the selected Mod id and the tag names
-      modio_instance.deleteTags(mod.id, tags, [&](const modio::Response& response, u32 mod_id, std::vector<modio::Tag> tags)
+      modio_instance.deleteTags(mod.id, tags, [&](const modio::Response& response, u32 mod_id)
       {
         std::cout << "Add tags response: " << response.code << std::endl;
         if(response.code == 204)
         {
           std::cout << "Tags deleted successfully" << std::endl;
-          for(auto& tag : tags)
-          {
-            std::cout << tag.name << std::endl;
-          }
         }
         finish();
       });

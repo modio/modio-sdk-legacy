@@ -11,9 +11,9 @@ namespace modio
   {
   public:
     u32 code;
-    u32 cursor_id;
-    u32 prev_id;
-    u32 next_id;
+    i32 cursor_id;
+    i32 prev_id;
+    i32 next_id;
     u32 result_count;
     modio::Error error;
 

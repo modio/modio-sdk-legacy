@@ -37,7 +37,7 @@ int main(void)
       std::cout << "Installing modfile..." << std::endl;
 
       // Now we provide the Modfile id and the local path where the modfile will be installed
-      modio_instance.installModfile(mod.modfile, "mods_dir/modfile", [&](const modio::Response& response, const std::string& path)
+      modio_instance.installModfile(mod.modfile, "mods_dir/modfile", [&](const modio::Response& response)
       {
         std::cout << "Install Modfile response: " << response.code << std::endl;
 

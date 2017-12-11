@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 typedef unsigned int u32;
+typedef int i32;
 
 typedef struct
 {

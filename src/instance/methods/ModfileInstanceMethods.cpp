@@ -14,14 +14,14 @@ namespace modio
 
   struct InstallModfileCall
   {
-    const std::function<void(const modio::Response& response, const std::string& path)> callback;
+    const std::function<void(const modio::Response& response)> callback;
   };
 
   std::map<int, AddModfileCall*> add_modfile_calls;
   std::map<int, EditModfileCall*> edit_modfile_calls;
   std::map<int, InstallModfileCall*> install_modfile_calls;
 
-  void onAddModfile(void* object, ModioResponse modio_response, const ModioModfile& modio_modfile)
+  void onAddModfile(void* object, ModioResponse modio_response, ModioModfile modio_modfile)
   {
     int call_id = *((int*)object);
 
@@ -38,7 +38,7 @@ namespace modio
     add_modfile_calls.erase(call_id);
   }
 
-  void onEditModfile(void* object, ModioResponse modio_response, const ModioModfile& modio_modfile)
+  void onEditModfile(void* object, ModioResponse modio_response, ModioModfile modio_modfile)
   {
     int call_id = *((int*)object);
 
@@ -53,12 +53,12 @@ namespace modio
     edit_modfile_calls.erase(call_id);
   }
 
-  void onInstallModfile(void* object, ModioResponse modio_response, char* path)
+  void onInstallModfile(void* object, ModioResponse modio_response)
   {
     int call_id = *((int*)object);
     modio::Response response;
     response.initialize(modio_response);
-    install_modfile_calls[call_id]->callback(response, path);
+    install_modfile_calls[call_id]->callback(response);
     delete (int*)object;
     delete install_modfile_calls[call_id];
     install_modfile_calls.erase(call_id);
@@ -69,7 +69,7 @@ namespace modio
     const struct AddModfileCall* add_modfile_call = new AddModfileCall{callback};
     add_modfile_calls[this->current_call_id] = (AddModfileCall*)add_modfile_call;
 
-    modioAddModfile((void*)new int(this->current_call_id), mod_id, modfile_handler.getModioModfileHandler(), &onAddModfile);
+    modioAddModfile((void*)new int(this->current_call_id), mod_id, *modfile_handler.getModioModfileHandler(), &onAddModfile);
 
     this->current_call_id++;
   }
@@ -79,12 +79,12 @@ namespace modio
     const struct EditModfileCall* edit_modfile_call = new EditModfileCall{callback};
     edit_modfile_calls[this->current_call_id] = (EditModfileCall*)edit_modfile_call;
 
-    modioEditModfile((void*)new int(this->current_call_id), mod_id, modfile_id, modfile_handler.getModioModfileHandler(), &onEditModfile);
+    modioEditModfile((void*)new int(this->current_call_id), mod_id, modfile_id, *modfile_handler.getModioModfileHandler(), &onEditModfile);
 
     this->current_call_id++;
   }
 
-  void Instance::installModfile(modio::Modfile modfile, const std::string& destination_path, const std::function<void(const modio::Response& response, const std::string& path)>& callback)
+  void Instance::installModfile(modio::Modfile modfile, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback)
   {
     const struct InstallModfileCall* install_modfile_call = new InstallModfileCall{callback};
     install_modfile_calls[this->current_call_id] = (InstallModfileCall*)install_modfile_call;

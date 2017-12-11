@@ -5,14 +5,14 @@ extern "C"
   struct AddModfileParams
   {
     void* object;
-    void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile);
+    void (*callback)(void* object, ModioResponse response, ModioModfile modfile);
   };
 
   struct EditModfileParams
   {
     void* object;
     int modfile_id;
-    void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile);
+    void (*callback)(void* object, ModioResponse response, ModioModfile modfile);
   };
 
   struct InstallModfileParams
@@ -22,85 +22,21 @@ extern "C"
     std::string zip_path;
     std::string destination_path;
     FILE* file;
-    void (*callback)(void* object, ModioResponse response, char*);
+    void (*callback)(void* object, ModioResponse response);
   };
 
   std::map< int, AddModfileParams* > add_modfile_callbacks;
   std::map< int, EditModfileParams* > edit_modfile_callbacks;
   std::map< int, InstallModfileParams* > install_modfile_callbacks;
 
-  void modioOnModfileAdded(int call_number, int response_code, json response_json)
+  void createModfileJson(int modfile_id, std::string file_path)
   {
-    ModioResponse response;
-    modioInitResponse(&response, response_json);
-    response.code = response_code;
-
-    ModioModfile modfile;
-    modioInitModfile(&modfile, response_json);
-
-    add_modfile_callbacks[call_number]->callback(add_modfile_callbacks[call_number]->object, response, modfile);
-    add_modfile_callbacks.erase(call_number);
-  }
-
-  void modioAddModfile(void* object, int mod_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile))
-  {
-    modio::minizipwrapper::compress(modfile_handler->path, modio::getModIODirectory() + "tmp/modfile.zip");
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files";
-
-    int call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
-
-    add_modfile_callbacks[call_number] = new AddModfileParams;
-    add_modfile_callbacks[call_number]->callback = callback;
-    add_modfile_callbacks[call_number]->object = object;
-
-    std::map<std::string, std::string> curlform_files;
-    curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
-
-    modio::curlwrapper::postForm(call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), curlform_files, &modioOnModfileAdded);
-  }
-
-  void modioOnModfileEdited(int call_number, int response_code, json response_json)
-  {
-    ModioResponse response;
-    modioInitResponse(&response, response_json);
-    response.code = response_code;
-
-    ModioModfile modfile;
-    modioInitModfile(&modfile, response_json);
-
-    edit_modfile_callbacks[call_number]->callback(edit_modfile_callbacks[call_number]->object, response, modfile);
-    edit_modfile_callbacks.erase(call_number);
-  }
-
-  void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile))
-  {
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-
-    int call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
-
-    edit_modfile_callbacks[call_number] = new EditModfileParams;
-    edit_modfile_callbacks[call_number]->modfile_id = modfile_id;
-    edit_modfile_callbacks[call_number]->callback = callback;
-    edit_modfile_callbacks[call_number]->object = object;
-
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id);
-
-    std::multimap<std::string,std::string> modfile_params = modio::modfileHandlerToMultimap(modfile_handler);
-    for(std::multimap<std::string,std::string>::iterator i = modfile_params.begin(); i != modfile_params.end(); i++)
-    {
-      if(i==modfile_params.begin())
-        url+="?";
-      else
-        url+="&";
-      url+=(*i).first + "=" + (*i).second;
-    }
-
-    modio::curlwrapper::put(call_number, url, headers, modio::modfileHandlerToMultimap(modfile_handler), &modioOnModfileEdited);
+    json modfile_json;
+    modfile_json["modfile_id"] = modfile_id;
+    std::string json_path = file_path;
+    std::ofstream out(json_path);
+    out<<std::setw(4)<<modfile_json<<std::endl;
+    out.close();
   }
 
   void addToModfilesJson(int modfile_id, std::string path)
@@ -129,14 +65,30 @@ extern "C"
     out.close();
   }
 
-  void createModfileJson(int modfile_id, std::string file_path)
+  void modioOnModfileAdded(int call_number, int response_code, json response_json)
   {
-    json modfile_json;
-    modfile_json["modfile_id"] = modfile_id;
-    std::string json_path = file_path;
-    std::ofstream out(json_path);
-    out<<std::setw(4)<<modfile_json<<std::endl;
-    out.close();
+    ModioResponse response;
+    modioInitResponse(&response, response_json);
+    response.code = response_code;
+
+    ModioModfile modfile;
+    modioInitModfile(&modfile, response_json);
+
+    add_modfile_callbacks[call_number]->callback(add_modfile_callbacks[call_number]->object, response, modfile);
+    add_modfile_callbacks.erase(call_number);
+  }
+
+  void modioOnModfileEdited(int call_number, int response_code, json response_json)
+  {
+    ModioResponse response;
+    modioInitResponse(&response, response_json);
+    response.code = response_code;
+
+    ModioModfile modfile;
+    modioInitModfile(&modfile, response_json);
+
+    edit_modfile_callbacks[call_number]->callback(edit_modfile_callbacks[call_number]->object, response, modfile);
+    edit_modfile_callbacks.erase(call_number);
   }
 
   void modioOnModfileDownloaded(int call_number, int response_code, json response_json)
@@ -159,11 +111,59 @@ extern "C"
 
     char* destintation_path = new char[destination_path_str.size()+1];
     strcpy(destintation_path, destination_path_str.c_str());
-    install_modfile_callbacks[call_number]->callback(install_modfile_callbacks[call_number]->object, response, destintation_path);
+    install_modfile_callbacks[call_number]->callback(install_modfile_callbacks[call_number]->object, response);
     install_modfile_callbacks.erase(call_number);
   }
 
-  void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response, char* path))
+  void modioAddModfile(void* object, int mod_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
+  {
+    modio::minizipwrapper::compress(modfile_handler.path, modio::getModIODirectory() + "tmp/modfile.zip");
+    std::vector<std::string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files";
+
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    add_modfile_callbacks[call_number] = new AddModfileParams;
+    add_modfile_callbacks[call_number]->callback = callback;
+    add_modfile_callbacks[call_number]->object = object;
+
+    std::map<std::string, std::string> curlform_files;
+    curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
+
+    modio::curlwrapper::postForm(call_number, url, headers, modio::modfileHandlerToMultimap(&modfile_handler), curlform_files, &modioOnModfileAdded);
+  }
+
+  void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
+  {
+    std::vector<std::string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+
+    int call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    edit_modfile_callbacks[call_number] = new EditModfileParams;
+    edit_modfile_callbacks[call_number]->modfile_id = modfile_id;
+    edit_modfile_callbacks[call_number]->callback = callback;
+    edit_modfile_callbacks[call_number]->object = object;
+
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id);
+
+    std::multimap<std::string,std::string> modfile_params = modio::modfileHandlerToMultimap(&modfile_handler);
+    for(std::multimap<std::string,std::string>::iterator i = modfile_params.begin(); i != modfile_params.end(); i++)
+    {
+      if(i==modfile_params.begin())
+        url+="?";
+      else
+        url+="&";
+      url+=(*i).first + "=" + (*i).second;
+    }
+
+    modio::curlwrapper::put(call_number, url, headers, modio::modfileHandlerToMultimap(&modfile_handler), &modioOnModfileEdited);
+  }
+
+  void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response))
   {
     std::string file_path = std::string(modio::getModIODirectory() + "tmp/") + modio::toString(modfile_id) + "_modfile.zip";
 
