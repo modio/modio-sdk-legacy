@@ -4,7 +4,7 @@ namespace modio
 {
   struct DownloadImageCall
   {
-    const std::function<void(const modio::Response&, const std::string& path)> callback;
+    const std::function<void(const modio::Response&)> callback;
   };
 
   struct EditModLogoCall
@@ -15,16 +15,15 @@ namespace modio
   std::map<int, DownloadImageCall*> download_image_calls;
   std::map<int, EditModLogoCall*> edit_mod_logo_calls;
 
-  void onDownloadImage(void* object, ModioResponse modio_response, char* path)
+  void onDownloadImage(void* object, ModioResponse modio_response)
   {
     int call_id = *((int*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
-    download_image_calls[call_id]->callback(response, path);
+    download_image_calls[call_id]->callback(response);
 
-    delete[] path;
     delete (int*)object;
     delete download_image_calls[call_id];
     download_image_calls.erase(call_id);
@@ -44,7 +43,7 @@ namespace modio
     edit_mod_logo_calls.erase(call_id);
   }
 
-  void Instance::downloadImage(const std::string& image_url, const std::string& path, const std::function<void(const modio::Response&, const std::string& path)>& callback)
+  void Instance::downloadImage(const std::string& image_url, const std::string& path, const std::function<void(const modio::Response&)>& callback)
   {
     const struct DownloadImageCall* download_image_call = new DownloadImageCall{callback};
     download_image_calls[this->current_call_id] = (DownloadImageCall*)download_image_call;

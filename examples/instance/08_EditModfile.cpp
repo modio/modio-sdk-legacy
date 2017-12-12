@@ -22,7 +22,7 @@ int main(void)
 
   // Let's start by requesting a single mod
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -37,8 +37,8 @@ int main(void)
       // The Modfile Handler helps setting up the fields that will be edited
       // Notice that the version field and modfile zip can't be edited, you should be uploading another modfile instead
       modio::ModfileHandler modfile_handler;
-      modfile_handler.setModfileActive(true);
-      modfile_handler.setModfileChangelog("Stuff was changed on this mod via the examples.");
+      modfile_handler.setActive(true);
+      modfile_handler.setChangelog("Stuff was changed on this mod via the examples.");
 
       std::cout << "Uploading modfile..." << std::endl;
 

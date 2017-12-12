@@ -7,7 +7,7 @@ extern "C"
     void* object;
     std::string destination_path;
     FILE* file;
-    void (*callback)(void* object, ModioResponse response, char* path);
+    void (*callback)(void* object, ModioResponse response);
   };
 
   struct EditModLogoParams
@@ -20,7 +20,7 @@ extern "C"
   std::map< int, DownloadImageParams* > download_image_callbacks;
   std::map< int, EditModLogoParams* > edit_mod_logo_callbacks;
 
-  void onImageDownloaded(int call_number, int response_code, json response_json)
+  void modioOnImageDownloaded(int call_number, int response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -29,11 +29,21 @@ extern "C"
     char* path_char = new char[download_image_callbacks[call_number]->destination_path.size() +1];
     strcpy(path_char, download_image_callbacks[call_number]->destination_path.c_str());
     fclose(download_image_callbacks[call_number]->file);
-    download_image_callbacks[call_number]->callback(download_image_callbacks[call_number]->object, response, path_char);
+    download_image_callbacks[call_number]->callback(download_image_callbacks[call_number]->object, response);
     download_image_callbacks.erase(call_number);
   }
 
-  void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse modioresponse, char* path))
+  void modioOnModLogoEdited(int call_number, int response_code, json response_json)
+  {
+    ModioResponse response;
+    modioInitResponse(&response, response_json);
+    response.code = response_code;
+
+    edit_mod_logo_callbacks[call_number]->callback(edit_mod_logo_callbacks[call_number]->object, response, edit_mod_logo_callbacks[call_number]->mod_id);
+    edit_mod_logo_callbacks.erase(call_number);
+  }
+
+  void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse modioresponse))
   {
     int call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -54,17 +64,7 @@ extern "C"
     }
     download_image_callbacks[call_number]->file = file;
 
-    modio::curlwrapper::download(call_number, image_url, path, file, progress, &onImageDownloaded);
-  }
-
-  void onModLogoEdited(int call_number, int response_code, json response_json)
-  {
-    ModioResponse response;
-    modioInitResponse(&response, response_json);
-    response.code = response_code;
-
-    edit_mod_logo_callbacks[call_number]->callback(edit_mod_logo_callbacks[call_number]->object, response, edit_mod_logo_callbacks[call_number]->mod_id);
-    edit_mod_logo_callbacks.erase(call_number);
+    modio::curlwrapper::download(call_number, image_url, path, file, progress, &modioOnImageDownloaded);
   }
 
   void modioEditModLogo(void* object, int mod_id, char* path, void (*callback)(void* object, ModioResponse response, int mod_id))
@@ -86,6 +86,6 @@ extern "C"
     std::map<std::string, std::string> curlform_files;
     curlform_files["logo"] = path;
 
-    modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &onModLogoEdited);
+    modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &modioOnModLogoEdited);
   }
 }

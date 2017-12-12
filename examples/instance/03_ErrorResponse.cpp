@@ -20,35 +20,36 @@ int main(void)
     finished = true;
   };
 
-  // Let's start by requesting a single mod
+  // Sometimes, mod.io API will return errors. Let's trigger some of them to find out how to interpret them
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(-1);
+  filter.addFieldValue("id", "-1");
 
   std::cout <<"Getting mods..." << std::endl;
 
   modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200 && mods.size() >= 1)
+
+    if(response.code == 200)
     {
-      modio::Mod mod = mods[0];
-      std::cout << "Requested mod: " << mod.name << std::endl;
-
-      std::cout << "Uploading image..." << std::endl;
-
-      // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
-      modio_instance.editModLogo(mod.id, "ModExample/logo.png", [&](const modio::Response& response, u32 mod_id)
+      std::cout << "Success!" << std::endl;
+    }else
+    {
+      // A general error message is returned
+      std::cout << "Error message: " << response.error.message << std::endl;
+      if(response.error.errors.size() > 0)
       {
-        std::cout << "Edit Mod Logo response: " << response.code << std::endl;
-
-        if(response.code == 200)
+        std::cout << "Errors:" << std::endl;
+        // and we can go into details on the error list
+        for(auto& error : response.error.errors)
         {
-          std::cout << "Image uploaded successfully!" << std::endl;
+          std::cout << error << std::endl;
         }
-
-        finish();
-      });
+      }
     }
+
+    finish();
   });
 
   wait();

@@ -22,7 +22,7 @@ int main(void)
 
   // Let's start by requesting a single mod
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -34,18 +34,17 @@ int main(void)
       modio::Mod mod = mods[0];
       std::cout << "Requested mod: " << mod.name << std::endl;
 
-      std::cout <<"Adding tags..." << std::endl;
+      std::cout <<"Getting tags..." << std::endl;
 
-      std::vector<std::string> tags;
-      tags.push_back("Easy");
-
-      // We delete tags by providing the selected Mod id and the tag names
-      modio_instance.deleteTags(mod.id, tags, [&](const modio::Response& response, u32 mod_id, std::vector<modio::Tag> tags)
+      // We request the list of tags by providing the Mod's id
+      modio_instance.getTags(mod.id, [&](const modio::Response& response, std::vector<modio::Tag> tags)
       {
-        std::cout << "Add tags response: " << response.code << std::endl;
-        if(response.code == 204)
+        std::cout << "Get tags response: " << response.code << std::endl;
+        if(response.code == 200)
         {
-          std::cout << "Tags deleted successfully" << std::endl;
+          std::cout << "Mod delete successfully" << std::endl;
+          std::cout << "Listing Tags" << std::endl;
+          std::cout << "============" << std::endl;
           for(auto& tag : tags)
           {
             std::cout << tag.name << std::endl;

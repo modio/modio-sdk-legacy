@@ -22,7 +22,7 @@ int main(void)
 
   // Let's start by requesting a single mod
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -34,16 +34,16 @@ int main(void)
       modio::Mod mod = mods[0];
       std::cout << "Requested mod: " << mod.name << std::endl;
 
-      std::cout << "Installing modfile..." << std::endl;
+      std::cout << "Uploading image..." << std::endl;
 
-      // Now we provide the Modfile id and the local path where the modfile will be installed
-      modio_instance.installModfile(mod.modfile, "mods_dir/modfile", [&](const modio::Response& response, const std::string& path)
+      // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
+      modio_instance.editModLogo(mod.id, "ModExample/logo.png", [&](const modio::Response& response, u32 mod_id)
       {
-        std::cout << "Install Modfile response: " << response.code << std::endl;
+        std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
         if(response.code == 200)
         {
-          std::cout << "Modfile installed successfully!" << std::endl;
+          std::cout << "Image uploaded successfully!" << std::endl;
         }
 
         finish();

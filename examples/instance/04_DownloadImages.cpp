@@ -21,8 +21,9 @@ int main(void)
   };
 
   // Let's start by requesting a single mod
+
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -34,16 +35,19 @@ int main(void)
       modio::Mod mod = mods[0];
       std::cout << "Requested mod: " << mod.name << std::endl;
 
-      std::cout << "Deleting mod..." << std::endl;
+      std::cout << "Downloading image" << std::endl;
 
-      // We delete a mod providing the Mod id
-      modio_instance.deleteMod(mod.id, [&](const modio::Response& response, u32 mod_id)
+      // Now let's download the original logo full size to the selected path
+      // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
+      modio_instance.downloadImage(mod.logo.original, "mods_dir/original.png", [&](const modio::Response& response)
       {
-        std::cout << "Mod Delete response: " << response.code << std::endl;
-        if(response.code == 204)
+        std::cout << "Download Image response: " << response.code << std::endl;
+
+        if(response.code == 200)
         {
-          std::cout << "Mod delete successfully" << std::endl;
+          std::cout << "Image downloaded successfully!" << std::endl;
         }
+
         finish();
       });
     }

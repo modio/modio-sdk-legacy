@@ -5,6 +5,7 @@ int main(void)
   modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
+  volatile static int download_mod_id = -1;
 
   auto wait = [&]()
   {
@@ -12,6 +13,12 @@ int main(void)
     {
       modio::sleep(10);
       modioProcess();
+      if(download_mod_id != -1)
+      {
+        double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
+        if(progress != -1)
+          std::cout << progress << std::endl;
+      }
     }
   };
 
@@ -21,9 +28,8 @@ int main(void)
   };
 
   // Let's start by requesting a single mod
-
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -35,17 +41,18 @@ int main(void)
       modio::Mod mod = mods[0];
       std::cout << "Requested mod: " << mod.name << std::endl;
 
-      std::cout << "Downloading image" << std::endl;
+      std::cout << "Installing modfile..." << std::endl;
 
-      // Now let's download the original logo full size to the selected path
-      // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
-      modio_instance.downloadImage(mod.logo.original, "mods_dir/original.png", [&](const modio::Response& response, const std::string& path)
+      download_mod_id = mod.id;
+
+      // Now we provide the Modfile id and the local path where the modfile will be installed
+      modio_instance.installModfile(mod.modfile, "mods_dir/modfile", [&](const modio::Response& response)
       {
-        std::cout << "Download Image response: " << response.code << std::endl;
+        std::cout << "Install Modfile response: " << response.code << std::endl;
 
         if(response.code == 200)
         {
-          std::cout << "Image downloaded successfully!" << std::endl;
+          std::cout << "Modfile installed successfully!" << std::endl;
         }
 
         finish();

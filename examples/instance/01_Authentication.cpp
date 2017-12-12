@@ -29,14 +29,12 @@ int main()
     std::cin >> email;
 
     // Auth works by sending an email with a code. Lets trigger that now
-    modio_instance.emailRequest(email, [&](const modio::Response& response, const std::string& message)
+    modio_instance.emailRequest(email, [&](const modio::Response& response)
     {
       std::cout << "Response code: " << response.code << std::endl;
 
       if (response.code == 200)
       {
-        std::cout << "Message: " << message << std::endl;
-
         std::string securityCode;
         std::cout << "Please enter the 5 digit security code: ";
         std::cin >> securityCode;

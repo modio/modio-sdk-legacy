@@ -20,36 +20,33 @@ int main(void)
     finished = true;
   };
 
-  // Sometimes, mod.io API will return errors. Let's trigger some of them to find out how to interpret them
+  // Let's start by requesting a single mod
   modio::FilterHandler filter;
-  filter.setFilterLimit(-1);
-  filter.addFilterFieldValue("id", "-1");
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
   modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
+    if(response.code == 200 && mods.size() >= 1)
+    {
+      modio::Mod mod = mods[0];
+      std::cout << "Requested mod: " << mod.name << std::endl;
 
-    if(response.code == 200)
-    {
-      std::cout << "Success!" << std::endl;
-    }else
-    {
-      // A general error message is returned
-      std::cout << "Error message: " << response.error.message << std::endl;
-      if(response.error.errors.size() > 0)
+      std::cout << "Deleting mod..." << std::endl;
+
+      // We delete a mod providing the Mod id
+      modio_instance.deleteMod(mod.id, [&](const modio::Response& response, u32 mod_id)
       {
-        std::cout << "Errors:" << std::endl;
-        // and we can go into details on the error list
-        for(auto& error : response.error.errors)
+        std::cout << "Mod Delete response: " << response.code << std::endl;
+        if(response.code == 204)
         {
-          std::cout << error << std::endl;
+          std::cout << "Mod delete successfully" << std::endl;
         }
-      }
+        finish();
+      });
     }
-
-    finish();
   });
 
   wait();

@@ -22,7 +22,7 @@ int main(void)
 
   // Let's start by requesting a single mod
   modio::FilterHandler filter;
-  filter.setFilterLimit(1);
+  filter.setLimit(1);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -40,16 +40,12 @@ int main(void)
       tags.push_back("Easy");
 
       // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-      modio_instance.addTags(mod.id, tags, [&](const modio::Response& response, u32 mod_id, std::vector<modio::Tag> tags)
+      modio_instance.addTags(mod.id, tags, [&](const modio::Response& response, u32 mod_id)
       {
         std::cout << "Add tags response: " << response.code << std::endl;
         if(response.code == 204)
         {
           std::cout << "Tags added successfully" << std::endl;
-          for(auto& tag : tags)
-          {
-            std::cout << tag.name << std::endl;
-          }
         }
         finish();
       });

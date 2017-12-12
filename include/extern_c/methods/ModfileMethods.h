@@ -10,9 +10,9 @@
 
 extern "C"
 {
-  void MODIO_DLL modioAddModfile(void* object, int mod_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile));
-  void MODIO_DLL modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, const ModioModfile& modfile));
-  void MODIO_DLL modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response, char* path));
+  void MODIO_DLL modioAddModfile(void* object, int mod_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+  void MODIO_DLL modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+  void MODIO_DLL modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response));
   int MODIO_DLL modioGetModfileState(int modfile_id);
   double MODIO_DLL modioGetModfileDownloadPercentage(int modfile_id);
 }

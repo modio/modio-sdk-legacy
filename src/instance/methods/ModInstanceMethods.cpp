@@ -39,17 +39,17 @@ namespace modio
     for(int i=0; i < mods_size; i++)
     {
       mods_vector[i].initialize(mods[i]);
-      delete &mods[i];
     }
 
     get_mods_calls[call_id]->callback((const Response&)response, mods_vector);
 
     delete (int*)object;
     delete get_mods_calls[call_id];
+    delete[] mods;
     get_mods_calls.erase(call_id);
   }
 
-  void onAddMod(void* object, ModioResponse modio_response, ModioMod* mod)
+  void onAddMod(void* object, ModioResponse modio_response, ModioMod mod)
   {
     int call_id = *((int*)object);
 
@@ -64,7 +64,7 @@ namespace modio
     add_mod_calls.erase(call_id);
   }
 
-  void onEditMod(void* object, ModioResponse modio_response, ModioMod* mod)
+  void onEditMod(void* object, ModioResponse modio_response, ModioMod mod)
   {
     int call_id = *((int*)object);
 
@@ -98,7 +98,7 @@ namespace modio
     const struct GetModsCall* get_mods_call = new GetModsCall{callback};
     get_mods_calls[this->current_call_id] = (GetModsCall*)get_mods_call;
 
-    modioGetMods((void*)new int(this->current_call_id), filter.getFilter(), &onGetMods);
+    modioGetMods((void*)new int(this->current_call_id), *filter.getFilter(), &onGetMods);
 
     this->current_call_id++;
   }
@@ -108,7 +108,7 @@ namespace modio
     const struct AddModCall* add_mod_call = new AddModCall{callback};
     add_mod_calls[this->current_call_id] = (AddModCall*)add_mod_call;
 
-    modioAddMod((void*)new int(this->current_call_id), mod_handler.getModioModHandler(), &onAddMod);
+    modioAddMod((void*)new int(this->current_call_id), *mod_handler.getModioModHandler(), &onAddMod);
 
     this->current_call_id++;
   }
@@ -118,7 +118,7 @@ namespace modio
     const struct EditModCall* edit_mod_call = new EditModCall{callback};
     edit_mod_calls[this->current_call_id] = (EditModCall*)edit_mod_call;
 
-    modioEditMod((void*)new int(this->current_call_id), mod_id, mod_handler.getModioModHandler(), &onEditMod);
+    modioEditMod((void*)new int(this->current_call_id), mod_id, *mod_handler.getModioModHandler(), &onEditMod);
 
     this->current_call_id++;
   }

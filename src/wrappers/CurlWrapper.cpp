@@ -450,7 +450,8 @@ namespace modio
       {
         int msgq = 0;
         curl_message = curl_multi_info_read(curl_multi_handle, &msgq);
-        if(curl_message && (curl_message->msg == CURLMSG_DONE)) {
+        if(curl_message && (curl_message->msg == CURLMSG_DONE))
+        {
           CURL *curl_handle = curl_message->easy_handle;
 
           if(ongoing_calls.find(curl_handle) != ongoing_calls.end())

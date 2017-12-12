@@ -14,7 +14,7 @@ namespace modio
 
   struct EmailRequestCall
   {
-    const std::function<void(const modio::Response&, const std::string&)> callback;
+    const std::function<void(const modio::Response&)> callback;
   };
 
   struct EmailExchangeCall
@@ -25,7 +25,7 @@ namespace modio
   std::map<int, EmailRequestCall*> email_request_calls;
   std::map<int, EmailExchangeCall*> email_exchange_calls;
 
-  void onEmailRequest(void* object, ModioResponse modio_response, char* message)
+  void onEmailRequest(void* object, ModioResponse modio_response)
   {
     int call_id = *((int*)object);
 
@@ -33,12 +33,11 @@ namespace modio
 
     response.initialize(modio_response);
 
-    email_request_calls[call_id]->callback((const modio::Response&)response, message);
+    email_request_calls[call_id]->callback((const modio::Response&)response);
 
     delete (int*)object;
     delete email_request_calls[call_id];
     email_request_calls.erase(call_id);
-    delete[] message;
   }
 
   void onEmailExchange(void* object, ModioResponse modio_response)
@@ -55,7 +54,7 @@ namespace modio
     email_request_calls.erase(call_id);
   }
 
-  void Instance::emailRequest(const std::string& email, const std::function<void(const modio::Response&, const std::string&)>& callback)
+  void Instance::emailRequest(const std::string& email, const std::function<void(const modio::Response&)>& callback)
   {
     const struct EmailRequestCall* email_request_call = new EmailRequestCall{callback};
     email_request_calls[this->current_call_id] = (EmailRequestCall*)email_request_call;

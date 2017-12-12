@@ -10,10 +10,10 @@ namespace modio
     ModioModfileHandler* modfile_handler;
   public:
     ModfileHandler();
-    void setModfilePath(const std::string& path);
-    void setModfileVersion(const std::string& version);
-    void setModfileChangelog(const std::string& changelog);
-    void setModfileActive(bool active);
+    void setPath(const std::string& path);
+    void setVersion(const std::string& version);
+    void setChangelog(const std::string& changelog);
+    void setActive(bool active);
     ModioModfileHandler* getModioModfileHandler();
     ~ModfileHandler();
   };
