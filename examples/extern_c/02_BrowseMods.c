@@ -33,11 +33,9 @@ int main(void)
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,3);
-  modioAddFilterLikeField(&filter, (char*)"name", (char*)"Example Mod");
-  modioAddFilterLikeField(&filter, (char*)"description", (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
 
   printf("Getting mods...\n");
-  modioGetMods(NULL,&filter, &onModsGet);
+  modioGetMods(NULL,filter, &onModsGet);
 
   while(!mods_get_finished)
   {

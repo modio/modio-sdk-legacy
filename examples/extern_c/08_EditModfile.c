@@ -42,7 +42,7 @@ int main(void)
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, &filter, &onModsGet);
+  modioGetMods(NULL, filter, &onModsGet);
 
   while(!mods_get_finished)
   {
@@ -56,7 +56,7 @@ int main(void)
   modioSetModfileActive(&modfile_handler,false);
   modioSetModfileChangelog(&modfile_handler,(char*)"Stuff was changed on this mod via the examples.");
 
-  modioEditModfile(NULL, global_modfile->mod_id, global_modfile->id, &modfile_handler, &onModfileEdited);
+  modioEditModfile(NULL, global_modfile->mod_id, global_modfile->id, modfile_handler, &onModfileEdited);
 
   while(!modfile_edited)
   {

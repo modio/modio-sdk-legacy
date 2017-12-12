@@ -34,7 +34,7 @@ int main(void)
   modioSetFilterOffset(&filter, -1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, &filter, &onModsGet);
+  modioGetMods(NULL, filter, &onModsGet);
 
   while(!mods_get_finished)
   {

@@ -5,7 +5,7 @@ bool modfile_installed = false;
 
 ModioModfile* global_modfile = NULL;
 
-void onModfileInstalled(void* object, ModioResponse response, char* path)
+void onModfileInstalled(void* object, ModioResponse response)
 {
   printf("Install Mod response: %i\n", response.code);
   if(response.code == 200)
@@ -42,7 +42,7 @@ int main(void)
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, &filter, &onModsGet);
+  modioGetMods(NULL, filter, &onModsGet);
 
   while(!mods_get_finished)
   {

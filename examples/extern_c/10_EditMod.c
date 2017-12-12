@@ -5,7 +5,7 @@ bool mods_edited_finished = false;
 
 ModioMod* global_mod = NULL;
 
-void onModEdited(void* object, ModioResponse response, ModioMod* mod)
+void onModEdited(void* object, ModioResponse response, ModioMod mod)
 {
   printf("Mod Edit response: %i\n", response.code);
   if(response.code == 200)
@@ -42,7 +42,7 @@ int main(void)
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, &filter, &onModsGet);
+  modioGetMods(NULL, filter, &onModsGet);
 
   while(!mods_get_finished)
   {
@@ -65,7 +65,7 @@ int main(void)
   //setNameid(&mod_handler, "my-example-mod"); //Name id must be unique
   //setModfile(&mod_handler, int modfile); //Modfile should exist
 
-  modioEditMod(NULL, global_mod->id, &mod_handler, &onModEdited);
+  modioEditMod(NULL, global_mod->id, mod_handler, &onModEdited);
 
   while(!mods_edited_finished)
   {

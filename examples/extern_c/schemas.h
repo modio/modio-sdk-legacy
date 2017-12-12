@@ -170,32 +170,31 @@ void modioPauseCurrentDownload();
 void modioSetDebugLevel(unsigned int debug_level);
 void modioProcess();
 
-void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response, char* message));
+void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
 void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
 bool modioIsLoggedIn();
 void modioLogout();
 
-void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response, char* path));
+void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response));
 void modioEditModLogo(void* object, int mod_id, char* path, void (*callback)(void* object, ModioResponse response, int mod_id));
 
-void modioAddModfile(void* object, int mod_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler* modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response, char* path));
+void modioAddModfile(void* object, int mod_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response));
 int modioGetModfileState(int modfile_id);
 double modioGetModfileDownloadPercentage(int modfile_id);
 
-void modioGetMods(void* object, ModioFilterHandler* filter, void (*callback)(void* object, ModioResponse response, ModioMod* mods, int mods_size));
-void modioAddMod(void* object, ModioModHandler* mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod* mod));
-void modioEditMod(void* object, int mod_id, ModioModHandler* mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod* mod));
+void modioGetMods(void* object, ModioFilterHandler filter, void (*callback)(void* object, ModioResponse response, ModioMod* mods, int mods_size));
+void modioAddMod(void* object, ModioModHandler mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
+void modioEditMod(void* object, int mod_id, ModioModHandler mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioDeleteMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id));
 void modioSetUserModVote(void* object, int mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response, int mod_id));
 void modioSubscribeMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id));
 void modioUnsubscribeMod(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id));
 
 void modioGetTags(void* object, int mod_id, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size));
-void modioAddTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size));
-void modioDeleteTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size));
-
+void modioAddTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id));
+void modioDeleteTags(void* object, int mod_id, char** tags_array, int tags_array_size, void (*callback)(void* object, ModioResponse response, int mod_id));
 //ModioFilterHandler Methods
 void modioInitFilter(ModioFilterHandler* filter);
 void modioSetFilterSort(ModioFilterHandler* filter, char* field, bool ascending);

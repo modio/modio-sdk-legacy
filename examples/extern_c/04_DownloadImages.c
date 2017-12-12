@@ -5,7 +5,7 @@ ModioMod* global_mod;
 bool mods_get_finished = false;
 bool images_downloaded = false;
 
-void onImageDownloaded(void* object, ModioResponse response, char* path)
+void onImageDownloaded(void* object, ModioResponse response)
 {
   printf("Download Image response: %i\n", response.code);
   if(response.code == 200)
@@ -42,7 +42,7 @@ int main(void)
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, &filter, &onModsGet);
+  modioGetMods(NULL, filter, &onModsGet);
 
   while(!mods_get_finished)
   {

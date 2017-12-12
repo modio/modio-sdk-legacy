@@ -5,7 +5,7 @@ bool get_tags_finished = false;
 
 ModioMod* global_mod;
 
-void onAddTags(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size)
+void onAddTags(void* object, ModioResponse response, int mod_id)
 {
   printf("Add Tags response: %i\n", response.code);
   if(response.code == 201)
@@ -42,7 +42,7 @@ int main(void)
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, &filter, &onModsGet);
+  modioGetMods(NULL, filter, &onModsGet);
 
   while(!mods_get_finished)
   {

@@ -2,15 +2,15 @@
 
 bool add_mod_finished = false;
 
-void onModAdded(void* object, ModioResponse response, ModioMod* mod)
+void onModAdded(void* object, ModioResponse response, ModioMod mod)
 {
   printf("Add Mod Response code: %i\n", response.code);
 
   if(response.code == 201)
   {
     printf("Mod added!\n");
-    printf("Mod id: %i\n", mod->id);
-    printf("Mod name: %s\n", mod->name);
+    printf("Mod id: %i\n", mod.id);
+    printf("Mod name: %s\n", mod.name);
   }
 
   add_mod_finished = true;
@@ -45,7 +45,7 @@ int main(void)
 
   printf("Adding mod...\n");
 
-  modioAddMod(NULL, &mod_handler, &onModAdded);
+  modioAddMod(NULL, mod_handler, &onModAdded);
 
   while(!add_mod_finished)
   {

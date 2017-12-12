@@ -3,11 +3,11 @@
 bool email_request_finished = false;
 bool email_exchange_finished = false;
 
-void onEmailRequest(void* object, ModioResponse response, char* message)
+void onEmailRequest(void* object, ModioResponse response)
 {
   if(response.code == 200)
   {
-    printf("Message: %s\n",message);
+    printf("Email request successful\n");
   }else
   {
     printf("Error sending code\n");
