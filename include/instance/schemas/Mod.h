@@ -1,7 +1,7 @@
 #ifndef MODIO_MOD_H
 #define MODIO_MOD_H
 
-#include "instance/schemas/Image.h"
+#include "instance/schemas/Logo.h"
 #include "instance/schemas/User.h"
 #include "instance/schemas/Media.h"
 #include "instance/schemas/Modfile.h"
@@ -27,7 +27,7 @@ namespace modio
     std::string description;
     std::string metadata_blob;
     std::string profile_url;
-    Image logo;
+    Logo logo;
     User submitted_by;
     Media media;
     Modfile modfile;

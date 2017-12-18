@@ -20,22 +20,6 @@ extern "C"
       strcpy(image->original, original_str.c_str());
     }
 
-    image->thumb_1280x720 = NULL;
-    if(modio::hasKey(image_json, "thumb_1280x720"))
-    {
-      std::string thumb_1280x720_str = image_json["thumb_1280x720"];
-      image->thumb_1280x720 = new char[thumb_1280x720_str.size() + 1];
-      strcpy(image->thumb_1280x720, thumb_1280x720_str.c_str());
-    }
-
-    image->thumb_640x360 = NULL;
-    if(modio::hasKey(image_json, "thumb_640x360"))
-    {
-      std::string thumb_640x360_str = image_json["thumb_640x360"];
-      image->thumb_640x360 = new char[thumb_640x360_str.size() + 1];
-      strcpy(image->thumb_640x360, thumb_640x360_str.c_str());
-    }
-
     image->thumb_320x180 = NULL;
     if(modio::hasKey(image_json, "thumb_320x180"))
     {
@@ -49,9 +33,7 @@ extern "C"
   {
     delete[] image->filename;
     delete[] image->original;
-    delete[] image->thumb_1280x720;
     delete[] image->thumb_320x180;
-    delete[] image->thumb_640x360;
 
     delete image;
   }

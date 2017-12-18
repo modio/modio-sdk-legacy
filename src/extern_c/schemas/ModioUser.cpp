@@ -58,7 +58,7 @@ extern "C"
 
     if(modio::hasKey(user_json, "avatar"))
     {
-      modioInitImage(&(user->avatar), user_json["avatar"]);
+      modioInitAvatar(&(user->avatar), user_json["avatar"]);
     }
   }
 

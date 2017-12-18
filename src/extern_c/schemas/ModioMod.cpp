@@ -82,7 +82,7 @@ extern "C"
 
     if(modio::hasKey(mod_json, "logo"))
     {
-      modioInitImage(&(mod->logo), mod_json["logo"]);
+      modioInitLogo(&(mod->logo), mod_json["logo"]);
     }
 
     if(modio::hasKey(mod_json, "submitted_by"))

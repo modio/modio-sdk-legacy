@@ -11,10 +11,10 @@ namespace modio
   {
   public:
     u32 code;
-    i32 cursor_id;
-    i32 prev_id;
-    i32 next_id;
     u32 result_count;
+    u32 result_limit;
+    i32 result_offset;
+
     modio::Error error;
 
     void initialize(ModioResponse response);

@@ -5,7 +5,7 @@
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
 #include "wrappers/CurlWrapper.h"
-#include "extern_c/schemas/ModioImage.h"
+#include "extern_c/schemas/ModioLogo.h"
 #include "extern_c/schemas/ModioUser.h"
 #include "extern_c/schemas/ModioMedia.h"
 #include "extern_c/schemas/ModioModfile.h"
@@ -30,7 +30,7 @@ extern "C"
     char* description;
     char* metadata_blob;
     char* profile_url;
-    ModioImage logo;
+    ModioLogo logo;
     ModioUser submitted_by;
     ModioMedia media;
     ModioModfile modfile;

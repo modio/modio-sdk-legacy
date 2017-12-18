@@ -15,26 +15,25 @@ extern "C"
       modioInitError(&(response->error),empty_json);
     }
 
-    response->cursor_id = -1;
-    if(modio::hasKey(response_json,"cursor_id"))
-    {
-      response->cursor_id = response_json["cursor_id"];
-    }
-    response->prev_id = -1;
-    if(modio::hasKey(response_json,"prev_id"))
-    {
-      response->prev_id = response_json["prev_id"];
-    }
-    response->next_id = -1;
-    if(modio::hasKey(response_json,"next_id"))
-    {
-      response->next_id = response_json["next_id"];
-    }
-    response->result_count = -1;
+    response->result_count = 0;
     if(modio::hasKey(response_json,"result_count"))
     {
       response->result_count = response_json["result_count"];
     }
+
+    response->result_limit = 0;
+    if(modio::hasKey(response_json,"result_limit"))
+    {
+      response->result_limit = response_json["result_limit"];
+    }
+
+    response->result_offset = -1;
+    if(modio::hasKey(response_json,"result_offset"))
+    {
+      response->result_offset = response_json["result_offset"];
+    }
+
+
   }
 
   void modioFreeResponse(ModioResponse* response)

@@ -43,10 +43,9 @@ int main(void)
       // Additionally, we can access cursor data to ease future browsing queries
       std::cout << std::endl;
       std::cout << "Cursor data:" << std::endl;
-      std::cout << "Cursor id: " << response.cursor_id << std::endl;
-      std::cout << "Prev id: " << response.prev_id << std::endl;
-      std::cout << "Next id: " << response.next_id << std::endl;
       std::cout << "Result count: " << response.result_count << std::endl;
+      std::cout << "Result limit: " << response.result_limit << std::endl;
+      std::cout << "Result offset: " << response.result_offset << std::endl;
     }
     finish();
   });

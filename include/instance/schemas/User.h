@@ -3,7 +3,7 @@
 
 #include "Globals.h"
 #include "extern_c/schemas/ModioUser.h"
-#include "instance/schemas/Image.h"
+#include "instance/schemas/Avatar.h"
 
 namespace modio
 {
@@ -17,7 +17,7 @@ namespace modio
     std::string timezone;
     std::string language;
     std::string profile_url;
-    modio::Image avatar;
+    Avatar avatar;
 
     void initialize(ModioUser modio_user);
   };
