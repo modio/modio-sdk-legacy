@@ -27,7 +27,7 @@ namespace modio
   std::map<int, EditModCall*> edit_mod_calls;
   std::map<int, DeleteModCall*> delete_mod_calls;
 
-  void onGetMods(void* object, ModioResponse modio_response, ModioMod* mods, int mods_size)
+  void onGetMods(void* object, ModioResponse modio_response, ModioMod mods[], int mods_size)
   {
     int call_id = *((int*)object);
 
@@ -45,7 +45,6 @@ namespace modio
 
     delete (int*)object;
     delete get_mods_calls[call_id];
-    delete[] mods;
     get_mods_calls.erase(call_id);
   }
 

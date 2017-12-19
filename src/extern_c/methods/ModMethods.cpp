@@ -5,7 +5,7 @@ extern "C"
   struct GetModsParams
   {
     void* object;
-    void (*callback)(void* object, ModioResponse response, ModioMod* mods, int mods_size);
+    void (*callback)(void* object, ModioResponse response, ModioMod mods[], int mods_size);
   };
 
   struct AddModParams
@@ -39,18 +39,19 @@ extern "C"
     modioInitResponse(&response, response_json);
     response.code = response_code;
 
-    ModioMod* mods = NULL;
-    int mods_size = 0;
     if(response.code == 200)
     {
-      mods_size = (int)response_json["data"].size();
-      mods = new ModioMod[mods_size];
+      int mods_size = (int)response_json["data"].size();
+      ModioMod mods[mods_size];
       for(int i=0;i<mods_size;i++)
       {
         modioInitMod(&mods[i], response_json["data"][i]);
       }
+      get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, mods, mods_size);
+    }else
+    {
+      get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, NULL, 0);
     }
-    get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, mods, mods_size);
     get_mods_callbacks.erase(call_number);
   }
 
@@ -87,7 +88,7 @@ extern "C"
     return_id_callbacks.erase(call_number);
   }
 
-  void modioGetMods(void* object, ModioFilterHandler filter, void (*callback)(void* object, ModioResponse response, ModioMod* mods, int mods_size))
+  void modioGetMods(void* object, ModioFilterHandler filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], int mods_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
     std::vector<std::string> headers;

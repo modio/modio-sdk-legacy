@@ -3,7 +3,7 @@
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
-#include "extern_c/schemas/ModioImage.h"
+#include "extern_c/schemas/ModioAvatar.h"
 
 using json = nlohmann::json;
 
@@ -18,7 +18,7 @@ extern "C"
     char* timezone;
     char* language;
     char* profile_url;
-    ModioImage avatar;
+    ModioAvatar avatar;
   };
 
   void modioInitUser(ModioUser* user, json user_json);

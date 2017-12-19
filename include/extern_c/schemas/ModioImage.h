@@ -13,8 +13,6 @@ extern "C"
     char* filename;
     char* original;
     char* thumb_320x180;
-    char* thumb_640x360;
-    char* thumb_1280x720;
   };
 
   void modioInitImage(ModioImage* image, json image_json);
