@@ -3,17 +3,12 @@
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
+#include "extern_c/ModioC.h"
 
 using json = nlohmann::json;
 
 extern "C"
 {
-  struct ModioTag
-  {
-    u32 date_added;
-    char* name;
-  };
-
   void modioInitTag(ModioTag* tag, json tag_json);
   void modioFreeTag(ModioTag* tag);
 }

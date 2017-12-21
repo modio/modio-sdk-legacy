@@ -17,10 +17,7 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
     }
 
     printf("\nCursor data:\n");
-    printf("Cursor id: %i\n",response.cursor_id);
-    printf("Prev id: %i\n",response.prev_id);
-    printf("Next id: %i\n",response.next_id);
-    printf("Result count: %i\n",response.result_count);
+    //printf("Result count: %i\n",response.result_count);
   }
 
   mods_get_finished = true;

@@ -3,16 +3,12 @@
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
+#include "extern_c/ModioC.h"
 
 using json = nlohmann::json;
 
 extern "C"
 {
-  struct ModioFilehash
-  {
-    char* md5;
-  };
-
   void modioInitFilehash(ModioFilehash* filehash, json filehash_json);
   void modioFreeFilehash(ModioFilehash* filehash);
 }
