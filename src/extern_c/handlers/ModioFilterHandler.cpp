@@ -60,7 +60,6 @@ extern "C"
     filter->sort = NULL;
     filter->limit = NULL;
     filter->offset = NULL;
-    filter->cursor = NULL;
     filter->full_text_search = NULL;
     filter->field_value_list = NULL;
     filter->like_list = NULL;
@@ -102,15 +101,6 @@ extern "C"
     std::string offset_str = std::string("_offset=") + modio::toString(offset);
     filter->offset = new char[offset_str.size() + 1];
     strcpy(filter->offset, offset_str.c_str());
-  }
-
-  void modioSetFilterCursor(ModioFilterHandler* filter, int cursor)
-  {
-    if(filter->cursor)
-      delete[] filter->cursor;
-    std::string cursor_str = std::string("_cursor=") + modio::toString(cursor);
-    filter->cursor = new char[cursor_str.size() + 1];
-    strcpy(filter->cursor, cursor_str.c_str());
   }
 
   void modioSetFilterFullTextSearch(ModioFilterHandler* filter, char* text)
@@ -210,8 +200,6 @@ extern "C"
       delete filter->limit;
     if(filter->offset)
       delete filter->offset;
-    if(filter->cursor)
-      delete filter->cursor;
     if(filter->full_text_search)
       delete filter->full_text_search;
 
@@ -266,7 +254,6 @@ namespace modio
     filter_string = addParam(filter_string, filter->sort);
     filter_string = addParam(filter_string, filter->limit);
     filter_string = addParam(filter_string, filter->offset);
-    filter_string = addParam(filter_string, filter->cursor);
     filter_string = addParam(filter_string, filter->full_text_search);
 
     filter_string = addParam(filter_string, filter->field_value_list);

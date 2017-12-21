@@ -13,7 +13,6 @@ namespace modio
     void setSort(const std::string& field, bool ascending);
     void setLimit(u32 limit);
     void setOffset(u32 offset);
-    void setCursor(u32 cursor);
     void setFullTextSearch(const std::string& text);
     void addFieldValue(const std::string& field, const std::string& value);
     void addLikeField(const std::string& field, const std::string& value);
