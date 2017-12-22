@@ -7,6 +7,7 @@ ModioMod* global_mod;
 
 void onGetTags(void* object, ModioResponse response, int mod_id, ModioTag* tags_array, int tags_array_size)
 {
+  bool* wait = object;
   printf("Get Tags response: %i\n", response.code);
   if(response.code == 200)
   {
@@ -16,48 +17,42 @@ void onGetTags(void* object, ModioResponse response, int mod_id, ModioTag* tags_
       printf("%s\n", tags_array[i].name);
     }
   }
-  get_tags_finished = true;
+  *wait = false;
 }
 
 void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
 {
+  bool* wait = object;
   printf("On mod get response: %i\n",response.code);
-  if(response.code == 200)
+  if(response.code == 200 && mods_size > 0)
   {
-    printf("Listing mod\n");
-    printf("============\n");
-    for(int i=0;i<(int)mods_size;i++)
-    {
-      printf("Mod[%i]\n",i);
-      printf("Id:\t%i\n",mods[i].id);
-      printf("Name:\t%s\n",mods[i].name);
-      global_mod = &(mods[i]);
-    }
+    ModioMod mod = mods[0];
+    printf("Id:\t%i\n",mod.id);
+    printf("Name:\t%s\n",mod.name);
+
+    printf("Getting tags...\n");
+
+    modioGetTags(wait, mod.id, &onGetTags);
+  }else
+  {
+    *wait = false;
   }
-  mods_get_finished = true;
 }
 
 int main(void)
 {
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
+  bool wait = true;
+
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, filter, &onModsGet);
+  modioGetMods(&wait, filter, &onModsGet);
 
-  while(!mods_get_finished)
-  {
-    modioProcess();
-  }
-
-  printf("Getting tags...\n");
-
-  modioGetTags(NULL, global_mod->id, &onGetTags);
-
-  while(!get_tags_finished)
+  while(wait)
   {
     modioProcess();
   }

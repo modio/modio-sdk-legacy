@@ -1,9 +1,8 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-
 void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
 {
+  bool* wait = object;
   printf("On mod get response: %i\n",response.code);
   if(response.code == 200)
   {
@@ -16,25 +15,28 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
       printf("Name:\t%s\n",mods[i].name);
     }
 
-    printf("\nCursor data:\n");
-    //printf("Result count: %i\n",response.result_count);
+    printf("\nPagination:\n");
+    printf("Result count: %i\n",response.result_count);
+    printf("Result limit: %i\n",response.result_limit);
+    printf("Result Offset: %i\n",response.result_offset);
   }
-
-  mods_get_finished = true;
+  *wait = false;
 }
 
 int main(void)
 {
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
+  bool wait = true;
+
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,3);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL,filter, &onModsGet);
+  modioGetMods(&wait,filter, &onModsGet);
 
-  while(!mods_get_finished)
+  while(wait)
   {
     modioProcess();
   }

@@ -183,6 +183,15 @@ extern "C"
     ModioListNode* tags;
   }ModioModHandler;
 
+  //General Methods
+  void MODIO_DLL modioInit(int game_id, char* api_key);
+  //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
+  void MODIO_DLL modioShutdown();
+  //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();
+  void MODIO_DLL modioPauseCurrentDownload();
+  void MODIO_DLL modioSetDebugLevel(unsigned int debug_level);
+  void MODIO_DLL modioProcess();
+
   //Authentication methods
   void MODIO_DLL modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));

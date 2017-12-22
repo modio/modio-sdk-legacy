@@ -7,30 +7,39 @@ ModioMod* global_mod = NULL;
 
 void onModfileAdded(void* object, ModioResponse response, ModioModfile modfile)
 {
+  bool* wait = object;
   printf("Add Modfile Response: %i\n", response.code);
   if(response.code == 201)
   {
     printf("Modfile added!\n");
   }
-  add_modfile_finished = true;
+  *wait = false;
 }
 
 void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
 {
+  bool* wait = object;
   printf("On mod get response: %i\n",response.code);
-  if(response.code == 200)
+  if(response.code == 200 && mods_size > 0)
   {
-    printf("Listing mod\n");
-    printf("============\n");
-    for(int i=0;i<(int)mods_size;i++)
-    {
-      printf("Mod[%i]\n",i);
-      printf("Id:\t%i\n",mods[i].id);
-      printf("Name:\t%s\n",mods[i].name);
-      global_mod = &(mods[i]);
-    }
+    ModioMod mod = mods[0];
+    printf("Id:\t%i\n",mod.id);
+    printf("Name:\t%s\n",mod.name);
+
+    ModioModfileHandler modfile_handler;
+    modioInitModfileHandler(&modfile_handler);
+    //Required
+    modioSetModfilePath(&modfile_handler, "ModExample/modfile/");
+    modioSetModfileVersion(&modfile_handler, "v1.1.0");
+    modioSetModfileChangelog(&modfile_handler, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+    //Optional
+    modioSetModfileActive(&modfile_handler, true);
+
+    modioAddModfile(wait, mod.id, modfile_handler, &onModfileAdded);
+  }else
+  {
+    *wait = false;
   }
-  mods_get_finished = true;
 }
 
 int main(void)
@@ -43,30 +52,16 @@ int main(void)
     return 0;
   }
 
+  bool wait = true;
+
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, filter, &onModsGet);
+  modioGetMods(&wait, filter, &onModsGet);
 
-  while(!mods_get_finished)
-  {
-    modioProcess();
-  }
-
-  ModioModfileHandler modfile_handler;
-  modioInitModfileHandler(&modfile_handler);
-  //Required
-  modioSetModfilePath(&modfile_handler, "ModExample/modfile/");
-  modioSetModfileVersion(&modfile_handler, "v1.1.0");
-  modioSetModfileChangelog(&modfile_handler, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
-  //Optional
-  modioSetModfileActive(&modfile_handler, true);
-
-  modioAddModfile(NULL, global_mod->id, modfile_handler, &onModfileAdded);
-
-  while(!add_modfile_finished)
+  while(wait)
   {
     modioProcess();
   }

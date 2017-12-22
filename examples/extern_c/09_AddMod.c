@@ -4,6 +4,7 @@ bool add_mod_finished = false;
 
 void onModAdded(void* object, ModioResponse response, ModioMod mod)
 {
+  bool* wait = object;
   printf("Add Mod Response code: %i\n", response.code);
 
   if(response.code == 201)
@@ -12,8 +13,7 @@ void onModAdded(void* object, ModioResponse response, ModioMod mod)
     printf("Mod id: %i\n", mod.id);
     printf("Mod name: %s\n", mod.name);
   }
-
-  add_mod_finished = true;
+  *wait = false;
 }
 
 int main(void)
@@ -25,6 +25,8 @@ int main(void)
     printf("You are not logged in, please login before creating a mod.\n");
     return 0;
   }
+
+  bool wait = true;
 
   ModioModHandler mod_handler;
   modioInitModHandler(&mod_handler);
@@ -45,9 +47,9 @@ int main(void)
 
   printf("Adding mod...\n");
 
-  modioAddMod(NULL, mod_handler, &onModAdded);
+  modioAddMod(&wait, mod_handler, &onModAdded);
 
-  while(!add_mod_finished)
+  while(wait)
   {
     modioProcess();
   }

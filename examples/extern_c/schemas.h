@@ -192,6 +192,15 @@ typedef struct
   ModioListNode* tags;
 }ModioModHandler;
 
+//General Methods
+void modioInit(int game_id, char* api_key);
+//void init(int game_id, char* api_key, char* root_path);
+void modioShutdown();
+//CurrentDownloadInfo modioGetCurrentDownloadInfo();
+void modioPauseCurrentDownload();
+void modioSetDebugLevel(unsigned int debug_level);
+void modioProcess();
+
 //Authentication methods
 void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
 void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
