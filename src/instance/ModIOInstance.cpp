@@ -7,4 +7,9 @@ namespace modio
     this->current_call_id = 0;
     modioInit(id, (char*)guid.c_str());
   }
+
+  void Instance::sleep(u32 milliseconds)
+  {
+    modioSleep(milliseconds);
+  }
 }

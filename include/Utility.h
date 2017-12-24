@@ -92,8 +92,11 @@ namespace modio
   std::string getModIODirectory();
   bool hasKey(json json_object, std::string key);
   void removeFile(std::string filename);
+  bool removeDirectory(std::string directory_name);
   std::string addSlashIfNeeded(std::string directory_path);
-  void  MODIO_DLL sleep(int milliseconds);
+  bool checkIfModIsStillInstalled(std::string path, u32 modfile_id);
+  void updateModfilesJson();
+  std::string getModfilePath(u32 modfile_id);
 }
 
 #endif

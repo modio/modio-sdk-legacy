@@ -1,41 +1,5 @@
 #include "ModIOSDK.h"
 
-bool checkIfModIsStillInstalled(std::string path, int modfile_id)
-{
-  std::string modfile_json_path = path + "modio.json";
-  std::ifstream modfile_file(modfile_json_path.c_str());
-  if(!modfile_file.is_open())
-  {
-    return false;
-  }
-  json modfile_json;
-  modfile_file >> modfile_json;
-  int json_modfile_id = modfile_json["modfile_id"];
-  return json_modfile_id == modfile_id;
-}
-
-void updateModfilesJson()
-{
-  std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
-  if(modfiles_file.is_open())
-  {
-    json modfiles_json;
-    json resulting_json;
-    modfiles_file >> modfiles_json;
-    modfiles_json = modfiles_json["modfiles"];
-    for(int i=0; i<(int)modfiles_json.size(); i++)
-    {
-      if(checkIfModIsStillInstalled(modfiles_json[i]["path"], modfiles_json[i]["id"]))
-      {
-        resulting_json["modfiles"].push_back(modfiles_json[i]);
-      }
-    }
-    std::ofstream out(modio::getModIODirectory() + "modfiles.json");
-    out<<std::setw(4)<<resulting_json<<std::endl;
-    out.close();
-  }
-}
-
 void modioInit(int game_id, char* api_key)
 {
   modio::clearLog();
@@ -58,7 +22,7 @@ void modioInit(int game_id, char* api_key)
     }
   }
 
-  updateModfilesJson();
+  modio::updateModfilesJson();
 
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "images/");
@@ -98,4 +62,17 @@ void modioPauseCurrentDownload()
 void modioProcess()
 {
   modio::curlwrapper::process();
+}
+
+void modioSleep(u32 milliseconds)
+{
+  #ifdef LINUX
+    usleep(milliseconds * 1000);
+  #endif
+  #ifdef WINDOWS
+    Sleep(milliseconds);
+  #endif
+  #ifdef OSX
+    TODO
+  #endif
 }

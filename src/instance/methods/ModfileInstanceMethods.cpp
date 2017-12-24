@@ -103,4 +103,9 @@ namespace modio
   {
     return modioGetModfileDownloadPercentage(modfile_id);
   }
+
+  bool Instance::uninstallModfile(u32 modfile_id)
+  {
+    return modioUninstallModfile(modfile_id);
+  }
 }

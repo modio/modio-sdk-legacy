@@ -11,13 +11,13 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(10);
+      modio_instance.sleep(10);
       modioProcess();
       if(download_mod_id != -1)
       {
         double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
-        if(progress != -1)
-          std::cout << progress << std::endl;
+        if(progress > 0)
+          std::cout << "Download progress: " << progress << "%" << std::endl;
       }
     }
   };
@@ -43,7 +43,7 @@ int main(void)
 
       std::cout << "Installing modfile..." << std::endl;
 
-      download_mod_id = mod.id;
+      download_mod_id = mod.modfile.id;
 
       // Now we provide the Modfile id and the local path where the modfile will be installed
       modio_instance.installModfile(mod.modfile, "mods_dir/modfile", [&](const modio::Response& response)

@@ -3,6 +3,7 @@
 
 //#pragma warning(disable : 4503)
 
+#include "Utility.h"
 #include "Globals.h"
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"

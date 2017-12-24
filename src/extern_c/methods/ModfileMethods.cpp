@@ -196,7 +196,7 @@ extern "C"
 
   int modioGetModfileState(int modfile_id)
   {
-    if(modioGetModfileDownloadPercentage(modfile_id))
+    if(modioGetModfileDownloadPercentage(modfile_id) != -1)
     {
       return MODIO_MODFILE_INSTALLING;
     }
@@ -240,5 +240,14 @@ extern "C"
       }
     }
     return -1;
+  }
+
+  bool modioUninstallModfile(u32 modfile_id)
+  {
+    modio::updateModfilesJson();
+    std::string modfile_path = modio::getModfilePath(modfile_id);
+    bool result = modfile_path != "" && modio::checkIfModIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
+    modio::updateModfilesJson();
+    return result;
   }
 }

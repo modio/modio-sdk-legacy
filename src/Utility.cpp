@@ -141,6 +141,47 @@ namespace modio
       writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
   }
 
+  bool removeDirectory(std::string directory_name)
+  {
+    DIR *dir;
+    struct dirent *entry;
+    char path[PATH_MAX];
+
+    if(directory_name[directory_name.size()-1]!='/')
+      directory_name += '/';
+
+    if (path == NULL)
+    {
+      writeLogLine("Out of memory error", MODIO_DEBUGLEVEL_LOG);
+      return false;
+    }
+
+    dir = opendir(directory_name.c_str());
+    if (dir == NULL)
+    {
+      writeLogLine("Error opendir()", MODIO_DEBUGLEVEL_LOG);
+      return false;
+    }
+
+    while ((entry = readdir(dir)) != NULL)
+    {
+      if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
+      {
+        snprintf(path, (size_t) PATH_MAX, "%s/%s", directory_name.c_str(), entry->d_name);
+        if (entry->d_type == DT_DIR) {
+            removeDirectory(path);
+        }
+        writeLogLine("Deleting: " + std::string(path), MODIO_DEBUGLEVEL_LOG);
+        remove(path);
+      }
+    }
+    closedir(dir);
+    writeLogLine("Deleting: " + directory_name, MODIO_DEBUGLEVEL_LOG);
+    remove(directory_name.c_str());
+
+    return true;
+  }
+
   std::string addSlashIfNeeded(std::string directory_path)
   {
     if(directory_path!= "" && directory_path[directory_path.size()-1] != '/')
@@ -149,16 +190,64 @@ namespace modio
     return directory_path;
   }
 
-  void sleep(int milliseconds)
+  bool checkIfModIsStillInstalled(std::string path, u32 modfile_id)
   {
-    #ifdef LINUX
-      usleep(milliseconds * 1000);
-    #endif
-    #ifdef WINDOWS
-      Sleep(milliseconds);
-    #endif
-    #ifdef OSX
-      TODO
-    #endif
+    std::string modfile_json_path = path + "modio.json";
+    std::ifstream modfile_file(modfile_json_path.c_str());
+    if(!modfile_file.is_open())
+    {
+      return false;
+    }
+    json modfile_json;
+    modfile_file >> modfile_json;
+    u32 json_modfile_id = modfile_json["modfile_id"];
+    return json_modfile_id == modfile_id;
+  }
+
+  void updateModfilesJson()
+  {
+    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
+    if(modfiles_file.is_open())
+    {
+      json modfiles_json;
+      json resulting_json;
+      modfiles_file >> modfiles_json;
+      modfiles_json = modfiles_json["modfiles"];
+      for(int i=0; i<(int)modfiles_json.size(); i++)
+      {
+        if(checkIfModIsStillInstalled(modfiles_json[i]["path"], modfiles_json[i]["id"]))
+        {
+          resulting_json["modfiles"].push_back(modfiles_json[i]);
+        }
+      }
+      std::ofstream out(modio::getModIODirectory() + "modfiles.json");
+      out<<std::setw(4)<<resulting_json<<std::endl;
+      out.close();
+    }
+  }
+
+  std::string getModfilePath(u32 modfile_id)
+  {
+    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
+    if(modfiles_file.is_open())
+    {
+      json modfiles_json;
+      try
+      {
+        modfiles_file >> modfiles_json;
+        modfiles_json = modfiles_json["modfiles"];
+        for(int i=0; i<(int)modfiles_json.size(); i++)
+        {
+          if(modfile_id == modfiles_json[i]["id"])
+          {
+            return modfiles_json[i]["path"];
+          }
+        }
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      }
+    }
+    return "";
   }
 }

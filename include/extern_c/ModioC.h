@@ -191,6 +191,7 @@ extern "C"
   void MODIO_DLL modioPauseCurrentDownload();
   void MODIO_DLL modioSetDebugLevel(unsigned int debug_level);
   void MODIO_DLL modioProcess();
+  void MODIO_DLL modioSleep(u32 milliseconds);
 
   //Authentication methods
   void MODIO_DLL modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
@@ -208,6 +209,7 @@ extern "C"
   void MODIO_DLL modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response));
   int MODIO_DLL modioGetModfileState(int modfile_id);
   double MODIO_DLL modioGetModfileDownloadPercentage(int modfile_id);
+  bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
 
   //Mods Methods
   void MODIO_DLL modioGetMods(void* object, ModioFilterHandler filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], int mods_size));

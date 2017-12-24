@@ -40,7 +40,7 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
     strcat(instalation_path, modfile_id_str);
 
     context_object->modfile_id = mod.modfile.id;
-    modioInstallModfile(wait, mod.id, mod.modfile.download_url, (char*)instalation_path, &onModfileInstalled);
+    modioInstallModfile(wait, mod.modfile.id, mod.modfile.download_url, (char*)instalation_path, &onModfileInstalled);
   }else
   {
     *wait = false;
@@ -71,6 +71,7 @@ int main(void)
         printf("Download progress: %f%%\n", modfile_download_progress);
     }
     modioProcess();
+    modioSleep(10);
   }
 
   modioShutdown();

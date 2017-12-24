@@ -10,7 +10,7 @@ int main()
   {
     while (!finished)
     {
-      modio::sleep(10);
+      modio_instance.sleep(10);
       modioProcess();
     }
   };
