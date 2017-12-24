@@ -68,6 +68,10 @@ using json = nlohmann::json;
 #define MODIO_MODFILE_INSTALLED     1
 #define MODIO_MODFILE_INSTALLING    2
 
+#ifndef PATH_MAX
+#define PATH_MAX 260
+#endif
+
 extern "C"
 {
   struct ModioListNode

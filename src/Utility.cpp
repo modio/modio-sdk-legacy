@@ -168,7 +168,8 @@ namespace modio
       if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
       {
         snprintf(path, (size_t) PATH_MAX, "%s/%s", directory_name.c_str(), entry->d_name);
-        if (entry->d_type == DT_DIR) {
+        if(opendir(path) != NULL)
+        {
             removeDirectory(path);
         }
         writeLogLine("Deleting: " + std::string(path), MODIO_DEBUGLEVEL_LOG);

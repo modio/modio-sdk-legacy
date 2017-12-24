@@ -42,12 +42,13 @@ extern "C"
     if(response.code == 200)
     {
       int mods_size = (int)response_json["data"].size();
-      ModioMod mods[mods_size];
-      for(int i=0;i<mods_size;i++)
+      ModioMod* mods = new ModioMod[mods_size];
+      for(int i=0; i<mods_size; i++)
       {
         modioInitMod(&mods[i], response_json["data"][i]);
       }
       get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, mods, mods_size);
+      delete[] mods;
     }else
     {
       get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, NULL, 0);

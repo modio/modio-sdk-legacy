@@ -1,22 +1,22 @@
 CC = cl.exe
 CFLAGS = /EHsc /MD
-LIBRARIES = ../src/modio.lib
+LIBRARIES = ../../src/modio.lib
 
 build:
-  $(CC) $(CFLAGS) 01_Authentication.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 02_BrowseMods.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 03_ErrorResponse.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 04_DownloadImages.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 05_EditImage.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 06_DownloadModfile.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 07_AddModfile.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 08_EditModfile.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 09_AddMod.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 10_EditMod.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 11_DeleteMod.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 12_GetTags.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 13_AddTags.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
-  $(CC) $(CFLAGS) 14_DeleteTags.cpp /I ../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 01_Authentication.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 02_BrowseMods.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 03_ErrorResponse.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 04_DownloadImages.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 05_EditImage.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 06_DownloadModfile.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 07_AddModfile.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 08_EditModfile.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 09_AddMod.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 10_EditMod.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 11_DeleteMod.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 12_GetTags.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 13_AddTags.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
+  $(CC) $(CFLAGS) 14_DeleteTags.cpp /I ../../include /link $(LIBRARIES) /SUBSYSTEM:CONSOLE
 
 clean:
  del *.obj
