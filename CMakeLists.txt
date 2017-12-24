@@ -3,9 +3,9 @@ project(modio)
 set(CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 11)
 
-set ( PROJECT_LINK_LIBS libcurl.a libcurldll.a zlib.lib zdll.lib )
-
-link_directories( lib/ )
+IF (WIN32)
+  add_definitions(-DBUILDING_MODIO_DLL -DWINDOWS)
+ENDIF()
 
 include_directories(include)
  
@@ -13,4 +13,6 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_library(modio SHARED ${SOURCES})
 
-target_link_libraries(modio ${PROJECT_LINK_LIBS} )
+IF (WIN32)
+  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a  ${CMAKE_SOURCE_DIR}/lib/zlib.lib  ${CMAKE_SOURCE_DIR}/lib/zdll.lib )
+ENDIF()
