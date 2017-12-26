@@ -109,11 +109,6 @@ namespace modio
     return modioUninstallModfile(modfile_id);
   }
 
-  u32 Instance::getInstalledModfilesCount()
-  {
-    return modioGetInstalledModfilesCount();
-  }
-
   std::vector<u32> Instance::getInstalledModfileIds()
   {
     std::vector<u32> installed_modfile_ids;

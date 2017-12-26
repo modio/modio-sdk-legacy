@@ -4,9 +4,11 @@ int main(void)
 {
   modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
-  if( modio_instance.getInstalledModfilesCount() > 0 )
+  std::vector<u32> modfile_ids = modio_instance.getInstalledModfileIds()[0]
+
+  if( modfile_ids.size() > 0 )
   {
-    if( modio_instance.uninstallModfile(modio_instance.getInstalledModfileIds()[0]) )
+    if( modio_instance.uninstallModfile(modfile_ids[0]) )
     {
       std::cout << "Modfile uninstalled successfully." << std::endl;
     }else
