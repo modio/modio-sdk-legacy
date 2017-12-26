@@ -210,6 +210,8 @@ extern "C"
   int MODIO_DLL modioGetModfileState(int modfile_id);
   double MODIO_DLL modioGetModfileDownloadPercentage(int modfile_id);
   bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
+  u32 MODIO_DLL modioGetInstalledModfilesCount();
+  u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
 
   //Mods Methods
   void MODIO_DLL modioGetMods(void* object, ModioFilterHandler filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], int mods_size));

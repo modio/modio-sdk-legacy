@@ -250,4 +250,46 @@ extern "C"
     modio::updateModfilesJson();
     return result;
   }
+
+  u32 MODIO_DLL modioGetInstalledModfilesCount()
+  {
+    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
+    if(modfiles_file.is_open())
+    {
+      json modfiles_json;
+      try
+      {
+        modfiles_file >> modfiles_json;
+        modfiles_json = modfiles_json["modfiles"];
+        return (u32)modfiles_json.size();
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      }
+    }
+    return 0;
+  }
+
+  u32 MODIO_DLL modioGetInstalledModfileId(u32 index)
+  {
+    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
+    if(modfiles_file.is_open())
+    {
+      json modfiles_json;
+      try
+      {
+        modfiles_file >> modfiles_json;
+        modfiles_json = modfiles_json["modfiles"];
+        if(index >= modfiles_json.size())
+        {
+          return 0;
+        }
+        return modfiles_json[index]["id"];
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      }
+    }
+    return 0;
+  }
 }

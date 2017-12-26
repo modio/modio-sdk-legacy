@@ -51,6 +51,8 @@ namespace modio
     u32 getModfileState(u32 modfile_id);
     double getModfileDownloadPercentage(u32 modfile_id);
     bool uninstallModfile(u32 modfile_id);
+    u32 getInstalledModfilesCount();
+    std::vector<u32> getInstalledModfileIds();
 
     //Tag Methods
     void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);

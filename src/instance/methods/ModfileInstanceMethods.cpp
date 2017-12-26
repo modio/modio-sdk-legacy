@@ -108,4 +108,20 @@ namespace modio
   {
     return modioUninstallModfile(modfile_id);
   }
+
+  u32 Instance::getInstalledModfilesCount()
+  {
+    return modioGetInstalledModfilesCount();
+  }
+
+  std::vector<u32> Instance::getInstalledModfileIds()
+  {
+    std::vector<u32> installed_modfile_ids;
+    u32 installed_modfiles_count = getInstalledModfilesCount();
+    for(int i=0; i<installed_modfiles_count; i++)
+    {
+      installed_modfile_ids.push_back(modioGetInstalledModfileId(i));
+    }
+    return installed_modfile_ids;
+  }
 }
