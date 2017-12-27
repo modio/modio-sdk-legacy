@@ -5,7 +5,6 @@ typedef unsigned int u32;
 typedef int i32;
 
 #include <iostream>
-#include <thread>
 
 #include "Utility.h"
 

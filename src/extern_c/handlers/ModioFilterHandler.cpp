@@ -82,7 +82,7 @@ extern "C"
       ascending_str = "-";
     std::string sort_str = std::string("_sort=") + ascending_str + field;
     filter->sort = new char[sort_str.size() + 1];
-    strcpy(filter->sort, sort_str.c_str());
+    strcpy_s(filter->sort, sort_str.size() + 1, sort_str.c_str());
   }
 
   void modioSetFilterLimit(ModioFilterHandler* filter, u32 limit)

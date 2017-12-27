@@ -1,10 +1,14 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.5)
 project(modio)
 set(CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 11)
 
-IF (WIN32)
-  add_definitions(-DBUILDING_MODIO_DLL -DMINGW -DWINDOWS)
+IF (MINGW)
+  add_definitions(-DBUILDING_MODIO_DLL -DMINGW)
+ENDIF()
+
+IF (MSVC)
+  add_definitions(-DBUILDING_MODIO_DLL)
 ENDIF()
 
 include_directories(include)
@@ -13,10 +17,10 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_library(modio SHARED ${SOURCES})
 
-#IF (WIN32)
-#  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a  ${CMAKE_SOURCE_DIR}/lib/zlib.lib  ${CMAKE_SOURCE_DIR}/lib/zdll.lib )
-#ENDIF()
-
-IF (WIN32)
+IF (MINGW)
   target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a   ${CMAKE_SOURCE_DIR}/lib/libz.a )
+ENDIF()
+
+IF (MSVC)
+  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a  ${CMAKE_SOURCE_DIR}/lib/zlib.lib  ${CMAKE_SOURCE_DIR}/lib/zdll.lib )
 ENDIF()

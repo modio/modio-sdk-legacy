@@ -53,10 +53,6 @@
 #include <dirent.h>
 #endif
 
-#ifdef MINGW
-#include "dependencies/mingw_threads/mingw.threads.h"
-#endif
-
 using json = nlohmann::json;
 
 // NOTE(@jackson): Debug "Severity"? (Steamworks uses "spew level")
@@ -74,8 +70,8 @@ using json = nlohmann::json;
 
 namespace modio
 {
+  std::string toString(i32 number);
   std::string toString(u32 number);
-  std::string toString(int number);
   std::string toString(double number);
   void createDirectory(std::string directory);
   void clearLog();

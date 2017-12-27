@@ -251,7 +251,7 @@ extern "C"
     return result;
   }
 
-  u32 MODIO_DLL modioGetInstalledModfilesCount()
+  u32 modioGetInstalledModfilesCount()
   {
     std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
     if(modfiles_file.is_open())
@@ -270,7 +270,7 @@ extern "C"
     return 0;
   }
 
-  u32 MODIO_DLL modioGetInstalledModfileId(u32 index)
+  u32 modioGetInstalledModfileId(u32 index)
   {
     std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
     if(modfiles_file.is_open())

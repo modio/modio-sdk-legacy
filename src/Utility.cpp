@@ -2,7 +2,7 @@
 
 namespace modio
 {
-  std::string toString(u32 number)
+  std::string toString(i32 number)
   {
     if (number == 0)
         return "0";
@@ -22,9 +22,9 @@ namespace modio
     return returnvalue;
   }
 
-  std::string toString(int number)
+  std::string toString(u32 number)
   {
-    return toString((u32)number);
+    return toString((i32)number);
   }
 
   std::string toString(double number)
