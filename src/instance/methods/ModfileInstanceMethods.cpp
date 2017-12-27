@@ -113,7 +113,7 @@ namespace modio
   {
     std::vector<u32> installed_modfile_ids;
     u32 installed_modfiles_count = modioGetInstalledModfilesCount();
-    for(int i=0; i<installed_modfiles_count; i++)
+    for(u32 i=0; i<installed_modfiles_count; i++)
     {
       installed_modfile_ids.push_back(modioGetInstalledModfileId(i));
     }

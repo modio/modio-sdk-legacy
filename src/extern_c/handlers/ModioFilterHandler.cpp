@@ -17,7 +17,7 @@ namespace modio
         char* old_value = iterator->value;
         std::string appended_value = std::string(iterator->value) + "," + value;
         iterator->value = new char[appended_value.size() + 1];
-        strcpy(iterator->value,appended_value.c_str());
+        strcpy_s(iterator->value, appended_value.size() + 1, appended_value.c_str());
         delete old_value;
         return true;
       }
@@ -34,7 +34,7 @@ namespace modio
         char* old_value = iterator->value;
         std::string replaced_value = field + "=" + value;
         iterator->value = new char[replaced_value.size() + 1];
-        strcpy(iterator->value,replaced_value.c_str());
+        strcpy_s(iterator->value, replaced_value.size() + 1, replaced_value.c_str());
         delete old_value;
         return true;
       }
@@ -46,7 +46,7 @@ namespace modio
   {
     ModioListNode* node = new ModioListNode;
     node->value = new char[value.size() + 1];
-    strcpy(node->value, value.c_str());
+    strcpy_s(node->value, value.size() + 1, value.c_str());
     node->next = list;
 
     return node;
@@ -91,7 +91,7 @@ extern "C"
       delete[] filter->limit;
     std::string limit_str = std::string("_limit=") + modio::toString(limit);
     filter->limit = new char[limit_str.size() + 1];
-    strcpy(filter->limit, limit_str.c_str());
+    strcpy_s(filter->limit, limit_str.size() + 1, limit_str.c_str());
   }
 
   void modioSetFilterOffset(ModioFilterHandler* filter, u32 offset)
@@ -100,7 +100,7 @@ extern "C"
       delete[] filter->offset;
     std::string offset_str = std::string("_offset=") + modio::toString(offset);
     filter->offset = new char[offset_str.size() + 1];
-    strcpy(filter->offset, offset_str.c_str());
+    strcpy_s(filter->offset, offset_str.size() + 1, offset_str.c_str());
   }
 
   void modioSetFilterFullTextSearch(ModioFilterHandler* filter, char* text)
@@ -109,7 +109,7 @@ extern "C"
       delete[] filter->full_text_search;
     std::string full_text_search_str = std::string("_q=") + text;
     filter->full_text_search = new char[full_text_search_str.size() + 1];
-    strcpy(filter->full_text_search, full_text_search_str.c_str());
+    strcpy_s(filter->full_text_search, full_text_search_str.size() + 1, full_text_search_str.c_str());
   }
 
   void modioAddFilterFieldValue(ModioFilterHandler* filter, char* field, char* value)

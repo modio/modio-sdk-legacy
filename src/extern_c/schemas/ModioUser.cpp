@@ -21,7 +21,7 @@ extern "C"
     {
       std::string username_str = user_json["username"];
       user->username = new char[username_str.size() + 1];
-      strcpy(user->username, username_str.c_str());
+      strcpy_s(user->username, username_str.size() + 1, username_str.c_str());
     }
 
     user->name_id = NULL;
@@ -29,7 +29,7 @@ extern "C"
     {
       std::string name_id_str = user_json["name_id"];
       user->name_id = new char[name_id_str.size() + 1];
-      strcpy(user->name_id, name_id_str.c_str());
+      strcpy_s(user->name_id, name_id_str.size() + 1, name_id_str.c_str());
     }
 
     user->timezone = NULL;
@@ -37,7 +37,7 @@ extern "C"
     {
       std::string timezone_str = user_json["timezone"];
       user->timezone = new char[timezone_str.size() + 1];
-      strcpy(user->timezone, timezone_str.c_str());
+      strcpy_s(user->timezone, timezone_str.size() + 1, timezone_str.c_str());
     }
 
     user->language = NULL;
@@ -45,7 +45,7 @@ extern "C"
     {
       std::string language_str = user_json["language"];
       user->language = new char[language_str.size() + 1];
-      strcpy(user->language, language_str.c_str());
+      strcpy_s(user->language, language_str.size() + 1, language_str.c_str());
     }
 
     user->profile_url = NULL;
@@ -53,7 +53,7 @@ extern "C"
     {
       std::string profile_url_str = user_json["profile_url"];
       user->profile_url = new char[profile_url_str.size() + 1];
-      strcpy(user->profile_url, profile_url_str.c_str());
+      strcpy_s(user->profile_url, profile_url_str.size() + 1, profile_url_str.c_str());
     }
 
     if(modio::hasKey(user_json, "avatar"))
