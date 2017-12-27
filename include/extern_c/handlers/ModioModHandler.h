@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Utility.h"
 #include "extern_c/ModioC.h"
+#include "extern_c/schemas/ModioListNode.h"
 
 #ifdef WINDOWS
 #  ifdef BUILDING_MODIO_DLL

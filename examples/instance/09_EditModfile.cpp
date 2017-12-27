@@ -21,6 +21,7 @@ int main(void)
   };
 
   // Let's start by requesting a single mod
+
   modio::FilterHandler filter;
   filter.setLimit(1);
 
@@ -57,8 +58,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

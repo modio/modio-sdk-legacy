@@ -1,22 +1,17 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-bool get_tags_finished = false;
-
-ModioMod* global_mod;
-
-void onAddTags(void* object, ModioResponse response, int mod_id)
+void onDeleteTags(void* object, ModioResponse response, u32 mod_id)
 {
   bool* wait = object;
-  printf("Add Tags response: %i\n", response.code);
+  printf("Delete Tags response: %i\n", response.code);
   if(response.code == 201)
   {
-    printf("Tag added successfully!\n");
+    printf("Tag deleted successfully!\n");
   }
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
   printf("On mod get response: %i\n", response.code);
@@ -32,7 +27,8 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
     tags_array[0] = (char*) malloc(50);
     strcpy(tags_array[0], "Hard\0");
 
-    modioAddTags(wait, mod.id, (char**)tags_array, 1, &onAddTags);
+    // We delete tags by providing the selected Mod id and the tag names
+    modioDeleteTags(wait, mod.id, (char**)tags_array, 1, &onDeleteTags);
   }else
   {
     *wait = false;
@@ -44,6 +40,8 @@ int main(void)
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
+
+  // Let's start by requesting a single mod
 
   ModioFilterHandler filter;
   modioInitFilter(&filter);

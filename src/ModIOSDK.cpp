@@ -1,6 +1,6 @@
 #include "ModIOSDK.h"
 
-void modioInit(int game_id, char* api_key)
+void modioInit(u32 game_id, char* api_key)
 {
   modio::clearLog();
 

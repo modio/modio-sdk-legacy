@@ -39,7 +39,7 @@ int main(void)
 
       // Now let's download the original logo full size to the selected path
       // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
-      modio_instance.downloadImage(mod.logo.original, "mods_dir/original.png", [&](const modio::Response& response)
+      modio_instance.downloadImage(mod.logo.original, "../mods_dir/original.png", [&](const modio::Response& response)
       {
         std::cout << "Download Image response: " << response.code << std::endl;
 
@@ -54,8 +54,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

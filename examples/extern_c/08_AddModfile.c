@@ -1,10 +1,5 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-bool add_modfile_finished = false;
-
-ModioMod* global_mod = NULL;
-
 void onModfileAdded(void* object, ModioResponse response, ModioModfile modfile)
 {
   bool* wait = object;
@@ -16,7 +11,7 @@ void onModfileAdded(void* object, ModioResponse response, ModioModfile modfile)
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
   printf("On mod get response: %i\n",response.code);
@@ -26,13 +21,12 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
     printf("Id:\t%i\n",mod.id);
     printf("Name:\t%s\n",mod.name);
 
+    // The Modfile Handler helps us setting up the modfile fields and the mod directory that will be zipped and uploaded
     ModioModfileHandler modfile_handler;
     modioInitModfileHandler(&modfile_handler);
-    //Required
-    modioSetModfilePath(&modfile_handler, "ModExample/modfile/");
+    modioSetModfilePath(&modfile_handler, "../ModExample/modfile/");
     modioSetModfileVersion(&modfile_handler, "v1.1.0");
     modioSetModfileChangelog(&modfile_handler, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
-    //Optional
     modioSetModfileActive(&modfile_handler, true);
 
     modioAddModfile(wait, mod.id, modfile_handler, &onModfileAdded);
@@ -53,6 +47,8 @@ int main(void)
   }
 
   bool wait = true;
+
+  // Let's start by requesting a single mod
 
   ModioFilterHandler filter;
   modioInitFilter(&filter);

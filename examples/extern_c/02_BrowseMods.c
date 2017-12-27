@@ -1,6 +1,6 @@
 #include "schemas.h"
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
   printf("On mod get response: %i\n",response.code);
@@ -8,13 +8,14 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
   {
     printf("Listing mod\n");
     printf("============\n");
-    for(int i=0;i<(int)mods_size;i++)
+    for(u32 i=0; i<mods_size; i++)
     {
       printf("Mod[%i]\n",i);
       printf("Id:\t%i\n",mods[i].id);
       printf("Name:\t%s\n",mods[i].name);
     }
 
+    // Additionally, we can access pagination data to ease future browsing queries
     printf("\nPagination:\n");
     printf("Result count: %i\n",response.result_count);
     printf("Result limit: %i\n",response.result_limit);
@@ -29,11 +30,14 @@ int main(void)
 
   bool wait = true;
 
+  // Before requesting mods, let's define the query filters
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,3);
 
   printf("Getting mods...\n");
+
+  // Now we finished setting up the filters we are ready to request the mods
   modioGetMods(&wait,filter, &onModsGet);
 
   while(wait)

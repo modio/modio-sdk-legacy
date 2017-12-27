@@ -72,18 +72,6 @@ using json = nlohmann::json;
 #define PATH_MAX 260
 #endif
 
-extern "C"
-{
-  struct ModioListNode
-  {
-    char* value;
-    ModioListNode* next;
-  };
-
-  void MODIO_DLL modioInitNode(ModioListNode* node);
-  void MODIO_DLL modioFreeNodeList(ModioListNode* node_list);
-}
-
 namespace modio
 {
   std::string toString(u32 number);

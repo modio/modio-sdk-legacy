@@ -14,10 +14,10 @@ extern "C"
     void (*callback)(void* object, ModioResponse response);
   };
 
-  std::map< int,EmailRequestParams* > email_request_params;
-  std::map< int,EmailExchangeParams* > email_exchange_params;
+  std::map< u32,EmailRequestParams* > email_request_params;
+  std::map< u32,EmailExchangeParams* > email_exchange_params;
 
-  void modioOnEmailRequested(int call_number, int response_code, json response_json)
+  void modioOnEmailRequested(u32 call_number, u32 response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -34,7 +34,7 @@ extern "C"
     delete email_request_params[call_number];
   }
 
-  void modioOnEmailExchanged(int call_number, int response_code, json response_json)
+  void modioOnEmailExchanged(u32 call_number, u32 response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -60,7 +60,7 @@ extern "C"
 
     std::vector<std::string> headers;
 
-    int call_number = modio::curlwrapper::getCallCount();
+    u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
     email_request_params[call_number] = new EmailRequestParams;
@@ -79,7 +79,7 @@ extern "C"
     std::map<std::string, std::string> data;
     std::vector<std::string> headers;
 
-    int call_number = modio::curlwrapper::getCallCount();
+    u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
     email_exchange_params[call_number] = new EmailExchangeParams;
     email_exchange_params[call_number]->callback = callback;

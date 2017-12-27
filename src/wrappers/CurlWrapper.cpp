@@ -12,8 +12,8 @@ namespace modio
 
     CurrentDownloadInfo current_download_info;
 
-    int call_count = 0;
-    int ongoing_call = 0;
+    u32 call_count = 0;
+    u32 ongoing_call = 0;
 
     void initCurl()
     {
@@ -34,12 +34,12 @@ namespace modio
         writeLogLine("Error initializing curl", MODIO_DEBUGLEVEL_ERROR);
     }
 
-    int getCallCount()
+    u32 getCallCount()
     {
       return call_count;
     }
 
-    int getOngoingCall()
+    u32 getOngoingCall()
     {
       return ongoing_call;
     }
@@ -54,12 +54,12 @@ namespace modio
       ongoing_call++;
     }
 
-    void lockCall(int call_number)
+    void lockCall(u32 call_number)
     {
       while(call_number!=getOngoingCall());
     }
 
-    JsonResponseHandler::JsonResponseHandler(int call_number, std::function<void(int call_number, int response_code, json response_json)> callback)
+    JsonResponseHandler::JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
       this->response = "";
       this->call_number = call_number;
@@ -69,7 +69,7 @@ namespace modio
     size_t get_data(char *ptr, size_t size, size_t nmemb, void *userdata)
     {
       CURL* handle = (CURL*)userdata;
-      int data_size = size * nmemb;
+      u32 data_size = size * nmemb;
       ongoing_calls[handle]->response.append(ptr, data_size);
       return data_size;
     }
@@ -77,7 +77,7 @@ namespace modio
     void setHeaders(std::vector<std::string> headers, CURL* curl)
     {
       struct curl_slist *chunk = NULL;
-      for(int i=0;i<(int)headers.size();i++)
+      for(u32 i=0;i<headers.size();i++)
         chunk = curl_slist_append(chunk, headers[i].c_str());
 
       curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
@@ -113,7 +113,7 @@ namespace modio
       return response_json;
     }
 
-    void get(int call_number, std::string url, std::vector<std::string> headers, std::function<void(int call_number, int response_code, json response_json)> callback)
+    void get(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
       writeLogLine("getJsonCall call to " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -143,7 +143,7 @@ namespace modio
       return written;
     }
 
-    int progress_callback(void *clientp,   double dltotal,   double dlnow,   double ultotal,   double ulnow)
+    i32 progress_callback(void *clientp,   double dltotal,   double dlnow,   double ultotal,   double ulnow)
     {
       current_download_info.download_total = dltotal;
       current_download_info.download_progress = dlnow;
@@ -195,7 +195,7 @@ namespace modio
       {
         std::string extension = path.substr(path.length() - 4);
 
-        for(int i=1; i<(int)extension.size();i++)
+        for(u32 i=1; i<extension.size();i++)
           extension[i] = tolower(extension[i]);
 
         if(extension == ".zip")
@@ -237,7 +237,7 @@ namespace modio
       return current_download_info;
     }
 
-    void download(int call_number, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(int call_number, int response_code, json response)> callback)
+    void download(u32 call_number, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code, json response)> callback)
     {
       writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -275,7 +275,7 @@ namespace modio
       }
     }
 
-    void postForm(int call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(int call_number, int response_code, json response)> callback)
+    void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, json response)> callback)
     {
       writeLogLine(std::string("postForm call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -341,7 +341,7 @@ namespace modio
       }
     }
 
-    void post(int call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(int call_number, int response_code, json response_json)> callback)
+    void post(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
       writeLogLine(std::string("post call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -376,7 +376,7 @@ namespace modio
       }
     }
 
-    void put(int call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::function<void(int call_number, int response_code, json response_json)> callback)
+    void put(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
       writeLogLine(std::string("put call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -413,7 +413,7 @@ namespace modio
       }
     }
 
-    void deleteCall(int call_number, std::string url, std::vector<std::string> headers, std::function<void(int call_number, int response_code, json response_json)> callback)
+    void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
       writeLogLine(std::string("delete call to ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -441,14 +441,14 @@ namespace modio
     void process()
     {
       CURLMcode code;
-      int handle_count;
+      i32 handle_count;
       code = curl_multi_perform(curl_multi_handle, &handle_count);
 
       struct CURLMsg *curl_message;
 
       do
       {
-        int msgq = 0;
+        i32 msgq = 0;
         curl_message = curl_multi_info_read(curl_multi_handle, &msgq);
         if(curl_message && (curl_message->msg == CURLMSG_DONE))
         {
@@ -457,7 +457,7 @@ namespace modio
           if(ongoing_calls.find(curl_handle) != ongoing_calls.end())
           {
             json response_json = parseJsonResonse(ongoing_calls[curl_handle]->response);
-            int response_code;
+            u32 response_code;
             curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
             ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response_code, response_json);
             advanceOngoingCall();

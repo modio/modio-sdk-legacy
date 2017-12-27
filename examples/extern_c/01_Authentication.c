@@ -29,6 +29,8 @@ void onEmailRequest(void* object, ModioResponse response)
   fgets(security_code, 6, stdin);
   security_code[strcspn(security_code, "\n")] = 0;
   printf("Sending code... \n");
+
+  // Finish the auth process by entering the security code
   modioEmailExchange(wait,(char*)security_code,&onExchange);
 }
 
@@ -38,6 +40,7 @@ int main(void)
 
   bool wait = true;
 
+  // Check to see if we have a cookie and are already logged in
   if(!modioIsLoggedIn())
   {
     char email[50];
@@ -46,6 +49,8 @@ int main(void)
     email[strcspn(email, "\n")] = 0;
     printf("Sending email to %s\n",email);
     printf("Sending email... \n");
+
+    // Auth works by sending an email with a code. Lets trigger that now
     modioEmailRequest(&wait,(char*)email,&onEmailRequest);
     while(wait)
     {

@@ -1,7 +1,5 @@
 #include "schemas.h"
 
-bool add_mod_finished = false;
-
 void onModAdded(void* object, ModioResponse response, ModioMod mod)
 {
   bool* wait = object;
@@ -28,25 +26,21 @@ int main(void)
 
   bool wait = true;
 
+  // The Mod Handler helps setting up the fields before creating a Mod
   ModioModHandler mod_handler;
   modioInitModHandler(&mod_handler);
-  //Required fields
-  modioSetLogoPath(&mod_handler, (char*)"ModExample/logo.png");
+  modioSetLogoPath(&mod_handler, (char*)"../ModExample/logo.png");
   modioSetName(&mod_handler, (char*)"Example Mod Test");
   modioSetHomepage(&mod_handler, (char*)"http://www.webpage.com");
   modioSetSummary(&mod_handler, (char*)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
   modioAddTag(&mod_handler, (char*)"Easy");
   modioAddTag(&mod_handler, (char*)"Medium");
-  //Optional fields
-  modioSetPrice(&mod_handler, 1.99);
-  modioSetStock(&mod_handler, 25);
   modioSetDescription(&mod_handler, (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
-  modioSetMetadata(&mod_handler, (char*)"Optional metadata");
-  //setNameid(&mod_handler, "my-example-mod"); //Name id must be unique
-  //setModfile(&mod_handler, int modfile); //Modfile should exist
+  modioSetMetadataBlob(&mod_handler, (char*)"Optional metadata");
 
   printf("Adding mod...\n");
 
+  // Now we can create the new mod. Remember, this mod wont have a Modfile right away, you should be adding one after the mod was created successfully
   modioAddMod(&wait, mod_handler, &onModAdded);
 
   while(wait)

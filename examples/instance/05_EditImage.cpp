@@ -21,6 +21,7 @@ int main(void)
   };
 
   // Let's start by requesting a single mod
+  
   modio::FilterHandler filter;
   filter.setLimit(1);
 
@@ -37,7 +38,7 @@ int main(void)
       std::cout << "Uploading image..." << std::endl;
 
       // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
-      modio_instance.editModLogo(mod.id, "ModExample/logo.png", [&](const modio::Response& response, u32 mod_id)
+      modio_instance.editModLogo(mod.id, "../ModExample/logo.png", [&](const modio::Response& response, u32 mod_id)
       {
         std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
@@ -52,8 +53,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

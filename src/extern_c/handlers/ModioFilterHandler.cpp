@@ -85,7 +85,7 @@ extern "C"
     strcpy(filter->sort, sort_str.c_str());
   }
 
-  void modioSetFilterLimit(ModioFilterHandler* filter, int limit)
+  void modioSetFilterLimit(ModioFilterHandler* filter, u32 limit)
   {
     if(filter->limit)
       delete[] filter->limit;
@@ -94,7 +94,7 @@ extern "C"
     strcpy(filter->limit, limit_str.c_str());
   }
 
-  void modioSetFilterOffset(ModioFilterHandler* filter, int offset)
+  void modioSetFilterOffset(ModioFilterHandler* filter, u32 offset)
   {
     if(filter->offset)
       delete[] filter->offset;

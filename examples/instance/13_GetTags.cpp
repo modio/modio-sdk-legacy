@@ -57,8 +57,6 @@ int main(void)
 
   wait();
 
-  modioShutdown();
-
   std::cout << "Process finished" << std::endl;
 
   return 0;

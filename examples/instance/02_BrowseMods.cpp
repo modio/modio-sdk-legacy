@@ -40,7 +40,7 @@ int main(void)
         std::cout << "Name:\t" << mod.name << std::endl;
       }
 
-      // Additionally, we can access cursor data to ease future browsing queries
+      // Additionally, we can access pagination data to ease future browsing queries
       std::cout << std::endl;
       std::cout << "Cursor data:" << std::endl;
       std::cout << "Result count: " << response.result_count << std::endl;
@@ -51,8 +51,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

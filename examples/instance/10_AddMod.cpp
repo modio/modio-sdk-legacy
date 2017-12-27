@@ -22,22 +22,14 @@ int main(void)
 
   // The Mod Handler helps setting up the fields before creating a Mod
   modio::ModHandler mod_handler;
-
-  //The logo, name, homepage, summary, and tags are mandatory
-  mod_handler.setLogoPath("ModExample/logo.png");
+  mod_handler.setLogoPath("../ModExample/logo.png");
   mod_handler.setName("Example Mod Test30");
   mod_handler.setHomepage("http://www.webpage.com");
   mod_handler.setSummary("Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
   mod_handler.addTag("Easy");
   mod_handler.addTag("Medium");
-
-  // The price, stock, description, metadata blob, nameid and modfile are optional
-  mod_handler.setPrice(1.99);
-  mod_handler.setStock(25);
   mod_handler.setDescription("This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
-  mod_handler.setMetadata("Optional metadata");
-  //mod_handler.setNameid("my-example-mod"); //Name id must be unique
-  //mod_handler.setModfile(int modfile); //Modfile should exist
+  mod_handler.setMetadataBlob("Optional metadata");
 
   std::cout <<"Creating mod..." << std::endl;
 
@@ -53,8 +45,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

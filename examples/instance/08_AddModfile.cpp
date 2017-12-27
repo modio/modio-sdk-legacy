@@ -21,6 +21,7 @@ int main(void)
   };
 
   // Let's start by requesting a single mod
+
   modio::FilterHandler filter;
   filter.setLimit(1);
 
@@ -35,13 +36,9 @@ int main(void)
 
       // The Modfile Handler helps us setting up the modfile fields and the mod directory that will be zipped and uploaded
       modio::ModfileHandler modfile_handler;
-
-      // The mod directory path, version and changelog are mandatory fields
-      modfile_handler.setPath("ModExample/modfile/");
+      modfile_handler.setPath("../ModExample/modfile/");
       modfile_handler.setVersion("v1.1.0");
       modfile_handler.setChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
-
-      // The active field is optional
       modfile_handler.setActive(true);
 
       std::cout << "Uploading modfile..." << std::endl;
@@ -61,8 +58,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

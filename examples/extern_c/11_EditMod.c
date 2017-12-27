@@ -1,10 +1,5 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-bool mods_edited_finished = false;
-
-ModioMod* global_mod = NULL;
-
 void onModEdited(void* object, ModioResponse response, ModioMod mod)
 {
   bool* wait = object;
@@ -16,7 +11,7 @@ void onModEdited(void* object, ModioResponse response, ModioMod mod)
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
   printf("On mod get response: %i\n",response.code);
@@ -26,21 +21,16 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
     printf("Id:\t%i\n",mod.id);
     printf("Name:\t%s\n",mod.name);
 
+    // The Mod Handler helps setting up the fields that will be updated
     ModioModHandler mod_handler;
     modioInitModHandler(&mod_handler);
-    //Required fields
-    modioSetLogoPath(&mod_handler, (char*)"ModExample/logo.png");
+    modioSetLogoPath(&mod_handler, (char*)"../ModExample/logo.png");
     modioSetName(&mod_handler, (char*)"Update Example");
     modioSetHomepage(&mod_handler, (char*)"http://www.updated.com");
     modioSetSummary(&mod_handler, (char*)"Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
     modioAddTag(&mod_handler, (char*)"Easy");
-    //Optional fields
-    modioSetPrice(&mod_handler, 2.99);
-    //setStock(mod_handler, 50);//The developer should allow mods to control mod supply and scarcity
     modioSetDescription(&mod_handler, (char*)"This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
-    modioSetMetadata(&mod_handler, (char*)"Optional updated metadata");
-    //setNameid(&mod_handler, "my-example-mod"); //Name id must be unique
-    //setModfile(&mod_handler, int modfile); //Modfile should exist
+    modioSetMetadataBlob(&mod_handler, (char*)"Optional updated metadata");
 
     modioEditMod(wait, mod.id, mod_handler, &onModEdited);
   }else
@@ -60,6 +50,9 @@ int main(void)
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
+
+  // Let's start by requesting a single mod
+
   modioGetMods(&wait, filter, &onModsGet);
 
   while(wait)

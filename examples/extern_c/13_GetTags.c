@@ -1,38 +1,34 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-bool get_tags_finished = false;
-
-ModioMod* global_mod;
-
-void onDeleteTags(void* object, ModioResponse response, int mod_id)
+void onGetTags(void* object, ModioResponse response, u32 mod_id, ModioTag* tags_array, u32 tags_array_size)
 {
   bool* wait = object;
-  printf("Delete Tags response: %i\n", response.code);
-  if(response.code == 201)
+  printf("Get Tags response: %i\n", response.code);
+  if(response.code == 200)
   {
-    printf("Tag deleted successfully!\n");
+    printf("Listing tags:\n");
+    for(u32 i=0; i < tags_array_size; i++)
+    {
+      printf("%s\n", tags_array[i].name);
+    }
   }
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
-  printf("On mod get response: %i\n", response.code);
+  printf("On mod get response: %i\n",response.code);
   if(response.code == 200 && mods_size > 0)
   {
     ModioMod mod = mods[0];
     printf("Id:\t%i\n",mod.id);
     printf("Name:\t%s\n",mod.name);
 
-    printf("Adding tags...\n");
+    printf("Getting tags...\n");
 
-    char** tags_array = (char**) malloc(1);
-    tags_array[0] = (char*) malloc(50);
-    strcpy(tags_array[0], "Hard\0");
-
-    modioDeleteTags(wait, mod.id, (char**)tags_array, 1, &onDeleteTags);
+    // We request the list of tags by providing the Mod's id
+    modioGetTags(wait, mod.id, &onGetTags);
   }else
   {
     *wait = false;
@@ -44,6 +40,8 @@ int main(void)
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
+
+  // Let's start by requesting a single mod
 
   ModioFilterHandler filter;
   modioInitFilter(&filter);

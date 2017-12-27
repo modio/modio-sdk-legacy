@@ -3,7 +3,7 @@
 typedef struct
 {
   bool wait;
-  int modfile_id;
+  u32 modfile_id;
 }ContextObject;
 
 void onModfileInstalled(void* object, ModioResponse response)
@@ -17,7 +17,7 @@ void onModfileInstalled(void* object, ModioResponse response)
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   ContextObject* context_object = object;
   bool* wait = &(context_object->wait);
@@ -36,10 +36,12 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
 
     char instalation_path[100];
     strcpy(instalation_path, "");
-    strcat(instalation_path, "mods_dir/modfile_");
+    strcat(instalation_path, "../mods_dir/modfile_");
     strcat(instalation_path, modfile_id_str);
 
     context_object->modfile_id = mod.modfile.id;
+
+    // Now we provide the Modfile id and the local path where the modfile will be installed
     modioInstallModfile(wait, mod.modfile.id, mod.modfile.download_url, (char*)instalation_path, &onModfileInstalled);
   }else
   {
@@ -55,6 +57,8 @@ int main(void)
   context_object.wait = true;
   context_object.modfile_id = -1;
 
+  // Let's start by requesting a single mod
+
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,1);
@@ -64,6 +68,7 @@ int main(void)
 
   while(context_object.wait)
   {
+    // Track download progress by providing the modfile id
     if(modioGetModfileState(context_object.modfile_id) == MODIO_MODFILE_INSTALLING)
     {
       double modfile_download_progress = modioGetModfileDownloadPercentage(context_object.modfile_id);

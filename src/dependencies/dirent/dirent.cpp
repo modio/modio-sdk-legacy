@@ -1,4 +1,11 @@
-#ifdef WINDOWS
+#ifdef _WIN32
+#define INCLUDE_DIRENT
+#endif
+#ifdef _WIN64
+#define INCLUDE_DIRENT
+#endif
+
+#ifdef INCLUDE_DIRENT
 
 /*
 

@@ -5,7 +5,7 @@ int main(void)
   modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
-  volatile static int download_mod_id = -1;
+  volatile static u32 download_modfile_id = -1;
 
   auto wait = [&]()
   {
@@ -13,9 +13,10 @@ int main(void)
     {
       modio_instance.sleep(10);
       modioProcess();
-      if(download_mod_id != -1)
+      if(download_modfile_id != -1)
       {
-        double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
+        // Track download progress by providing the modfile id
+        double progress = modio_instance.getModfileDownloadPercentage(download_modfile_id);
         if(progress > 0)
           std::cout << "Download progress: " << progress << "%" << std::endl;
       }
@@ -28,6 +29,7 @@ int main(void)
   };
 
   // Let's start by requesting a single mod
+
   modio::FilterHandler filter;
   filter.setLimit(1);
 
@@ -43,10 +45,10 @@ int main(void)
 
       std::cout << "Installing modfile..." << std::endl;
 
-      download_mod_id = mod.modfile.id;
+      download_modfile_id = mod.modfile.id;
 
       // Now we provide the Modfile id and the local path where the modfile will be installed
-      modio_instance.installModfile(mod.modfile, "mods_dir/modfile", [&](const modio::Response& response)
+      modio_instance.installModfile(mod.modfile, "../mods_dir/modfile", [&](const modio::Response& response)
       {
         std::cout << "Install Modfile response: " << response.code << std::endl;
 
@@ -61,8 +63,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

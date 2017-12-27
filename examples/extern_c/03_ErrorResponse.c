@@ -1,6 +1,6 @@
 #include "schemas.h"
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
   printf("On mod get response: %i\n", response.code);
@@ -9,11 +9,14 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
     printf("Success!\n");
   }else
   {
+    // A general error message is returned
     printf("Error message: %s\n",response.error.message);
+
     if(response.error.errors_array_size > 0)
     {
       printf("Errors:\n");
-      for(int i=0; i<response.error.errors_array_size; i++)
+      // and we can go into details on the error list
+      for(u32 i=0; i<response.error.errors_array_size; i++)
       {
         printf("%s\n",response.error.errors_array[i]);
       }
@@ -28,6 +31,7 @@ int main(void)
 
   bool wait = true;
 
+  // Sometimes, mod.io API will return errors. Let's trigger some of them to find out how to interpret them
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,-1);

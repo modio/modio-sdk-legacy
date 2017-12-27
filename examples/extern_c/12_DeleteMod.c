@@ -1,11 +1,6 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-bool mod_deleted_finished = false;
-
-ModioMod* global_mod;
-
-void onModDeleted(void* object, ModioResponse response, int mod_id)
+void onModDeleted(void* object, ModioResponse response, u32 mod_id)
 {
   bool* wait = object;
   printf("Mod Delete response: %i\n", response.code);
@@ -16,7 +11,7 @@ void onModDeleted(void* object, ModioResponse response, int mod_id)
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
   printf("On mod get response: %i\n",response.code);
@@ -28,6 +23,7 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
 
     printf("Deleting mod...\n");
 
+    // We delete a mod providing the Mod id
     modioDeleteMod(wait, mod.id, &onModDeleted);
   }else
   {
@@ -41,6 +37,7 @@ int main(void)
 
   bool wait = true;
 
+  // Let's start by requesting a single mod
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,1);

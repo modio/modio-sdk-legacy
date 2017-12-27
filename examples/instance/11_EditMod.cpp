@@ -36,17 +36,13 @@ int main(void)
 
       // The Mod Handler helps setting up the fields that will be updated
       modio::ModHandler mod_handler;
-      mod_handler.setLogoPath("ModExample/logo.png");
+      mod_handler.setLogoPath("../ModExample/logo.png");
       mod_handler.setName("Update Example");
       mod_handler.setHomepage("http://www.updated.com");
       mod_handler.setSummary("Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
       mod_handler.addTag("Easy");
-      mod_handler.setPrice(2.99);
-      //mod_handler.setStock(50);// In order to use Stock features, the game developer should set this up on the mod.io website
       mod_handler.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
-      mod_handler.setMetadata("Optional updated metadata");
-      //mod_handler.setNameid("my-example-mod"); // The Name id must be unique
-      //mod_handler.setModfile(int modfile); // The Modfile should exist
+      mod_handler.setMetadataBlob("Optional updated metadata");
 
       std::cout <<"Editing mod..." << std::endl;
 
@@ -63,8 +59,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

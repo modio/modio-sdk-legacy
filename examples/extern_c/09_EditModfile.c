@@ -1,10 +1,5 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-bool modfile_edited = false;
-
-ModioModfile* global_modfile = NULL;
-
 void onModfileEdited(void* object, ModioResponse response, ModioModfile modfile)
 {
   bool* wait = object;
@@ -16,7 +11,7 @@ void onModfileEdited(void* object, ModioResponse response, ModioModfile modfile)
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
   bool* wait = object;
   printf("On mod get response: %i\n",response.code);
@@ -28,6 +23,8 @@ void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_si
 
     printf("Editing modfile...\n");
 
+    // The Modfile Handler helps setting up the fields that will be edited
+    // Notice that the version field and modfile zip can't be edited, you should be uploading another modfile instead
     ModioModfileHandler modfile_handler;
     modioInitModfileHandler(&modfile_handler);
     modioSetModfileActive(&modfile_handler,false);
@@ -45,6 +42,8 @@ int main(void)
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
+
+  // Let's start by requesting a single mod
 
   ModioFilterHandler filter;
   modioInitFilter(&filter);
