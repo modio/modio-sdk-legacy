@@ -28,7 +28,7 @@ extern "C"
       message_str = response_json["message"];
 
     char* message = new char[message_str.size() + 1];
-    strcpy(message, message_str.c_str());
+    strcpy_s(message, message_str.size() + 1, message_str.c_str());
     email_request_params[call_number]->callback(email_request_params[call_number]->object, response);
     email_request_params.erase(call_number);
     delete email_request_params[call_number];

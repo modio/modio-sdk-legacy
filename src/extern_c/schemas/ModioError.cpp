@@ -13,7 +13,7 @@ extern "C"
     {
       std::string message_str = error_json["message"];
       error->message = new char[message_str.size() + 1];
-      strcpy(error->message, message_str.c_str());
+      strcpy_s(error->message, message_str.size() + 1, message_str.c_str());
     }
 
     error->errors_array = NULL;
@@ -33,7 +33,7 @@ extern "C"
         std::string error_value = it.value();
         errors_str += error_value;
         error->errors_array[i]= new char[errors_str.size() + 1];
-        strcpy(error->errors_array[i], errors_str.c_str());
+        strcpy_s(error->errors_array[i], errors_str.size() + 1, errors_str.c_str());
         i++;
       }
     }

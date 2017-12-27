@@ -13,8 +13,8 @@ namespace modio
   struct CurrentDownloadInfo
   {
     std::string url;
-    long download_total;
-    long download_progress;
+    double download_total;
+	double download_progress;
   };
 
   extern std::string API_KEY;

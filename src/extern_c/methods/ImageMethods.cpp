@@ -27,7 +27,7 @@ extern "C"
     response.code = response_code;
 
     char* path_char = new char[download_image_callbacks[call_number]->destination_path.size() +1];
-    strcpy(path_char, download_image_callbacks[call_number]->destination_path.c_str());
+    strcpy_s(path_char, download_image_callbacks[call_number]->destination_path.size() + 1, download_image_callbacks[call_number]->destination_path.c_str());
     fclose(download_image_callbacks[call_number]->file);
     download_image_callbacks[call_number]->callback(download_image_callbacks[call_number]->object, response);
     download_image_callbacks.erase(call_number);

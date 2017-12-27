@@ -16,7 +16,7 @@ extern "C"
       delete[] modfile_handler->version;
 
     modfile_handler->version = new char[strlen(version) + 1];
-    strcpy(modfile_handler->version, version);
+    strcpy_s(modfile_handler->version, strlen(version) + 1, version);
   }
 
   void modioSetModfileChangelog(ModioModfileHandler* modfile_handler, char* changelog)
@@ -25,7 +25,7 @@ extern "C"
       delete[] modfile_handler->changelog;
 
     modfile_handler->changelog = new char[strlen(changelog) + 1];
-    strcpy(modfile_handler->changelog, changelog);
+    strcpy_s(modfile_handler->changelog, strlen(changelog) + 1, changelog);
   }
 
   void modioSetModfilePath(ModioModfileHandler* modfile_handler, char* path)
@@ -34,7 +34,7 @@ extern "C"
       delete[] modfile_handler->path;
 
     modfile_handler->path = new char[strlen(path) + 1];
-    strcpy(modfile_handler->path, path);
+    strcpy_s(modfile_handler->path, strlen(path) + 1, path);
   }
 
   void modioSetModfileActive(ModioModfileHandler* modfile_handler, bool active)
@@ -45,9 +45,9 @@ extern "C"
     modfile_handler->active = new char[2];
 
     if(active)
-      strcpy(modfile_handler->active, "1");
+      strcpy_s(modfile_handler->active, 2, "1");
     else
-      strcpy(modfile_handler->active, "0");
+      strcpy_s(modfile_handler->active, 2, "0");
   }
 
   void modioDeleteModfileHandler(ModioModfileHandler* modfile_handler)

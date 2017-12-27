@@ -9,7 +9,7 @@ extern "C"
     {
       std::string filename_str = image_json["filename"];
       image->filename = new char[filename_str.size() + 1];
-      strcpy(image->filename, filename_str.c_str());
+      strcpy_s(image->filename, filename_str.size() + 1, filename_str.c_str());
     }
 
     image->original = NULL;
@@ -17,7 +17,7 @@ extern "C"
     {
       std::string original_str = image_json["original"];
       image->original = new char[original_str.size() + 1];
-      strcpy(image->original, original_str.c_str());
+      strcpy_s(image->original, original_str.size() + 1, original_str.c_str());
     }
 
     image->thumb_320x180 = NULL;
@@ -25,7 +25,7 @@ extern "C"
     {
       std::string thumb_320x180_str = image_json["thumb_320x180"];
       image->thumb_320x180 = new char[thumb_320x180_str.size() + 1];
-      strcpy(image->thumb_320x180, thumb_320x180_str.c_str());
+      strcpy_s(image->thumb_320x180, thumb_320x180_str.size() + 1, thumb_320x180_str.c_str());
     }
   }
 

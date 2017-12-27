@@ -110,7 +110,7 @@ extern "C"
     addToModfilesJson(install_modfile_callbacks[call_number]->modfile_id, destination_path_str);
 
     char* destintation_path = new char[destination_path_str.size()+1];
-    strcpy(destintation_path, destination_path_str.c_str());
+    strcpy_s(destintation_path, destination_path_str.size() + 1, destination_path_str.c_str());
     install_modfile_callbacks[call_number]->callback(install_modfile_callbacks[call_number]->object, response);
     install_modfile_callbacks.erase(call_number);
   }

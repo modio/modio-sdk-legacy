@@ -9,7 +9,7 @@ extern "C"
     {
       std::string filename_str = header_json["filename"];
       header->filename = new char[filename_str.size() + 1];
-      strcpy(header->filename, filename_str.c_str());
+      strcpy_s(header->filename, filename_str.size() + 1, filename_str.c_str());
     }
 
     header->original = NULL;
@@ -17,7 +17,7 @@ extern "C"
     {
       std::string original_str = header_json["original"];
       header->original = new char[original_str.size() + 1];
-      strcpy(header->original, original_str.c_str());
+      strcpy_s(header->original, original_str.size() + 1, original_str.c_str());
     }
   }
 
