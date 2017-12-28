@@ -29,7 +29,7 @@ extern "C"
     {
       std::string homepage_str = mod_json["homepage"];
       mod->homepage = new char[homepage_str.size() + 1];
-      strcpy_s(mod->homepage, homepage_str.size() + 1, homepage_str.c_str());
+      strcpy(mod->homepage, homepage_str.c_str());
     }
 
     mod->name = NULL;
@@ -37,7 +37,7 @@ extern "C"
     {
       std::string name_str = mod_json["name"];
       mod->name = new char[name_str.size() + 1];
-      strcpy_s(mod->name, name_str.size() + 1, name_str.c_str());
+      strcpy(mod->name, name_str.c_str());
     }
 
     mod->name_id = NULL;
@@ -45,7 +45,7 @@ extern "C"
     {
       std::string name_id_str = mod_json["name_id"];
       mod->name_id = new char[name_id_str.size() + 1];
-      strcpy_s(mod->name_id, name_id_str.size() + 1, name_id_str.c_str());
+      strcpy(mod->name_id, name_id_str.c_str());
     }
 
     mod->summary = NULL;
@@ -53,7 +53,7 @@ extern "C"
     {
       std::string summary_str = mod_json["summary"];
       mod->summary = new char[summary_str.size() + 1];
-      strcpy_s(mod->summary, summary_str.size() + 1, summary_str.c_str());
+      strcpy(mod->summary, summary_str.c_str());
     }
 
     mod->description = NULL;
@@ -61,7 +61,7 @@ extern "C"
     {
       std::string description_str = mod_json["description"];
       mod->description = new char[description_str.size() + 1];
-      strcpy_s(mod->description, description_str.size() + 1, description_str.c_str());
+      strcpy(mod->description, description_str.c_str());
     }
 
     mod->metadata_blob = NULL;
@@ -69,7 +69,7 @@ extern "C"
     {
       std::string metadata_blob_str = mod_json["metadata_blob"];
       mod->metadata_blob = new char[metadata_blob_str.size() + 1];
-      strcpy_s(mod->metadata_blob, metadata_blob_str.size() + 1, metadata_blob_str.c_str());
+      strcpy(mod->metadata_blob, metadata_blob_str.c_str());
     }
 
     mod->profile_url = NULL;
@@ -77,7 +77,7 @@ extern "C"
     {
       std::string profile_url_str = mod_json["profile_url"];
       mod->profile_url = new char[profile_url_str.size() + 1];
-      strcpy_s(mod->profile_url, profile_url_str.size() + 1, profile_url_str.c_str());
+      strcpy(mod->profile_url, profile_url_str.c_str());
     }
 
     if(modio::hasKey(mod_json, "logo"))

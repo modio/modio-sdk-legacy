@@ -120,7 +120,7 @@ static voidpf file_build_ioposix(FILE *file, const char *filename)
     ioposix->file = file;
     ioposix->filenameLength = strlen(filename) + 1;
     ioposix->filename = (char*)malloc(ioposix->filenameLength * sizeof(char));
-    strncpy_s((char*)ioposix->filename, ioposix->filenameLength * sizeof(char), (char*)filename, ioposix->filenameLength);
+    strncpy((char*)ioposix->filename, (char*)filename, ioposix->filenameLength);
     return (voidpf)ioposix;
 }
 
@@ -137,7 +137,7 @@ static voidpf ZCALLBACK fopen_file_func (voidpf opaque, const char* filename, in
 
     if ((filename != NULL) && (mode_fopen != NULL))
     {
-        fopen_s(&file, filename, mode_fopen);
+        file = fopen(filename, mode_fopen);
         return file_build_ioposix(file, filename);
     }
     return file;
@@ -156,7 +156,7 @@ static voidpf ZCALLBACK fopen64_file_func (voidpf opaque, const void* filename, 
 
     if ((filename != NULL) && (mode_fopen != NULL))
     {
-        fopen_s(&file, (const char*)filename, mode_fopen);
+        file = fopen((const char*)filename, mode_fopen);
         return file_build_ioposix(file, (const char*)filename);
     }
     return file;
@@ -173,7 +173,7 @@ static voidpf ZCALLBACK fopendisk64_file_func (voidpf opaque, voidpf stream, int
         return NULL;
     ioposix = (FILE_IOPOSIX*)stream;
     diskFilename = (char*)malloc(ioposix->filenameLength * sizeof(char));
-    strncpy_s(diskFilename, ioposix->filenameLength * sizeof(char), (char*)ioposix->filename, ioposix->filenameLength);
+    strncpy(diskFilename, (char*)ioposix->filename, ioposix->filenameLength);
     for (i = ioposix->filenameLength - 1; i >= 0; i -= 1)
     {
         if (diskFilename[i] != '.')
@@ -199,7 +199,7 @@ static voidpf ZCALLBACK fopendisk_file_func (voidpf opaque, voidpf stream, int n
         return NULL;
     ioposix = (FILE_IOPOSIX*)stream;
     diskFilename = (char*)malloc(ioposix->filenameLength * sizeof(char));
-    strncpy_s((char*)diskFilename, ioposix->filenameLength * sizeof(char), (char*)ioposix->filename, ioposix->filenameLength);
+    strncpy((char*)diskFilename, (char*)ioposix->filename, ioposix->filenameLength);
     for (i = ioposix->filenameLength - 1; i >= 0; i -= 1)
     {
         if (diskFilename[i] != '.')

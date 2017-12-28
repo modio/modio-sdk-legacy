@@ -110,7 +110,7 @@ extern "C"
     addToModfilesJson(install_modfile_callbacks[call_number]->modfile_id, destination_path_str);
 
     char* destintation_path = new char[destination_path_str.size()+1];
-    strcpy_s(destintation_path, destination_path_str.size() + 1, destination_path_str.c_str());
+    strcpy(destintation_path, destination_path_str.c_str());
     install_modfile_callbacks[call_number]->callback(install_modfile_callbacks[call_number]->object, response);
     install_modfile_callbacks.erase(call_number);
   }
@@ -184,10 +184,10 @@ extern "C"
     curl_off_t progress = modio::curlwrapper::getProgressIfStored(file_path);
     if(progress != 0)
     {
-      fopen_s(&file, file_path.c_str(),"ab");
+      file = fopen(file_path.c_str(),"ab");
     }else
     {
-      fopen_s(&file, file_path.c_str(),"wb");
+      file = fopen(file_path.c_str(),"wb");
     }
     install_modfile_callbacks[call_number]->file = file;
 

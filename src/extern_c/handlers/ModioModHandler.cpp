@@ -21,7 +21,7 @@ extern "C"
       delete[] mod_handler->logo;
 
     mod_handler->logo = new char[strlen(logo_path) + 1];
-    strcpy_s(mod_handler->logo, strlen(logo_path) + 1, logo_path);
+    strcpy(mod_handler->logo, logo_path);
   }
 
   void modioSetName(ModioModHandler* mod_handler, char* name)
@@ -30,7 +30,7 @@ extern "C"
       delete[] mod_handler->name;
 
     mod_handler->name = new char[strlen(name) + 1];
-    strcpy_s(mod_handler->name, strlen(name) + 1, name);
+    strcpy(mod_handler->name, name);
   }
 
   void modioSetHomepage(ModioModHandler* mod_handler, char* homepage)
@@ -39,7 +39,7 @@ extern "C"
       delete[] mod_handler->homepage;
 
     mod_handler->homepage = new char[strlen(homepage) + 1];
-    strcpy_s(mod_handler->homepage, strlen(homepage) + 1, homepage);
+    strcpy(mod_handler->homepage, homepage);
   }
 
   void modioSetSummary(ModioModHandler* mod_handler, char* summary)
@@ -48,7 +48,7 @@ extern "C"
       delete[] mod_handler->summary;
 
     mod_handler->summary = new char[strlen(summary) + 1];
-    strcpy_s(mod_handler->summary, strlen(summary) + 1, summary);
+    strcpy(mod_handler->summary, summary);
   }
 
   void modioSetDescription(ModioModHandler* mod_handler, char* description)
@@ -57,7 +57,7 @@ extern "C"
       delete[] mod_handler->description;
 
     mod_handler->description = new char[strlen(description) + 1];
-    strcpy_s(mod_handler->description, strlen(description) + 1, description);
+    strcpy(mod_handler->description, description);
   }
 
   void modioSetMetadataBlob(ModioModHandler* mod_handler, char* metadata_blob)
@@ -66,7 +66,7 @@ extern "C"
       delete[] mod_handler->metadata_blob;
 
     mod_handler->metadata_blob = new char[strlen(metadata_blob) + 1];
-    strcpy_s(mod_handler->metadata_blob, strlen(metadata_blob) + 1, metadata_blob);
+    strcpy(mod_handler->metadata_blob, metadata_blob);
   }
 
   void modioSetNameid(ModioModHandler* mod_handler, char* name_id)
@@ -75,7 +75,7 @@ extern "C"
       delete[] mod_handler->name_id;
 
     mod_handler->name_id = new char[strlen(name_id) + 1];
-    strcpy_s(mod_handler->name_id, strlen(name_id) + 1, name_id);
+    strcpy(mod_handler->name_id, name_id);
   }
 
   void modioSetModfile(ModioModHandler* mod_handler, u32 modfile)
@@ -84,7 +84,7 @@ extern "C"
       delete[] mod_handler->modfile;
 
     mod_handler->modfile = new char[modio::toString(modfile).size() + 1];
-    strcpy_s(mod_handler->modfile, modio::toString(modfile).size() + 1, modio::toString(modfile).c_str());
+    strcpy(mod_handler->modfile, modio::toString(modfile).c_str());
   }
 
   void modioAddTag(ModioModHandler* mod_handler, char* tag)
@@ -92,7 +92,7 @@ extern "C"
     ModioListNode* new_tag = new ModioListNode;
     modioInitNode(new_tag);
     new_tag->value = new char[strlen(tag) + 1];
-    strcpy_s(new_tag->value, strlen(tag) + 1, tag);
+    strcpy(new_tag->value, tag);
 
     if(!mod_handler->tags)
     {

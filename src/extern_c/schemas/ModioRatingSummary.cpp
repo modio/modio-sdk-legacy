@@ -29,7 +29,7 @@ extern "C"
     {
       std::string display_text_str = ratings_json["display_text"];
       ratings->display_text = new char[display_text_str.size() + 1];
-      strcpy_s(ratings->display_text, display_text_str.size() + 1, display_text_str.c_str());
+      strcpy(ratings->display_text, display_text_str.c_str());
     }
   }
 

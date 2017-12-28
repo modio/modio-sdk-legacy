@@ -13,7 +13,7 @@ extern "C"
     {
       std::string name_str = tag_json["name"];
       tag->name = new char[name_str.size() + 1];
-      strcpy_s(tag->name, name_str.size() + 1, name_str.c_str());
+      strcpy(tag->name, name_str.c_str());
     }
   }
 

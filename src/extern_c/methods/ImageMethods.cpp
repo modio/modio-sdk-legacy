@@ -27,7 +27,7 @@ extern "C"
     response.code = response_code;
 
     char* path_char = new char[download_image_callbacks[call_number]->destination_path.size() +1];
-    strcpy_s(path_char, download_image_callbacks[call_number]->destination_path.size() + 1, download_image_callbacks[call_number]->destination_path.c_str());
+    strcpy(path_char, download_image_callbacks[call_number]->destination_path.c_str());
     fclose(download_image_callbacks[call_number]->file);
     download_image_callbacks[call_number]->callback(download_image_callbacks[call_number]->object, response);
     download_image_callbacks.erase(call_number);
@@ -57,10 +57,10 @@ extern "C"
     curl_off_t progress = modio::curlwrapper::getProgressIfStored(path);
     if(progress != 0)
     {
-	  fopen_s(&file, path,"ab");
+      file = fopen(path,"ab");
     }else
     {
-      fopen_s(&file, path,"wb");
+      file = fopen(path,"wb");
     }
     download_image_callbacks[call_number]->file = file;
 

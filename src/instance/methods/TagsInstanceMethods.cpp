@@ -89,7 +89,7 @@ namespace modio
     for(int i=0; i<tags_array_size; i++)
     {
       tags_array[i] = new char[tags[i].size() + 1];
-      strcpy_s(tags_array[i], tags[i].size() + 1, (char*)tags[i].c_str());
+      strcpy(tags_array[i], (char*)tags[i].c_str());
     }
 
     modioAddTags((void*)new u32(this->current_call_id), mod_id, tags_array, tags_array_size, &onAddTags);
@@ -106,7 +106,7 @@ namespace modio
     for(int i=0; i<tags_array_size; i++)
     {
       tags_array[i] = new char[tags[i].size() + 1];
-      strcpy_s(tags_array[i], tags[i].size() + 1, (char*)tags[i].c_str());
+      strcpy(tags_array[i], (char*)tags[i].c_str());
     }
 
     modioDeleteTags((void*)new u32(this->current_call_id), mod_id, tags_array, tags_array_size, &onDeleteTags);

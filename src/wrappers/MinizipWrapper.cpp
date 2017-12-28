@@ -40,9 +40,9 @@ namespace modio
           return;
         }
 
-        strcpy_s(final_filename, MAX_FILENAME,directory_path.c_str());
-        strcat_s(final_filename, MAX_FILENAME,"/");
-        strcat_s(final_filename, MAX_FILENAME,filename);
+        strcpy(final_filename,directory_path.c_str());
+        strcat(final_filename,"/");
+        strcat(final_filename,filename);
 
         const size_t filename_length = strlen(filename);
         if (filename[ filename_length-1 ] == dir_delimter)
@@ -61,7 +61,7 @@ namespace modio
 
           std::string new_file_path = filename;
 		  FILE *out;
-		  fopen_s(&out, final_filename, "wb");
+		  out = fopen(final_filename, "wb");
 
           if(!out)
           {
@@ -207,7 +207,7 @@ namespace modio
           writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
         else
         {
-          fopen_s(&fin, complete_file_path.c_str(), "rb");
+          fin = fopen(complete_file_path.c_str(), "rb");
           if (fin == NULL)
           {
             writeLogLine(std::string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);

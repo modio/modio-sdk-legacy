@@ -9,7 +9,7 @@ extern "C"
     {
       std::string md5_str = filehash_json["md5"];
       filehash->md5 = new char[md5_str.size() + 1];
-      strcpy_s(filehash->md5, md5_str.size() + 1, md5_str.c_str());
+      strcpy(filehash->md5, md5_str.c_str());
     }
   }
 
