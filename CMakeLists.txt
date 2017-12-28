@@ -22,5 +22,5 @@ IF (MINGW)
 ENDIF()
 
 IF (MSVC)
-  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a  ${CMAKE_SOURCE_DIR}/lib/zlib.lib  ${CMAKE_SOURCE_DIR}/lib/zdll.lib )
+  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a  ${CMAKE_SOURCE_DIR}/lib/zlib.lib )
 ENDIF()

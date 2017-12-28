@@ -58,7 +58,8 @@ uLong filetime(const char *filename, tm_zip *tmzip, uLong *dostime)
 
 int check_file_exists(const char* filename)
 {
-    FILE* ftestexist = FOPEN_FUNC(filename,"rb");
+	FILE* ftestexist;
+	fopen_s(&ftestexist, filename, "rb");
     if (ftestexist == NULL)
         return 0;
     fclose(ftestexist);
@@ -68,7 +69,8 @@ int check_file_exists(const char* filename)
 int is_large_file(const char* filename)
 {
     ZPOS64_T pos = 0;
-    FILE* pFile = FOPEN_FUNC(filename, "rb");
+	FILE* pFile;
+	fopen_s(&pFile, filename, "rb");
 
     if (pFile == NULL)
         return 0;
@@ -90,7 +92,7 @@ int get_file_crc(const char* filenameinzip, void *buf, unsigned long size_buf, u
     unsigned long size_read = 0;
     int err = ZIP_OK;
 
-    fin = FOPEN_FUNC(filenameinzip,"rb");
+     fopen_s(&fin, filenameinzip,"rb");
     if (fin == NULL)
         err = ZIP_ERRNO;
     else

@@ -184,10 +184,10 @@ extern "C"
     curl_off_t progress = modio::curlwrapper::getProgressIfStored(file_path);
     if(progress != 0)
     {
-      file = fopen(file_path.c_str(),"ab");
+      fopen_s(&file, file_path.c_str(),"ab");
     }else
     {
-      file = fopen(file_path.c_str(),"wb");
+      fopen_s(&file, file_path.c_str(),"wb");
     }
     install_modfile_callbacks[call_number]->file = file;
 

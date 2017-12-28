@@ -57,10 +57,10 @@ extern "C"
     curl_off_t progress = modio::curlwrapper::getProgressIfStored(path);
     if(progress != 0)
     {
-      file = fopen(path,"ab");
+	  fopen_s(&file, path,"ab");
     }else
     {
-      file = fopen(path,"wb");
+      fopen_s(&file, path,"wb");
     }
     download_image_callbacks[call_number]->file = file;
 
