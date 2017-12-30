@@ -132,12 +132,6 @@ namespace modio
     if(directory_name[directory_name.size()-1]!='/')
       directory_name += '/';
 
-    if (path == NULL)
-    {
-      writeLogLine("Out of memory error", MODIO_DEBUGLEVEL_LOG);
-      return false;
-    }
-
     dir = opendir(directory_name.c_str());
     if (dir == NULL)
     {

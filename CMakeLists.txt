@@ -11,6 +11,12 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_library(modio SHARED ${SOURCES})
 
+IF (APPLE)
+  find_package(ZLIB REQUIRED)
+  find_package(CURL REQUIRED)
+  target_link_libraries(modio ${CURL_LIBRARIES} ZLIB::ZLIB)
+ENDIF()
+
 IF (MINGW)
   target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libz.a )
 ENDIF()

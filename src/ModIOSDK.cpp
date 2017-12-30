@@ -73,6 +73,6 @@ void modioSleep(u32 milliseconds)
     Sleep(milliseconds);
   #endif
   #ifdef OSX
-    TODO
+    usleep(milliseconds * 1000);
   #endif
 }
