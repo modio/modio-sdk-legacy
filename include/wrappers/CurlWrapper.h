@@ -1,6 +1,8 @@
 #ifndef MODIO_CURL_WRAPPER_H
 #define MODIO_CURL_WRAPPER_H
 
+#define CURL_STATICLIB
+
 #include <stdio.h>
 #include <iostream>
 #include <map>

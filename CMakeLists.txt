@@ -3,13 +3,7 @@ project(modio)
 set(CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 11)
 
-IF (MINGW)
-  add_definitions(-DBUILDING_MODIO_DLL -DMINGW)
-ENDIF()
-
-IF (MSVC)
-  add_definitions(-DBUILDING_MODIO_DLL)
-ENDIF()
+add_definitions(-DBUILDING_MODIO_DLL)
 
 include_directories(include)
 
@@ -18,9 +12,13 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_library(modio SHARED ${SOURCES})
 
 IF (MINGW)
-  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a   ${CMAKE_SOURCE_DIR}/lib/libz.a )
+  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libz.a )
 ENDIF()
 
 IF (MSVC)
-  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a ${CMAKE_SOURCE_DIR}/lib/libcurldll.a  ${CMAKE_SOURCE_DIR}/lib/zlib.lib )
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/x64/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/x64/zlib64.lib )
+  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/libcurl.a  ${CMAKE_SOURCE_DIR}/lib/zlib.lib )
+  endif()
 ENDIF()
