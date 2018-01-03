@@ -4,16 +4,16 @@ CC = g++
 CFLAGS = -c -Wall -std=c++11
 SOURCES = $(MODIO_SOURCES) dependencies/dirent/dirent.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
-LIBRARIES = ../lib/libcurl.a ../lib/libcurldll.a ../lib/libz.a
+LIBRARIES = ../lib/MinGW/libcurl.a ../lib/MinGW/libz.a
 IMPORT_LIBRARY = modio.a
 LIBRARY = modio.dll
 VARIABLES_DEFINITION=-DMINGW
 
 .cpp.o:
-	$(CC) -DBUILDING_MODIO_DLL $(CFLAGS) $< -o $@ -I ../include $(VARIABLES_DEFINITION)
+	$(CC) -static -DBUILDING_MODIO_DLL -DCURL_STATICLIB $(CFLAGS) $< -o $@ -I ../include $(VARIABLES_DEFINITION)
 
 $(LIBRARY): $(OBJECTS)
-	$(CC) -shared -o $(LIBRARY) $(OBJECTS) -Wl,--out-implib,$(IMPORT_LIBRARY) $(LIBRARIES)
+	$(CC) -static -shared -o $(LIBRARY) $(OBJECTS) -Wl,--out-implib,$(IMPORT_LIBRARY) $(LIBRARIES) -lwldap32 -lws2_32
 
 clean:
 	-find . -name '*.o' -exec rm -r {} \;
