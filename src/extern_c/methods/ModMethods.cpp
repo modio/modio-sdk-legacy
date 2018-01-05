@@ -106,7 +106,7 @@ extern "C"
     modio::curlwrapper::get(call_number, url, headers, &modioOnGetMods);
   }
 
-  void modioEditMod(void* object, u32 mod_id, ModioModHandler mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod))
+  void modioEditMod(void* object, u32 mod_id, ModioModUpdater mod_updater, void (*callback)(void* object, ModioResponse response, ModioMod mod))
   {
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -120,7 +120,7 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 
-    std::multimap<std::string,std::string> mod_params = modio::getModfileCurlFormCopyContentsParams(&mod_handler);
+    std::multimap<std::string,std::string> mod_params = modio::getModfileUpdaterCurlFormCopyContentsParams(&mod_updater);
     for(std::multimap<std::string,std::string>::iterator i = mod_params.begin(); i != mod_params.end(); i++)
     {
       if(i==mod_params.begin())
@@ -133,7 +133,7 @@ extern "C"
     modio::curlwrapper::put(call_number, url, headers, mod_params, &modioOnModAdded);
   }
 
-  void modioAddMod(void* object, ModioModHandler mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod))
+  void modioAddMod(void* object, ModioModCreator mod_creator, void (*callback)(void* object, ModioResponse response, ModioMod mod))
   {
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -147,7 +147,7 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
 
-    modio::curlwrapper::postForm(call_number, url, headers, modio::getModfileCurlFormCopyContentsParams(&mod_handler), modio::getModfileCurlFormFilesParams(&mod_handler), &modioOnModAdded);
+    modio::curlwrapper::postForm(call_number, url, headers, modio::getModCreatorCurlFormCopyContentsParams(&mod_creator), modio::getModCreatorCurlFormFilesParams(&mod_creator), &modioOnModAdded);
   }
 
   void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id))

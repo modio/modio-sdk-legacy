@@ -102,22 +102,22 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::addMod(modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
+  void Instance::addMod(modio::ModCreator& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
   {
     const struct AddModCall* add_mod_call = new AddModCall{callback};
     add_mod_calls[this->current_call_id] = (AddModCall*)add_mod_call;
 
-    modioAddMod((void*)new u32(this->current_call_id), *mod_handler.getModioModHandler(), &onAddMod);
+    modioAddMod((void*)new u32(this->current_call_id), *mod_handler.getModioModCreator(), &onAddMod);
 
     this->current_call_id++;
   }
 
-  void Instance::editMod(u32 mod_id, modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
+  void Instance::editMod(u32 mod_id, modio::ModUpdater& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
   {
     const struct EditModCall* edit_mod_call = new EditModCall{callback};
     edit_mod_calls[this->current_call_id] = (EditModCall*)edit_mod_call;
 
-    modioEditMod((void*)new u32(this->current_call_id), mod_id, *mod_handler.getModioModHandler(), &onEditMod);
+    modioEditMod((void*)new u32(this->current_call_id), mod_id, *mod_handler.getModioModUpdater(), &onEditMod);
 
     this->current_call_id++;
   }

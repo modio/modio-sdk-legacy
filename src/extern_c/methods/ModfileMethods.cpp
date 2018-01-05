@@ -115,9 +115,9 @@ extern "C"
     install_modfile_callbacks.erase(call_number);
   }
 
-  void modioAddModfile(void* object, u32 mod_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
+  void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
-    modio::minizipwrapper::compress(modfile_handler.path, modio::getModIODirectory() + "tmp/modfile.zip");
+    modio::minizipwrapper::compress(modfile_creator.path, modio::getModIODirectory() + "tmp/modfile.zip");
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files";
@@ -132,10 +132,10 @@ extern "C"
     std::map<std::string, std::string> curlform_files;
     curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
 
-    modio::curlwrapper::postForm(call_number, url, headers, modio::modfileHandlerToMultimap(&modfile_handler), curlform_files, &modioOnModfileAdded);
+    modio::curlwrapper::postForm(call_number, url, headers, modio::convertModfileCreatorToMultimap(&modfile_creator), curlform_files, &modioOnModfileAdded);
   }
 
-  void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
+  void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileUpdater modfile_updater, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
@@ -150,7 +150,7 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id);
 
-    std::multimap<std::string,std::string> modfile_params = modio::modfileHandlerToMultimap(&modfile_handler);
+    std::multimap<std::string,std::string> modfile_params = modio::convertModfileUpdaterToMultimap(&modfile_updater);
     for(std::multimap<std::string,std::string>::iterator i = modfile_params.begin(); i != modfile_params.end(); i++)
     {
       if(i==modfile_params.begin())
@@ -160,7 +160,7 @@ extern "C"
       url+=(*i).first + "=" + (*i).second;
     }
 
-    modio::curlwrapper::put(call_number, url, headers, modio::modfileHandlerToMultimap(&modfile_handler), &modioOnModfileEdited);
+    modio::curlwrapper::put(call_number, url, headers, modio::convertModfileUpdaterToMultimap(&modfile_updater), &modioOnModfileEdited);
   }
 
   void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response))

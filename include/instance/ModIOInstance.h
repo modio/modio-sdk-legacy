@@ -3,8 +3,10 @@
 
 #include "ModIOSDK.h"
 #include "instance/handlers/FilterHandler.h"
-#include "instance/handlers/ModHandler.h"
-#include "instance/handlers/ModfileHandler.h"
+#include "instance/handlers/ModCreator.h"
+#include "instance/handlers/ModUpdater.h"
+#include "instance/handlers/ModfileCreator.h"
+#include "instance/handlers/ModfileUpdater.h"
 #include "instance/schemas/Error.h"
 #include "instance/schemas/Filehash.h"
 #include "instance/schemas/Image.h"
@@ -39,14 +41,14 @@ namespace modio
     void editModLogo(u32 mod_id, const std::string& path, const std::function<void(const modio::Response&, u32 mod_id)>& callback);
 
     //Mod Methods
-    void addMod(modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
+    void addMod(modio::ModCreator& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void getMods(modio::FilterHandler& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
-    void editMod(u32 mod_id, modio::ModHandler& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
+    void editMod(u32 mod_id, modio::ModUpdater& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
 
     //Modfile Methods
-    void addModfile(u32 mod_id, modio::ModfileHandler& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
-    void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileHandler& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
+    void addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
+    void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileUpdater& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
     void installModfile(modio::Modfile modfile, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
     u32 getModfileState(u32 modfile_id);
     double getModfileDownloadPercentage(u32 modfile_id);
