@@ -11,25 +11,25 @@ extern "C"
   struct EditModfileParams
   {
     void* object;
-    int modfile_id;
+    u32 modfile_id;
     void (*callback)(void* object, ModioResponse response, ModioModfile modfile);
   };
 
   struct InstallModfileParams
   {
     void* object;
-    int modfile_id;
+    u32 modfile_id;
     std::string zip_path;
     std::string destination_path;
     FILE* file;
     void (*callback)(void* object, ModioResponse response);
   };
 
-  std::map< int, AddModfileParams* > add_modfile_callbacks;
-  std::map< int, EditModfileParams* > edit_modfile_callbacks;
-  std::map< int, InstallModfileParams* > install_modfile_callbacks;
+  std::map< u32, AddModfileParams* > add_modfile_callbacks;
+  std::map< u32, EditModfileParams* > edit_modfile_callbacks;
+  std::map< u32, InstallModfileParams* > install_modfile_callbacks;
 
-  void createModfileJson(int modfile_id, std::string file_path)
+  void createModfileJson(u32 modfile_id, std::string file_path)
   {
     json modfile_json;
     modfile_json["modfile_id"] = modfile_id;
@@ -39,7 +39,7 @@ extern "C"
     out.close();
   }
 
-  void addToModfilesJson(int modfile_id, std::string path)
+  void addToModfilesJson(u32 modfile_id, std::string path)
   {
     json modfiles_json;
     std::ifstream in(modio::getModIODirectory() + "modfiles.json");
@@ -65,7 +65,7 @@ extern "C"
     out.close();
   }
 
-  void modioOnModfileAdded(int call_number, int response_code, json response_json)
+  void modioOnModfileAdded(u32 call_number, u32 response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -78,7 +78,7 @@ extern "C"
     add_modfile_callbacks.erase(call_number);
   }
 
-  void modioOnModfileEdited(int call_number, int response_code, json response_json)
+  void modioOnModfileEdited(u32 call_number, u32 response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -91,7 +91,7 @@ extern "C"
     edit_modfile_callbacks.erase(call_number);
   }
 
-  void modioOnModfileDownloaded(int call_number, int response_code, json response_json)
+  void modioOnModfileDownloaded(u32 call_number, u32 response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -115,14 +115,14 @@ extern "C"
     install_modfile_callbacks.erase(call_number);
   }
 
-  void modioAddModfile(void* object, int mod_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
+  void modioAddModfile(void* object, u32 mod_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
     modio::minizipwrapper::compress(modfile_handler.path, modio::getModIODirectory() + "tmp/modfile.zip");
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files";
 
-    int call_number = modio::curlwrapper::getCallCount();
+    u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
     add_modfile_callbacks[call_number] = new AddModfileParams;
@@ -135,12 +135,12 @@ extern "C"
     modio::curlwrapper::postForm(call_number, url, headers, modio::modfileHandlerToMultimap(&modfile_handler), curlform_files, &modioOnModfileAdded);
   }
 
-  void modioEditModfile(void* object, int mod_id, int modfile_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
+  void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileHandler modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
-    int call_number = modio::curlwrapper::getCallCount();
+    u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
     edit_modfile_callbacks[call_number] = new EditModfileParams;
@@ -167,7 +167,7 @@ extern "C"
   {
     std::string file_path = std::string(modio::getModIODirectory() + "tmp/") + modio::toString(modfile_id) + "_modfile.zip";
 
-    int call_number = modio::curlwrapper::getCallCount();
+    u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
     install_modfile_callbacks[call_number] = new InstallModfileParams;
@@ -194,9 +194,9 @@ extern "C"
     modio::curlwrapper::download(call_number, std::string(modfile_download) + "?shhh=secret", file_path, file, progress, &modioOnModfileDownloaded);
   }
 
-  int modioGetModfileState(int modfile_id)
+  u32 modioGetModfileState(u32 modfile_id)
   {
-    if(modioGetModfileDownloadPercentage(modfile_id))
+    if(modioGetModfileDownloadPercentage(modfile_id) != -1)
     {
       return MODIO_MODFILE_INSTALLING;
     }
@@ -208,7 +208,7 @@ extern "C"
       {
         modfiles_file >> modfiles_json;
         modfiles_json = modfiles_json["modfiles"];
-        for(int i=0; i<(int)modfiles_json.size(); i++)
+        for(u32 i=0; i<modfiles_json.size(); i++)
         {
           if(modfile_id == modfiles_json[i]["id"])
           {
@@ -223,7 +223,7 @@ extern "C"
     return MODIO_MODFILE_NOT_INSTALLED;
   }
 
-  double modioGetModfileDownloadPercentage(int modfile_id)
+  double modioGetModfileDownloadPercentage(u32 modfile_id)
   {
     if(install_modfile_callbacks.find(modio::curlwrapper::getOngoingCall()) != install_modfile_callbacks.end())
     {
@@ -240,5 +240,56 @@ extern "C"
       }
     }
     return -1;
+  }
+
+  bool modioUninstallModfile(u32 modfile_id)
+  {
+    modio::updateModfilesJson();
+    std::string modfile_path = modio::getModfilePath(modfile_id);
+    bool result = modfile_path != "" && modio::checkIfModIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
+    modio::updateModfilesJson();
+    return result;
+  }
+
+  u32 modioGetInstalledModfilesCount()
+  {
+    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
+    if(modfiles_file.is_open())
+    {
+      json modfiles_json;
+      try
+      {
+        modfiles_file >> modfiles_json;
+        modfiles_json = modfiles_json["modfiles"];
+        return (u32)modfiles_json.size();
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      }
+    }
+    return 0;
+  }
+
+  u32 modioGetInstalledModfileId(u32 index)
+  {
+    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
+    if(modfiles_file.is_open())
+    {
+      json modfiles_json;
+      try
+      {
+        modfiles_file >> modfiles_json;
+        modfiles_json = modfiles_json["modfiles"];
+        if(index >= modfiles_json.size())
+        {
+          return 0;
+        }
+        return modfiles_json[index]["id"];
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      }
+    }
+    return 0;
   }
 }

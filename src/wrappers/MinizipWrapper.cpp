@@ -60,7 +60,8 @@ namespace modio
           }
 
           std::string new_file_path = filename;
-          FILE *out = fopen( final_filename, "wb" );
+		  FILE *out;
+		  out = fopen(final_filename, "wb");
 
           if(!out)
           {
@@ -206,7 +207,7 @@ namespace modio
           writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
         else
         {
-          fin = FOPEN_FUNC(complete_file_path.c_str(), "rb");
+          fin = fopen(complete_file_path.c_str(), "rb");
           if (fin == NULL)
           {
             writeLogLine(std::string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);

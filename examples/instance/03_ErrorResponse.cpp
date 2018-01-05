@@ -10,7 +10,7 @@ int main(void)
   {
     while (!finished)
     {
-      modio::sleep(10);
+      modio_instance.sleep(10);
       modioProcess();
     }
   };
@@ -53,8 +53,6 @@ int main(void)
   });
 
   wait();
-
-  modioShutdown();
 
   std::cout << "Process finished" << std::endl;
 

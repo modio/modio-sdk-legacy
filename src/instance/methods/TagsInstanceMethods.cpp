@@ -17,54 +17,54 @@ namespace modio
     const std::function<void(const modio::Response& response, u32 mod_id)> callback;
   };
 
-  std::map<int, GetTagsCall*> get_tags_calls;
-  std::map<int, AddTagsCall*> add_tags_calls;
-  std::map<int, DeleteTagsCall*> delete_tags_calls;
+  std::map<u32, GetTagsCall*> get_tags_calls;
+  std::map<u32, AddTagsCall*> add_tags_calls;
+  std::map<u32, DeleteTagsCall*> delete_tags_calls;
 
-  void onGetTags(void* object, ModioResponse modio_response, int mod_id, ModioTag* tags_array, int tags_array_size)
+  void onGetTags(void* object, ModioResponse modio_response, u32 mod_id, ModioTag* tags_array, u32 tags_array_size)
   {
-    int call_id = *((int*)object);
+    u32 call_id = *((u32*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
     std::vector<modio::Tag> tags_vector;
     tags_vector.resize(tags_array_size);
-    for(int i=0; i < tags_array_size; i++)
+    for(u32 i=0; i < tags_array_size; i++)
     {
       tags_vector[i].initialize(tags_array[i]);
     }
     get_tags_calls[call_id]->callback((const Response&)response, tags_vector);
 
-    delete (int*)object;
+    delete (u32*)object;
     delete[] tags_array;
     delete get_tags_calls[call_id];
     get_tags_calls.erase(call_id);
   }
 
-  void onAddTags(void* object, ModioResponse modio_response, int mod_id)
+  void onAddTags(void* object, ModioResponse modio_response, u32 mod_id)
   {
-    int call_id = *((int*)object);
+    u32 call_id = *((u32*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
     add_tags_calls[call_id]->callback((const Response&)response, mod_id);
-    delete (int*)object;
+    delete (u32*)object;
     delete add_tags_calls[call_id];
     add_tags_calls.erase(call_id);
   }
 
-  void onDeleteTags(void* object, ModioResponse modio_response, int mod_id)
+  void onDeleteTags(void* object, ModioResponse modio_response, u32 mod_id)
   {
-    int call_id = *((int*)object);
+    u32 call_id = *((u32*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
     delete_tags_calls[call_id]->callback((const Response&)response, mod_id);
 
-    delete (int*)object;
+    delete (u32*)object;
     delete delete_tags_calls[call_id];
     delete_tags_calls.erase(call_id);
   }
@@ -74,7 +74,7 @@ namespace modio
     const struct GetTagsCall* get_tags_call = new GetTagsCall{callback};
     get_tags_calls[this->current_call_id] = (GetTagsCall*)get_tags_call;
 
-    modioGetTags((void*)new int(this->current_call_id), mod_id, &onGetTags);
+    modioGetTags((void*)new u32(this->current_call_id), mod_id, &onGetTags);
 
     this->current_call_id++;
   }
@@ -89,10 +89,10 @@ namespace modio
     for(int i=0; i<tags_array_size; i++)
     {
       tags_array[i] = new char[tags[i].size() + 1];
-      strcpy(tags_array[i],(char*)tags[i].c_str());
+      strcpy(tags_array[i], (char*)tags[i].c_str());
     }
 
-    modioAddTags((void*)new int(this->current_call_id), mod_id, tags_array, tags_array_size, &onAddTags);
+    modioAddTags((void*)new u32(this->current_call_id), mod_id, tags_array, tags_array_size, &onAddTags);
     this->current_call_id++;
   }
 
@@ -106,10 +106,10 @@ namespace modio
     for(int i=0; i<tags_array_size; i++)
     {
       tags_array[i] = new char[tags[i].size() + 1];
-      strcpy(tags_array[i],(char*)tags[i].c_str());
+      strcpy(tags_array[i], (char*)tags[i].c_str());
     }
 
-    modioDeleteTags((void*)new int(this->current_call_id), mod_id, tags_array, tags_array_size, &onDeleteTags);
+    modioDeleteTags((void*)new u32(this->current_call_id), mod_id, tags_array, tags_array_size, &onDeleteTags);
 
     this->current_call_id++;
   }

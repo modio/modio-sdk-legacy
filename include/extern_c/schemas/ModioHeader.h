@@ -3,17 +3,12 @@
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
+#include "extern_c/ModioC.h"
 
 using json = nlohmann::json;
 
 extern "C"
 {
-  struct ModioHeader
-  {
-    char* filename;
-    char* original;
-  };
-
   void modioInitHeader(ModioHeader* header, json header_json);
   void modioFreeHeader(ModioHeader* header);
 }

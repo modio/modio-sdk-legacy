@@ -17,7 +17,7 @@ namespace modio
         char* old_value = iterator->value;
         std::string appended_value = std::string(iterator->value) + "," + value;
         iterator->value = new char[appended_value.size() + 1];
-        strcpy(iterator->value,appended_value.c_str());
+        strcpy(iterator->value, appended_value.c_str());
         delete old_value;
         return true;
       }
@@ -34,7 +34,7 @@ namespace modio
         char* old_value = iterator->value;
         std::string replaced_value = field + "=" + value;
         iterator->value = new char[replaced_value.size() + 1];
-        strcpy(iterator->value,replaced_value.c_str());
+        strcpy(iterator->value, replaced_value.c_str());
         delete old_value;
         return true;
       }
@@ -60,7 +60,6 @@ extern "C"
     filter->sort = NULL;
     filter->limit = NULL;
     filter->offset = NULL;
-    filter->cursor = NULL;
     filter->full_text_search = NULL;
     filter->field_value_list = NULL;
     filter->like_list = NULL;
@@ -86,7 +85,7 @@ extern "C"
     strcpy(filter->sort, sort_str.c_str());
   }
 
-  void modioSetFilterLimit(ModioFilterHandler* filter, int limit)
+  void modioSetFilterLimit(ModioFilterHandler* filter, u32 limit)
   {
     if(filter->limit)
       delete[] filter->limit;
@@ -95,22 +94,13 @@ extern "C"
     strcpy(filter->limit, limit_str.c_str());
   }
 
-  void modioSetFilterOffset(ModioFilterHandler* filter, int offset)
+  void modioSetFilterOffset(ModioFilterHandler* filter, u32 offset)
   {
     if(filter->offset)
       delete[] filter->offset;
     std::string offset_str = std::string("_offset=") + modio::toString(offset);
     filter->offset = new char[offset_str.size() + 1];
     strcpy(filter->offset, offset_str.c_str());
-  }
-
-  void modioSetFilterCursor(ModioFilterHandler* filter, int cursor)
-  {
-    if(filter->cursor)
-      delete[] filter->cursor;
-    std::string cursor_str = std::string("_cursor=") + modio::toString(cursor);
-    filter->cursor = new char[cursor_str.size() + 1];
-    strcpy(filter->cursor, cursor_str.c_str());
   }
 
   void modioSetFilterFullTextSearch(ModioFilterHandler* filter, char* text)
@@ -210,8 +200,6 @@ extern "C"
       delete filter->limit;
     if(filter->offset)
       delete filter->offset;
-    if(filter->cursor)
-      delete filter->cursor;
     if(filter->full_text_search)
       delete filter->full_text_search;
 
@@ -266,7 +254,6 @@ namespace modio
     filter_string = addParam(filter_string, filter->sort);
     filter_string = addParam(filter_string, filter->limit);
     filter_string = addParam(filter_string, filter->offset);
-    filter_string = addParam(filter_string, filter->cursor);
     filter_string = addParam(filter_string, filter->full_text_search);
 
     filter_string = addParam(filter_string, filter->field_value_list);

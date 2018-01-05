@@ -1,58 +1,52 @@
 #include "schemas.h"
 
-ModioMod* global_mod;
-
-bool mods_get_finished = false;
-bool mod_logo_edited = false;
-
-void onModLogoEdited(void* object, ModioResponse response, int mod_id)
+void onModLogoEdited(void* object, ModioResponse response, u32 mod_id)
 {
+  bool* wait = object;
   printf("Edit mod logo response: %i\n", response.code);
   if(response.code == 201)
   {
     printf("Image downloaded successfully!\n");
   }
-  mod_logo_edited = true;
+  *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
+  bool* wait = object;
   printf("On mod get response: %i\n",response.code);
-  if(response.code == 200)
+  if(response.code == 200 && mods_size > 0)
   {
-    printf("Listing mod\n");
-    printf("============\n");
-    for(int i=0;i<(int)mods_size;i++)
-    {
-      printf("Mod[%i]\n",i);
-      printf("Id:\t%i\n",mods[i].id);
-      printf("Name:\t%s\n",mods[i].name);
-      global_mod = &(mods[i]);
-    }
+    ModioMod mod = mods[0];
+    printf("Id:\t%i\n",mod.id);
+    printf("Name:\t%s\n",mod.name);
+
+    printf("Editing mod logo...\n");
+
+    // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
+    modioEditModLogo(wait, mod.id, (char*)"../ModExample/logo.png", &onModLogoEdited);
+  }else
+  {
+    *wait = false;
   }
-  mods_get_finished = true;
 }
 
 int main(void)
 {
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
+  bool wait = true;
+
+  // Let's start by requesting a single mod
+
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, filter, &onModsGet);
+  modioGetMods(&wait, filter, &onModsGet);
 
-  while(!mods_get_finished)
-  {
-    modioProcess();
-  }
-
-  printf("Editing mod logo...\n");
-  modioEditModLogo(NULL, global_mod->id, (char*)"ModExample/logo.png", &onModLogoEdited);
-
-  while(!mod_logo_edited)
+  while(wait)
   {
     modioProcess();
   }

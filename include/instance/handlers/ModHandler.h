@@ -14,11 +14,9 @@ namespace modio
     void setName(const std::string& name);
     void setHomepage(const std::string& homepage);
     void setSummary(const std::string& summary);
-    void setPrice(double price);
-    void setStock(int stock);
     void setDescription(const std::string& description);
-    void setMetadata(const std::string& metadata);
-    void setNameid(const std::string& nameid);
+    void setMetadataBlob(const std::string& metadata_blob);
+    void setNameid(const std::string& name_id);
     void setModfile(int modfile);
     void addTag(const std::string& tag);
     ModioModHandler* getModioModHandler();

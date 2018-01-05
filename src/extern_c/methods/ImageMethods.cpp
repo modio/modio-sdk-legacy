@@ -13,14 +13,14 @@ extern "C"
   struct EditModLogoParams
   {
     void* object;
-    int mod_id;
-    void (*callback)(void* object, ModioResponse response, int mod_id);
+    u32 mod_id;
+    void (*callback)(void* object, ModioResponse response, u32 mod_id);
   };
 
-  std::map< int, DownloadImageParams* > download_image_callbacks;
-  std::map< int, EditModLogoParams* > edit_mod_logo_callbacks;
+  std::map< u32, DownloadImageParams* > download_image_callbacks;
+  std::map< u32, EditModLogoParams* > edit_mod_logo_callbacks;
 
-  void modioOnImageDownloaded(int call_number, int response_code, json response_json)
+  void modioOnImageDownloaded(u32 call_number, u32 response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -33,7 +33,7 @@ extern "C"
     download_image_callbacks.erase(call_number);
   }
 
-  void modioOnModLogoEdited(int call_number, int response_code, json response_json)
+  void modioOnModLogoEdited(u32 call_number, u32 response_code, json response_json)
   {
     ModioResponse response;
     modioInitResponse(&response, response_json);
@@ -45,7 +45,7 @@ extern "C"
 
   void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse modioresponse))
   {
-    int call_number = modio::curlwrapper::getCallCount();
+    u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
     download_image_callbacks[call_number] = new DownloadImageParams;
@@ -67,12 +67,12 @@ extern "C"
     modio::curlwrapper::download(call_number, image_url, path, file, progress, &modioOnImageDownloaded);
   }
 
-  void modioEditModLogo(void* object, int mod_id, char* path, void (*callback)(void* object, ModioResponse response, int mod_id))
+  void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(void* object, ModioResponse response, u32 mod_id))
   {
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
 
-    int call_number = modio::curlwrapper::getCallCount();
+    u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
     edit_mod_logo_callbacks[call_number] = new EditModLogoParams;

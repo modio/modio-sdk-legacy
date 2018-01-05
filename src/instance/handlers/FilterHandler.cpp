@@ -23,11 +23,6 @@ namespace modio
     modioSetFilterOffset(this->filter, offset);
   }
 
-  void FilterHandler::setCursor(u32 cursor)
-  {
-    modioSetFilterCursor(this->filter, cursor);
-  }
-
   void FilterHandler::setFullTextSearch(const std::string& text)
   {
     modioSetFilterFullTextSearch(this->filter, (char*)text.c_str());

@@ -3,18 +3,12 @@
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
+#include "extern_c/ModioC.h"
 
 using json = nlohmann::json;
 
 extern "C"
 {
-  struct ModioImage
-  {
-    char* filename;
-    char* original;
-    char* thumb_320x180;
-  };
-
   void modioInitImage(ModioImage* image, json image_json);
   void modioFreeImage(ModioImage* image);
 }

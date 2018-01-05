@@ -31,6 +31,8 @@
 *.out
 *.app
 
+build/
+
 src/modio.so
 src/modio.dylib
 src/modio.dll

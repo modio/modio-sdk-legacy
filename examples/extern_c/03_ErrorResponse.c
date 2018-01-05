@@ -1,42 +1,46 @@
 #include "schemas.h"
 
-bool mods_get_finished = false;
-
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, int mods_size)
+void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {
+  bool* wait = object;
   printf("On mod get response: %i\n", response.code);
   if(response.code == 200)
   {
     printf("Success!\n");
   }else
   {
+    // A general error message is returned
     printf("Error message: %s\n",response.error.message);
+
     if(response.error.errors_array_size > 0)
     {
       printf("Errors:\n");
-      for(int i=0; i<response.error.errors_array_size; i++)
+      // and we can go into details on the error list
+      for(u32 i=0; i<response.error.errors_array_size; i++)
       {
         printf("%s\n",response.error.errors_array[i]);
       }
     }
   }
-
-  mods_get_finished = true;
+  *wait = false;
 }
 
 int main(void)
 {
   modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
+  bool wait = true;
+
+  // Sometimes, mod.io API will return errors. Let's trigger some of them to find out how to interpret them
   ModioFilterHandler filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter,-1);
   modioSetFilterOffset(&filter, -1);
 
   printf("Getting mods...\n");
-  modioGetMods(NULL, filter, &onModsGet);
+  modioGetMods(&wait, filter, &onModsGet);
 
-  while(!mods_get_finished)
+  while(wait)
   {
     modioProcess();
   }

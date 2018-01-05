@@ -25,6 +25,9 @@ namespace modio
   public:
     Instance(u32 id, const std::string& guid);
 
+    //General Methods
+    void sleep(u32 milliseconds);
+
     //Authentication Methods
     bool isLoggedIn() const;
     void logout() const;
@@ -47,6 +50,8 @@ namespace modio
     void installModfile(modio::Modfile modfile, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
     u32 getModfileState(u32 modfile_id);
     double getModfileDownloadPercentage(u32 modfile_id);
+    bool uninstallModfile(u32 modfile_id);
+    std::vector<u32> getInstalledModfileIds();
 
     //Tag Methods
     void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);

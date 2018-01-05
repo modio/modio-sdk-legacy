@@ -28,29 +28,19 @@ namespace modio
     modioSetSummary(this->mod_handler, (char*)summary.c_str());
   }
 
-  void ModHandler::setPrice(double price)
-  {
-    modioSetPrice(this->mod_handler, price);
-  }
-
-  void ModHandler::setStock(int stock)
-  {
-    modioSetStock(this->mod_handler, stock);
-  }
-
   void ModHandler::setDescription(const std::string& description)
   {
     modioSetDescription(this->mod_handler, (char*)description.c_str());
   }
 
-  void ModHandler::setMetadata(const std::string& metadata)
+  void ModHandler::setMetadataBlob(const std::string& metadata_blob)
   {
-    modioSetMetadata(this->mod_handler, (char*)metadata.c_str());
+    modioSetMetadataBlob(this->mod_handler, (char*)metadata_blob.c_str());
   }
 
-  void ModHandler::setNameid(const std::string& nameid)
+  void ModHandler::setNameid(const std::string& name_id)
   {
-    modioSetNameid(this->mod_handler, (char*)nameid.c_str());
+    modioSetNameid(this->mod_handler, (char*)name_id.c_str());
   }
 
   void ModHandler::setModfile(int modfile)
