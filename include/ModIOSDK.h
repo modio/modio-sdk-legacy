@@ -7,14 +7,14 @@
 #include "Globals.h"
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
-#include "extern_c/ModioC.h"
-#include "extern_c/schemas/ModioMod.h"
-#include "extern_c/methods/AuthenticationMethods.h"
-#include "extern_c/methods/ModMethods.h"
-#include "extern_c/methods/ModfileMethods.h"
-#include "extern_c/methods/TagMethods.h"
-#include "extern_c/methods/ImageMethods.h"
-#include "instance/ModIOInstance.h"
+#include "c/ModioC.h"
+#include "c/schemas/ModioMod.h"
+#include "c/methods/AuthenticationMethods.h"
+#include "c/methods/ModMethods.h"
+#include "c/methods/ModfileMethods.h"
+#include "c/methods/TagMethods.h"
+#include "c/methods/ImageMethods.h"
+#include "c++/ModIOInstance.h"
 
 
 #endif
