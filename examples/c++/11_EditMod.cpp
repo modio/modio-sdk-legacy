@@ -26,7 +26,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+  modio_instance.getUserMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200 && mods.size() >= 1)
@@ -41,6 +41,8 @@ int main(void)
       mod_editor.setSummary("Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
       mod_editor.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
       mod_editor.setMetadataBlob("Optional updated metadata");
+      mod_editor.setStatus(1);
+      mod_editor.setVisible(1);
 
       std::cout <<"Editing mod..." << std::endl;
 
@@ -49,7 +51,7 @@ int main(void)
         std::cout << "On mod get response: " << response.code << std::endl;
         if(response.code == 200)
         {
-          std::cout << "Mod created successfully" << std::endl;
+          std::cout << "Mod edited successfully" << std::endl;
         }
         finish();
       });

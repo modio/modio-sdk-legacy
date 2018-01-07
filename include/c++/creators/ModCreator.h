@@ -10,6 +10,7 @@ namespace modio
     ModioModCreator* mod_creator;
   public:
     ModCreator();
+    void setVisible(u32 visible);
     void setLogoPath(const std::string& path);
     void setName(const std::string& name);
     void setNameid(const std::string& name_id);

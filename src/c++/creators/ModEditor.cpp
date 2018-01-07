@@ -8,6 +8,16 @@ namespace modio
     modioInitModEditor(this->mod_editor);
   }
 
+  void ModEditor::setVisible(u32 visible)
+  {
+    modioSetModEditorVisible(this->mod_editor, visible);
+  }
+
+  void ModEditor::setStatus(u32 status)
+  {
+    modioSetModEditorStatus(this->mod_editor, status);
+  }
+
   void ModEditor::setName(const std::string& name)
   {
     modioSetModEditorName(this->mod_editor, (char*)name.c_str());

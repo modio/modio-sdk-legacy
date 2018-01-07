@@ -4,6 +4,7 @@ extern "C"
 {
   void modioInitModCreator(ModioModCreator* mod_creator)
   {
+    mod_creator->visible = NULL;
     mod_creator->logo = NULL;
     mod_creator->name = NULL;
     mod_creator->name_id = NULL;
@@ -12,6 +13,15 @@ extern "C"
     mod_creator->homepage = NULL;
     mod_creator->metadata_blob = NULL;
     mod_creator->tags = NULL;
+  }
+
+  void modioSetModCreatorVisible(ModioModCreator* mod_creator, u32 visible)
+  {
+    if(mod_creator->visible)
+    delete[] mod_creator->visible;
+
+    mod_creator->visible = new char[modio::toString(visible).size() + 1];
+    strcpy(mod_creator->visible, modio::toString(visible).c_str());
   }
 
   void modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char* logo_path)
@@ -100,14 +110,24 @@ extern "C"
 
   void modioFreeModCreator(ModioModCreator* mod_creator)
   {
-    delete mod_creator->logo;
-    delete mod_creator->name;
-    delete mod_creator->homepage;
-    delete mod_creator->summary;
-    delete mod_creator->description;
-    delete mod_creator->metadata_blob;
-    delete mod_creator->name_id;
-    delete mod_creator->tags;
+    if(mod_creator->visible)
+      delete[] mod_creator->visible;
+    if(mod_creator->logo)
+      delete[] mod_creator->logo;
+    if(mod_creator->name)
+      delete[] mod_creator->name;
+    if(mod_creator->homepage)
+      delete[] mod_creator->homepage;
+    if(mod_creator->summary)
+      delete[] mod_creator->summary;
+    if(mod_creator->description)
+      delete[] mod_creator->description;
+    if(mod_creator->metadata_blob)
+      delete[] mod_creator->metadata_blob;
+    if(mod_creator->name_id)
+      delete[] mod_creator->name_id;
+    if(mod_creator->tags)
+      delete[] mod_creator->tags;
   }
 }
 
@@ -126,6 +146,9 @@ namespace modio
   std::multimap<std::string, std::string> getModCreatorCurlFormCopyContentsParams(ModioModCreator* mod_creator)
   {
     std::multimap<std::string, std::string> result;
+
+    if(mod_creator->visible)
+      result.insert(std::pair<std::string,std::string>("visible",mod_creator->visible));
 
     if(mod_creator->name)
       result.insert(std::pair<std::string,std::string>("name",mod_creator->name));

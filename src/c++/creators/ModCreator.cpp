@@ -8,6 +8,11 @@ namespace modio
     modioInitModCreator(this->mod_creator);
   }
 
+  void ModCreator::setVisible(u32 visible)
+  {
+    modioSetModCreatorVisible(this->mod_creator, visible);
+  }
+
   void ModCreator::setLogoPath(const std::string& path)
   {
     modioSetModCreatorLogoPath(this->mod_creator, (char*)path.c_str());

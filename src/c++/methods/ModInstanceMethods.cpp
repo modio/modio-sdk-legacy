@@ -102,6 +102,16 @@ namespace modio
     this->current_call_id++;
   }
 
+  void Instance::getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Mod> & mods)>& callback)
+  {
+    const struct GetModsCall* get_mods_call = new GetModsCall{callback};
+    get_mods_calls[this->current_call_id] = (GetModsCall*)get_mods_call;
+
+    modioUserGetMods((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetMods);
+
+    this->current_call_id++;
+  }
+
   void Instance::addMod(modio::ModCreator& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
   {
     const struct AddModCall* add_mod_call = new AddModCall{callback};

@@ -27,7 +27,7 @@ int main(void)
 
   std::cout <<"Getting mods..." << std::endl;
 
-  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+  modio_instance.getUserMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
   {
     if(response.code == 200 && mods.size() >= 1)
     {

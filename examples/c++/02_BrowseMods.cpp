@@ -23,7 +23,7 @@ int main(void)
   // Before requesting mods, let's define the query filters
   modio::FilterCreator filter;
   filter.setLimit(3);
-  filter.addFieldValue("status", "0");
+  //filter.addFieldValue("status", "0");
 
   std::cout <<"Getting mods..." << std::endl;
 

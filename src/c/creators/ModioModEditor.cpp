@@ -4,13 +4,33 @@ extern "C"
 {
   void modioInitModEditor(ModioModEditor* mod_editor)
   {
+    mod_editor->visible = NULL;
+    mod_editor->status = NULL;
     mod_editor->name = NULL;
     mod_editor->name_id = NULL;
     mod_editor->summary = NULL;
     mod_editor->description = NULL;
     mod_editor->homepage = NULL;
     mod_editor->metadata_blob = NULL;
-    mod_editor->status = NULL;
+    mod_editor->modfile = NULL;
+  }
+
+  void modioSetModEditorVisible(ModioModEditor* mod_editor, u32 visible)
+  {
+    if(mod_editor->visible)
+    delete[] mod_editor->visible;
+
+    mod_editor->visible = new char[modio::toString(visible).size() + 1];
+    strcpy(mod_editor->visible, modio::toString(visible).c_str());
+  }
+
+  void modioSetModEditorStatus(ModioModEditor* mod_editor, u32 status)
+  {
+    if(mod_editor->status)
+    delete[] mod_editor->status;
+
+    mod_editor->status = new char[modio::toString(status).size() + 1];
+    strcpy(mod_editor->status, modio::toString(status).c_str());
   }
 
   void modioSetModEditorName(ModioModEditor* mod_editor, char* name)
@@ -76,24 +96,26 @@ extern "C"
     strcpy(mod_editor->metadata_blob, metadata_blob);
   }
 
-  void modioSetModEditorStatus(ModioModEditor* mod_editor, char* status)
-  {
-    if(mod_editor->status)
-      delete[] mod_editor->status;
-
-    mod_editor->status = new char[strlen(status) + 1];
-    strcpy(mod_editor->status, status);
-  }
-
   void modioFreeModEditor(ModioModEditor* mod_editor)
   {
-    delete mod_editor->name;
-    delete mod_editor->name_id;
-    delete mod_editor->summary;
-    delete mod_editor->description;
-    delete mod_editor->homepage;
-    delete mod_editor->modfile;
-    delete mod_editor->metadata_blob;
+    if(mod_editor->visible)
+      delete[] mod_editor->visible;
+    if(mod_editor->status)
+      delete[] mod_editor->status;
+    if(mod_editor->name)
+      delete[] mod_editor->name;
+    if(mod_editor->name_id)
+      delete[] mod_editor->name_id;
+    if(mod_editor->summary)
+      delete[] mod_editor->summary;
+    if(mod_editor->description)
+      delete[] mod_editor->description;
+    if(mod_editor->homepage)
+      delete[] mod_editor->homepage;
+    if(mod_editor->modfile)
+      delete[] mod_editor->modfile;
+    if(mod_editor->metadata_blob)
+      delete[] mod_editor->metadata_blob;
   }
 }
 
@@ -102,6 +124,11 @@ namespace modio
   std::multimap<std::string, std::string> getModEditorCurlFormCopyContentsParams(ModioModEditor* mod_editor)
   {
     std::multimap<std::string, std::string> result;
+    if(mod_editor->status)
+      result.insert(std::pair<std::string,std::string>("status",mod_editor->status));
+
+    if(mod_editor->visible)
+      result.insert(std::pair<std::string,std::string>("visible",mod_editor->visible));
 
     if(mod_editor->name)
       result.insert(std::pair<std::string,std::string>("name",mod_editor->name));
@@ -123,9 +150,6 @@ namespace modio
 
     if(mod_editor->metadata_blob)
       result.insert(std::pair<std::string,std::string>("metadata_blob",mod_editor->metadata_blob));
-
-    if(mod_editor->status)
-      result.insert(std::pair<std::string,std::string>("status",mod_editor->status));
 
     return result;
   }

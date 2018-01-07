@@ -75,6 +75,10 @@ extern "C"
     if(modio::hasKey(modfile_json, "filehash"))
     {
       modioInitFilehash(&(modfile->filehash), modfile_json["filehash"]);
+    }else
+    {
+      json empty_json;
+      modioInitFilehash(&(modfile->filehash), empty_json);
     }
   }
 

@@ -188,6 +188,7 @@ extern "C"
 
   typedef struct
   {
+    char* visible;
     char* logo;
     char* name;
     char* name_id;
@@ -200,6 +201,8 @@ extern "C"
 
   typedef struct
   {
+    char* visible;
+    char* status;
     char* name;
     char* name_id;
     char* summary;
@@ -207,7 +210,6 @@ extern "C"
     char* homepage;
     char* modfile;
     char* metadata_blob;
-    char* status;
     ModioListNode* tags;
   }ModioModEditor;
 
@@ -292,6 +294,7 @@ extern "C"
 
   //Add Mod Handler Methods
   void MODIO_DLL modioInitModCreator(ModioModCreator* mod_creator);
+  void MODIO_DLL modioSetModCreatorVisible(ModioModCreator* mod_creator, u32 visible);
   void MODIO_DLL modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char* logo_path);
   void MODIO_DLL modioSetModCreatorName(ModioModCreator* mod_creator, char* name);
   void MODIO_DLL modioSetModCreatorNameid(ModioModCreator* mod_creator, char* name_id);
@@ -304,6 +307,8 @@ extern "C"
 
   //Update Mod Handler Methods
   void MODIO_DLL modioInitModEditor(ModioModEditor* update_mod_handler);
+  void MODIO_DLL modioSetModEditorVisible(ModioModEditor* update_mod_handler, u32 visible);
+  void MODIO_DLL modioSetModEditorStatus(ModioModEditor* update_mod_handler, u32 status);
   void MODIO_DLL modioSetModEditorName(ModioModEditor* update_mod_handler, char* name);
   void MODIO_DLL modioSetModEditorNameid(ModioModEditor* update_mod_handler, char* name_id);
   void MODIO_DLL modioSetModEditorSummary(ModioModEditor* update_mod_handler, char* summary);
@@ -311,7 +316,6 @@ extern "C"
   void MODIO_DLL modioSetModEditorHomepage(ModioModEditor* update_mod_handler, char* homepage);
   void MODIO_DLL modioSetModEditorModfile(ModioModEditor* update_mod_handler, u32 modfile);
   void MODIO_DLL modioSetModEditorMetadataBlob(ModioModEditor* update_mod_handler, char* metadata_blob);
-  void MODIO_DLL modioSetModEditorStatus(ModioModEditor* update_mod_handler, char* status);
   void MODIO_DLL modioFreeModEditor(ModioModEditor* update_mod_handler);
 }
 

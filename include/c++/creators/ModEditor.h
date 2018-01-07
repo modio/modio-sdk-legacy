@@ -10,6 +10,8 @@ namespace modio
     ModioModEditor* mod_editor;
   public:
     ModEditor();
+    void setVisible(u32 status);
+    void setStatus(u32 status);
     void setName(const std::string& name);
     void setNameid(const std::string& name_id);
     void setSummary(const std::string& summary);
@@ -17,7 +19,6 @@ namespace modio
     void setHomepage(const std::string& homepage);
     void setModfile(u32 modfile);
     void setMetadataBlob(const std::string& metadata_blob);
-    void setStatus(u32 status);
     ModioModEditor* getModioModEditor();
     ~ModEditor();
   };
