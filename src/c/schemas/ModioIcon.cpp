@@ -47,12 +47,20 @@ extern "C"
 
   void modioFreeIcon(ModioIcon* icon)
   {
-    delete[] icon->filename;
-    delete[] icon->original;
-    delete[] icon->thumb_64x64;
-    delete[] icon->thumb_128x128;
-    delete[] icon->thumb_256x256;
-
-    delete icon;
+    if(icon)
+    {
+      if(icon->filename)
+        delete[] icon->filename;
+      if(icon->original)
+        delete[] icon->original;
+      if(icon->thumb_64x64)
+        delete[] icon->thumb_64x64;
+      if(icon->thumb_128x128)
+        delete[] icon->thumb_128x128;
+      if(icon->thumb_256x256)
+        delete[] icon->thumb_256x256;
+      
+      delete icon;
+    }
   }
 }

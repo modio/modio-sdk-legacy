@@ -41,6 +41,20 @@ extern "C"
 
   void modioFreeError(ModioError* error)
   {
-    delete error;
+    if(error)
+    {
+      if(error->message)
+        delete[] error->message;
+
+      if(error->errors_array)
+      {
+        for(u32 i=0; i<error->errors_array_size; i++)
+        {
+          delete[] error->errors_array[i];
+        }
+      }
+
+      delete error;
+    }
   }
 }

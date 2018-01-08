@@ -50,17 +50,22 @@ extern "C"
 
   void modioFreeMedia(ModioMedia* media)
   {
-    for(int i=0; i<(int)media->youtube_size; i++)
+    if(media)
     {
-      delete media->youtube_array[i];
-    }
-    for(int i=0; i<(int)media->sketchfab_size; i++)
-    {
-      delete media->sketchfab_array[i];
-    }
-    for(int i=0; i<(int)media->images_size; i++)
-    {
-      modioFreeImage(&(media->images_array[i]));
+      for(int i=0; i<(int)media->youtube_size; i++)
+      {
+        delete[] media->youtube_array[i];
+      }
+      for(int i=0; i<(int)media->sketchfab_size; i++)
+      {
+        delete[] media->sketchfab_array[i];
+      }
+      for(int i=0; i<(int)media->images_size; i++)
+      {
+        modioFreeImage(&(media->images_array[i]));
+      }
+
+      delete media;
     }
   }
 }

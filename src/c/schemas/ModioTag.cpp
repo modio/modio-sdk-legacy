@@ -4,7 +4,7 @@ extern "C"
 {
   void modioInitTag(ModioTag* tag, json tag_json)
   {
-    tag->date_added = -1;
+    tag->date_added = 0;
     if(modio::hasKey(tag_json, "date_added"))
       tag->date_added = tag_json["date_added"];
 
@@ -20,6 +20,10 @@ extern "C"
   void modioFreeTag(ModioTag* tag)
   {
     if(tag)
-      delete[] tag;
+    {
+      if(tag->name)
+        delete[] tag->name;
+      delete tag;
+    }
   }
 }

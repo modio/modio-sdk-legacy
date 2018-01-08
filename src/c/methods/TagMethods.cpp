@@ -48,6 +48,7 @@ extern "C"
           {
             modioInitTag(&(tags_array[i]), response_json["data"][i]);
           }
+          delete[] tags_array;
         }
       }catch(json::parse_error &e)
       {
@@ -55,6 +56,7 @@ extern "C"
       }
     }
     get_tags_callbacks[call_number]->callback(get_tags_callbacks[call_number]->object, response, get_tags_callbacks[call_number]->mod_id, tags_array, tags_array_size);
+    delete get_tags_callbacks[call_number];
     get_tags_callbacks.erase(call_number);
   }
 
@@ -65,6 +67,7 @@ extern "C"
     response.code = response_code;
 
     add_tags_callbacks[call_number]->callback(add_tags_callbacks[call_number]->object, response, add_tags_callbacks[call_number]->mod_id);
+    delete add_tags_callbacks[call_number];
     add_tags_callbacks.erase(call_number);
   }
 
@@ -75,6 +78,7 @@ extern "C"
     response.code = response_code;
 
     delete_tags_callbacks[call_number]->callback(delete_tags_callbacks[call_number]->object, response, delete_tags_callbacks[call_number]->mod_id);
+    delete delete_tags_callbacks[call_number];
     delete_tags_callbacks.erase(call_number);
   }
 

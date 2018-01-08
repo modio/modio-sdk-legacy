@@ -4,7 +4,7 @@ extern "C"
 {
   void modioInitUser(ModioUser* user, json user_json)
   {
-    user->id = -1;
+    user->id = 0;
     if(modio::hasKey(user_json, "id"))
     {
       user->id = user_json["id"];
@@ -56,21 +56,27 @@ extern "C"
       strcpy(user->profile_url, profile_url_str.c_str());
     }
 
+    json avatar_json;
     if(modio::hasKey(user_json, "avatar"))
-    {
-      modioInitAvatar(&(user->avatar), user_json["avatar"]);
-    }else
-    {
-      json empty_json;
-      modioInitAvatar(&(user->avatar), empty_json);
-    }
+      avatar_json = user_json["avatar"];
+    modioInitAvatar(&(user->avatar), avatar_json);
   }
 
   void modioFreeUser(ModioUser* user)
   {
-    delete[] user->username;
-    delete[] user->name_id;
-    delete[] user->timezone;
-    delete[] user->language;
+    if(user)
+    {
+      if(user->username)
+        delete[] user->username;
+      if(user->name_id)
+        delete[] user->name_id;
+      if(user->timezone)
+        delete[] user->timezone;
+      if(user->language)
+        delete[] user->language;
+      if(user->profile_url)
+        delete[] user->profile_url;
+      delete user;
+    }
   }
 }

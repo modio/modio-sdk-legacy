@@ -10,10 +10,14 @@ extern "C"
 
   void modioFreeNodeList(ModioListNode* node)
   {
-    if(node->value)
-      delete node->value;
+    if(node)
+    {
+      ModioListNode* next = node->next;
+      if(node->value)
+        delete node->value;
+      delete node;
 
-    if(node->next)
-      modioFreeNodeList(node->next);
+      modioFreeNodeList(next);
+    }
   }
 }

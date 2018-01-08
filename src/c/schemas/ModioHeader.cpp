@@ -23,9 +23,14 @@ extern "C"
 
   void modioFreeHeader(ModioHeader* header)
   {
-    delete[] header->filename;
-    delete[] header->original;
+    if(header)
+    {
+      if(header->filename)
+        delete[] header->filename;
+      if(header->original)
+        delete[] header->original;
 
-    delete header;
+      delete header;
+    }
   }
 }

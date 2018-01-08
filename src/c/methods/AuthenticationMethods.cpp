@@ -23,15 +23,9 @@ extern "C"
     modioInitResponse(&response, response_json);
     response.code = response_code;
 
-    std::string message_str = "";
-    if(modio::hasKey(response_json,"message"))
-      message_str = response_json["message"];
-
-    char* message = new char[message_str.size() + 1];
-    strcpy(message, message_str.c_str());
     email_request_params[call_number]->callback(email_request_params[call_number]->object, response);
-    email_request_params.erase(call_number);
     delete email_request_params[call_number];
+    email_request_params.erase(call_number);
   }
 
   void modioOnEmailExchanged(u32 call_number, u32 response_code, json response_json)
@@ -49,6 +43,7 @@ extern "C"
       out.close();
     }
     email_exchange_params[call_number]->callback(email_exchange_params[call_number]->object, response);
+    delete email_exchange_params[call_number];
     email_exchange_params.erase(call_number);
   }
 

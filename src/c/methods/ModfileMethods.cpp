@@ -75,6 +75,7 @@ extern "C"
     modioInitModfile(&modfile, response_json);
 
     add_modfile_callbacks[call_number]->callback(add_modfile_callbacks[call_number]->object, response, modfile);
+    delete add_modfile_callbacks[call_number];
     add_modfile_callbacks.erase(call_number);
   }
 
@@ -88,6 +89,7 @@ extern "C"
     modioInitModfile(&modfile, response_json);
 
     edit_modfile_callbacks[call_number]->callback(edit_modfile_callbacks[call_number]->object, response, modfile);
+    delete edit_modfile_callbacks[call_number];
     edit_modfile_callbacks.erase(call_number);
   }
 
@@ -109,9 +111,8 @@ extern "C"
     createModfileJson(install_modfile_callbacks[call_number]->modfile_id, destination_path_str + std::string("modio.json"));
     addToModfilesJson(install_modfile_callbacks[call_number]->modfile_id, destination_path_str);
 
-    char* destintation_path = new char[destination_path_str.size()+1];
-    strcpy(destintation_path, destination_path_str.c_str());
     install_modfile_callbacks[call_number]->callback(install_modfile_callbacks[call_number]->object, response);
+    delete install_modfile_callbacks[call_number];
     install_modfile_callbacks.erase(call_number);
   }
 

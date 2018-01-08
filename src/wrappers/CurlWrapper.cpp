@@ -212,6 +212,8 @@ namespace modio
       ongoing_call = -1;
       call_count = -1;
       ongoing_calls.clear();
+
+      delete current_download_handle;
     }
 
     curl_off_t getProgressIfStored(std::string path)
@@ -461,6 +463,7 @@ namespace modio
             curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
             ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response_code, response_json);
             advanceOngoingCall();
+            delete ongoing_calls[curl_handle];
           }
 
           curl_multi_remove_handle(curl_multi_handle, curl_handle);

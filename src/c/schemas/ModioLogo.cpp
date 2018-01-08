@@ -47,10 +47,20 @@ extern "C"
 
   void modioFreeLogo(ModioLogo* logo)
   {
-    delete[] logo->filename;
-    delete[] logo->original;
-    delete[] logo->thumb_1280x720;
+    if(logo)
+    {
+      if(logo->filename)
+        delete[] logo->filename;
+      if(logo->original)
+        delete[] logo->original;
+      if(logo->thumb_320x180)
+        delete[] logo->thumb_320x180;
+      if(logo->thumb_640x360)
+        delete[] logo->thumb_640x360;
+      if(logo->thumb_1280x720)
+        delete[] logo->thumb_1280x720;
 
-    delete logo;
+      delete logo;
+    }
   }
 }

@@ -11,6 +11,15 @@ extern "C"
     modfile_creator->filehash = NULL;
   }
 
+  void modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path)
+  {
+    if(modfile_creator->path)
+    delete[] modfile_creator->path;
+
+    modfile_creator->path = new char[strlen(path) + 1];
+    strcpy(modfile_creator->path, path);
+  }
+
   void modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char* version)
   {
     if(modfile_creator->version)
@@ -27,15 +36,6 @@ extern "C"
 
     modfile_creator->changelog = new char[strlen(changelog) + 1];
     strcpy(modfile_creator->changelog, changelog);
-  }
-
-  void modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path)
-  {
-    if(modfile_creator->path)
-      delete[] modfile_creator->path;
-
-    modfile_creator->path = new char[strlen(path) + 1];
-    strcpy(modfile_creator->path, path);
   }
 
   void modioSetModfileCreatorActive(ModioModfileCreator* modfile_creator, bool active)

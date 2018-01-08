@@ -11,6 +11,7 @@ extern "C"
     mod_editor->summary = NULL;
     mod_editor->description = NULL;
     mod_editor->homepage = NULL;
+    mod_editor->modfile = NULL;
     mod_editor->metadata_blob = NULL;
     mod_editor->modfile = NULL;
   }
@@ -18,7 +19,7 @@ extern "C"
   void modioSetModEditorVisible(ModioModEditor* mod_editor, u32 visible)
   {
     if(mod_editor->visible)
-    delete[] mod_editor->visible;
+      delete[] mod_editor->visible;
 
     mod_editor->visible = new char[modio::toString(visible).size() + 1];
     strcpy(mod_editor->visible, modio::toString(visible).c_str());
@@ -27,7 +28,7 @@ extern "C"
   void modioSetModEditorStatus(ModioModEditor* mod_editor, u32 status)
   {
     if(mod_editor->status)
-    delete[] mod_editor->status;
+      delete[] mod_editor->status;
 
     mod_editor->status = new char[modio::toString(status).size() + 1];
     strcpy(mod_editor->status, modio::toString(status).c_str());
@@ -45,7 +46,7 @@ extern "C"
   void modioSetModEditorNameid(ModioModEditor* mod_editor, char* name_id)
   {
     if(mod_editor->name_id)
-    delete[] mod_editor->name_id;
+      delete[] mod_editor->name_id;
 
     mod_editor->name_id = new char[strlen(name_id) + 1];
     strcpy(mod_editor->name_id, name_id);
@@ -54,7 +55,7 @@ extern "C"
   void modioSetModEditorSummary(ModioModEditor* mod_editor, char* summary)
   {
     if(mod_editor->summary)
-    delete[] mod_editor->summary;
+      delete[] mod_editor->summary;
 
     mod_editor->summary = new char[strlen(summary) + 1];
     strcpy(mod_editor->summary, summary);
@@ -63,7 +64,7 @@ extern "C"
   void modioSetModEditorDescription(ModioModEditor* mod_editor, char* description)
   {
     if(mod_editor->description)
-    delete[] mod_editor->description;
+      delete[] mod_editor->description;
 
     mod_editor->description = new char[strlen(description) + 1];
     strcpy(mod_editor->description, description);
@@ -81,7 +82,7 @@ extern "C"
   void modioSetModEditorModfile(ModioModEditor* mod_editor, u32 modfile)
   {
     if(mod_editor->modfile)
-    delete[] mod_editor->modfile;
+      delete[] mod_editor->modfile;
 
     mod_editor->modfile = new char[modio::toString(modfile).size() + 1];
     strcpy(mod_editor->modfile, modio::toString(modfile).c_str());
@@ -116,6 +117,8 @@ extern "C"
       delete[] mod_editor->modfile;
     if(mod_editor->metadata_blob)
       delete[] mod_editor->metadata_blob;
+
+    modioFreeNodeList(mod_editor->tags);
   }
 }
 

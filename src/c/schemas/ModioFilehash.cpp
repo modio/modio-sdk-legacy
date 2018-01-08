@@ -15,8 +15,11 @@ extern "C"
 
   void modioFreeFilehash(ModioFilehash* filehash)
   {
-    if(filehash->md5)
-      delete[] filehash->md5;
-    delete filehash;
+    if(filehash)
+    {
+      if(filehash->md5)
+        delete[] filehash->md5;
+      delete filehash;
+    }
   }
 }

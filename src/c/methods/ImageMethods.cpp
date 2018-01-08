@@ -26,10 +26,9 @@ extern "C"
     modioInitResponse(&response, response_json);
     response.code = response_code;
 
-    char* path_char = new char[download_image_callbacks[call_number]->destination_path.size() +1];
-    strcpy(path_char, download_image_callbacks[call_number]->destination_path.c_str());
     fclose(download_image_callbacks[call_number]->file);
     download_image_callbacks[call_number]->callback(download_image_callbacks[call_number]->object, response);
+    delete download_image_callbacks[call_number];
     download_image_callbacks.erase(call_number);
   }
 
@@ -40,6 +39,7 @@ extern "C"
     response.code = response_code;
 
     edit_mod_logo_callbacks[call_number]->callback(edit_mod_logo_callbacks[call_number]->object, response, edit_mod_logo_callbacks[call_number]->mod_id);
+    delete edit_mod_logo_callbacks[call_number];
     edit_mod_logo_callbacks.erase(call_number);
   }
 

@@ -18,7 +18,7 @@ namespace modio
         std::string appended_value = std::string(iterator->value) + "," + value;
         iterator->value = new char[appended_value.size() + 1];
         strcpy(iterator->value, appended_value.c_str());
-        delete old_value;
+        delete[] old_value;
         return true;
       }
     }
@@ -35,7 +35,7 @@ namespace modio
         std::string replaced_value = field + "=" + value;
         iterator->value = new char[replaced_value.size() + 1];
         strcpy(iterator->value, replaced_value.c_str());
-        delete old_value;
+        delete[] old_value;
         return true;
       }
     }
@@ -195,13 +195,13 @@ extern "C"
   void modioFreeFilter(ModioFilterCreator* filter)
   {
     if(filter->sort)
-      delete filter->sort;
+      delete[] filter->sort;
     if(filter->limit)
-      delete filter->limit;
+      delete[] filter->limit;
     if(filter->offset)
-      delete filter->offset;
+      delete[] filter->offset;
     if(filter->full_text_search)
-      delete filter->full_text_search;
+      delete[] filter->full_text_search;
 
     if(filter->like_list)
       modioFreeNodeList(filter->like_list);

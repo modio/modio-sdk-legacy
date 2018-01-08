@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Utility.h"
 #include "c/ModioC.h"
+#include "c/schemas/ModioListNode.h"
 
 namespace modio
 {

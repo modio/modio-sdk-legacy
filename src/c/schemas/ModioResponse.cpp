@@ -4,16 +4,7 @@ extern "C"
 {
   void modioInitResponse(ModioResponse* response, json response_json)
   {
-    response->code = -1;
-
-    if(modio::hasKey(response_json, "error"))
-    {
-      modioInitError(&(response->error),response_json["error"]);
-    }else
-    {
-      json empty_json;
-      modioInitError(&(response->error),empty_json);
-    }
+    response->code = 0;
 
     response->result_count = 0;
     if(modio::hasKey(response_json,"result_count"))
@@ -33,11 +24,20 @@ extern "C"
       response->result_offset = response_json["result_offset"];
     }
 
-
+    json error_json;
+    if(modio::hasKey(response_json, "error"))
+    {
+      error_json = response_json["error"];
+    }
+    modioInitError(&(response->error), error_json);
   }
 
   void modioFreeResponse(ModioResponse* response)
   {
-    delete response;
+    if(response)
+    {
+      modioFreeError(&(response->error));
+      delete response;
+    }
   }
 }

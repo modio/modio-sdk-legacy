@@ -31,7 +31,6 @@ int main(void)
   mod_editor.setSummary("Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
   mod_editor.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   mod_editor.setMetadataBlob("Optional updated metadata");
-  mod_editor.setStatus(1);
   mod_editor.setVisible(1);
 
   std::cout <<"Editing mod..." << std::endl;

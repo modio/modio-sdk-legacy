@@ -4,19 +4,19 @@ extern "C"
 {
   void modioInitRatingSummary(ModioRatingSummary* ratings, json ratings_json)
   {
-    ratings->total_ratings = -1;
+    ratings->total_ratings = 0;
     if(modio::hasKey(ratings_json, "total_ratings"))
       ratings->total_ratings = ratings_json["total_ratings"];
 
-    ratings->positive_ratings = -1;
+    ratings->positive_ratings = 0;
     if(modio::hasKey(ratings_json, "positive_ratings"))
       ratings->positive_ratings = ratings_json["positive_ratings"];
 
-    ratings->negative_ratings = -1;
+    ratings->negative_ratings = 0;
     if(modio::hasKey(ratings_json, "negative_ratings"))
       ratings->negative_ratings = ratings_json["negative_ratings"];
 
-    ratings->percentage_positive = -1;
+    ratings->percentage_positive = 0;
     if(modio::hasKey(ratings_json, "percentage_positive"))
       ratings->percentage_positive = ratings_json["percentage_positive"];
 
@@ -35,6 +35,11 @@ extern "C"
 
   void modioFreeRatingSummary(ModioRatingSummary* ratings)
   {
-    delete ratings;
+    if(ratings)
+    {
+      if(ratings->display_text)
+        delete[] ratings->display_text;
+      delete ratings;
+    }
   }
 }

@@ -50,6 +50,7 @@ extern "C"
     modioInitMod(&mod, response_json);
 
     get_mod_callbacks[call_number]->callback(get_mod_callbacks[call_number]->object, response, mod);
+    delete get_mod_callbacks[call_number];
     get_mod_callbacks.erase(call_number);
   }
 
@@ -73,6 +74,7 @@ extern "C"
     {
       get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, NULL, 0);
     }
+    delete get_mods_callbacks[call_number];
     get_mods_callbacks.erase(call_number);
   }
 
@@ -86,6 +88,7 @@ extern "C"
     modioInitMod(&mod, response_json);
 
     add_mod_callback[call_number]->callback(add_mod_callback[call_number]->object, response, mod);
+    delete add_mod_callback[call_number];
     add_mod_callback.erase(call_number);
   }
 
@@ -96,6 +99,7 @@ extern "C"
     response.code = response_code;
 
     delete_mod_callbacks[call_number]->callback(delete_mod_callbacks[call_number]->object, response, delete_mod_callbacks[call_number]->mod_id);
+    delete delete_mod_callbacks[call_number];
     delete_mod_callbacks.erase(call_number);
   }
 
@@ -106,6 +110,7 @@ extern "C"
     response.code = response_code;
 
     return_id_callbacks[call_number]->callback(return_id_callbacks[call_number]->object, response, return_id_callbacks[call_number]->mod_id);
+    delete return_id_callbacks[call_number];
     return_id_callbacks.erase(call_number);
   }
 

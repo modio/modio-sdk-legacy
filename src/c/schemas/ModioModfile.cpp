@@ -4,31 +4,31 @@ extern "C"
 {
   void modioInitModfile(ModioModfile* modfile, json modfile_json)
   {
-    modfile->id = -1;
+    modfile->id = 0;
     if(modio::hasKey(modfile_json, "id"))
       modfile->id = modfile_json["id"];
 
-    modfile->mod_id = -1;
+    modfile->mod_id = 0;
     if(modio::hasKey(modfile_json, "mod_id"))
       modfile->mod_id = modfile_json["mod_id"];
 
-    modfile->virus_status = -1;
+    modfile->virus_status = 0;
     if(modio::hasKey(modfile_json, "virus_status"))
       modfile->virus_status = modfile_json["virus_status"];
 
-    modfile->virus_positive = -1;
+    modfile->virus_positive = 0;
     if(modio::hasKey(modfile_json, "virus_positive"))
       modfile->virus_positive = modfile_json["virus_positive"];
 
-    modfile->date_added = -1;
+    modfile->date_added = 0;
     if(modio::hasKey(modfile_json, "date_added"))
       modfile->date_added = modfile_json["date_added"];
 
-    modfile->date_scanned = -1;
+    modfile->date_scanned = 0;
     if(modio::hasKey(modfile_json, "date_scanned"))
       modfile->date_scanned = modfile_json["date_scanned"];
 
-    modfile->filesize = -1;
+    modfile->filesize = 0;
     if(modio::hasKey(modfile_json, "filesize"))
       modfile->filesize = modfile_json["filesize"];
 
@@ -72,18 +72,27 @@ extern "C"
       strcpy(modfile->download_url, download_url_str.c_str());
     }
 
+    json filehash_json;
     if(modio::hasKey(modfile_json, "filehash"))
-    {
-      modioInitFilehash(&(modfile->filehash), modfile_json["filehash"]);
-    }else
-    {
-      json empty_json;
-      modioInitFilehash(&(modfile->filehash), empty_json);
-    }
+      filehash_json = modfile_json["filehash"];
+    modioInitFilehash(&(modfile->filehash), filehash_json);
   }
 
   void modioFreeModfile(ModioModfile* modfile)
   {
-    delete modfile;
+    if(modfile)
+    {
+      if(modfile->filename)
+        delete[] modfile->filename;
+      if(modfile->version)
+        delete[] modfile->version;
+      if(modfile->virustotal_hash)
+        delete[] modfile->virustotal_hash;
+      if(modfile->changelog)
+        delete[] modfile->changelog;
+      if(modfile->download_url)
+        delete[] modfile->download_url;
+      delete modfile;
+    }
   }
 }

@@ -31,10 +31,16 @@ extern "C"
 
   void modioFreeImage(ModioImage* image)
   {
-    delete[] image->filename;
-    delete[] image->original;
-    delete[] image->thumb_320x180;
-
-    delete image;
+    if(image)
+    {
+      if(image->filename)
+        delete[] image->filename;
+      if(image->original)
+        delete[] image->original;
+      if(image->thumb_320x180)
+        delete[] image->thumb_320x180;
+      
+      delete image;
+    }
   }
 }
