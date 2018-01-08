@@ -2,6 +2,11 @@
 
 namespace modio
 {
+  struct GetModCall
+  {
+    const std::function<void(const modio::Response&, const modio::Mod& mod)> callback;
+  };
+
   struct GetModsCall
   {
     const std::function<void(const modio::Response&, std::vector<modio::Mod>& mods)> callback;
@@ -22,10 +27,32 @@ namespace modio
     const std::function<void(const modio::Response& response, u32 mod_id)> callback;
   };
 
+  std::map<u32, GetModCall*> get_mod_calls;
   std::map<u32, GetModsCall*> get_mods_calls;
   std::map<u32, AddModCall*> add_mod_calls;
   std::map<u32, EditModCall*> edit_mod_calls;
   std::map<u32, DeleteModCall*> delete_mod_calls;
+
+  void onGetMod(void* object, ModioResponse modio_response, ModioMod mod)
+  {
+    u32 call_id = *((u32*)object);
+
+    modio::Response response;
+    response.initialize(modio_response);
+
+    modio::Mod modio_mod;
+
+    if(modio_response.code == 200)
+    {
+      modio_mod.initialize(mod);
+    }
+
+    get_mod_calls[call_id]->callback((const Response&)response, modio_mod);
+
+    delete (u32*)object;
+    delete get_mod_calls[call_id];
+    get_mod_calls.erase(call_id);
+  }
 
   void onGetMods(void* object, ModioResponse modio_response, ModioMod mods[], u32 mods_size)
   {
@@ -92,6 +119,16 @@ namespace modio
     delete_mod_calls.erase(call_id);
   }
 
+  void Instance::getMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
+  {
+    const struct GetModCall* get_mod_call = new GetModCall{callback};
+    get_mod_calls[this->current_call_id] = (GetModCall*)get_mod_call;
+
+    modioGetMod((void*)new u32(this->current_call_id), mod_id, &onGetMod);
+
+    this->current_call_id++;
+  }
+
   void Instance::getMods(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Mod> & mods)>& callback)
   {
     const struct GetModsCall* get_mods_call = new GetModsCall{callback};
@@ -107,7 +144,7 @@ namespace modio
     const struct GetModsCall* get_mods_call = new GetModsCall{callback};
     get_mods_calls[this->current_call_id] = (GetModsCall*)get_mods_call;
 
-    modioUserGetMods((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetMods);
+    modioGetUserMods((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetMods);
 
     this->current_call_id++;
   }

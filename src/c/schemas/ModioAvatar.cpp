@@ -39,9 +39,16 @@ extern "C"
 
   void modioFreeAvatar(ModioAvatar* avatar)
   {
-    delete[] avatar->filename;
-    delete[] avatar->original;
-    delete[] avatar->thumb_50x50;
+    if(avatar->filename)
+      delete[] avatar->filename;
+
+    if(avatar->original)
+      delete[] avatar->original;
+
+    if(avatar->thumb_50x50)
+      delete[] avatar->thumb_50x50;
+
+    if(avatar->thumb_100x100)
     delete[] avatar->thumb_100x100;
 
     delete avatar;

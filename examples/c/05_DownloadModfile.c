@@ -17,14 +17,13 @@ void onModfileInstalled(void* object, ModioResponse response)
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
+void onModGet(void* object, ModioResponse response, ModioMod mod)
 {
   ContextObject* context_object = object;
   bool* wait = &(context_object->wait);
   printf("On mod get response: %i\n",response.code);
-  if(response.code == 200 && mods_size > 0)
+  if(response.code == 200)
   {
-    ModioMod mod = mods[0];
     printf("Id:\t%i\n",mod.id);
     printf("Name:\t%s\n",mod.name);
     printf("Modfile id:\t%i\n",mod.modfile.id);
@@ -58,13 +57,12 @@ int main(void)
   context_object.modfile_id = -1;
 
   // Let's start by requesting a single mod
+  printf("Please enter the mod id: \n");
+  u32 mod_id;
+  scanf("%i", &mod_id);
 
-  ModioFilterCreator filter;
-  modioInitFilter(&filter);
-  modioSetFilterLimit(&filter,1);
-
-  printf("Getting mods...\n");
-  modioGetMods(&context_object, filter, &onModsGet);
+  printf("Getting mod...\n");
+  modioGetMod(&context_object.wait, mod_id, &onModGet);
 
   while(context_object.wait)
   {

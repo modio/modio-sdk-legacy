@@ -6,18 +6,17 @@ void onModDeleted(void* object, ModioResponse response, u32 mod_id)
   printf("Mod Delete response: %i\n", response.code);
   if(response.code == 204)
   {
-    printf("Mod deleted downloaded successfully!\n");
+    printf("Mod deleted successfully!\n");
   }
   *wait = false;
 }
 
-void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
+void onModGet(void* object, ModioResponse response, ModioMod mod)
 {
   bool* wait = object;
   printf("On mod get response: %i\n",response.code);
-  if(response.code == 200 && mods_size > 0)
+  if(response.code == 200)
   {
-    ModioMod mod = mods[0];
     printf("Id:\t%i\n",mod.id);
     printf("Name:\t%s\n",mod.name);
 
@@ -38,12 +37,12 @@ int main(void)
   bool wait = true;
 
   // Let's start by requesting a single mod
-  ModioFilterCreator filter;
-  modioInitFilter(&filter);
-  modioSetFilterLimit(&filter,1);
+  printf("Please enter the mod id: \n");
+  u32 mod_id;
+  scanf("%i", &mod_id);
 
-  printf("Getting mods...\n");
-  modioGetMods(&wait, filter, &onModsGet);
+  printf("Getting mod...\n");
+  modioGetMod(&wait, mod_id, &onModGet);
 
   while(wait)
   {

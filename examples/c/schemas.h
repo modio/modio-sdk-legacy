@@ -14,67 +14,86 @@ typedef int i32;
 #define MODIO_MODFILE_INSTALLED     1
 #define MODIO_MODFILE_INSTALLING    2
 
+typedef struct ModioListNode ModioListNode;
+typedef struct ModioAvatar ModioAvatar;
+typedef struct ModioError ModioError;
+typedef struct ModioFilehash ModioFilehash;
+typedef struct ModioHeader ModioHeader;
+typedef struct ModioIcon ModioIcon;
+typedef struct ModioImage ModioImage;
+typedef struct ModioLogo ModioLogo;
+typedef struct ModioMedia ModioMedia;
+typedef struct ModioUser ModioUser;
+typedef struct ModioModfile ModioModfile;
+typedef struct ModioRatingSummary ModioRatingSummary;
+typedef struct ModioTag ModioTag;
+typedef struct ModioMod ModioMod;
+typedef struct ModioResponse ModioResponse;
+typedef struct ModioFilterCreator ModioFilterCreator;
+typedef struct ModioModfileCreator ModioModfileCreator;
+typedef struct ModioModfileEditor ModioModfileEditor;
+typedef struct ModioModCreator ModioModCreator;
+typedef struct ModioModEditor ModioModEditor;
+
 struct ModioListNode
 {
   char* value;
-  struct ModioListNode* next;
+  ModioListNode* next;
 };
 
-typedef struct ModioListNode ModioListNode;
-
-typedef struct
+struct ModioAvatar
 {
   char* filename;
   char* original;
   char* thumb_50x50;
   char* thumb_100x100;
-}ModioAvatar;
+};
 
-typedef struct
+struct ModioError
 {
   u32 code;
   char* message;
   char** errors_array;
   u32 errors_array_size;
-}ModioError;
+};
 
-typedef struct
+struct ModioFilehash
 {
   char* md5;
-}ModioFilehash;
+};
 
-typedef struct
+struct ModioHeader
 {
   char* filename;
   char* original;
-}ModioHeader;
+};
 
-typedef struct
+struct ModioIcon
 {
   char* filename;
   char* original;
   char* thumb_64x64;
   char* thumb_128x128;
   char* thumb_256x256;
-}ModioIcon;
+};
 
-typedef struct
+struct ModioImage
 {
   char* filename;
   char* original;
   char* thumb_320x180;
-}ModioImage;
+};
 
-typedef struct
+struct ModioLogo
 {
   char* filename;
   char* original;
   char* thumb_320x180;
   char* thumb_640x360;
   char* thumb_1280x720;
-}ModioLogo;
+};
 
-typedef struct
+struct ModioMedia
 {
   char** youtube_array;
   u32 youtube_size;
@@ -82,9 +101,9 @@ typedef struct
   u32 sketchfab_size;
   ModioImage* images_array;
   u32 images_size;
-}ModioMedia;
+};
 
-typedef struct
+struct ModioUser
 {
   u32 id;
   long date_online;
@@ -94,9 +113,9 @@ typedef struct
   char* language;
   char* profile_url;
   ModioAvatar avatar;
-}ModioUser;
+};
 
-typedef struct
+struct ModioModfile
 {
   u32 id;
   u32 mod_id;
@@ -111,9 +130,9 @@ typedef struct
   char* changelog;
   char* download_url;
   ModioFilehash filehash;
-}ModioModfile;
+};
 
-typedef struct
+struct ModioRatingSummary
 {
   u32 total_ratings;
   u32 positive_ratings;
@@ -121,21 +140,23 @@ typedef struct
   u32 percentage_positive;
   double weighted_aggregate;
   char* display_text;
-}ModioRatingSummary;
+};
 
-typedef struct
+struct ModioTag
 {
   u32 date_added;
   char* name;
-}ModioTag;
+};
 
-typedef struct
+struct ModioMod
 {
   u32 id;
   u32 game_id;
+  u32 status;
+  u32 visible;
   long date_added;
-  long date_live;
   long date_updated;
+  long date_live;
   char* homepage;
   char* name;
   char* name_id;
@@ -145,23 +166,23 @@ typedef struct
   char* profile_url;
   ModioLogo logo;
   ModioUser submitted_by;
-  ModioMedia media;
   ModioModfile modfile;
+  ModioMedia media;
   ModioRatingSummary rating_summary;
   ModioTag* tags_array;
   u32 tags_array_size;
-}ModioMod;
+};
 
-typedef struct
+struct ModioResponse
 {
   u32 code;
   u32 result_count;
   u32 result_limit;
   i32 result_offset;
   ModioError error;
-}ModioResponse;
+};
 
-typedef struct
+struct ModioFilterCreator
 {
   char* sort;
   char* limit;
@@ -177,26 +198,27 @@ typedef struct
   ModioListNode* smaller_than_list;
   ModioListNode* greater_than_list;
   ModioListNode* not_equal_list;
-}ModioFilterCreator;
+};
 
-typedef struct
+struct ModioModfileCreator
 {
   char* path;
   char* version;
   char* changelog;
   char* active;
   char* filehash;
-}ModioModfileCreator;
+};
 
-typedef struct
+struct ModioModfileEditor
 {
   char* version;
   char* changelog;
   char* active;
-}ModioModfileEditor;
+};
 
-typedef struct
+struct ModioModCreator
 {
+  char* visible;
   char* logo;
   char* name;
   char* name_id;
@@ -205,10 +227,12 @@ typedef struct
   char* homepage;
   char* metadata_blob;
   ModioListNode* tags;
-}ModioModCreator;
+};
 
-typedef struct
+struct ModioModEditor
 {
+  char* visible;
+  char* status;
   char* name;
   char* name_id;
   char* summary;
@@ -216,9 +240,8 @@ typedef struct
   char* homepage;
   char* modfile;
   char* metadata_blob;
-  char* status;
   ModioListNode* tags;
-}ModioModEditor;
+};
 
 //General Methods
 void modioInit(u32 game_id, char* api_key);
@@ -242,7 +265,7 @@ void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(voi
 
 //Modfile Methods
 void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_editor, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
 void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response));
 u32 modioGetModfileState(u32 modfile_id);
 double modioGetModfileDownloadPercentage(u32 modfile_id);
@@ -251,9 +274,11 @@ u32 modioGetInstalledModfilesCount();
 u32 modioGetInstalledModfileId(u32 index);
 
 //Mods Methods
+void modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mods));
 void modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
-void modioAddMod(void* object, ModioModCreator mod_creator, void (*callback)(void* object, ModioResponse response, ModioMod mod));
-void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_editor, void (*callback)(void* object, ModioResponse response, ModioMod mod));
+void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+void modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
+void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
 void modioSetUserModVote(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response, u32 mod_id));
 void modioSubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
@@ -264,7 +289,7 @@ void modioGetTags(void* object, u32 mod_id, void (*callback)(void* object, Modio
 void modioAddTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response, u32 mod_id));
 void modioDeleteTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response, u32 mod_id));
 
-//Filter Creator Methods
+//Filter Handler Methods
 void modioInitFilter(ModioFilterCreator* filter);
 void modioSetFilterSort(ModioFilterCreator* filter, char* field, bool ascending);
 void modioSetFilterLimit(ModioFilterCreator* filter, u32 limit);
@@ -282,7 +307,7 @@ void modioAddFilterGreaterThanField(ModioFilterCreator* filter, char* field, dou
 void modioAddFilterNotEqualField(ModioFilterCreator* filter, char* field, char* value);
 void modioFreeFilter(ModioFilterCreator* filter);
 
-//Modfile Creator Methods
+//Modfile Creator Handler Methods
 void modioInitModfileCreator(ModioModfileCreator* modfile_creator);
 void modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path);
 void modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char* version);
@@ -291,15 +316,16 @@ void modioSetModfileCreatorActive(ModioModfileCreator* modfile_creator, bool act
 void modioSetModfileCreatorFilehash(ModioModfileCreator* modfile_creator, char* filehash);
 void modioFreeModfileCreator(ModioModfileCreator* modfile_creator);
 
-//Modfile Editor Methods
+//Update Modfile Handler Methods
 void modioInitModfileEditor(ModioModfileEditor* modfile_creator);
 void modioSetModfileEditorVersion(ModioModfileEditor* modfile_creator, char* version);
 void modioSetModfileEditorChangelog(ModioModfileEditor* modfile_creator, char* changelog);
 void modioSetModfileEditorActive(ModioModfileEditor* modfile_creator, bool active);
 void modioFreeModfileEditor(ModioModfileEditor* modfile_creator);
 
-//Mod Creator Methods
+//Add Mod Handler Methods
 void modioInitModCreator(ModioModCreator* mod_creator);
+void modioSetModCreatorVisible(ModioModCreator* mod_creator, u32 visible);
 void modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char* logo_path);
 void modioSetModCreatorName(ModioModCreator* mod_creator, char* name);
 void modioSetModCreatorNameid(ModioModCreator* mod_creator, char* name_id);
@@ -310,14 +336,15 @@ void modioSetModCreatorMetadataBlob(ModioModCreator* mod_creator, char* metadata
 void modioAddModCreatorTag(ModioModCreator* mod_creator, char* tag);
 void modioFreeModCreator(ModioModCreator* mod_creator);
 
-//Mod Editor Methods
-void modioInitModEditor(ModioModEditor* mod_editor);
-void modioSetModEditorName(ModioModEditor* mod_editor, char* name);
-void modioSetModEditorNameid(ModioModEditor* mod_editor, char* name_id);
-void modioSetModEditorSummary(ModioModEditor* mod_editor, char* summary);
-void modioSetModEditorDescription(ModioModEditor* mod_editor, char* description);
-void modioSetModEditorHomepage(ModioModEditor* mod_editor, char* homepage);
-void modioSetModEditorModfile(ModioModEditor* mod_editor, u32 modfile);
-void modioSetModEditorMetadataBlob(ModioModEditor* mod_editor, char* metadata_blob);
-void modioSetModEditorStatus(ModioModEditor* mod_editor, char* status);
-void modioFreeModEditor(ModioModEditor* mod_editor);
+//Update Mod Handler Methods
+void modioInitModEditor(ModioModEditor* update_mod_handler);
+void modioSetModEditorVisible(ModioModEditor* update_mod_handler, u32 visible);
+void modioSetModEditorStatus(ModioModEditor* update_mod_handler, u32 status);
+void modioSetModEditorName(ModioModEditor* update_mod_handler, char* name);
+void modioSetModEditorNameid(ModioModEditor* update_mod_handler, char* name_id);
+void modioSetModEditorSummary(ModioModEditor* update_mod_handler, char* summary);
+void modioSetModEditorDescription(ModioModEditor* update_mod_handler, char* description);
+void modioSetModEditorHomepage(ModioModEditor* update_mod_handler, char* homepage);
+void modioSetModEditorModfile(ModioModEditor* update_mod_handler, u32 modfile);
+void modioSetModEditorMetadataBlob(ModioModEditor* update_mod_handler, char* metadata_blob);
+void modioFreeModEditor(ModioModEditor* update_mod_handler);

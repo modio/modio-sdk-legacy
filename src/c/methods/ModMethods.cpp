@@ -2,6 +2,12 @@
 
 extern "C"
 {
+  struct GetModParams
+  {
+    void* object;
+    void (*callback)(void* object, ModioResponse response, ModioMod mod);
+  };
+
   struct GetModsParams
   {
     void* object;
@@ -28,10 +34,24 @@ extern "C"
     void (*callback)(void* object, ModioResponse response, u32 mod_id);
   };
 
+  std::map< u32,GetModParams* > get_mod_callbacks;
   std::map< u32,AddModParams* > add_mod_callback;
   std::map< u32,DeleteModParams* > delete_mod_callbacks;
   std::map< u32,GetModsParams* > get_mods_callbacks;
   std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
+
+  void modioOnGetMod(u32 call_number, u32 response_code, json response_json)
+  {
+    ModioResponse response;
+    modioInitResponse(&response, response_json);
+    response.code = response_code;
+
+    ModioMod mod;
+    modioInitMod(&mod, response_json);
+
+    get_mod_callbacks[call_number]->callback(get_mod_callbacks[call_number]->object, response, mod);
+    get_mod_callbacks.erase(call_number);
+  }
 
   void modioOnGetMods(u32 call_number, u32 response_code, json response_json)
   {
@@ -89,6 +109,22 @@ extern "C"
     return_id_callbacks.erase(call_number);
   }
 
+  void modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mods))
+  {
+    std::vector<std::string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
+
+    u32 call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    get_mod_callbacks[call_number] = new GetModParams;
+    get_mod_callbacks[call_number]->callback = callback;
+    get_mod_callbacks[call_number]->object = object;
+
+    modio::curlwrapper::get(call_number, url, headers, &modioOnGetMod);
+  }
+
   void modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
@@ -106,7 +142,7 @@ extern "C"
     modio::curlwrapper::get(call_number, url, headers, &modioOnGetMods);
   }
 
-  void modioUserGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
+  void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
     std::vector<std::string> headers;

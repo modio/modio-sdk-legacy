@@ -20,19 +20,17 @@ int main(void)
     finished = true;
   };
 
-  // Let's start by requesting a single mod
+  u32 mod_id;
+  std::cout << "Enter the mod id: " << std::endl;
+  std::cin >> mod_id;
 
-  modio::FilterCreator filter;
-  filter.setLimit(1);
+  std::cout <<"Getting mod..." << std::endl;
 
-  std::cout <<"Getting mods..." << std::endl;
-
-  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+  modio_instance.getMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200 && mods.size() >= 1)
+    if(response.code == 200)
     {
-      modio::Mod mod = mods[0];
       std::cout << "Requested mod: " << mod.name << std::endl;
 
       std::cout << "Downloading image" << std::endl;

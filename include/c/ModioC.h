@@ -3,7 +3,26 @@
 
 extern "C"
 {
-  struct ModioListNode;
+  typedef struct ModioListNode ModioListNode;
+  typedef struct ModioAvatar ModioAvatar;
+  typedef struct ModioError ModioError;
+  typedef struct ModioFilehash ModioFilehash;
+  typedef struct ModioHeader ModioHeader;
+  typedef struct ModioIcon ModioIcon;
+  typedef struct ModioImage ModioImage;
+  typedef struct ModioLogo ModioLogo;
+  typedef struct ModioMedia ModioMedia;
+  typedef struct ModioUser ModioUser;
+  typedef struct ModioModfile ModioModfile;
+  typedef struct ModioRatingSummary ModioRatingSummary;
+  typedef struct ModioTag ModioTag;
+  typedef struct ModioMod ModioMod;
+  typedef struct ModioResponse ModioResponse;
+  typedef struct ModioFilterCreator ModioFilterCreator;
+  typedef struct ModioModfileCreator ModioModfileCreator;
+  typedef struct ModioModfileEditor ModioModfileEditor;
+  typedef struct ModioModCreator ModioModCreator;
+  typedef struct ModioModEditor ModioModEditor;
 
   struct ModioListNode
   {
@@ -11,59 +30,59 @@ extern "C"
     ModioListNode* next;
   };
 
-  typedef struct
+  struct ModioAvatar
   {
     char* filename;
     char* original;
     char* thumb_50x50;
     char* thumb_100x100;
-  }ModioAvatar;
+  };
 
-  typedef struct
+  struct ModioError
   {
     u32 code;
     char* message;
     char** errors_array;
     u32 errors_array_size;
-  }ModioError;
+  };
 
-  typedef struct
+  struct ModioFilehash
   {
     char* md5;
-  }ModioFilehash;
+  };
 
-  typedef struct
+  struct ModioHeader
   {
     char* filename;
     char* original;
-  }ModioHeader;
+  };
 
-  typedef struct
+  struct ModioIcon
   {
     char* filename;
     char* original;
     char* thumb_64x64;
     char* thumb_128x128;
     char* thumb_256x256;
-  }ModioIcon;
+  };
 
-  typedef struct
+  struct ModioImage
   {
     char* filename;
     char* original;
     char* thumb_320x180;
-  }ModioImage;
+  };
 
-  typedef struct
+  struct ModioLogo
   {
     char* filename;
     char* original;
     char* thumb_320x180;
     char* thumb_640x360;
     char* thumb_1280x720;
-  }ModioLogo;
+  };
 
-  typedef struct
+  struct ModioMedia
   {
     char** youtube_array;
     u32 youtube_size;
@@ -71,9 +90,9 @@ extern "C"
     u32 sketchfab_size;
     ModioImage* images_array;
     u32 images_size;
-  }ModioMedia;
+  };
 
-  typedef struct
+  struct ModioUser
   {
     u32 id;
     long date_online;
@@ -83,9 +102,9 @@ extern "C"
     char* language;
     char* profile_url;
     ModioAvatar avatar;
-  }ModioUser;
+  };
 
-  typedef struct
+  struct ModioModfile
   {
     u32 id;
     u32 mod_id;
@@ -100,9 +119,9 @@ extern "C"
     char* changelog;
     char* download_url;
     ModioFilehash filehash;
-  }ModioModfile;
+  };
 
-  typedef struct
+  struct ModioRatingSummary
   {
     u32 total_ratings;
     u32 positive_ratings;
@@ -110,15 +129,15 @@ extern "C"
     u32 percentage_positive;
     double weighted_aggregate;
     char* display_text;
-  }ModioRatingSummary;
+  };
 
-  typedef struct
+  struct ModioTag
   {
     u32 date_added;
     char* name;
-  }ModioTag;
+  };
 
-  typedef struct
+  struct ModioMod
   {
     u32 id;
     u32 game_id;
@@ -141,18 +160,18 @@ extern "C"
     ModioRatingSummary rating_summary;
     ModioTag* tags_array;
     u32 tags_array_size;
-  }ModioMod;
+  };
 
-  typedef struct
+  struct ModioResponse
   {
     u32 code;
     u32 result_count;
     u32 result_limit;
     i32 result_offset;
     ModioError error;
-  }ModioResponse;
+  };
 
-  typedef struct
+  struct ModioFilterCreator
   {
     char* sort;
     char* limit;
@@ -168,25 +187,25 @@ extern "C"
     ModioListNode* smaller_than_list;
     ModioListNode* greater_than_list;
     ModioListNode* not_equal_list;
-  }ModioFilterCreator;
+  };
 
-  typedef struct
+  struct ModioModfileCreator
   {
     char* path;
     char* version;
     char* changelog;
     char* active;
     char* filehash;
-  }ModioModfileCreator;
+  };
 
-  typedef struct
+  struct ModioModfileEditor
   {
     char* version;
     char* changelog;
     char* active;
-  }ModioModfileEditor;
+  };
 
-  typedef struct
+  struct ModioModCreator
   {
     char* visible;
     char* logo;
@@ -197,9 +216,9 @@ extern "C"
     char* homepage;
     char* metadata_blob;
     ModioListNode* tags;
-  }ModioModCreator;
+  };
 
-  typedef struct
+  struct ModioModEditor
   {
     char* visible;
     char* status;
@@ -211,7 +230,7 @@ extern "C"
     char* modfile;
     char* metadata_blob;
     ModioListNode* tags;
-  }ModioModEditor;
+  };
 
   //General Methods
   void MODIO_DLL modioInit(u32 game_id, char* api_key);
@@ -244,8 +263,9 @@ extern "C"
   u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
 
   //Mods Methods
+  void MODIO_DLL modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mods));
   void MODIO_DLL modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
-  void MODIO_DLL modioUserGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+  void MODIO_DLL modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
