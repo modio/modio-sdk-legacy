@@ -1,14 +1,6 @@
 #ifndef MODIO_UTILITY_H
 #define MODIO_UTILITY_H
 
-#include <iostream>
-#include <vector>
-#include <string.h>
-#include <fstream>
-
-#include "dependencies/json/json.hpp"
-#include "Globals.h"
-
 #ifdef __linux__
 #define LINUX
 #endif
@@ -37,6 +29,15 @@
 #  define MODIO_DLL
 #endif
 
+#include <iostream>
+#include <vector>
+#include <string.h>
+#include <fstream>
+
+#include "c/ModioC.h"
+#include "dependencies/json/json.hpp"
+#include "Globals.h"
+
 #ifdef LINUX
 #include <sys/stat.h>
 #include <dirent.h>
@@ -54,15 +55,6 @@
 #endif
 
 using json = nlohmann::json;
-
-// NOTE(@jackson): Debug "Severity"? (Steamworks uses "spew level")
-#define MODIO_DEBUGLEVEL_LOG      2
-#define MODIO_DEBUGLEVEL_WARNING  1
-#define MODIO_DEBUGLEVEL_ERROR    0
-
-#define MODIO_MODFILE_NOT_INSTALLED 0
-#define MODIO_MODFILE_INSTALLED     1
-#define MODIO_MODFILE_INSTALLING    2
 
 #ifndef PATH_MAX
 #define PATH_MAX 260

@@ -40,8 +40,8 @@ src/modio.lib
 src/modio.exp
 src/modio.a
 
-!examples/extern_c/mods_dir/readme.txt
-!examples/instance/mods_dir/readme.txt
+!examples/c/mods_dir/readme.txt
+!examples/c++/mods_dir/readme.txt
 
 examples/*/.modio/
 examples/*/mods_dir/*
