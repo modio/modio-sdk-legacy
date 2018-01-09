@@ -59,8 +59,6 @@ extern "C"
         delete[] icon->thumb_128x128;
       if(icon->thumb_256x256)
         delete[] icon->thumb_256x256;
-      
-      delete icon;
     }
   }
 }

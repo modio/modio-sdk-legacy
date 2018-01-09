@@ -53,8 +53,6 @@ extern "C"
           delete[] error->errors_array[i];
         }
       }
-
-      delete error;
     }
   }
 }

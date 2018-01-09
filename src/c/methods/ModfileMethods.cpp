@@ -77,6 +77,8 @@ extern "C"
     add_modfile_callbacks[call_number]->callback(add_modfile_callbacks[call_number]->object, response, modfile);
     delete add_modfile_callbacks[call_number];
     add_modfile_callbacks.erase(call_number);
+    modioFreeResponse(&response);
+    modioFreeModfile(&modfile);
   }
 
   void modioOnModfileEdited(u32 call_number, u32 response_code, json response_json)
@@ -91,6 +93,8 @@ extern "C"
     edit_modfile_callbacks[call_number]->callback(edit_modfile_callbacks[call_number]->object, response, modfile);
     delete edit_modfile_callbacks[call_number];
     edit_modfile_callbacks.erase(call_number);
+    modioFreeResponse(&response);
+    modioFreeModfile(&modfile);
   }
 
   void modioOnModfileDownloaded(u32 call_number, u32 response_code, json response_json)
@@ -114,6 +118,7 @@ extern "C"
     install_modfile_callbacks[call_number]->callback(install_modfile_callbacks[call_number]->object, response);
     delete install_modfile_callbacks[call_number];
     install_modfile_callbacks.erase(call_number);
+    modioFreeResponse(&response);
   }
 
   void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))

@@ -59,8 +59,6 @@ extern "C"
         delete[] logo->thumb_640x360;
       if(logo->thumb_1280x720)
         delete[] logo->thumb_1280x720;
-
-      delete logo;
     }
   }
 }

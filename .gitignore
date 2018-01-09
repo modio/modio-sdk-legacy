@@ -40,9 +40,6 @@ src/modio.lib
 src/modio.exp
 src/modio.a
 
-!examples/c/mods_dir/readme.txt
-!examples/c++/mods_dir/readme.txt
-
 examples/*/.modio/
 examples/*/mods_dir/*
 examples/*/modio.dll
@@ -64,3 +61,6 @@ examples/*/11_DeleteMod
 examples/*/12_GetTags
 examples/*/13_AddTags
 examples/*/14_DeleteTags
+
+!examples/c/mods_dir/readme.txt
+!examples/c++/mods_dir/readme.txt

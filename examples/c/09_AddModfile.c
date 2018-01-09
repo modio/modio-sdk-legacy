@@ -40,7 +40,7 @@ int main(void)
   modioSetModfileCreatorChangelog(&modfile_creator, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
   modioSetModfileCreatorActive(&modfile_creator, true);
 
-  modioAddModfile(wait, mod_id, modfile_creator, &onModfileAdded);
+  modioAddModfile(&wait, mod_id, modfile_creator, &onModfileAdded);
 
   modioFreeModfileCreator(&modfile_creator);
   while(wait)

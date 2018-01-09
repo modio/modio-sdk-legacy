@@ -14,7 +14,7 @@ extern "C"
     {
       ModioListNode* next = node->next;
       if(node->value)
-        delete node->value;
+        delete[] node->value;
       delete node;
 
       modioFreeNodeList(next);

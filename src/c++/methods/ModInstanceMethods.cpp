@@ -83,6 +83,12 @@ namespace modio
     response.initialize(modio_response);
 
     modio::Mod modio_mod;
+
+    if(modio_response.code == 201)
+    {
+      modio_mod.initialize(mod);
+    }
+
     add_mod_calls[call_id]->callback((const Response&)response, modio_mod);
 
     delete (u32*)object;

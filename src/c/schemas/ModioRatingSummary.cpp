@@ -39,7 +39,6 @@ extern "C"
     {
       if(ratings->display_text)
         delete[] ratings->display_text;
-      delete ratings;
     }
   }
 }

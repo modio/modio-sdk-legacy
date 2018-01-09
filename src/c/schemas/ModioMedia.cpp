@@ -64,8 +64,6 @@ extern "C"
       {
         modioFreeImage(&(media->images_array[i]));
       }
-
-      delete media;
     }
   }
 }

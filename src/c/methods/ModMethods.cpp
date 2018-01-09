@@ -52,6 +52,9 @@ extern "C"
     get_mod_callbacks[call_number]->callback(get_mod_callbacks[call_number]->object, response, mod);
     delete get_mod_callbacks[call_number];
     get_mod_callbacks.erase(call_number);
+
+    modioFreeResponse(&response);
+    modioFreeMod(&mod);
   }
 
   void modioOnGetMods(u32 call_number, u32 response_code, json response_json)
@@ -69,6 +72,10 @@ extern "C"
         modioInitMod(&mods[i], response_json["data"][i]);
       }
       get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, mods, mods_size);
+      for(u32 i=0; i<mods_size; i++)
+      {
+        modioFreeMod(&mods[i]);
+      }
       delete[] mods;
     }else
     {
@@ -76,6 +83,7 @@ extern "C"
     }
     delete get_mods_callbacks[call_number];
     get_mods_callbacks.erase(call_number);
+    modioFreeResponse(&response);
   }
 
   void modioOnModAdded(u32 call_number, u32 response_code, json response_json)

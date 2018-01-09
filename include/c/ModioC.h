@@ -248,7 +248,6 @@ extern "C"
     char* homepage;
     char* modfile;
     char* metadata_blob;
-    ModioListNode* tags;
   };
 
   //General Methods

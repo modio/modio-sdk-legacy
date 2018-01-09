@@ -39,8 +39,6 @@ extern "C"
         delete[] image->original;
       if(image->thumb_320x180)
         delete[] image->thumb_320x180;
-      
-      delete image;
     }
   }
 }

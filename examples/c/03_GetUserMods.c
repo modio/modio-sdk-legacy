@@ -30,6 +30,11 @@ int main(void)
 
   bool wait = true;
 
+  // Before requesting mods, let's define the query filters
+  ModioFilterCreator filter;
+  modioInitFilter(&filter);
+  modioSetFilterLimit(&filter,3);
+
   // Mods created by the current user can be retreived using the modioGetUserMods function
   // This function will return mods even if they are still not acceped or visible
   printf("Getting mods...\n");

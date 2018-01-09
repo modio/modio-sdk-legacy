@@ -23,7 +23,6 @@ extern "C"
     {
       if(tag->name)
         delete[] tag->name;
-      delete tag;
     }
   }
 }

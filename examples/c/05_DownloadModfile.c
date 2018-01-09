@@ -22,6 +22,12 @@ void onModGet(void* object, ModioResponse response, ModioMod mod)
   ContextObject* context_object = object;
   bool* wait = &(context_object->wait);
   printf("On mod get response: %i\n",response.code);
+  if(mod.modfile.id == 0)
+  {
+    printf("Please select a mod containing a modfile\n");
+    *wait = false;
+    return;
+  }
   if(response.code == 200)
   {
     printf("Id:\t%i\n",mod.id);

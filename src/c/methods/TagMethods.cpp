@@ -48,7 +48,6 @@ extern "C"
           {
             modioInitTag(&(tags_array[i]), response_json["data"][i]);
           }
-          delete[] tags_array;
         }
       }catch(json::parse_error &e)
       {
@@ -56,6 +55,12 @@ extern "C"
       }
     }
     get_tags_callbacks[call_number]->callback(get_tags_callbacks[call_number]->object, response, get_tags_callbacks[call_number]->mod_id, tags_array, tags_array_size);
+    for(u32 i=0; i<tags_array_size; i++)
+    {
+      modioFreeTag(&(tags_array[i]));
+    }
+    if(tags_array)
+      delete[] tags_array;
     delete get_tags_callbacks[call_number];
     get_tags_callbacks.erase(call_number);
   }

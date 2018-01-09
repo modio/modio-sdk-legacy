@@ -92,7 +92,8 @@ extern "C"
         delete[] modfile->changelog;
       if(modfile->download_url)
         delete[] modfile->download_url;
-      delete modfile;
+
+      modioFreeFilehash(&(modfile->filehash));
     }
   }
 }

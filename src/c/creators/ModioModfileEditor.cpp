@@ -43,13 +43,13 @@ extern "C"
   void modioFreeModfileEditor(ModioModfileEditor* modfile_editor)
   {
     if(modfile_editor->version)
-      delete modfile_editor->version;
+      delete[] modfile_editor->version;
 
     if(modfile_editor->changelog)
-      delete modfile_editor->changelog;
+      delete[] modfile_editor->changelog;
 
     if(modfile_editor->active)
-      delete modfile_editor->active;
+      delete[] modfile_editor->active;
   }
 }
 

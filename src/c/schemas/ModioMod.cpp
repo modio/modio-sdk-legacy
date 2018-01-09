@@ -130,9 +130,6 @@ extern "C"
   {
     if(mod)
     {
-      for(u32 i=0;i<mod->tags_array_size; i++)
-      modioFreeTag(&(mod->tags_array[i]));
-
       if(mod->homepage)
         delete mod->homepage;
       if(mod->name)
@@ -147,10 +144,19 @@ extern "C"
         delete[] mod->metadata_blob;
       if(mod->profile_url)
         delete[] mod->profile_url;
+
+      modioFreeLogo(&(mod->logo));
+      modioFreeUser(&(mod->submitted_by));
+      modioFreeModfile(&(mod->modfile));
+      modioFreeMedia(&(mod->media));
+      modioFreeRatingSummary(&(mod->rating_summary));
+
+      for(u32 i=0; i<mod->tags_array_size; i++)
+      {
+        modioFreeTag(&(mod->tags_array[i]));
+      }
       if(mod->tags_array)
         delete[] mod->tags_array;
-
-      delete mod;
     }
   }
 }
