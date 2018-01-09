@@ -30,6 +30,7 @@ extern "C"
     download_image_callbacks[call_number]->callback(download_image_callbacks[call_number]->object, response);
     delete download_image_callbacks[call_number];
     download_image_callbacks.erase(call_number);
+    modioFreeResponse(&response);
   }
 
   void modioOnModLogoEdited(u32 call_number, u32 response_code, json response_json)
@@ -41,6 +42,7 @@ extern "C"
     edit_mod_logo_callbacks[call_number]->callback(edit_mod_logo_callbacks[call_number]->object, response, edit_mod_logo_callbacks[call_number]->mod_id);
     delete edit_mod_logo_callbacks[call_number];
     edit_mod_logo_callbacks.erase(call_number);
+    modioFreeResponse(&response);
   }
 
   void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse modioresponse))

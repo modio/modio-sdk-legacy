@@ -26,6 +26,7 @@ extern "C"
     email_request_params[call_number]->callback(email_request_params[call_number]->object, response);
     delete email_request_params[call_number];
     email_request_params.erase(call_number);
+    modioFreeResponse(&response);
   }
 
   void modioOnEmailExchanged(u32 call_number, u32 response_code, json response_json)
@@ -45,6 +46,7 @@ extern "C"
     email_exchange_params[call_number]->callback(email_exchange_params[call_number]->object, response);
     delete email_exchange_params[call_number];
     email_exchange_params.erase(call_number);
+    modioFreeResponse(&response);
   }
 
   void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response))

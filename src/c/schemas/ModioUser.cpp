@@ -76,7 +76,8 @@ extern "C"
         delete[] user->language;
       if(user->profile_url)
         delete[] user->profile_url;
-      delete user;
+
+      modioFreeAvatar(&(user->avatar));
     }
   }
 }

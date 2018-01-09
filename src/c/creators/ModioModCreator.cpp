@@ -126,8 +126,9 @@ extern "C"
       delete[] mod_creator->metadata_blob;
     if(mod_creator->name_id)
       delete[] mod_creator->name_id;
+
     if(mod_creator->tags)
-      delete[] mod_creator->tags;
+      modioFreeNodeList(mod_creator->tags);
   }
 }
 

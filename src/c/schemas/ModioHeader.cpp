@@ -29,8 +29,6 @@ extern "C"
         delete[] header->filename;
       if(header->original)
         delete[] header->original;
-
-      delete header;
     }
   }
 }

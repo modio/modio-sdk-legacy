@@ -41,6 +41,8 @@ int main(void)
     if(response.code == 201)
     {
       std::cout << "Mod created successfully" << std::endl;
+      std::cout << "Mod id:" << mod.id << std::endl;
+      std::cout << "Mod name:" << mod.name << std::endl;
     }
     finish();
   });

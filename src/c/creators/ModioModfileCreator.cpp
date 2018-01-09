@@ -63,19 +63,19 @@ extern "C"
   void modioFreeModfileCreator(ModioModfileCreator* modfile_creator)
   {
     if(modfile_creator->path)
-      delete modfile_creator->path;
+      delete[] modfile_creator->path;
 
     if(modfile_creator->version)
-      delete modfile_creator->version;
+      delete[] modfile_creator->version;
 
     if(modfile_creator->changelog)
-      delete modfile_creator->changelog;
+      delete[] modfile_creator->changelog;
 
     if(modfile_creator->active)
-      delete modfile_creator->active;
+      delete[] modfile_creator->active;
 
     if(modfile_creator->filehash)
-      delete modfile_creator->filehash;
+      delete[] modfile_creator->filehash;
   }
 }
 

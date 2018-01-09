@@ -31,7 +31,7 @@ int main(void)
   modioSetModEditorDescription(&mod_editor, (char*)"This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   modioSetModEditorMetadataBlob(&mod_editor, (char*)"Optional updated metadata");
 
-  modioEditMod(wait, mod_id, mod_editor, &onModEdited);
+  modioEditMod(&wait, mod_id, mod_editor, &onModEdited);
 
   modioFreeModEditor(&mod_editor);
 

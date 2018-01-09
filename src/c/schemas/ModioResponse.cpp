@@ -37,7 +37,6 @@ extern "C"
     if(response)
     {
       modioFreeError(&(response->error));
-      delete response;
     }
   }
 }

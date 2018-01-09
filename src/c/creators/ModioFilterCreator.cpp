@@ -203,6 +203,8 @@ extern "C"
     if(filter->full_text_search)
       delete[] filter->full_text_search;
 
+    if(filter->field_value_list)
+      modioFreeNodeList(filter->field_value_list);
     if(filter->like_list)
       modioFreeNodeList(filter->like_list);
     if(filter->not_like_list)

@@ -117,8 +117,6 @@ extern "C"
       delete[] mod_editor->modfile;
     if(mod_editor->metadata_blob)
       delete[] mod_editor->metadata_blob;
-
-    modioFreeNodeList(mod_editor->tags);
   }
 }
 

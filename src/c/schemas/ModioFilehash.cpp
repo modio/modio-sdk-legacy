@@ -19,7 +19,6 @@ extern "C"
     {
       if(filehash->md5)
         delete[] filehash->md5;
-      delete filehash;
     }
   }
 }
