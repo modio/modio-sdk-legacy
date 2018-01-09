@@ -1,4 +1,4 @@
-#include "schemas.h"
+#include "modio_c.h"
 
 void onImageDownloaded(void* object, ModioResponse response)
 {

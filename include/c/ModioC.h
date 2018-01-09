@@ -1,5 +1,24 @@
-#ifndef MODIO_STRUCTS_H
-#define MODIO_STRUCTS_H
+#ifndef MODIO_MODIO_C_H
+#define MODIO_MODIO_C_H
+
+typedef unsigned int u32;
+typedef int i32;
+
+#define MODIO_DEBUGLEVEL_LOG      2
+#define MODIO_DEBUGLEVEL_WARNING  1
+#define MODIO_DEBUGLEVEL_ERROR    0
+
+#define MODIO_MODFILE_NOT_INSTALLED 0
+#define MODIO_MODFILE_INSTALLED     1
+#define MODIO_MODFILE_INSTALLING    2
+
+#define MODIO_NOT_ACCEPTED 0
+#define MODIO_ACCEPTED     1
+#define MODIO_ARCHIVED     2
+#define MODIO_DELETED      3
+
+#define MODIO_HIDDEN 0
+#define MODIO_PUBLIC 1
 
 extern "C"
 {
@@ -263,7 +282,7 @@ extern "C"
   u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
 
   //Mods Methods
-  void MODIO_DLL modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mods));
+  void MODIO_DLL modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
@@ -296,7 +315,7 @@ extern "C"
   void MODIO_DLL modioAddFilterNotEqualField(ModioFilterCreator* filter, char* field, char* value);
   void MODIO_DLL modioFreeFilter(ModioFilterCreator* filter);
 
-  //Modfile Creator Handler Methods
+  //Modfile Creator Methods
   void MODIO_DLL modioInitModfileCreator(ModioModfileCreator* modfile_creator);
   void MODIO_DLL modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path);
   void MODIO_DLL modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char* version);
@@ -305,14 +324,14 @@ extern "C"
   void MODIO_DLL modioSetModfileCreatorFilehash(ModioModfileCreator* modfile_creator, char* filehash);
   void MODIO_DLL modioFreeModfileCreator(ModioModfileCreator* modfile_creator);
 
-  //Update Modfile Handler Methods
+  //Modfile Editor Methods
   void MODIO_DLL modioInitModfileEditor(ModioModfileEditor* modfile_creator);
   void MODIO_DLL modioSetModfileEditorVersion(ModioModfileEditor* modfile_creator, char* version);
   void MODIO_DLL modioSetModfileEditorChangelog(ModioModfileEditor* modfile_creator, char* changelog);
   void MODIO_DLL modioSetModfileEditorActive(ModioModfileEditor* modfile_creator, bool active);
   void MODIO_DLL modioFreeModfileEditor(ModioModfileEditor* modfile_creator);
 
-  //Add Mod Handler Methods
+  //Mod Creator Methods
   void MODIO_DLL modioInitModCreator(ModioModCreator* mod_creator);
   void MODIO_DLL modioSetModCreatorVisible(ModioModCreator* mod_creator, u32 visible);
   void MODIO_DLL modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char* logo_path);
@@ -325,7 +344,7 @@ extern "C"
   void MODIO_DLL modioAddModCreatorTag(ModioModCreator* mod_creator, char* tag);
   void MODIO_DLL modioFreeModCreator(ModioModCreator* mod_creator);
 
-  //Update Mod Handler Methods
+  //Mod Editor Methods
   void MODIO_DLL modioInitModEditor(ModioModEditor* update_mod_handler);
   void MODIO_DLL modioSetModEditorVisible(ModioModEditor* update_mod_handler, u32 visible);
   void MODIO_DLL modioSetModEditorStatus(ModioModEditor* update_mod_handler, u32 status);

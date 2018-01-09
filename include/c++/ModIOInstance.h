@@ -1,7 +1,7 @@
 #ifndef MODIO_INSTANCE_H
 #define MODIO_INSTANCE_H
 
-#include "ModIOSDK.h"
+#include "modio.h"
 #include "c++/creators/FilterCreator.h"
 #include "c++/creators/ModCreator.h"
 #include "c++/creators/ModEditor.h"
@@ -33,6 +33,7 @@ namespace modio
     //Authentication Methods
     bool isLoggedIn() const;
     void logout() const;
+    void setDebugLevel(u32 debug_level);
     void emailRequest(const std::string& email, const std::function<void(const modio::Response&)>& callback);
     void emailExchange(const std::string& security_code, const std::function<void(const modio::Response&)>& callback);
 

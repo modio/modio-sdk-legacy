@@ -8,6 +8,11 @@ namespace modio
     modioInit(id, (char*)guid.c_str());
   }
 
+  void Instance::setDebugLevel(u32 debug_level)
+  {
+    modioSetDebugLevel(debug_level);
+  }
+
   void Instance::sleep(u32 milliseconds)
   {
     modioSleep(milliseconds);

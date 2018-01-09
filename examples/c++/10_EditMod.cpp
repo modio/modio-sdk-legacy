@@ -1,4 +1,4 @@
-#include "c++/ModIOInstance.h"
+#include "modio.h"
 
 int main(void)
 {
@@ -31,7 +31,7 @@ int main(void)
   mod_editor.setSummary("Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
   mod_editor.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   mod_editor.setMetadataBlob("Optional updated metadata");
-  mod_editor.setVisible(1);
+  mod_editor.setVisible(MODIO_PUBLIC);
 
   std::cout <<"Editing mod..." << std::endl;
 

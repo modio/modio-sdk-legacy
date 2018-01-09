@@ -1,4 +1,4 @@
-#include "schemas.h"
+#include "modio_c.h"
 
 void onModfileEdited(void* object, ModioResponse response, ModioModfile modfile)
 {

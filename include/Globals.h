@@ -1,9 +1,6 @@
 #ifndef MODIO_GLOBALS_H
 #define MODIO_GLOBALS_H
 
-typedef unsigned int u32;
-typedef int i32;
-
 #include <iostream>
 
 #include "Utility.h"

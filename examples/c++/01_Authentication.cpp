@@ -1,4 +1,4 @@
-#include "c++/ModIOInstance.h"
+#include "modio.h"
 
 int main()
 {

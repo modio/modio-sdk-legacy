@@ -1,4 +1,4 @@
-#include "c++/ModIOInstance.h"
+#include "modio.h"
 
 int main(void)
 {
@@ -30,7 +30,7 @@ int main(void)
   mod_creator.addTag("Medium");
   mod_creator.setDescription("This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
   mod_creator.setMetadataBlob("Optional metadata");
-  mod_creator.setVisible(1);
+  mod_creator.setVisible(MODIO_PUBLIC);
 
   std::cout <<"Creating mod..." << std::endl;
 

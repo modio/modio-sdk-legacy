@@ -1,4 +1,4 @@
-#include "ModIOSDK.h"
+#include "modio.h"
 
 void modioInit(u32 game_id, char* api_key)
 {

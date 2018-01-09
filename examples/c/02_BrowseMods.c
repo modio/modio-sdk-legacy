@@ -1,4 +1,4 @@
-#include "schemas.h"
+#include "modio_c.h"
 
 void onModsGet(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)
 {

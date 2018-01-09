@@ -1,8 +1,6 @@
 #ifndef MODIO_SDK_H
 #define MODIO_SDK_H
 
-//#pragma warning(disable : 4503)
-
 #include "Utility.h"
 #include "Globals.h"
 #include "wrappers/CurlWrapper.h"
@@ -15,6 +13,5 @@
 #include "c/methods/TagMethods.h"
 #include "c/methods/ImageMethods.h"
 #include "c++/ModIOInstance.h"
-
 
 #endif

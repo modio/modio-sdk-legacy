@@ -1,4 +1,4 @@
-#include "schemas.h"
+#include "modio_c.h"
 
 void onGetTags(void* object, ModioResponse response, u32 mod_id, ModioTag* tags_array, u32 tags_array_size)
 {

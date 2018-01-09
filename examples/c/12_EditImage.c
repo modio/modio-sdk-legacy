@@ -1,4 +1,4 @@
-#include "schemas.h"
+#include "modio_c.h"
 
 void onModLogoEdited(void* object, ModioResponse response, u32 mod_id)
 {

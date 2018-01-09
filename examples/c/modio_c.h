@@ -14,6 +14,14 @@ typedef int i32;
 #define MODIO_MODFILE_INSTALLED     1
 #define MODIO_MODFILE_INSTALLING    2
 
+#define MODIO_NOT_ACCEPTED 0
+#define MODIO_ACCEPTED     1
+#define MODIO_ARCHIVED     2
+#define MODIO_DELETED      3
+
+#define MODIO_HIDDEN 0
+#define MODIO_PUBLIC 1
+
 typedef struct ModioListNode ModioListNode;
 typedef struct ModioAvatar ModioAvatar;
 typedef struct ModioError ModioError;
@@ -274,7 +282,7 @@ u32 modioGetInstalledModfilesCount();
 u32 modioGetInstalledModfileId(u32 index);
 
 //Mods Methods
-void modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mods));
+void modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
 void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
 void modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
