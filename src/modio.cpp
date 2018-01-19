@@ -25,7 +25,7 @@ void modioInit(u32 game_id, char* api_key)
   modio::updateModfilesJson();
 
   modio::createDirectory(modio::getModIODirectory());
-  modio::createDirectory(modio::getModIODirectory() + "images/");
+  modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }

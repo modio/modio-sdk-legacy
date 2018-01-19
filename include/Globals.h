@@ -21,6 +21,7 @@ namespace modio
   extern unsigned int DEBUG_LEVEL;
   extern std::string MODIO_URL;
   extern std::string MODIO_VERSION_PATH;
+  extern u32 MAX_CALL_CACHE;
 }
 
 #endif

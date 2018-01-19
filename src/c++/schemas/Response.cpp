@@ -8,6 +8,7 @@ namespace modio
     this->result_count = modio_response.result_count;
     this->result_limit = modio_response.result_limit;
     this->result_offset = modio_response.result_offset;
+    this->result_cached = modio_response.result_cached;
     this->error.initialize(modio_response.error);
   }
 }

@@ -77,6 +77,8 @@ namespace modio
   bool checkIfModIsStillInstalled(std::string path, u32 modfile_id);
   void updateModfilesJson();
   std::string getModfilePath(u32 modfile_id);
+  json openJson(std::string file_path);
+  void writeJson(std::string file_path, json json_object);
 }
 
 #endif

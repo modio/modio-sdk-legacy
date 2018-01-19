@@ -14,6 +14,7 @@ namespace modio
     void setLimit(u32 limit);
     void setOffset(u32 offset);
     void setFullTextSearch(const std::string& text);
+    void setCacheMaxAgeSeconds(u32 max_age_seconds);
     void addFieldValue(const std::string& field, const std::string& value);
     void addLikeField(const std::string& field, const std::string& value);
     void addNotLikeField(const std::string& field, const std::string& value);

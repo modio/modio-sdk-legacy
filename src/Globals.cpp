@@ -9,4 +9,5 @@ namespace modio
   unsigned int DEBUG_LEVEL = MODIO_DEBUGLEVEL_ERROR;
   std::string MODIO_URL = "https://api.mod.io/";
   std::string MODIO_VERSION_PATH = "v1/";
+  u32 MAX_CALL_CACHE = 10;
 }

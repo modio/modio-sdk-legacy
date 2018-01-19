@@ -28,6 +28,11 @@ namespace modio
     modioSetFilterFullTextSearch(this->filter, (char*)text.c_str());
   }
 
+  void FilterCreator::setCacheMaxAgeSeconds(u32 max_age_seconds)
+  {
+    modioSetFilterCacheMaxAgeSeconds(this->filter, max_age_seconds);
+  }
+
   void FilterCreator::addFieldValue(const std::string& field, const std::string& value)
   {
     modioAddFilterFieldValue(this->filter, (char*)field.c_str(), (char*)value.c_str());

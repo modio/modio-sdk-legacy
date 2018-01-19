@@ -187,6 +187,7 @@ extern "C"
     u32 result_count;
     u32 result_limit;
     i32 result_offset;
+    bool result_cached;
     ModioError error;
   };
 
@@ -196,6 +197,7 @@ extern "C"
     char* limit;
     char* offset;
     char* full_text_search;
+    u32 cache_max_age_seconds;
     ModioListNode* field_value_list;
     ModioListNode* like_list;
     ModioListNode* not_like_list;
@@ -302,6 +304,7 @@ extern "C"
   void MODIO_DLL modioSetFilterLimit(ModioFilterCreator* filter, u32 limit);
   void MODIO_DLL modioSetFilterOffset(ModioFilterCreator* filter, u32 offset);
   void MODIO_DLL modioSetFilterFullTextSearch(ModioFilterCreator* filter, char* text);
+  void MODIO_DLL modioSetFilterCacheMaxAgeSeconds(ModioFilterCreator* filter, u32 max_age_seconds);
   void MODIO_DLL modioAddFilterFieldValue(ModioFilterCreator* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterLikeField(ModioFilterCreator* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterNotLikeField(ModioFilterCreator* filter, char* field, char* value);

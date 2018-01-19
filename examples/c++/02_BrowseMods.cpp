@@ -22,7 +22,8 @@ int main(void)
 
   // Before requesting mods, let's define the query filters
   modio::FilterCreator filter;
-  filter.setLimit(3);
+  filter.setLimit(7);
+  filter.setCacheMaxAgeSeconds(100);
 
   std::cout <<"Getting mods..." << std::endl;
 

@@ -71,6 +71,7 @@ extern "C"
     filter->smaller_than_list = NULL;
     filter->greater_than_list = NULL;
     filter->not_equal_list = NULL;
+    filter->cache_max_age_seconds = 0;
   }
 
   void modioSetFilterSort(ModioFilterCreator* filter, char* field, bool ascending)
@@ -110,6 +111,11 @@ extern "C"
     std::string full_text_search_str = std::string("_q=") + text;
     filter->full_text_search = new char[full_text_search_str.size() + 1];
     strcpy(filter->full_text_search, full_text_search_str.c_str());
+  }
+
+  void modioSetFilterCacheMaxAgeSeconds(ModioFilterCreator* filter, u32 max_age_seconds)
+  {
+    filter->cache_max_age_seconds = max_age_seconds;
   }
 
   void modioAddFilterFieldValue(ModioFilterCreator* filter, char* field, char* value)

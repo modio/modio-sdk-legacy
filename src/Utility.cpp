@@ -227,4 +227,29 @@ namespace modio
     }
     return "";
   }
+
+  json openJson(std::string file_path)
+  {
+    std::ifstream ifs(file_path);
+    json cache_file_json;
+    if(ifs.is_open())
+    {
+      try
+      {
+        ifs >> cache_file_json;
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+        cache_file_json = {};
+      }
+    }
+    ifs.close();
+    return cache_file_json;
+  }
+
+  void writeJson(std::string file_path, json json_object)
+  {
+    std::ofstream ofs(file_path);
+    ofs << std::setw(4) << json_object << std::endl;
+  }
 }
