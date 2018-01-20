@@ -48,11 +48,11 @@ namespace modio
     void getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
     void editMod(u32 mod_id, modio::ModEditor& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+    void installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
 
     //Modfile Methods
     void addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
     void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
-    void installModfile(modio::Modfile modfile, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
     u32 getModfileState(u32 modfile_id);
     double getModfileDownloadPercentage(u32 modfile_id);
     bool uninstallModfile(u32 modfile_id);

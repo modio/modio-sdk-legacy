@@ -12,14 +12,8 @@ namespace modio
     const std::function<void(const modio::Response& response, const modio::Modfile& modfile)> callback;
   };
 
-  struct InstallModfileCall
-  {
-    const std::function<void(const modio::Response& response)> callback;
-  };
-
   std::map<u32, AddModfileCall*> add_modfile_calls;
   std::map<u32, EditModfileCall*> edit_modfile_calls;
-  std::map<u32, InstallModfileCall*> install_modfile_calls;
 
   void onAddModfile(void* object, ModioResponse modio_response, ModioModfile modio_modfile)
   {
@@ -53,17 +47,6 @@ namespace modio
     edit_modfile_calls.erase(call_id);
   }
 
-  void onInstallModfile(void* object, ModioResponse modio_response)
-  {
-    u32 call_id = *((u32*)object);
-    modio::Response response;
-    response.initialize(modio_response);
-    install_modfile_calls[call_id]->callback(response);
-    delete (u32*)object;
-    delete install_modfile_calls[call_id];
-    install_modfile_calls.erase(call_id);
-  }
-
   void Instance::addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback)
   {
     const struct AddModfileCall* add_modfile_call = new AddModfileCall{callback};
@@ -80,16 +63,6 @@ namespace modio
     edit_modfile_calls[this->current_call_id] = (EditModfileCall*)edit_modfile_call;
 
     modioEditModfile((void*)new u32(this->current_call_id), mod_id, modfile_id, *modfile_handler.getModioModfileEditor(), &onEditModfile);
-
-    this->current_call_id++;
-  }
-
-  void Instance::installModfile(modio::Modfile modfile, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback)
-  {
-    const struct InstallModfileCall* install_modfile_call = new InstallModfileCall{callback};
-    install_modfile_calls[this->current_call_id] = (InstallModfileCall*)install_modfile_call;
-
-    modioInstallModfile((void*)new u32(this->current_call_id), modfile.id, (char*)modfile.download_url.c_str(), (char*)destination_path.c_str(), &onInstallModfile);
 
     this->current_call_id++;
   }

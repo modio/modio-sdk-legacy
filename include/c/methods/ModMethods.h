@@ -10,5 +10,6 @@
 #include "c/creators/ModioFilterCreator.h"
 #include "c/schemas/ModioResponse.h"
 #include "c/ModioC.h"
+#include "c++/schemas/Mod.h"
 
 #endif

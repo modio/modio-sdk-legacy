@@ -27,11 +27,17 @@ namespace modio
     const std::function<void(const modio::Response& response, u32 mod_id)> callback;
   };
 
+  struct InstallModCall
+  {
+    const std::function<void(const modio::Response& response)> callback;
+  };
+
   std::map<u32, GetModCall*> get_mod_calls;
   std::map<u32, GetModsCall*> get_mods_calls;
   std::map<u32, AddModCall*> add_mod_calls;
   std::map<u32, EditModCall*> edit_mod_calls;
   std::map<u32, DeleteModCall*> delete_mod_calls;
+  std::map<u32, InstallModCall*> install_mod_calls;
 
   void onGetMod(void* object, ModioResponse modio_response, ModioMod mod)
   {
@@ -125,6 +131,17 @@ namespace modio
     delete_mod_calls.erase(call_id);
   }
 
+  void onInstallModfile(void* object, ModioResponse modio_response)
+  {
+    u32 call_id = *((u32*)object);
+    modio::Response response;
+    response.initialize(modio_response);
+    install_mod_calls[call_id]->callback(response);
+    delete (u32*)object;
+    delete install_mod_calls[call_id];
+    install_mod_calls.erase(call_id);
+  }
+
   void Instance::getMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
   {
     const struct GetModCall* get_mod_call = new GetModCall{callback};
@@ -181,6 +198,16 @@ namespace modio
     delete_mod_calls[this->current_call_id] = (DeleteModCall*)delete_mod_call;
 
     modioDeleteMod((void*)new u32(this->current_call_id), mod_id, &onDeleteMod);
+
+    this->current_call_id++;
+  }
+
+  void Instance::installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback)
+  {
+    const struct InstallModCall* install_modfile_call = new InstallModCall{callback};
+    install_mod_calls[this->current_call_id] = (InstallModCall*)install_modfile_call;
+
+    modioInstallMod((void*)new u32(this->current_call_id), mod_id, (char*)destination_path.c_str(), &onInstallModfile);
 
     this->current_call_id++;
   }

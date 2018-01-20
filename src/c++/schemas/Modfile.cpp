@@ -19,8 +19,7 @@ namespace modio
       this->virustotal_hash = modio_modfile.virustotal_hash;
     if(modio_modfile.changelog)
       this->changelog = modio_modfile.changelog;
-    if(modio_modfile.download_url)
-      this->download_url = modio_modfile.download_url;
     this->filehash.initialize(modio_modfile.filehash);
+    this->download.initialize(modio_modfile.download);
   }
 }

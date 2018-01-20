@@ -5,6 +5,7 @@
 #include "Utility.h"
 #include "c/ModioC.h"
 #include "c/schemas/ModioFilehash.h"
+#include "c/schemas/ModioDownload.h"
 
 using json = nlohmann::json;
 

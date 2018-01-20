@@ -32,6 +32,7 @@ extern "C"
   typedef struct ModioLogo ModioLogo;
   typedef struct ModioMedia ModioMedia;
   typedef struct ModioUser ModioUser;
+  typedef struct ModioDownload ModioDownload;
   typedef struct ModioModfile ModioModfile;
   typedef struct ModioRatingSummary ModioRatingSummary;
   typedef struct ModioTag ModioTag;
@@ -123,6 +124,12 @@ extern "C"
     ModioAvatar avatar;
   };
 
+  struct ModioDownload
+  {
+    char* binary_url;
+    u32 date_expires;
+  };
+
   struct ModioModfile
   {
     u32 id;
@@ -136,8 +143,8 @@ extern "C"
     char* version;
     char* virustotal_hash;
     char* changelog;
-    char* download_url;
     ModioFilehash filehash;
+    ModioDownload download;
   };
 
   struct ModioRatingSummary
@@ -275,7 +282,6 @@ extern "C"
   //Modfile Methods
   void MODIO_DLL modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
   void MODIO_DLL modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-  void MODIO_DLL modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response));
   u32 MODIO_DLL modioGetModfileState(u32 modfile_id);
   double MODIO_DLL modioGetModfileDownloadPercentage(u32 modfile_id);
   bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
@@ -289,6 +295,7 @@ extern "C"
   void MODIO_DLL modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
+  void MODIO_DLL modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioSetUserModVote(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response, u32 mod_id));
   void MODIO_DLL modioSubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
   void MODIO_DLL modioUnsubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));

@@ -274,7 +274,7 @@ void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(voi
 //Modfile Methods
 void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
 void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-void modioInstallModfile(void* object, u32 modfile_id, char* modfile_download, char* destination_path, void (*callback)(void* object, ModioResponse response));
+void modioInstallModfile(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
 u32 modioGetModfileState(u32 modfile_id);
 double modioGetModfileDownloadPercentage(u32 modfile_id);
 bool modioUninstallModfile(u32 modfile_id);

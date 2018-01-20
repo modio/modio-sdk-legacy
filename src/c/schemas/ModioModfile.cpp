@@ -64,18 +64,15 @@ extern "C"
       strcpy(modfile->changelog, changelog_str.c_str());
     }
 
-    modfile->download_url = NULL;
-    if(modio::hasKey(modfile_json, "download_url"))
-    {
-      std::string download_url_str = modfile_json["download_url"];
-      modfile->download_url = new char[download_url_str.size() + 1];
-      strcpy(modfile->download_url, download_url_str.c_str());
-    }
-
     json filehash_json;
     if(modio::hasKey(modfile_json, "filehash"))
       filehash_json = modfile_json["filehash"];
     modioInitFilehash(&(modfile->filehash), filehash_json);
+
+    json download_json;
+    if(modio::hasKey(modfile_json, "download"))
+      download_json = modfile_json["download"];
+    modioInitDownload(&(modfile->download), download_json);
   }
 
   void modioFreeModfile(ModioModfile* modfile)
@@ -90,10 +87,9 @@ extern "C"
         delete[] modfile->virustotal_hash;
       if(modfile->changelog)
         delete[] modfile->changelog;
-      if(modfile->download_url)
-        delete[] modfile->download_url;
 
       modioFreeFilehash(&(modfile->filehash));
+      modioFreeDownload(&(modfile->download));
     }
   }
 }

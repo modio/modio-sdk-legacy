@@ -32,35 +32,18 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout <<"Getting mods..." << std::endl;
+  std::cout <<"Install mods..." << std::endl;
 
-  modio_instance.getMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
+  modio_instance.installModfile(mod_id, "../mods_dir/modfile", [&](const modio::Response& response)
   {
-    std::cout << "On mod get response: " << response.code << std::endl;
+    std::cout << "Install Modfile response: " << response.code << std::endl;
+
     if(response.code == 200)
     {
-      std::cout << "Requested mod: " << mod.name << std::endl;
-
-      std::cout << "Installing modfile..." << std::endl;
-
-      download_modfile_id = mod.modfile.id;
-
-      // Now we provide the Modfile id and the local path where the modfile will be installed
-      modio_instance.installModfile(mod.modfile, "../mods_dir/modfile", [&](const modio::Response& response)
-      {
-        std::cout << "Install Modfile response: " << response.code << std::endl;
-
-        if(response.code == 200)
-        {
-          std::cout << "Modfile installed successfully!" << std::endl;
-        }
-
-        finish();
-      });
-    }else
-    {
-      finish();
+      std::cout << "Modfile installed successfully!" << std::endl;
     }
+
+    finish();
   });
 
   wait();
