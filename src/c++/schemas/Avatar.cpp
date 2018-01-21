@@ -13,4 +13,16 @@ namespace modio
     if(modio_avatar.thumb_100x100)
       this->thumb_100x100 = modio_avatar.thumb_100x100;
   }
+
+  json Avatar::toJson()
+  {
+    json avatar_json;
+
+    avatar_json["filename"] = this->filename;
+    avatar_json["original"] = this->original;
+    avatar_json["thumb_50x50"] = this->thumb_50x50;
+    avatar_json["thumb_100x100"] = this->thumb_100x100;
+
+    return avatar_json;
+  }
 }

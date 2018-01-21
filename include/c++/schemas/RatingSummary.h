@@ -17,6 +17,7 @@ namespace modio
     std::string display_text;
 
     void initialize(ModioRatingSummary ratings);
+    json toJson();
   };
 }
 

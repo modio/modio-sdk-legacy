@@ -15,10 +15,10 @@ namespace modio
     u32 result_limit;
     i32 result_offset;
     bool result_cached;
-
     modio::Error error;
 
     void initialize(ModioResponse response);
+    json toJson();
   };
 }
 

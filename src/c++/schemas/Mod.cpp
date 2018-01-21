@@ -36,4 +36,38 @@ namespace modio
       this->tags[i].initialize(modio_mod.tags_array[i]);
     }
   }
+
+  json Mod::toJson()
+  {
+    json mod_json;
+
+    mod_json["id"] = this->id;
+    mod_json["game_id"] = this->game_id;
+    mod_json["status"] = this->status;
+    mod_json["visible"] = this->visible;
+    mod_json["date_added"] = this->date_added;
+    mod_json["date_updated"] = this->date_updated;
+    mod_json["date_live"] = this->date_live;
+    mod_json["homepage"] = this->homepage;
+    mod_json["name"] = this->name;
+    mod_json["name_id"] = this->name_id;
+    mod_json["summary"] = this->summary;
+    mod_json["description"] = this->description;
+    mod_json["metadata_blob"] = this->metadata_blob;
+    mod_json["profile_url"] = this->profile_url;
+    mod_json["logo"] = this->logo.toJson();
+    mod_json["submitted_by"] = this->submitted_by.toJson();
+    mod_json["modfile"] = this->modfile.toJson();
+    mod_json["media"] = this->media.toJson();
+    mod_json["rating_summary"] = this->rating_summary.toJson();
+
+    json tags_json;
+    for(auto& tag : tags)
+    {
+      tags_json.push_back(tag.toJson());
+    }
+    mod_json["tags"] = tags_json;
+
+    return mod_json;
+  }
 }

@@ -15,4 +15,17 @@ namespace modio
     if(modio_iogo.thumb_1280x720)
       this->thumb_1280x720 = modio_iogo.thumb_1280x720;
   }
+
+  json Logo::toJson()
+  {
+    json logo_json;
+
+    logo_json["filename"] = this->filename;
+    logo_json["original"] = this->original;
+    logo_json["thumb_320x180"] = this->thumb_320x180;
+    logo_json["thumb_640x360"] = this->thumb_640x360;
+    logo_json["thumb_1280x720"] = this->thumb_1280x720;
+
+    return logo_json;
+  }
 }

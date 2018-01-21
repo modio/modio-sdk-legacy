@@ -15,6 +15,7 @@ namespace modio
     std::vector<Image> images;
 
     void initialize(ModioMedia media);
+    json toJson();
   };
 }
 

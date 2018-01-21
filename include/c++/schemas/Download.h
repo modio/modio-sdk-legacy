@@ -13,6 +13,7 @@ namespace modio
     std::string binary_url;
 
     void initialize(ModioDownload download);
+    json toJson();
   };
 }
 

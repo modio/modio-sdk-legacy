@@ -74,9 +74,6 @@ namespace modio
   void removeFile(std::string filename);
   bool removeDirectory(std::string directory_name);
   std::string addSlashIfNeeded(std::string directory_path);
-  bool checkIfModIsStillInstalled(std::string path, u32 modfile_id);
-  void updateModfilesJson();
-  std::string getModfilePath(u32 modfile_id);
   json openJson(std::string file_path);
   void writeJson(std::string file_path, json json_object);
 }

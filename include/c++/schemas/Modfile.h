@@ -26,6 +26,7 @@ namespace modio
     modio::Download download;
 
     void initialize(ModioModfile modfile);
+    json toJson();
   };
 }
 

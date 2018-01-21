@@ -5,7 +5,7 @@ int main(void)
   modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
-  volatile static u32 download_modfile_id = -1;
+  volatile static u32 download_mod_id = -1;
 
   auto wait = [&]()
   {
@@ -13,10 +13,10 @@ int main(void)
     {
       modio_instance.sleep(10);
       modioProcess();
-      if(download_modfile_id != -1)
+      if(download_mod_id != -1)
       {
         // Track download progress by providing the modfile id
-        double progress = modio_instance.getModfileDownloadPercentage(download_modfile_id);
+        double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
         if(progress > 0)
           std::cout << "Download progress: " << progress << "%" << std::endl;
       }
@@ -31,6 +31,7 @@ int main(void)
   u32 mod_id;
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
+  download_mod_id = mod_id;
 
   std::cout <<"Install mods..." << std::endl;
 

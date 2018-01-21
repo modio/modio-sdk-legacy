@@ -2,106 +2,6 @@
 
 extern "C"
 {
-  void createModfileJson(u32 modfile_id, std::string file_path)
-  {
-    json modfile_json;
-    modfile_json["modfile_id"] = modfile_id;
-    std::string json_path = file_path;
-    std::ofstream out(json_path);
-    out<<std::setw(4)<<modfile_json<<std::endl;
-    out.close();
-  }
-
-  void addToModfilesJson(modio::Mod mod, u32 modfile_id, std::string path)
-  {
-    json modfiles_json;
-    std::ifstream in(modio::getModIODirectory() + "modfiles.json");
-    if(in.is_open())
-    {
-      in >> modfiles_json;
-      for(json::iterator i=modfiles_json["modfiles"].begin(); i!=modfiles_json["modfiles"].end(); i++)
-      {
-        if((*i)["id"] == modfile_id && (*i)["path"] == path)
-        {
-          return;
-        }
-      }
-    }
-    in.close();
-
-    json modfile_json;
-    modfile_json["id"] = modfile_id;
-
-    modfile_json["mod"]["id"] = mod.id;
-    modfile_json["mod"]["game_id"] = mod.game_id;
-    modfile_json["mod"]["status"] = mod.status;
-
-    modfile_json["mod"]["name"] = mod.name;
-    modfile_json["mod"]["description"] = mod.description;
-
-    modfile_json["path"] = path;
-    modfiles_json["modfiles"].push_back(modfile_json);
-    std::ofstream out(modio::getModIODirectory() + "modfiles.json");
-    out<<std::setw(4)<<modfiles_json<<std::endl;
-    out.close();
-  }
-
-  void addCallToCache(std::string url, json response_json)
-  {
-    std::time_t datetime = std::time(nullptr);
-    std::string filename = modio::toString((u32)datetime) + ".json";
-    std::ofstream o(modio::getModIODirectory() + "cache/" + filename);
-    o << std::setw(4) << response_json << std::endl;
-
-    json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
-
-    for (json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
-    {
-      if((*it)["url"] == url)
-      {
-        std::string filename = (*it)["file"];
-        cache_file_json.erase(it);
-        modio::removeFile(modio::getModIODirectory() + "cache/" + filename);
-        break;
-      }
-    }
-
-    json cache_object;
-    cache_object["datetime"] = datetime;
-    cache_object["file"] = filename;
-    cache_object["url"] = url;
-    cache_file_json.push_back(cache_object);
-
-    while(cache_file_json.size() > modio::MAX_CALL_CACHE)
-    {
-      std::string filename = (*(cache_file_json.begin()))["file"];
-      cache_file_json.erase(cache_file_json.begin());
-      modio::removeFile(modio::getModIODirectory() + "cache/" + filename);
-    }
-
-    modio::writeJson(modio::getModIODirectory() + "cache.json", cache_file_json);
-  }
-
-  std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
-  {
-    json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
-    for (json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
-    {
-      if((*it)["url"] == url)
-      {
-        u32 current_datetime = std::time(nullptr);
-        u32 file_datetime = (*it)["datetime"];
-        u32 difference = current_datetime - file_datetime;
-
-        if(difference <= max_age_seconds)
-        {
-          return (*it)["file"];
-        }
-      }
-    }
-    return "";
-  }
-
   struct GetModParams
   {
     void* object;
@@ -151,6 +51,7 @@ extern "C"
   struct GetInstallModParams
   {
     void* object;
+    u32 mod_id;
     std::string destination_path;
     void (*callback)(void* object, ModioResponse response);
   };
@@ -189,7 +90,7 @@ extern "C"
     if(response.code == 200)
     {
       if(!get_mods_callbacks[call_number]->is_cache)
-        addCallToCache(get_mods_callbacks[call_number]->url, response_json);
+        modio::addCallToCache(get_mods_callbacks[call_number]->url, response_json);
 
       u32 mods_size = (u32)response_json["data"].size();
       ModioMod* mods = new ModioMod[mods_size];
@@ -280,7 +181,7 @@ extern "C"
     get_mods_callbacks[call_number]->url = url;
     get_mods_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
       std::ifstream cache_file(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -313,7 +214,7 @@ extern "C"
     get_mods_callbacks[call_number]->url = url;
     get_mods_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
       std::ifstream cache_file(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -408,10 +309,9 @@ extern "C"
     if(destination_path_str[destination_path_str.size()-1] != '/')
       destination_path_str += "/";
 
-    createModfileJson(install_mod_callbacks[call_number]->modfile_id, destination_path_str + std::string("modio.json"));
-    std::cout<<"R"<<install_mod_callbacks[call_number]->mod.name<<std::endl;
+    modio::createInstalledModJson(install_mod_callbacks[call_number]->mod, destination_path_str + std::string("modio.json"));
 
-    addToModfilesJson(install_mod_callbacks[call_number]->mod, install_mod_callbacks[call_number]->modfile_id, destination_path_str);
+    modio::addToInstalledModsJson(install_mod_callbacks[call_number]->mod, destination_path_str);
 
     install_mod_callbacks[call_number]->callback(install_mod_callbacks[call_number]->object, response);
     delete install_mod_callbacks[call_number];
@@ -421,7 +321,6 @@ extern "C"
 
   void onGetInstallMod(void* object, ModioResponse response, ModioMod mod)
   {
-std::cout<<"A"<<std::endl;
     u32 call_number = *((u32*)object);
 
     std::string file_path = modio::getModIODirectory() + "tmp/" + modio::toString(mod.modfile.id) + "_modfile.zip";
@@ -438,8 +337,6 @@ std::cout<<"A"<<std::endl;
     install_mod_callbacks[install_call_number]->modfile_id = mod.modfile.id;
     install_mod_callbacks[install_call_number]->object = get_install_mod_callbacks[call_number]->object;
     install_mod_callbacks[install_call_number]->mod.initialize(mod);
-    std::cout<<"R"<<mod.name<<std::endl;
-    std::cout<<"R"<<install_mod_callbacks[install_call_number]->mod.name<<std::endl;
 
     FILE* file;
     curl_off_t progress = modio::curlwrapper::getProgressIfStored(file_path);
@@ -462,13 +359,14 @@ std::cout<<"A"<<std::endl;
   void modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    //modio::curlwrapper::advanceCallCount();
 
     get_install_mod_callbacks[call_number] = new GetInstallModParams;
     get_install_mod_callbacks[call_number]->object = object;
+    get_install_mod_callbacks[call_number]->mod_id = mod_id;
     get_install_mod_callbacks[call_number]->destination_path = destination_path;
     get_install_mod_callbacks[call_number]->callback = callback;
-std::cout<<"C"<<std::endl;
+
     modioGetMod((void*)new u32(call_number), mod_id, &onGetInstallMod);
   }
 
@@ -537,5 +435,24 @@ std::cout<<"C"<<std::endl;
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/subscribe";
 
     modio::curlwrapper::deleteCall(call_number, url, headers, &modioOnReturnIdCallback);
+  }
+
+  double modioGetModfileDownloadPercentage(u32 modfile_id)
+  {
+    if(install_mod_callbacks.find(modio::curlwrapper::getOngoingCall()) != install_mod_callbacks.end())
+    {
+      InstallModParams* install_modfile_params = install_mod_callbacks[modio::curlwrapper::getOngoingCall()];
+
+      if(install_modfile_params->mod.id == modfile_id)
+      {
+        modio::CurrentDownloadInfo current_download_info = modio::curlwrapper::getCurrentDownloadInfo();
+        if(current_download_info.download_progress == 0)
+          return 0;
+        double result = current_download_info.download_progress;
+        result /= current_download_info.download_total;
+        return result * 100;
+      }
+    }
+    return -1;
   }
 }

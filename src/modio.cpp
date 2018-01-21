@@ -22,7 +22,7 @@ void modioInit(u32 game_id, char* api_key)
     }
   }
 
-  modio::updateModfilesJson();
+  modio::updateInstalledModsJson();
 
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "cache/");

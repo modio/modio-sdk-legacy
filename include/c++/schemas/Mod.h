@@ -1,6 +1,9 @@
 #ifndef MODIO_MOD_H
 #define MODIO_MOD_H
 
+#include "Utility.h"
+#include "Globals.h"
+#include "ModUtility.h"
 #include "c++/schemas/Logo.h"
 #include "c++/schemas/User.h"
 #include "c++/schemas/Media.h"
@@ -8,7 +11,6 @@
 #include "c++/schemas/RatingSummary.h"
 #include "c++/schemas/Tag.h"
 #include "c/schemas/ModioMod.h"
-#include "Globals.h"
 
 namespace modio
 {
@@ -37,6 +39,7 @@ namespace modio
     std::vector<Tag> tags;
 
     void initialize(ModioMod mod);
+    json toJson();
   };
 }
 
