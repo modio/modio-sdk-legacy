@@ -58,14 +58,14 @@ namespace modio
     return "";
   }
 
-  void createInstalledModJson(modio::Mod mod, std::string file_path)
+  void createInstalledModJson(json mod_json, std::string file_path)
   {
     std::ofstream out(file_path.c_str());
-    out<<std::setw(4)<<mod.toJson()<<std::endl;
+    out<<std::setw(4)<<mod_json<<std::endl;
     out.close();
   }
 
-  void addToInstalledModsJson(modio::Mod mod, std::string path)
+  void addToInstalledModsJson(json mod_json, std::string path)
   {
     json installed_mods_json;
     std::ifstream ifs(modio::getModIODirectory() + "installed_mods.json");
@@ -75,7 +75,7 @@ namespace modio
       ifs.close();
       for (auto& it : installed_mods_json["mods"])
       {
-        if(it["id"] == mod.id && it["path"] == path)
+        if(it["id"] == mod_json["id"] && it["path"] == path)
         {
           return;
         }
@@ -83,10 +83,10 @@ namespace modio
     }
 
     json installed_mod_json;
-    installed_mod_json["mod"] = mod.toJson();
+    installed_mod_json["mod"] = mod_json;
     installed_mod_json["path"] = path;
-    installed_mod_json["mod_id"] = mod.id;
-    installed_mod_json["modfile_id"] = mod.modfile.id;
+    installed_mod_json["mod_id"] = mod_json["id"];
+    installed_mod_json["modfile_id"] = mod_json["modfile"]["id"];
 
     installed_mods_json["mods"].push_back(installed_mod_json);
     std::ofstream ofs(modio::getModIODirectory() + "installed_mods.json");

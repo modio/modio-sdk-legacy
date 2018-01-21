@@ -36,9 +36,18 @@ extern "C"
     void (*callback)(void* object, ModioResponse response, u32 mod_id);
   };
 
+  struct GetInstallModParams
+  {
+    u32 mod_id;
+    void* object;
+    std::string destination_path;
+    void (*callback)(void* object, ModioResponse response);
+  };
+
   struct InstallModParams
   {
-    modio::Mod mod;
+    u32 mod_id;
+    json mod_json;
     u32 get_install_mod_call;
     void* object;
     u32 modfile_id;
@@ -48,21 +57,13 @@ extern "C"
     void (*callback)(void* object, ModioResponse response);
   };
 
-  struct GetInstallModParams
-  {
-    void* object;
-    u32 mod_id;
-    std::string destination_path;
-    void (*callback)(void* object, ModioResponse response);
-  };
-
   std::map< u32,GetModParams* > get_mod_callbacks;
   std::map< u32,AddModParams* > add_mod_callback;
   std::map< u32,DeleteModParams* > delete_mod_callbacks;
   std::map< u32,GetModsParams* > get_mods_callbacks;
   std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
+  std::map< u32, GetInstallModParams* > get_install_mod_callbacks;
   std::map< u32, InstallModParams* > install_mod_callbacks;
-  std::map< u32,GetInstallModParams* > get_install_mod_callbacks;
 
   void modioOnGetMod(u32 call_number, u32 response_code, json response_json)
   {
@@ -309,9 +310,9 @@ extern "C"
     if(destination_path_str[destination_path_str.size()-1] != '/')
       destination_path_str += "/";
 
-    modio::createInstalledModJson(install_mod_callbacks[call_number]->mod, destination_path_str + std::string("modio.json"));
+    modio::createInstalledModJson(install_mod_callbacks[call_number]->mod_json, destination_path_str + std::string("modio.json"));
 
-    modio::addToInstalledModsJson(install_mod_callbacks[call_number]->mod, destination_path_str);
+    modio::addToInstalledModsJson(install_mod_callbacks[call_number]->mod_json, destination_path_str);
 
     install_mod_callbacks[call_number]->callback(install_mod_callbacks[call_number]->object, response);
     delete install_mod_callbacks[call_number];
@@ -319,25 +320,20 @@ extern "C"
     modioFreeResponse(&response);
   }
 
-  void onGetInstallMod(void* object, ModioResponse response, ModioMod mod)
+  void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
   {
-    u32 call_number = *((u32*)object);
-
-    std::string file_path = modio::getModIODirectory() + "tmp/" + modio::toString(mod.modfile.id) + "_modfile.zip";
-
     u32 install_call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
-
+    std::string file_path = modio::getModIODirectory() + "tmp/" + modio::toString((u32)response_json["modfile"]["id"]) + "_modfile.zip";
     install_mod_callbacks[install_call_number] = new InstallModParams;
 
-    std::string destination_path = modio::addSlashIfNeeded(get_install_mod_callbacks[call_number]->destination_path);
-    install_mod_callbacks[install_call_number]->destination_path = destination_path;
     install_mod_callbacks[install_call_number]->zip_path = file_path;
-    install_mod_callbacks[install_call_number]->callback = get_install_mod_callbacks[call_number]->callback;
-    install_mod_callbacks[install_call_number]->modfile_id = mod.modfile.id;
+    install_mod_callbacks[install_call_number]->modfile_id = response_json["modfile"]["id"];
+    install_mod_callbacks[install_call_number]->mod_json = response_json;
+    install_mod_callbacks[install_call_number]->mod_id = get_install_mod_callbacks[call_number]->mod_id;
     install_mod_callbacks[install_call_number]->object = get_install_mod_callbacks[call_number]->object;
-    install_mod_callbacks[install_call_number]->mod.initialize(mod);
-
+    install_mod_callbacks[install_call_number]->callback = get_install_mod_callbacks[call_number]->callback;
+    install_mod_callbacks[install_call_number]->destination_path = get_install_mod_callbacks[call_number]->destination_path;
     FILE* file;
     curl_off_t progress = modio::curlwrapper::getProgressIfStored(file_path);
     if(progress != 0)
@@ -349,25 +345,30 @@ extern "C"
     }
     install_mod_callbacks[install_call_number]->file = file;
 
-    modio::curlwrapper::download(install_call_number, std::string(mod.modfile.download.binary_url) + "?shhh=secret", file_path, file, progress, &modioOnModDownloaded);
+    std::string downoad_url = response_json["modfile"]["download"]["binary_url"];
 
-    delete (u32*)object;
+    modio::curlwrapper::download(install_call_number, downoad_url + "?shhh=secret", file_path, file, progress, &modioOnModDownloaded);
+
     delete get_install_mod_callbacks[call_number];
     get_install_mod_callbacks.erase(call_number);
   }
 
   void modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response))
   {
+    std::vector<std::string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
+
     u32 call_number = modio::curlwrapper::getCallCount();
-    //modio::curlwrapper::advanceCallCount();
+    modio::curlwrapper::advanceCallCount();
 
     get_install_mod_callbacks[call_number] = new GetInstallModParams;
     get_install_mod_callbacks[call_number]->object = object;
     get_install_mod_callbacks[call_number]->mod_id = mod_id;
-    get_install_mod_callbacks[call_number]->destination_path = destination_path;
+    get_install_mod_callbacks[call_number]->destination_path = modio::addSlashIfNeeded(destination_path);
     get_install_mod_callbacks[call_number]->callback = callback;
 
-    modioGetMod((void*)new u32(call_number), mod_id, &onGetInstallMod);
+    modio::curlwrapper::get(call_number, url, headers, &onGetInstallMod);
   }
 
   void modioSetUserModVote(void* object, u32 mod_id, bool vote_up, void (*callback)(void *object, ModioResponse response, u32 mod_id))
@@ -443,9 +444,10 @@ extern "C"
     {
       InstallModParams* install_modfile_params = install_mod_callbacks[modio::curlwrapper::getOngoingCall()];
 
-      if(install_modfile_params->mod.id == modfile_id)
+      if(install_modfile_params->mod_id == modfile_id)
       {
         modio::CurrentDownloadInfo current_download_info = modio::curlwrapper::getCurrentDownloadInfo();
+
         if(current_download_info.download_progress == 0)
           return 0;
         double result = current_download_info.download_progress;
