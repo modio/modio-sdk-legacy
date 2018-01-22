@@ -59,8 +59,31 @@ void modioPauseCurrentDownload()
   modio::curlwrapper::pauseCurrentDownload();
 }
 
+void onGetAllModEvents(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+{
+  printf("Get events response: %i\n", response.code);
+  if(response.code == 200)
+  {
+    printf("Listing events:\n");
+
+    for(u32 i=0; i < mod_events_array_size; i++)
+    {
+      std::cout<<"Id"<<mod_events_array[i].id<<std::endl;
+      std::cout<<"Date added"<<mod_events_array[i].date_added<<std::endl;
+      std::cout<<"Event type"<<mod_events_array[i].event_type<<std::endl;
+      std::cout<<"Mod id"<<mod_events_array[i].mod_id<<std::endl;
+    }
+  }
+}
+
 void modioProcess()
 {
+  u32 current_time = modio::getCurrentTime();
+  if(current_time - modio::LAST_EVENT_POLL > 5)
+  {
+    modio::LAST_EVENT_POLL = current_time;
+    modioGetAllModEvents(NULL,&onGetAllModEvents);
+  }
   modio::curlwrapper::process();
 }
 

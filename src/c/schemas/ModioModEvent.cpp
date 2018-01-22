@@ -18,7 +18,18 @@ extern "C"
 
     mod_event->event_type = 0;
     if(modio::hasKey(mod_event_json, "event_type"))
-      mod_event->event_type = mod_event_json["event_type"];
+    {
+      if(mod_event_json["event_type"] == "MODFILE_CHANGED")
+        mod_event->event_type = EVENT_MODFILE_CHANGED;
+      else if(mod_event_json["event_type"] == "MOD_AVAILABLE")
+        mod_event->event_type = EVENT_MOD_AVAILABLE;
+      else if(mod_event_json["event_type"] == "MOD_UNAVAILABLE")
+        mod_event->event_type = EVENT_MOD_UNAVAILABLE;
+      else if(mod_event_json["event_type"] == "MOD_EDITED")
+        mod_event->event_type = EVENT_MOD_EDITED;
+      else
+        mod_event->event_type = EVENT_UNDEFINED;
+    }
 
     mod_event->date_added = 0;
     if(modio::hasKey(mod_event_json, "date_added"))

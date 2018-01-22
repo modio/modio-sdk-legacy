@@ -48,7 +48,7 @@ int main(void)
       std::cout << "Result limit: " << response.result_limit << std::endl;
       std::cout << "Result offset: " << response.result_offset << std::endl;
     }
-    finish();
+    //finish();
   });
 
   wait();

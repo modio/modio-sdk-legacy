@@ -21,10 +21,10 @@ typedef int i32;
 #define MODIO_PUBLIC 1
 
 #define EVENT_UNDEFINED       0
-#define EVENT_MODFILE_CHANGED 0
-#define EVENT_MOD_AVAILABLE   1
-#define EVENT_MOD_UNAVAILABLE 2
-#define EVENT_MOD_EDITED      3
+#define EVENT_MODFILE_CHANGED 1
+#define EVENT_MOD_AVAILABLE   2
+#define EVENT_MOD_UNAVAILABLE 3
+#define EVENT_MOD_EDITED      4
 
 extern "C"
 {
@@ -284,6 +284,9 @@ extern "C"
   void MODIO_DLL modioSetDebugLevel(u32 debug_level);
   void MODIO_DLL modioProcess();
   void MODIO_DLL modioSleep(u32 milliseconds);
+
+  //Events
+  void MODIO_DLL modioGetAllModEvents(void* object, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
 
   //Authentication methods
   void MODIO_DLL modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));

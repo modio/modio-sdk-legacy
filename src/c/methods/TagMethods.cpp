@@ -33,7 +33,6 @@ extern "C"
     modioInitResponse(&response, response_json);
     response.code = response_code;
 
-    std::vector<std::string> tags;
     ModioTag* tags_array = NULL;
     u32 tags_array_size = 0;
     if(response.code == 200)

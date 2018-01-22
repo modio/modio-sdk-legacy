@@ -192,4 +192,9 @@ namespace modio
     ofs << std::setw(4) << json_object << std::endl;
     ofs.close();
   }
+
+  u32 getCurrentTime()
+  {
+    return std::time(nullptr);
+  }
 }

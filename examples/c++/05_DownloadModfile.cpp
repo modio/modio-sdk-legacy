@@ -33,7 +33,7 @@ int main(void)
   std::cin >> mod_id;
   download_mod_id = mod_id;
 
-  std::cout <<"Install mods..." << std::endl;
+  std::cout <<"Installing mod..." << std::endl;
 
   modio_instance.installModfile(mod_id, "../mods_dir/modfile", [&](const modio::Response& response)
   {

@@ -76,6 +76,7 @@ namespace modio
   std::string addSlashIfNeeded(std::string directory_path);
   json openJson(std::string file_path);
   void writeJson(std::string file_path, json json_object);
+  u32 getCurrentTime();
 }
 
 #endif
