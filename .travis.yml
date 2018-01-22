@@ -1,6 +1,11 @@
+language: c++
+
+os:
+  - linux
+  - osx
+
 dist: trusty
 sudo: false
-language: c++
 
 addons:
   apt:
@@ -10,5 +15,6 @@ addons:
       - g++-5
 
 script:
-  - CXX=/usr/bin/g++-5 CC=/usr/bin/gcc-5 cmake .
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then CXX=/usr/bin/g++-5 CC=/usr/bin/gcc-5 cmake . ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake . ; fi
   - cmake --build . -- -j2
