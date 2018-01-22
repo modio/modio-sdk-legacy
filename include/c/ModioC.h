@@ -20,6 +20,12 @@ typedef int i32;
 #define MODIO_HIDDEN 0
 #define MODIO_PUBLIC 1
 
+#define EVENT_UNDEFINED       0
+#define EVENT_MODFILE_CHANGED 0
+#define EVENT_MOD_AVAILABLE   1
+#define EVENT_MOD_UNAVAILABLE 2
+#define EVENT_MOD_EDITED      3
+
 extern "C"
 {
   typedef struct ModioListNode ModioListNode;
@@ -43,6 +49,7 @@ extern "C"
   typedef struct ModioModfileEditor ModioModfileEditor;
   typedef struct ModioModCreator ModioModCreator;
   typedef struct ModioModEditor ModioModEditor;
+  typedef struct ModioModEvent ModioModEvent;
 
   struct ModioListNode
   {
@@ -257,6 +264,15 @@ extern "C"
     char* homepage;
     char* modfile;
     char* metadata_blob;
+  };
+
+  struct ModioModEvent
+  {
+    u32 id;
+    u32 mod_id;
+    u32 user_id;
+    u32 event_type;
+    long date_added;
   };
 
   //General Methods
