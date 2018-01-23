@@ -4,6 +4,9 @@
 typedef unsigned int u32;
 typedef int i32;
 
+#define MODIO_ENVIRONMENT_LIVE 0
+#define MODIO_ENVIRONMENT_TEST 1
+
 #define MODIO_DEBUGLEVEL_LOG      2
 #define MODIO_DEBUGLEVEL_WARNING  1
 #define MODIO_DEBUGLEVEL_ERROR    0
@@ -276,7 +279,7 @@ extern "C"
   };
 
   //General Methods
-  void MODIO_DLL modioInit(u32 game_id, char* api_key);
+  void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key);
   //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
   void MODIO_DLL modioShutdown();
   //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();

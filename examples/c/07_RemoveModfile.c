@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
   u32 installed_modfiles_count = modioGetInstalledModfilesCount();
 

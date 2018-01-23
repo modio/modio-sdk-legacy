@@ -1,7 +1,11 @@
 #include "modio.h"
 
-void modioInit(u32 game_id, char* api_key)
+void modioInit(u32 environment, u32 game_id, char* api_key)
 {
+  if(environment == MODIO_ENVIRONMENT_TEST)
+  {
+    modio::MODIO_URL = "https://api.test.mod.io/";
+  }
   modio::clearLog();
 
   modio::curlwrapper::initCurl();

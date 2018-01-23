@@ -25,7 +25,7 @@ namespace modio
     int current_call_id;
 
   public:
-    Instance(u32 id, const std::string& guid);
+    Instance(u32 environment, u32 id, const std::string& guid);
 
     //General Methods
     void sleep(u32 milliseconds);

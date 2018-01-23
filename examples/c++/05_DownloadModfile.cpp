@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
   volatile static u32 download_mod_id = -1;

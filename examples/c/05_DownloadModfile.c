@@ -17,46 +17,9 @@ void onModfileInstalled(void* object, ModioResponse response)
   *wait = false;
 }
 
-void onModGet(void* object, ModioResponse response, ModioMod mod)
-{
-  ContextObject* context_object = object;
-  bool* wait = &(context_object->wait);
-  printf("On mod get response: %i\n",response.code);
-  if(mod.modfile.id == 0)
-  {
-    printf("Please select a mod containing a modfile\n");
-    *wait = false;
-    return;
-  }
-  if(response.code == 200)
-  {
-    printf("Id:\t%i\n",mod.id);
-    printf("Name:\t%s\n",mod.name);
-    printf("Modfile id:\t%i\n",mod.modfile.id);
-
-    printf("Installing modfile...\n");
-
-    char modfile_id_str[10];
-    sprintf(modfile_id_str, "%d", mod.modfile.id);
-
-    char instalation_path[100];
-    strcpy(instalation_path, "");
-    strcat(instalation_path, "../mods_dir/modfile_");
-    strcat(instalation_path, modfile_id_str);
-
-    context_object->modfile_id = mod.modfile.id;
-
-    // Now we provide the Modfile id and the local path where the modfile will be installed
-    modioInstallModfile(wait, mod.modfile.id, mod.modfile.download_url, (char*)instalation_path, &onModfileInstalled);
-  }else
-  {
-    *wait = false;
-  }
-}
-
 int main(void)
 {
-  modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
   ContextObject context_object;
   context_object.wait = true;
@@ -67,8 +30,14 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  printf("Getting mod...\n");
-  modioGetMod(&context_object.wait, mod_id, &onModGet);
+  printf("Installing modfile...\n");
+
+  char instalation_path[100];
+  strcpy(instalation_path, "");
+  strcat(instalation_path, "../mods_dir/modfile");
+
+  // Now we provide the Modfile id and the local path where the modfile will be installed
+  modioInstallMod(&context_object.wait, mod_id, (char*)instalation_path, &onModfileInstalled);
 
   while(context_object.wait)
   {
