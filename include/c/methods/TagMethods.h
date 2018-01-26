@@ -3,9 +3,8 @@
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
-#include "c/schemas/ModioMod.h"
-#include "Globals.h"
 #include "c/schemas/ModioResponse.h"
 #include "c/ModioC.h"
+#include "c/methods/callbacks/TagCallbacks.h"
 
 #endif

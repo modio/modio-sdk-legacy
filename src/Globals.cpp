@@ -11,4 +11,5 @@ namespace modio
   std::string MODIO_VERSION_PATH = "v1/";
   u32 MAX_CALL_CACHE = 10;
   u32 LAST_EVENT_POLL = 0;
+  void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size) = NULL;
 }

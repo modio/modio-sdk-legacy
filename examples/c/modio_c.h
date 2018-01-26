@@ -289,7 +289,8 @@ void modioProcess();
 void modioSleep(u32 milliseconds);
 
 //Events
-void modioGetAllModEvents(void* object, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
+void modioListendToEvents(void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
+void modioGetAllModEvents(void* object, u32 begin, u32 end, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
 
 //Authentication methods
 void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));

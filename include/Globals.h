@@ -23,6 +23,7 @@ namespace modio
   extern std::string MODIO_VERSION_PATH;
   extern u32 MAX_CALL_CACHE;
   extern u32 LAST_EVENT_POLL;
+  extern void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
 }
 
 #endif

@@ -3,9 +3,11 @@
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
-#include "c/schemas/ModioModEvent.h"
 #include "Globals.h"
 #include "c/schemas/ModioResponse.h"
 #include "c/ModioC.h"
+#include "c/creators/ModioFilterCreator.h"
+#include "c/methods/callbacks/ModEventCallbacks.h"
+
 
 #endif

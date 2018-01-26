@@ -17,6 +17,11 @@
 #include "c++/schemas/Response.h"
 #include "c++/schemas/Tag.h"
 #include "c++/schemas/User.h"
+#include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
+#include "c++/methods/callbacks/ImageInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModInstanceCallbacks.h"
+#include "c++/methods/callbacks/TagsInstanceCallbacks.h"
 
 namespace modio
 {
@@ -29,6 +34,10 @@ namespace modio
 
     //General Methods
     void sleep(u32 milliseconds);
+
+    //Events
+    //void listendToEvents(const std::function<void(const modio::Response&, const std::vector<modio::ModEvents> & mod_events)>& callback);
+    //void getAllModEvents(modio::FilterCreator& filter, void* object, const std::function<void(const modio::Response&, const std::vector<modio::ModEvents> & mod_events)>& callback);
 
     //Authentication Methods
     bool isLoggedIn() const;

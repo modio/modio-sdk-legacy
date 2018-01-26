@@ -6,9 +6,9 @@
 #include "c/creators/ModioModfileCreator.h"
 #include "c/creators/ModioModfileEditor.h"
 #include "Globals.h"
-#include "c/schemas/ModioMod.h"
 #include "c/schemas/ModioResponse.h"
 #include "c/ModioC.h"
 #include "ModUtility.h"
+#include "c/methods/callbacks/ModfileCallbacks.h"
 
 #endif
