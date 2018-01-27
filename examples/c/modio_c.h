@@ -290,7 +290,7 @@ void modioSleep(u32 milliseconds);
 
 //Events
 void modioListendToEvents(void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
-void modioGetAllModEvents(void* object, u32 begin, u32 end, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
+void modioGetAllModEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
 
 //Authentication methods
 void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
@@ -320,8 +320,8 @@ void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*c
 void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
 void modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
 void modioSetUserModVote(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response, u32 mod_id));
-void modioSubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
-void modioUnsubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
+void modioSubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
+void modioUnsubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
 
 //Tags Methods
 void modioGetTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id, ModioTag* tags_array, u32 tags_array_size));

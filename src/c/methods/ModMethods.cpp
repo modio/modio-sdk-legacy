@@ -193,44 +193,6 @@ extern "C"
     modio::curlwrapper::post(call_number, url, headers, data, &modioOnReturnIdCallback);
   }
 
-  void modioSubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id))
-  {
-    std::map<std::string, std::string> data;
-
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
-
-    return_id_callbacks[call_number] = new CallbackParamReturnsId;
-    return_id_callbacks[call_number]->mod_id = mod_id;
-    return_id_callbacks[call_number]->callback = callback;
-    return_id_callbacks[call_number]->object = object;
-
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/subscribe";
-
-    modio::curlwrapper::post(call_number, url, headers, data, &modioOnReturnIdCallback);
-  }
-
-  void modioUnsubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id))
-  {
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
-
-    return_id_callbacks[call_number] = new CallbackParamReturnsId;
-    return_id_callbacks[call_number]->mod_id = mod_id;
-    return_id_callbacks[call_number]->callback = callback;
-    return_id_callbacks[call_number]->object = object;
-
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/subscribe";
-
-    modio::curlwrapper::deleteCall(call_number, url, headers, &modioOnReturnIdCallback);
-  }
-
   double modioGetModfileDownloadPercentage(u32 modfile_id)
   {
     if(install_mod_callbacks.find(modio::curlwrapper::getOngoingCall()) != install_mod_callbacks.end())

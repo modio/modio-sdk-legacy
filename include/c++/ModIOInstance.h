@@ -22,6 +22,7 @@
 #include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModInstanceCallbacks.h"
 #include "c++/methods/callbacks/TagsInstanceCallbacks.h"
+#include "c++/methods/callbacks/SubscriptionInstanceCallbacks.h"
 
 namespace modio
 {
@@ -71,6 +72,10 @@ namespace modio
     void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);
     void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
     void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+
+    //Subscription Methods
+    void subscribeMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
+    void unsubscribeMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
   };
 }
 

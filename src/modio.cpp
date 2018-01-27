@@ -82,6 +82,7 @@ void modioProcess()
 
     modioGetAllModEvents(NULL, filter, &onGetAllModEvents);
   }
+  modio::LAST_EVENT_POLL = current_time;
   modio::curlwrapper::process();
 }
 
