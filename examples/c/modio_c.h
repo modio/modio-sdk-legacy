@@ -340,10 +340,10 @@ void modioAddFilterLikeField(ModioFilterCreator* filter, char* field, char* valu
 void modioAddFilterNotLikeField(ModioFilterCreator* filter, char* field, char* value);
 void modioAddFilterInField(ModioFilterCreator* filter, char* field, char* value);
 void modioAddFilterNotInField(ModioFilterCreator* filter, char* field, char* value);
-void modioAddFilterMinField(ModioFilterCreator* filter, char* field, double value);
-void modioAddFilterMaxField(ModioFilterCreator* filter, char* field, double value);
-void modioAddFilterSmallerThanField(ModioFilterCreator* filter, char* field, double value);
-void modioAddFilterGreaterThanField(ModioFilterCreator* filter, char* field, double value);
+void modioAddFilterMinField(ModioFilterCreator* filter, char* field, char* value);
+void modioAddFilterMaxField(ModioFilterCreator* filter, char* field, char* value);
+void modioAddFilterSmallerThanField(ModioFilterCreator* filter, char* field, char* value);
+void modioAddFilterGreaterThanField(ModioFilterCreator* filter, char* field, char* value);
 void modioAddFilterNotEqualField(ModioFilterCreator* filter, char* field, char* value);
 void modioFreeFilter(ModioFilterCreator* filter);
 

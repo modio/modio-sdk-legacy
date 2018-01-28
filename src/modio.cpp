@@ -2,6 +2,9 @@
 
 void modioInit(u32 environment, u32 game_id, char* api_key)
 {
+  u32 current_time = modio::getCurrentTime();
+  modio::LAST_EVENT_POLL = current_time;
+
   if(environment == MODIO_ENVIRONMENT_TEST)
   {
     modio::MODIO_URL = "https://api.test.mod.io/";
@@ -72,17 +75,19 @@ void onGetAllModEvents(void* object, ModioResponse response, ModioModEvent* mod_
 void modioProcess()
 {
   u32 current_time = modio::getCurrentTime();
-  if(current_time - modio::LAST_EVENT_POLL > 5)
+
+  if(current_time - modio::LAST_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
   {
     ModioFilterCreator filter;
     modioInitFilter(&filter);
     modioSetFilterLimit(&filter,3);
-    modioAddFilterMinField(&filter, (char*)"date_added", modio::LAST_EVENT_POLL);
-    modioAddFilterSmallerThanField(&filter, (char*)"date_added", current_time);
+    modioAddFilterMinField(&filter, (char*)"date_added", (char*)modio::toString(modio::LAST_EVENT_POLL).c_str());
+    modioAddFilterSmallerThanField(&filter, (char*)"date_added", (char*)modio::toString(current_time).c_str());
 
     modioGetAllModEvents(NULL, filter, &onGetAllModEvents);
+
+    modio::LAST_EVENT_POLL = current_time;
   }
-  modio::LAST_EVENT_POLL = current_time;
   modio::curlwrapper::process();
 }
 

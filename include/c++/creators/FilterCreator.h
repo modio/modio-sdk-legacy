@@ -20,10 +20,10 @@ namespace modio
     void addNotLikeField(const std::string& field, const std::string& value);
     void addInField(const std::string& field, const std::string& value);
     void addNotInField(const std::string& field, const std::string& value);
-    void addMinField(const std::string& field, double value);
-    void addMaxField(const std::string& field, double value);
-    void addSmallerThanField(const std::string& field, double value);
-    void addGreaterThanField(const std::string& field, double value);
+    void addMinField(const std::string& field, const std::string& value);
+    void addMaxField(const std::string& field, const std::string& value);
+    void addSmallerThanField(const std::string& field, const std::string& value);
+    void addGreaterThanField(const std::string& field, const std::string& value);
     void addNotEqualField(const std::string& field, const std::string& value);
     ModioFilterCreator* getFilter();
     ~FilterCreator();

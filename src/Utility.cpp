@@ -29,10 +29,7 @@ namespace modio
 
   std::string toString(double number)
   {
-    std::ostringstream string_stream;
-    string_stream << number;
-    std::string return_value = string_stream.str();
-    return return_value;
+    return std::to_string(number);
   }
 
   void createDirectory(std::string directory)

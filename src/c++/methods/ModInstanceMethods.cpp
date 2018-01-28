@@ -2,7 +2,7 @@
 
 namespace modio
 {
-    void Instance::getMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
+  void Instance::getMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
   {
     const struct GetModCall* get_mod_call = new GetModCall{callback};
     get_mod_calls[this->current_call_id] = (GetModCall*)get_mod_call;

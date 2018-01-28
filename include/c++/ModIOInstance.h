@@ -12,6 +12,7 @@
 #include "c++/schemas/Image.h"
 #include "c++/schemas/Media.h"
 #include "c++/schemas/Mod.h"
+#include "c++/schemas/ModEvent.h"
 #include "c++/schemas/Modfile.h"
 #include "c++/schemas/RatingSummary.h"
 #include "c++/schemas/Response.h"
@@ -21,6 +22,7 @@
 #include "c++/methods/callbacks/ImageInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModEventsInstanceCallbacks.h"
 #include "c++/methods/callbacks/TagsInstanceCallbacks.h"
 #include "c++/methods/callbacks/SubscriptionInstanceCallbacks.h"
 
@@ -37,8 +39,8 @@ namespace modio
     void sleep(u32 milliseconds);
 
     //Events
-    //void listendToEvents(const std::function<void(const modio::Response&, const std::vector<modio::ModEvents> & mod_events)>& callback);
-    //void getAllModEvents(modio::FilterCreator& filter, void* object, const std::function<void(const modio::Response&, const std::vector<modio::ModEvents> & mod_events)>& callback);
+    void listendToModEvents(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
+    void getAllModEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
 
     //Authentication Methods
     bool isLoggedIn() const;

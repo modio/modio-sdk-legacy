@@ -340,10 +340,10 @@ extern "C"
   void MODIO_DLL modioAddFilterNotLikeField(ModioFilterCreator* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterInField(ModioFilterCreator* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterNotInField(ModioFilterCreator* filter, char* field, char* value);
-  void MODIO_DLL modioAddFilterMinField(ModioFilterCreator* filter, char* field, double value);
-  void MODIO_DLL modioAddFilterMaxField(ModioFilterCreator* filter, char* field, double value);
-  void MODIO_DLL modioAddFilterSmallerThanField(ModioFilterCreator* filter, char* field, double value);
-  void MODIO_DLL modioAddFilterGreaterThanField(ModioFilterCreator* filter, char* field, double value);
+  void MODIO_DLL modioAddFilterMinField(ModioFilterCreator* filter, char* field, char* value);
+  void MODIO_DLL modioAddFilterMaxField(ModioFilterCreator* filter, char* field, char* value);
+  void MODIO_DLL modioAddFilterSmallerThanField(ModioFilterCreator* filter, char* field, char* value);
+  void MODIO_DLL modioAddFilterGreaterThanField(ModioFilterCreator* filter, char* field, char* value);
   void MODIO_DLL modioAddFilterNotEqualField(ModioFilterCreator* filter, char* field, char* value);
   void MODIO_DLL modioFreeFilter(ModioFilterCreator* filter);
 
