@@ -70,6 +70,28 @@ void onGetAllModEvents(void* object, ModioResponse response, ModioModEvent* mod_
 {
   if(modio::callback)
     modio::callback(response, mod_events_array, mod_events_array_size);
+
+  for(int i=0; i<mod_events_array_size; i++)
+  {
+    switch( mod_events_array[i].event_type )
+    {
+      case EVENT_UNDEFINED:
+      printf("Undefined\n");
+      break;
+      case EVENT_MODFILE_CHANGED:
+      printf("Modfile changed\n");
+      break;
+      case EVENT_MOD_AVAILABLE:
+      printf("Mod available\n");
+      break;
+      case EVENT_MOD_UNAVAILABLE:
+      printf("Mod unavailable\n");
+      break;
+      case EVENT_MOD_EDITED:
+      printf("Mod edited\n");
+      break;
+    }
+  }
 }
 
 void modioProcess()

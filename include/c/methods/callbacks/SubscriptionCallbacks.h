@@ -1,5 +1,5 @@
-#ifndef MODIO_MODCALLBACKS_H
-#define MODIO_MODCALLBACKS_H
+#ifndef MODIO_SUBSCRIPTIONCALLBACKS_H
+#define MODIO_SUBSCRIPTIONCALLBACKS_H
 
 #include "Globals.h"
 #include "wrappers/MinizipWrapper.h"

@@ -1,5 +1,5 @@
-#ifndef MODIO_MODCALLBACKS_H
-#define MODIO_MODCALLBACKS_H
+#ifndef MODIO_MODEVENTCALLBACKS_H
+#define MODIO_MODEVENTCALLBACKS_H
 
 #include "Globals.h"
 #include "c/schemas/ModioResponse.h"

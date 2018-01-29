@@ -14,6 +14,7 @@
 #include "c/methods/ModfileMethods.h"
 #include "c/methods/TagMethods.h"
 #include "c/methods/ImageMethods.h"
+#include "c/methods/RatingsMethods.h"
 #include "c++/ModIOInstance.h"
 
 #endif

@@ -33,6 +33,7 @@ extern "C"
 {
   typedef struct ModioListNode ModioListNode;
   typedef struct ModioAvatar ModioAvatar;
+  typedef struct ModioDependency ModioDependency;
   typedef struct ModioError ModioError;
   typedef struct ModioFilehash ModioFilehash;
   typedef struct ModioHeader ModioHeader;
@@ -40,6 +41,7 @@ extern "C"
   typedef struct ModioImage ModioImage;
   typedef struct ModioLogo ModioLogo;
   typedef struct ModioMedia ModioMedia;
+  typedef struct ModioMetadataKVP ModioMetadataKVP;
   typedef struct ModioUser ModioUser;
   typedef struct ModioDownload ModioDownload;
   typedef struct ModioModfile ModioModfile;
@@ -66,6 +68,12 @@ extern "C"
     char* original;
     char* thumb_50x50;
     char* thumb_100x100;
+  };
+
+  struct ModioDependency
+  {
+    u32 mod_id;
+    u32 date_added;
   };
 
   struct ModioError
@@ -120,6 +128,12 @@ extern "C"
     u32 sketchfab_size;
     ModioImage* images_array;
     u32 images_size;
+  };
+
+  struct ModioMetadataKVP
+  {
+    char* metakey;
+    char* metavalue;
   };
 
   struct ModioUser
@@ -319,7 +333,11 @@ extern "C"
   void MODIO_DLL modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
   void MODIO_DLL modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
-  void MODIO_DLL modioSetUserModVote(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response, u32 mod_id));
+
+  //Ratings Methods
+  void MODIO_DLL modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));
+
+  //Subscription Methods
   void MODIO_DLL modioSubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioUnsubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
 

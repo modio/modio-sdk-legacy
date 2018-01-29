@@ -98,7 +98,6 @@ void modioOnModDownloaded(u32 call_number, u32 response_code, json response_json
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
-
   fclose(install_mod_callbacks[call_number]->file);
 
   std::string destination_path_str = install_mod_callbacks[call_number]->destination_path;
@@ -148,7 +147,10 @@ void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
 
     std::string downoad_url = response_json["modfile"]["download"]["binary_url"];
 
-    modio::curlwrapper::download(install_call_number, downoad_url + "?shhh=secret", file_path, file, progress, &modioOnModDownloaded);
+    std::vector<std::string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+
+    modio::curlwrapper::download(install_call_number, headers, downoad_url, file_path, file, progress, &modioOnModDownloaded);
   }else
   {
     ModioResponse response;
