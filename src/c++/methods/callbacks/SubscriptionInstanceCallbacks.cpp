@@ -2,10 +2,10 @@
 
 namespace modio
 {
-  std::map<u32, SubscribeModCall*> subscribe_mod_calls;
-  std::map<u32, UnsubscribeModCall*> unsubscribe_mod_calls;
+  std::map<u32, SubscribeToModCall*> subscribe_to_mod_calls;
+  std::map<u32, UnsubscribeFromModCall*> unsubscribe_from_mod_calls;
 
-  void onSubscribeMod(void* object, ModioResponse modio_response, ModioMod mod)
+  void onSubscribeToMod(void* object, ModioResponse modio_response, ModioMod mod)
   {
     u32 call_id = *((u32*)object);
 
@@ -19,24 +19,24 @@ namespace modio
       modio_mod.initialize(mod);
     }
 
-    subscribe_mod_calls[call_id]->callback((const Response&)response, modio_mod);
+    subscribe_to_mod_calls[call_id]->callback((const Response&)response, modio_mod);
 
     delete (u32*)object;
-    delete subscribe_mod_calls[call_id];
-    subscribe_mod_calls.erase(call_id);
+    delete subscribe_to_mod_calls[call_id];
+    subscribe_to_mod_calls.erase(call_id);
   }
 
-  void onUnsubscribeMod(void* object, ModioResponse modio_response)
+  void onUnsubscribeFromMod(void* object, ModioResponse modio_response)
   {
     u32 call_id = *((u32*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
-    unsubscribe_mod_calls[call_id]->callback((const Response&)response);
+    unsubscribe_from_mod_calls[call_id]->callback((const Response&)response);
 
     delete (u32*)object;
-    delete unsubscribe_mod_calls[call_id];
-    unsubscribe_mod_calls.erase(call_id);
+    delete unsubscribe_from_mod_calls[call_id];
+    unsubscribe_from_mod_calls.erase(call_id);
   }
 }

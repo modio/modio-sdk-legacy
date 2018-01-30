@@ -26,7 +26,7 @@ int main(void)
   scanf("%i", &mod_id);
 
   printf("Subscribing to mod...\n");
-  modioSubscribeMod(&wait, mod_id, &onModSubscribed);
+  modioSubscribeToMod(&wait, mod_id, &onModSubscribed);
 
   while(wait)
   {

@@ -8,22 +8,22 @@
 #include "c/schemas/ModioMod.h"
 #include "ModUtility.h"
 
-struct SubscribeModParams
+struct SubscribeToModParams
 {
   void* object;
   void (*callback)(void* object, ModioResponse response, ModioMod mod);
 };
 
-struct UnsubscribeModParams
+struct UnsubscribeFromModParams
 {
   void* object;
   void (*callback)(void* object, ModioResponse response);
 };
 
-extern std::map< u32, SubscribeModParams* > subscribe_mod_callbacks;
-extern std::map< u32, UnsubscribeModParams* > unsubscribe_mod_callbacks;
+extern std::map< u32, SubscribeToModParams* > subscribe_to_mod_callbacks;
+extern std::map< u32, UnsubscribeFromModParams* > unsubscribe_from_mod_callbacks;
 
-void modioOnSubscribeMod(u32 call_number, u32 response_code, json response_json);
-void modioOnUnsubscribeMod(u32 call_number, u32 response_code, json response_json);
+void modioOnSubscribeToMod(u32 call_number, u32 response_code, json response_json);
+void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, json response_json);
 
 #endif

@@ -33,6 +33,7 @@ typedef int i32;
 
 typedef struct ModioListNode ModioListNode;
 typedef struct ModioAvatar ModioAvatar;
+typedef struct ModioDependency ModioDependency;
 typedef struct ModioError ModioError;
 typedef struct ModioFilehash ModioFilehash;
 typedef struct ModioHeader ModioHeader;
@@ -40,6 +41,7 @@ typedef struct ModioIcon ModioIcon;
 typedef struct ModioImage ModioImage;
 typedef struct ModioLogo ModioLogo;
 typedef struct ModioMedia ModioMedia;
+typedef struct ModioMetadataKVP ModioMetadataKVP;
 typedef struct ModioUser ModioUser;
 typedef struct ModioDownload ModioDownload;
 typedef struct ModioModfile ModioModfile;
@@ -66,6 +68,12 @@ struct ModioAvatar
   char* original;
   char* thumb_50x50;
   char* thumb_100x100;
+};
+
+struct ModioDependency
+{
+  u32 mod_id;
+  u32 date_added;
 };
 
 struct ModioError
@@ -120,6 +128,12 @@ struct ModioMedia
   u32 sketchfab_size;
   ModioImage* images_array;
   u32 images_size;
+};
+
+struct ModioMetadataKVP
+{
+  char* metakey;
+  char* metavalue;
 };
 
 struct ModioUser
@@ -320,12 +334,12 @@ void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*c
 void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
 void modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
 
-//Ratings
-void modioSetUserModVote(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));
+//Ratings Methods
+void modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));
 
-//Subscription
-void modioSubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
-void modioUnsubscribeMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
+//Subscription Methods
+void modioSubscribeToMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
+void modioUnsubscribeFromMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
 
 //Tags Methods
 void modioGetTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id, ModioTag* tags_array, u32 tags_array_size));

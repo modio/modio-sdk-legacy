@@ -29,7 +29,7 @@ int main(void)
   scanf("%i", &rating);
 
   printf("Rating mod...\n");
-  modioSetUserModVote(&wait, mod_id, rating, &onModVoted);
+  modioAddModRating(&wait, mod_id, rating, &onModVoted);
 
   while(wait)
   {

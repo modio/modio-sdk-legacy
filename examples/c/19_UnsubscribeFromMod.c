@@ -24,7 +24,7 @@ int main(void)
   scanf("%i", &mod_id);
 
   printf("Unsubscribing to mod...\n");
-  modioUnsubscribeMod(&wait, mod_id, &onModUnsubscribed);
+  modioUnsubscribeFromMod(&wait, mod_id, &onModUnsubscribed);
 
   while(wait)
   {

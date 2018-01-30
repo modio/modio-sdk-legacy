@@ -24,14 +24,14 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout <<"Subscribing to mod..." << std::endl;
+  std::cout <<"Unsubscribing from mod..." << std::endl;
 
-  modio_instance.subscribeMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
+  modio_instance.unsubscribeFromMod(mod_id, [&](const modio::Response& response)
   {
-    std::cout << "Subscribe mod response: " << response.code << std::endl;
-    if(response.code == 201)
+    std::cout << "Unsubscribe mod response: " << response.code << std::endl;
+    if(response.code == 204)
     {
-      std::cout << "Subscribed to mod!" << std::endl;
+      std::cout << "Unsubscribed from mod!" << std::endl;
     }
     finish();
   });

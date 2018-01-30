@@ -80,8 +80,8 @@ namespace modio
     void addModRating(u32 mod_id, bool vote_up, const std::function<void(const modio::Response& response)>& callback);
 
     //Subscription Methods
-    void subscribeMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
-    void unsubscribeMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
+    void subscribeToMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
+    void unsubscribeFromMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
   };
 }
 

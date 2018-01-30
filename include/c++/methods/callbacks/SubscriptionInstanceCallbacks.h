@@ -1,18 +1,18 @@
 namespace modio
 {
-  struct SubscribeModCall
+  struct SubscribeToModCall
   {
     const std::function<void(const modio::Response&, const modio::Mod& mod)> callback;
   };
 
-  struct UnsubscribeModCall
+  struct UnsubscribeFromModCall
   {
     const std::function<void(const modio::Response&)> callback;
   };
 
-  extern std::map<u32, SubscribeModCall*> subscribe_mod_calls;
-  extern std::map<u32, UnsubscribeModCall*> unsubscribe_mod_calls;
+  extern std::map<u32, SubscribeToModCall*> subscribe_to_mod_calls;
+  extern std::map<u32, UnsubscribeFromModCall*> unsubscribe_from_mod_calls;
 
-  void onSubscribeMod(void* object, ModioResponse modio_response, ModioMod mod);
-  void onUnsubscribeMod(void* object, ModioResponse modio_response);
+  void onSubscribeToMod(void* object, ModioResponse modio_response, ModioMod mod);
+  void onUnsubscribeFromMod(void* object, ModioResponse modio_response);
 }
