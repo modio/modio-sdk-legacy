@@ -45,7 +45,7 @@ namespace modio
     {
       if((*it)["url"] == url)
       {
-        u32 current_datetime = std::time(nullptr);
+        u32 current_datetime = (u32)std::time(nullptr);
         u32 file_datetime = (*it)["datetime"];
         u32 difference = current_datetime - file_datetime;
 

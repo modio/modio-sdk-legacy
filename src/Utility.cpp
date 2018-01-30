@@ -192,6 +192,6 @@ namespace modio
 
   u32 getCurrentTime()
   {
-    return std::time(nullptr);
+    return (u32)std::time(nullptr);
   }
 }
