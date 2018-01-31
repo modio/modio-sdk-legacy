@@ -22,6 +22,7 @@ IF (MINGW)
 ENDIF()
 
 IF (MSVC)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/zlib.lib )
   elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)

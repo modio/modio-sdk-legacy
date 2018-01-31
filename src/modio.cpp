@@ -71,7 +71,7 @@ void onGetAllModEvents(void* object, ModioResponse response, ModioModEvent* mod_
   if(modio::callback)
     modio::callback(response, mod_events_array, mod_events_array_size);
 
-  for(int i=0; i<mod_events_array_size; i++)
+  for(int i=0; i<(int)mod_events_array_size; i++)
   {
     switch( mod_events_array[i].event_type )
     {

@@ -15,7 +15,7 @@ namespace modio
   void Instance::addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback)
   {
     char** tags_array = new char*[tags.size()];
-    for(int i=0; i<tags.size(); i++)
+    for(int i=0; i<(int)tags.size(); i++)
     {
       tags_array[i] = new char[tags[i].size() + 1];
       strcpy(tags_array[i], (char*)tags[i].c_str());
@@ -31,7 +31,7 @@ namespace modio
   void Instance::deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback)
   {
     char** tags_array = new char*[tags.size()];
-    for(int i=0; i<tags.size(); i++)
+    for(int i=0; i<(int)tags.size(); i++)
     {
       tags_array[i] = new char[tags[i].size() + 1];
       strcpy(tags_array[i], (char*)tags[i].c_str());
