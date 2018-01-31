@@ -76,19 +76,19 @@ void onGetAllModEvents(void* object, ModioResponse response, ModioModEvent* mod_
     switch( mod_events_array[i].event_type )
     {
       case EVENT_UNDEFINED:
-      printf("Undefined\n");
+      // TODO: Log error
       break;
       case EVENT_MODFILE_CHANGED:
-      printf("Modfile changed\n");
+      // TODO: Reinstall modfile
       break;
       case EVENT_MOD_AVAILABLE:
-      printf("Mod available\n");
+      // N/A
       break;
       case EVENT_MOD_UNAVAILABLE:
-      printf("Mod unavailable\n");
+      // N/A
       break;
       case EVENT_MOD_EDITED:
-      printf("Mod edited\n");
+      // TODO: Update locally installed mods
       break;
     }
   }

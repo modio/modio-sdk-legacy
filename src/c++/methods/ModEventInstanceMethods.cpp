@@ -12,9 +12,9 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::listendToModEvents(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback)
+  void Instance::setModEventListener(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback)
   {
-    listend_to_mod_event_call = new ListendToModEventsCall{callback};
-    modioListendToEvents(&onListendToModEvents);
+    set_mod_event_listener_call = new SetModEventListenerCall{callback};
+    modioSetModEventListener(&onSetModEventListener);
   }
 }

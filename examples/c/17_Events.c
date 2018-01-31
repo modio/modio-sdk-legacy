@@ -1,10 +1,12 @@
 #include "modio_c.h"
 
-void onEvent(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+void onModEvent(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
 {
+  // The mod event callback is triggered in a constant interval of time, 15 seconds by default
   printf("Event listener response: %i\n", response.code);
   if(response.code == 200)
   {
+    // it returns an array of events so you can notify the user about it or do the correspoding changes
     for(u32 i=0; i < mod_events_array_size; i++)
     {
       printf("Event found!\n");
@@ -41,7 +43,8 @@ int main(void)
 
   bool wait = true;
 
-  modioListendToEvents(&onEvent);
+  // You can register a function as callback for mod events
+  modioSetModEventListener(&onModEvent);
 
   printf("Listening to mod events...\n");
 

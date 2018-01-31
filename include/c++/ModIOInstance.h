@@ -40,8 +40,8 @@ namespace modio
     void sleep(u32 milliseconds);
 
     //Events
-    void listendToModEvents(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
     void getAllModEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
+    void setModEventListener(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
 
     //Authentication Methods
     bool isLoggedIn() const;
