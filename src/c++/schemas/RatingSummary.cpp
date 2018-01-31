@@ -12,4 +12,18 @@ namespace modio
     if(modio_ratings.display_text)
       this->display_text = modio_ratings.display_text;
   }
+
+  json RatingSummary::toJson()
+  {
+    json rating_summary_json;
+
+    rating_summary_json["total_ratings"] = this->total_ratings;
+    rating_summary_json["positive_ratings"] = this->positive_ratings;
+    rating_summary_json["negative_ratings"] = this->negative_ratings;
+    rating_summary_json["percentage_positive"] = this->percentage_positive;
+    rating_summary_json["weighted_aggregate"] = this->weighted_aggregate;
+    rating_summary_json["display_text"] = this->display_text;
+
+    return rating_summary_json;
+  }
 }

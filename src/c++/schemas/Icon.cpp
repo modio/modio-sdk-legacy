@@ -15,4 +15,17 @@ namespace modio
     if(modio_icon.thumb_256x256)
       this->thumb_256x256 = modio_icon.thumb_256x256;
   }
+
+  json Icon::toJson()
+  {
+    json icon_json;
+
+    icon_json["filename"] = this->filename;
+    icon_json["original"] = this->original;
+    icon_json["thumb_64x64"] = this->thumb_64x64;
+    icon_json["thumb_128x128"] = this->thumb_128x128;
+    icon_json["thumb_256x256"] = this->thumb_256x256;
+
+    return icon_json;
+  }
 }

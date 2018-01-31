@@ -239,7 +239,7 @@ namespace modio
       return current_download_info;
     }
 
-    void download(u32 call_number, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code, json response)> callback)
+    void download(u32 call_number, std::vector<std::string> headers, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code, json response)> callback)
     {
       writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -262,6 +262,8 @@ namespace modio
       if(curl)
       {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        setHeaders(headers, curl);
 
         setVerifies(curl);
 

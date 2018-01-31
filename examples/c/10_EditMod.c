@@ -13,7 +13,7 @@ void onModEdited(void* object, ModioResponse response, ModioMod mod)
 
 int main(void)
 {
-  modioInit(7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 

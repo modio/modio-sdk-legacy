@@ -17,6 +17,7 @@ namespace modio
     std::string thumb_256x256;
 
     void initialize(ModioIcon Icon);
+    json toJson();
   };
 }
 

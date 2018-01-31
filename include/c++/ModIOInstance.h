@@ -12,11 +12,20 @@
 #include "c++/schemas/Image.h"
 #include "c++/schemas/Media.h"
 #include "c++/schemas/Mod.h"
+#include "c++/schemas/ModEvent.h"
 #include "c++/schemas/Modfile.h"
 #include "c++/schemas/RatingSummary.h"
 #include "c++/schemas/Response.h"
 #include "c++/schemas/Tag.h"
 #include "c++/schemas/User.h"
+#include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
+#include "c++/methods/callbacks/ImageInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModEventsInstanceCallbacks.h"
+#include "c++/methods/callbacks/TagsInstanceCallbacks.h"
+#include "c++/methods/callbacks/SubscriptionInstanceCallbacks.h"
+#include "c++/methods/callbacks/RatingsInstanceCallbacks.h"
 
 namespace modio
 {
@@ -25,10 +34,14 @@ namespace modio
     int current_call_id;
 
   public:
-    Instance(u32 id, const std::string& guid);
+    Instance(u32 environment, u32 id, const std::string& guid);
 
     //General Methods
     void sleep(u32 milliseconds);
+
+    //Events
+    void getAllModEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
+    void setModEventListener(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
 
     //Authentication Methods
     bool isLoggedIn() const;
@@ -48,11 +61,11 @@ namespace modio
     void getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
     void editMod(u32 mod_id, modio::ModEditor& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+    void installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
 
     //Modfile Methods
     void addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
     void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
-    void installModfile(modio::Modfile modfile, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
     u32 getModfileState(u32 modfile_id);
     double getModfileDownloadPercentage(u32 modfile_id);
     bool uninstallModfile(u32 modfile_id);
@@ -62,6 +75,13 @@ namespace modio
     void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);
     void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
     void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+
+    //Ratings Methods
+    void addModRating(u32 mod_id, bool vote_up, const std::function<void(const modio::Response& response)>& callback);
+
+    //Subscription Methods
+    void subscribeToMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
+    void unsubscribeFromMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
   };
 }
 

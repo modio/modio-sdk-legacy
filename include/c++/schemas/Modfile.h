@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "c/schemas/ModioModfile.h"
 #include "c++/schemas/Filehash.h"
+#include "c++/schemas/Download.h"
 
 namespace modio
 {
@@ -21,10 +22,11 @@ namespace modio
     std::string version;
     std::string virustotal_hash;
     std::string changelog;
-    std::string download_url;
     modio::Filehash filehash;
+    modio::Download download;
 
     void initialize(ModioModfile modfile);
+    json toJson();
   };
 }
 

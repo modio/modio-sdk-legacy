@@ -5,6 +5,7 @@ extern "C"
   void modioInitResponse(ModioResponse* response, json response_json)
   {
     response->code = 0;
+    response->result_cached = false;
 
     response->result_count = 0;
     if(modio::hasKey(response_json,"result_count"))

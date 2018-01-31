@@ -2,7 +2,7 @@
 
 int main(void)
 {
-  modio::Instance modio_instance(7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
 
@@ -22,7 +22,8 @@ int main(void)
 
   // Before requesting mods, let's define the query filters
   modio::FilterCreator filter;
-  filter.setLimit(3);
+  filter.setLimit(7);
+  filter.setCacheMaxAgeSeconds(100);
 
   std::cout <<"Getting mods..." << std::endl;
 
