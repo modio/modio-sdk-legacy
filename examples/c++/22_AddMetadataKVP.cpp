@@ -24,18 +24,16 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  // We request the list of tags by providing the Mod's id
-  modio_instance.getTags(mod_id, [&](const modio::Response& response, std::vector<modio::Tag> tags)
+  // We add metadata key value pairs to a mod by providing the key and the value contained on a std::pair
+  std::vector< std::pair<std::string,std::string> > metadata_kvp;
+  metadata_kvp.push_back(std::pair<std::string,std::string>("pistol-dmg","800"));
+
+  modio_instance.addMetadataKVP(mod_id, metadata_kvp, [&](const modio::Response& response)
   {
-    std::cout << "Get tags response: " << response.code << std::endl;
-    if(response.code == 200)
+    std::cout << "Add metadta kvp response: " << response.code << std::endl;
+    if(response.code == 201)
     {
-      std::cout << "Listing Tags" << std::endl;
-      std::cout << "============" << std::endl;
-      for(auto& tag : tags)
-      {
-        std::cout << tag.name << std::endl;
-      }
+      std::cout << "Metadata KVP added successfully" << std::endl;
     }
     finish();
   });

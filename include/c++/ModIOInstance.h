@@ -11,6 +11,7 @@
 #include "c++/schemas/Filehash.h"
 #include "c++/schemas/Image.h"
 #include "c++/schemas/Media.h"
+#include "c++/schemas/MetadataKVP.h"
 #include "c++/schemas/Mod.h"
 #include "c++/schemas/ModEvent.h"
 #include "c++/schemas/Modfile.h"
@@ -20,6 +21,7 @@
 #include "c++/schemas/User.h"
 #include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
 #include "c++/methods/callbacks/ImageInstanceCallbacks.h"
+#include "c++/methods/callbacks/MetadataKVPInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModEventsInstanceCallbacks.h"
@@ -75,6 +77,11 @@ namespace modio
     void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);
     void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
     void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+
+    //Metadata KVP methods
+    void getMetadataKVP(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::MetadataKVP> metadata_kvp)>& callback);
+    void addMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback);
+    void deleteMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback);
 
     //Ratings Methods
     void addModRating(u32 mod_id, bool vote_up, const std::function<void(const modio::Response& response)>& callback);
