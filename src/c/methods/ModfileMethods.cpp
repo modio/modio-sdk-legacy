@@ -2,6 +2,55 @@
 
 extern "C"
 {
+  void modioGetModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
+  {
+    std::vector<std::string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id) + "?api_key=" + modio::API_KEY;
+
+    u32 call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    get_modfile_callbacks[call_number] = new GetModfileParams;
+    get_modfile_callbacks[call_number]->callback = callback;
+    get_modfile_callbacks[call_number]->object = object;
+
+    modio::curlwrapper::get(call_number, url, headers, &modioOnGetModfile);
+  }
+
+  void modioGetModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
+  {
+    std::string filter_string = modio::getFilterString(&filter);
+    std::vector<std::string> headers;
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "/files&api_key=" + modio::API_KEY;
+
+    u32 call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    get_modfiles_callbacks[call_number] = new GetModfilesParams;
+    get_modfiles_callbacks[call_number]->callback = callback;
+    get_modfiles_callbacks[call_number]->object = object;
+    get_modfiles_callbacks[call_number]->url = url;
+    get_modfiles_callbacks[call_number]->is_cache = false;
+
+    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    if(cache_filename != "")
+    {
+      std::ifstream cache_file(modio::getModIODirectory() + "cache/" + cache_filename);
+      json cache_file_json;
+      if(cache_file.is_open())
+      {
+        cache_file >> cache_file_json;
+        get_modfiles_callbacks[call_number]->is_cache = true;
+        modioOnGetModfiles(call_number, 200, cache_file_json);
+        return;
+      }
+    }
+
+    modio::curlwrapper::get(call_number, url, headers, &modioOnGetModfiles);
+  }
+
   void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
     modio::minizipwrapper::compress(modfile_creator.path, modio::getModIODirectory() + "tmp/modfile.zip");

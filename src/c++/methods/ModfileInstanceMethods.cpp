@@ -2,6 +2,26 @@
 
 namespace modio
 {
+  void Instance::getModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback)
+  {
+    const struct GetModfileCall* get_modfile_call = new GetModfileCall{callback};
+    get_modfile_calls[this->current_call_id] = (GetModfileCall*)get_modfile_call;
+
+    modioGetModfile((void*)new u32(this->current_call_id), mod_id, modfile_id, &onGetModfile);
+
+    this->current_call_id++;
+  }
+
+  void Instance::getModfiles(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Modfile> & modfiles)>& callback)
+  {
+    const struct GetModfilesCall* get_modfiles_call = new GetModfilesCall{callback};
+    get_modfiles_calls[this->current_call_id] = (GetModfilesCall*)get_modfiles_call;
+
+    modioGetModfiles((void*)new u32(this->current_call_id), mod_id, *filter.getFilter(), &onGetModfiles);
+
+    this->current_call_id++;
+  }
+
   void Instance::addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback)
   {
     const struct AddModfileCall* add_modfile_call = new AddModfileCall{callback};

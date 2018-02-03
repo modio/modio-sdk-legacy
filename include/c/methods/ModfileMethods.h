@@ -3,6 +3,7 @@
 
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
+#include "c/creators/ModioFilterCreator.h"
 #include "c/creators/ModioModfileCreator.h"
 #include "c/creators/ModioModfileEditor.h"
 #include "Globals.h"
