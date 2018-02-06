@@ -11,6 +11,7 @@
 #include "c++/schemas/Filehash.h"
 #include "c++/schemas/Image.h"
 #include "c++/schemas/Media.h"
+#include "c++/schemas/MetadataKVP.h"
 #include "c++/schemas/Mod.h"
 #include "c++/schemas/ModEvent.h"
 #include "c++/schemas/Modfile.h"
@@ -20,6 +21,7 @@
 #include "c++/schemas/User.h"
 #include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
 #include "c++/methods/callbacks/ImageInstanceCallbacks.h"
+#include "c++/methods/callbacks/MetadataKVPInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModEventsInstanceCallbacks.h"
@@ -40,6 +42,7 @@ namespace modio
     void sleep(u32 milliseconds);
 
     //Events
+    void getModEvents(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
     void getAllModEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
     void setModEventListener(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
 
@@ -64,6 +67,8 @@ namespace modio
     void installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
 
     //Modfile Methods
+    void getModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
+    void getModfiles(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
     void addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
     void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
     u32 getModfileState(u32 modfile_id);
@@ -75,6 +80,11 @@ namespace modio
     void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);
     void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
     void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+
+    //Metadata KVP methods
+    void getMetadataKVP(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::MetadataKVP> metadata_kvp)>& callback);
+    void addMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback);
+    void deleteMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback);
 
     //Ratings Methods
     void addModRating(u32 mod_id, bool vote_up, const std::function<void(const modio::Response& response)>& callback);

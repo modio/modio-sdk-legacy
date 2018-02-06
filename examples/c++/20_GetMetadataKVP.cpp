@@ -24,17 +24,17 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  // We request the list of tags by providing the Mod's id
-  modio_instance.getTags(mod_id, [&](const modio::Response& response, std::vector<modio::Tag> tags)
+  // We request the list of metadata key value pairs by providing the Mod's id
+  modio_instance.getMetadataKVP(mod_id, [&](const modio::Response& response, std::vector<modio::MetadataKVP> metadata_kvp)
   {
-    std::cout << "Get tags response: " << response.code << std::endl;
+    std::cout << "Get metadata response: " << response.code << std::endl;
     if(response.code == 200)
     {
-      std::cout << "Listing Tags" << std::endl;
-      std::cout << "============" << std::endl;
-      for(auto& tag : tags)
+      std::cout << "Listing Metadata KVP" << std::endl;
+      std::cout << "====================" << std::endl;
+      for(auto& metadata : metadata_kvp)
       {
-        std::cout << tag.name << std::endl;
+        std::cout << metadata.metakey << ":" << metadata.metavalue << std::endl;
       }
     }
     finish();
