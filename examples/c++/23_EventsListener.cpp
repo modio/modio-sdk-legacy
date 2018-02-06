@@ -36,6 +36,7 @@ int main(void)
         std::cout << "Id: " <<  mod_event.id << std::endl;
         std::cout << "Mod id: " <<  mod_event.mod_id << std::endl;
         std::cout << "User id: " <<  mod_event.user_id << std::endl;
+        std::cout << "Date added: " <<  (char*)ctime(&mod_event.date_added);
         std::cout << "Event Type: ";
         switch( mod_event.event_type )
         {
@@ -55,7 +56,6 @@ int main(void)
           std::cout<<"Mod edited"<< std::endl;
           break;
         }
-        std::cout << "Date added: " <<  mod_event.date_added << std::endl;
         std::cout << std::endl;
       }
     }

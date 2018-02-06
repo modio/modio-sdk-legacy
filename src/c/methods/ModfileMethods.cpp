@@ -23,7 +23,7 @@ extern "C"
     std::string filter_string = modio::getFilterString(&filter);
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "/files&api_key=" + modio::API_KEY;
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files?" + filter_string + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
