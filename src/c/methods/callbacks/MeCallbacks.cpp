@@ -2,6 +2,7 @@
 
 std::map< u32, GetAuthenticatedUserParams* > get_authenticated_user_callbacks;
 std::map< u32, GetUserSubscriptionsParams* > get_user_subscriptions_callbacks;
+std::map< u32, GetUserGamesParams* > get_user_games_callbacks;
 std::map< u32, GetUserModsParams* > get_user_mods_callbacks;
 std::map< u32, GetUserModfilesParams* > get_user_modfiles_callbacks;
 
@@ -50,6 +51,38 @@ void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, json respon
   }
   delete get_user_subscriptions_callbacks[call_number];
   get_user_subscriptions_callbacks.erase(call_number);
+  modioFreeResponse(&response);
+}
+
+void modioOnGetUserGamesParams(u32 call_number, u32 response_code, json response_json)
+{
+  ModioResponse response;
+  modioInitResponse(&response, response_json);
+  response.code = response_code;
+
+  if(response.code == 200)
+  {
+    if(!get_user_games_callbacks[call_number]->is_cache)
+      modio::addCallToCache(get_user_games_callbacks[call_number]->url, response_json);
+
+    u32 games_size = (u32)response_json["data"].size();
+    ModioGame* games = new ModioGame[games_size];
+    for(u32 i=0; i<games_size; i++)
+    {
+      modioInitGame(&games[i], response_json["data"][i]);
+    }
+    get_user_games_callbacks[call_number]->callback(get_user_games_callbacks[call_number]->object, response, games, games_size);
+    for(u32 i=0; i<games_size; i++)
+    {
+      modioFreeGame(&games[i]);
+    }
+    delete[] games;
+  }else
+  {
+    get_user_games_callbacks[call_number]->callback(get_user_games_callbacks[call_number]->object, response, NULL, 0);
+  }
+  delete get_user_games_callbacks[call_number];
+  get_user_games_callbacks.erase(call_number);
   modioFreeResponse(&response);
 }
 
