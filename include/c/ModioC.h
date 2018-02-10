@@ -36,6 +36,8 @@ extern "C"
   typedef struct ModioDependency ModioDependency;
   typedef struct ModioError ModioError;
   typedef struct ModioFilehash ModioFilehash;
+  typedef struct ModioGame ModioGame;
+  typedef struct ModioGameTagOption ModioGameTagOption;
   typedef struct ModioHeader ModioHeader;
   typedef struct ModioIcon ModioIcon;
   typedef struct ModioImage ModioImage;
@@ -290,6 +292,43 @@ extern "C"
     u32 user_id;
     u32 event_type;
     long date_added;
+  };
+
+  struct ModioGameTagOption
+  {
+    u32 hidden;
+    char* name;
+    char* type;
+    char** tags_array;
+    u32 tags_array_size;
+  };
+
+  struct ModioGame
+  {
+    u32 id;
+    u32 status;
+    u32 date_added;
+    u32 date_updated;
+    u32 presentation_option;
+    u32 date_live;
+    u32 community_options;
+    u32 submission_option;
+    u32 curation_option;
+    u32 revenue_options;
+    u32 api_access_options;
+    char* ugc_name;
+    char* homepage;
+    char* name;
+    char* name_id;
+    char* summary;
+    char* instructions;
+    char* profile_url;
+    ModioUser submitted_by;
+    ModioIcon icon;
+    ModioLogo logo;
+    ModioHeader header;
+    ModioGameTagOption* game_tag_option_array;
+    u32 game_tag_option_array_size;
   };
 
   //General Methods
