@@ -4,6 +4,7 @@
 #include "wrappers/CurlWrapper.h"
 #include "wrappers/MinizipWrapper.h"
 #include "Globals.h"
+#include "c/creators/ModioFilterCreator.h"
 #include "c/schemas/ModioResponse.h"
 #include "c/schemas/ModioUser.h"
 #include "c/ModioC.h"
