@@ -21,6 +21,7 @@
 #include "c++/schemas/User.h"
 #include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
 #include "c++/methods/callbacks/ImageInstanceCallbacks.h"
+#include "c++/methods/callbacks/MeInstanceCallbacks.h"
 #include "c++/methods/callbacks/MetadataKVPInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
 #include "c++/methods/callbacks/ModInstanceCallbacks.h"
@@ -92,6 +93,9 @@ namespace modio
     //Subscription Methods
     void subscribeToMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void unsubscribeFromMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
+
+    //Me Methods
+    void getAuthenticatedUser(const std::function<void(const modio::Response& response, const modio::User& user)>& callback);
   };
 }
 

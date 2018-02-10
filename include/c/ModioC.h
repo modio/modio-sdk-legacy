@@ -414,6 +414,9 @@ extern "C"
   void MODIO_DLL modioSetModEditorModfile(ModioModEditor* update_mod_handler, u32 modfile);
   void MODIO_DLL modioSetModEditorMetadataBlob(ModioModEditor* update_mod_handler, char* metadata_blob);
   void MODIO_DLL modioFreeModEditor(ModioModEditor* update_mod_handler);
+
+  //Me methods
+  void MODIO_DLL modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user));
 }
 
 #endif
