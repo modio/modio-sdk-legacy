@@ -1,3 +1,0 @@
-/home/turupawn/Projects/ModioDevel/devel/CMakeFiles/rebuild_cache.dir
-/home/turupawn/Projects/ModioDevel/devel/CMakeFiles/modio.dir
-/home/turupawn/Projects/ModioDevel/devel/CMakeFiles/edit_cache.dir
