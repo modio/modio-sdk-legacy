@@ -9,6 +9,8 @@
 #include "c++/creators/ModfileEditor.h"
 #include "c++/schemas/Error.h"
 #include "c++/schemas/Filehash.h"
+#include "c++/schemas/Game.h"
+#include "c++/schemas/GameTagOption.h"
 #include "c++/schemas/Image.h"
 #include "c++/schemas/Media.h"
 #include "c++/schemas/MetadataKVP.h"
@@ -95,6 +97,10 @@ namespace modio
 
     //Me Methods
     void getAuthenticatedUser(const std::function<void(const modio::Response& response, const modio::User& user)>& callback);
+    void getUserSubscriptions(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
+    void getUserGames(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Game> & games)>& callback);
+    void getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
+    void getUserModfiles(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
   };
 }
 
