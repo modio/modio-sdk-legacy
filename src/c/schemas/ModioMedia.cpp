@@ -57,21 +57,21 @@ extern "C"
         delete[] media->youtube_array[i];
       }
       if(media->youtube_array)
-        delete[] media;
+        delete[] media->youtube_array;
 
       for(int i=0; i<(int)media->sketchfab_size; i++)
       {
         delete[] media->sketchfab_array[i];
       }
       if(media->sketchfab_array)
-        delete[] media;
+        delete[] media->sketchfab_array;
 
       for(int i=0; i<(int)media->images_size; i++)
       {
         modioFreeImage(&(media->images_array[i]));
       }
       if(media->images_array)
-        delete[] media;
+        delete[] media->images_array;
     }
   }
 }

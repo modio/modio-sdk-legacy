@@ -55,7 +55,7 @@ extern "C"
         delete[] game_tag_option->tags_array[i];
       }
       if(game_tag_option->tags_array)
-        delete[] game_tag_option;
+        delete[] game_tag_option->tags_array;
     }
   }
 }

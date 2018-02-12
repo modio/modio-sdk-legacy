@@ -54,7 +54,7 @@ void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, json respon
   modioFreeResponse(&response);
 }
 
-void modioOnGetUserGamesParams(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserGames(u32 call_number, u32 response_code, json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -86,7 +86,7 @@ void modioOnGetUserGamesParams(u32 call_number, u32 response_code, json response
   modioFreeResponse(&response);
 }
 
-void modioOnGetUserModsParams(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserMods(u32 call_number, u32 response_code, json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -118,7 +118,7 @@ void modioOnGetUserModsParams(u32 call_number, u32 response_code, json response_
   modioFreeResponse(&response);
 }
 
-void modioOnGetUserModfilesParams(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserModfiles(u32 call_number, u32 response_code, json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

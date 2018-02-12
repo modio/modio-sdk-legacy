@@ -129,6 +129,7 @@ extern "C"
     {
       game->game_tag_option_array_size = game_json["tag_options"].size();
       game->game_tag_option_array = new ModioGameTagOption[game->game_tag_option_array_size];
+
       for(u32 i=0; i<game->game_tag_option_array_size; i++)
       {
         modioInitGameTagOption(&(game->game_tag_option_array[i]), game_json["tag_options"][i]);
@@ -170,8 +171,11 @@ extern "C"
       {
         modioFreeGameTagOption(&(game->game_tag_option_array[i]));
       }
+
       if(game->game_tag_option_array)
+      {
         delete[] game->game_tag_option_array;
+      }
     }
   }
 }
