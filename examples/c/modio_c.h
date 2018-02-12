@@ -36,6 +36,8 @@ typedef struct ModioAvatar ModioAvatar;
 typedef struct ModioDependency ModioDependency;
 typedef struct ModioError ModioError;
 typedef struct ModioFilehash ModioFilehash;
+typedef struct ModioGame ModioGame;
+typedef struct ModioGameTagOption ModioGameTagOption;
 typedef struct ModioHeader ModioHeader;
 typedef struct ModioIcon ModioIcon;
 typedef struct ModioImage ModioImage;
@@ -292,6 +294,43 @@ struct ModioModEvent
   long date_added;
 };
 
+struct ModioGameTagOption
+{
+  u32 hidden;
+  char* name;
+  char* type;
+  char** tags_array;
+  u32 tags_array_size;
+};
+
+struct ModioGame
+{
+  u32 id;
+  u32 status;
+  u32 date_added;
+  u32 date_updated;
+  u32 presentation_option;
+  u32 date_live;
+  u32 community_options;
+  u32 submission_option;
+  u32 curation_option;
+  u32 revenue_options;
+  u32 api_access_options;
+  char* ugc_name;
+  char* homepage;
+  char* name;
+  char* name_id;
+  char* summary;
+  char* instructions;
+  char* profile_url;
+  ModioUser submitted_by;
+  ModioIcon icon;
+  ModioLogo logo;
+  ModioHeader header;
+  ModioGameTagOption* game_tag_option_array;
+  u32 game_tag_option_array_size;
+};
+
 //General Methods
 void modioInit(u32 environment, u32 game_id, char* api_key);
 //void init(int game_id, char* api_key, char* root_path);
@@ -331,7 +370,6 @@ u32 modioGetInstalledModfileId(u32 index);
 //Mods Methods
 void modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
-void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
 void modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
@@ -414,3 +452,10 @@ void modioSetModEditorHomepage(ModioModEditor* update_mod_handler, char* homepag
 void modioSetModEditorModfile(ModioModEditor* update_mod_handler, u32 modfile);
 void modioSetModEditorMetadataBlob(ModioModEditor* update_mod_handler, char* metadata_blob);
 void modioFreeModEditor(ModioModEditor* update_mod_handler);
+
+//Me methods
+void modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user));
+void modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+void modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size));
+void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+void modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
