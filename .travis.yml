@@ -18,3 +18,21 @@ script:
   - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then CXX=/usr/bin/g++-5 CC=/usr/bin/gcc-5 cmake . ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake . ; fi
   - cmake --build . -- -j2
+  - ls
+
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --local user.name "${GH_USER}"
+  - git config --local user.email "${GH_EMAIL}"
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then git tag "Linux-$(date +'%Y%m%d%H%M%S')" ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then git tag "OSX-$(date +'%Y%m%d%H%M%S')" ; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then zip release.zip libmodio.so ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then zip release.zip libmodio.dylib ; fi
+
+deploy:
+  provider: releases
+  api_key: "${GH_TOKEN}"
+  file: "release.zip"
+  skip_cleanup: true
+  on:
+    branch: master
