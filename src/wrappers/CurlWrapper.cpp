@@ -212,6 +212,8 @@ namespace modio
       ongoing_call = -1;
       call_count = -1;
       ongoing_calls.clear();
+
+      delete current_download_handle;
     }
 
     curl_off_t getProgressIfStored(std::string path)
@@ -237,7 +239,7 @@ namespace modio
       return current_download_info;
     }
 
-    void download(u32 call_number, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code, json response)> callback)
+    void download(u32 call_number, std::vector<std::string> headers, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code, json response)> callback)
     {
       writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
@@ -260,6 +262,8 @@ namespace modio
       if(curl)
       {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        setHeaders(headers, curl);
 
         setVerifies(curl);
 
@@ -461,6 +465,7 @@ namespace modio
             curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
             ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response_code, response_json);
             advanceOngoingCall();
+            delete ongoing_calls[curl_handle];
           }
 
           curl_multi_remove_handle(curl_multi_handle, curl_handle);

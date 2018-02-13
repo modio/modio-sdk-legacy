@@ -156,7 +156,7 @@ static voidpf ZCALLBACK fopen64_file_func (voidpf opaque, const void* filename, 
 
     if ((filename != NULL) && (mode_fopen != NULL))
     {
-        file = FOPEN_FUNC((const char*)filename, mode_fopen);
+        file = fopen((const char*)filename, mode_fopen);
         return file_build_ioposix(file, (const char*)filename);
     }
     return file;
@@ -178,7 +178,8 @@ static voidpf ZCALLBACK fopendisk64_file_func (voidpf opaque, voidpf stream, int
     {
         if (diskFilename[i] != '.')
             continue;
-        snprintf(&diskFilename[i], ioposix->filenameLength - i, ".z%02d", number_disk + 1);
+        //snprintf(&diskFilename[i], ioposix->filenameLength - i, ".z%02d", number_disk + 1);
+		// TODO wirte log line
         break;
     }
     if (i >= 0)
@@ -203,8 +204,10 @@ static voidpf ZCALLBACK fopendisk_file_func (voidpf opaque, voidpf stream, int n
     {
         if (diskFilename[i] != '.')
             continue;
-        snprintf(&diskFilename[i], ioposix->filenameLength - i, ".z%02d", number_disk + 1);
-        break;
+		//snprintf(&diskFilename[i], ioposix->filenameLength - i, ".z%02d", number_disk + 1);
+		// TODO wirte log line
+
+		break;
     }
     if (i >= 0)
         ret = fopen_file_func(opaque, diskFilename, mode);
@@ -310,7 +313,7 @@ static long ZCALLBACK fseek64_file_func (voidpf opaque, voidpf stream, ZPOS64_T 
             return -1;
     }
 
-    if(FSEEKO_FUNC(ioposix->file, offset, fseek_origin) != 0)
+    if(FSEEKO_FUNC(ioposix->file, (long)offset, fseek_origin) != 0)
         ret = -1;
 
     return ret;

@@ -1,9 +1,6 @@
 #ifndef MODIO_GLOBALS_H
 #define MODIO_GLOBALS_H
 
-typedef unsigned int u32;
-typedef int i32;
-
 #include <iostream>
 
 #include "Utility.h"
@@ -24,6 +21,10 @@ namespace modio
   extern unsigned int DEBUG_LEVEL;
   extern std::string MODIO_URL;
   extern std::string MODIO_VERSION_PATH;
+  extern u32 MAX_CALL_CACHE;
+  extern u32 LAST_EVENT_POLL;
+  extern u32 EVENT_POLL_INTERVAL;
+  extern void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
 }
 
 #endif

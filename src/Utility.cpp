@@ -29,10 +29,7 @@ namespace modio
 
   std::string toString(double number)
   {
-    std::ostringstream string_stream;
-    string_stream << number;
-    std::string return_value = string_stream.str();
-    return return_value;
+    return std::to_string(number);
   }
 
   void createDirectory(std::string directory)
@@ -132,12 +129,6 @@ namespace modio
     if(directory_name[directory_name.size()-1]!='/')
       directory_name += '/';
 
-    if (path == NULL)
-    {
-      writeLogLine("Out of memory error", MODIO_DEBUGLEVEL_LOG);
-      return false;
-    }
-
     dir = opendir(directory_name.c_str());
     if (dir == NULL)
     {
@@ -173,64 +164,34 @@ namespace modio
     return directory_path;
   }
 
-  bool checkIfModIsStillInstalled(std::string path, u32 modfile_id)
+  json openJson(std::string file_path)
   {
-    std::string modfile_json_path = path + "modio.json";
-    std::ifstream modfile_file(modfile_json_path.c_str());
-    if(!modfile_file.is_open())
+    std::ifstream ifs(file_path);
+    json cache_file_json;
+    if(ifs.is_open())
     {
-      return false;
-    }
-    json modfile_json;
-    modfile_file >> modfile_json;
-    u32 json_modfile_id = modfile_json["modfile_id"];
-    return json_modfile_id == modfile_id;
-  }
-
-  void updateModfilesJson()
-  {
-    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
-    if(modfiles_file.is_open())
-    {
-      json modfiles_json;
-      json resulting_json;
-      modfiles_file >> modfiles_json;
-      modfiles_json = modfiles_json["modfiles"];
-      for(int i=0; i<(int)modfiles_json.size(); i++)
-      {
-        if(checkIfModIsStillInstalled(modfiles_json[i]["path"], modfiles_json[i]["id"]))
-        {
-          resulting_json["modfiles"].push_back(modfiles_json[i]);
-        }
-      }
-      std::ofstream out(modio::getModIODirectory() + "modfiles.json");
-      out<<std::setw(4)<<resulting_json<<std::endl;
-      out.close();
-    }
-  }
-
-  std::string getModfilePath(u32 modfile_id)
-  {
-    std::ifstream modfiles_file(modio::getModIODirectory() + "modfiles.json");
-    if(modfiles_file.is_open())
-    {
-      json modfiles_json;
       try
       {
-        modfiles_file >> modfiles_json;
-        modfiles_json = modfiles_json["modfiles"];
-        for(int i=0; i<(int)modfiles_json.size(); i++)
-        {
-          if(modfile_id == modfiles_json[i]["id"])
-          {
-            return modfiles_json[i]["path"];
-          }
-        }
+        ifs >> cache_file_json;
       }catch(json::parse_error &e)
       {
         modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+        cache_file_json = {};
       }
     }
-    return "";
+    ifs.close();
+    return cache_file_json;
+  }
+
+  void writeJson(std::string file_path, json json_object)
+  {
+    std::ofstream ofs(file_path);
+    ofs << std::setw(4) << json_object << std::endl;
+    ofs.close();
+  }
+
+  u32 getCurrentTime()
+  {
+    return (u32)std::time(nullptr);
   }
 }

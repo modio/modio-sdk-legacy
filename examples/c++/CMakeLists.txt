@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.5)
+include_directories(../../include)
+set (CMAKE_CXX_STANDARD 11)
+link_directories(../../build)
+
+file( GLOB EXAMPLE_SOURCES *.cpp )
+
+foreach(EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
+  file(RELATIVE_PATH SOURCE_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR} ${EXAMPLE_SOURCE} )
+  string( REPLACE ".cpp" "" EXECUTABLE_NAME ${SOURCE_FILE_NAME} )
+  add_executable(${EXECUTABLE_NAME} ${SOURCE_FILE_NAME})
+  IF (WIN32 OR APPLE)
+    target_link_libraries( ${EXECUTABLE_NAME} modio )
+  ENDIF ()
+  IF (UNIX AND NOT APPLE)
+    target_link_libraries ( ${EXECUTABLE_NAME} modio curl z )
+  ENDIF ()
+endforeach(EXAMPLE_SOURCE)
