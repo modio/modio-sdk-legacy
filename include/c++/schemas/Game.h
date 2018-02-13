@@ -18,8 +18,8 @@ namespace modio
     u32 status;
     u32 date_added;
     u32 date_updated;
-    u32 presentation_option;
     u32 date_live;
+    u32 presentation_option;
     u32 community_options;
     u32 submission_option;
     u32 curation_option;
