@@ -15,7 +15,7 @@ typedef int i32;
 #define MODIO_MODFILE_INSTALLED     1
 #define MODIO_MODFILE_INSTALLING    2
 
-# Status Constants
+// Status Constants
 #define MODIO_NOT_ACCEPTED 0
 #define MODIO_ACCEPTED     1
 #define MODIO_ARCHIVED     2
@@ -30,32 +30,32 @@ typedef int i32;
 #define EVENT_MOD_UNAVAILABLE 3
 #define EVENT_MOD_EDITED      4
 
-# Presentation Option Constants
+// Presentation Option Constants
 #define MODIO_GRID_VIEW   0
 #define MODIO_TABLE_VIEW  1
 
-# Submission Option Constants
+// Submission Option Constants
 #define MODIO_MOD_UPLOADS_CONTROLED     0
 #define MODIO_MOD_UPLOADS_FROM_ANYWHERE 1
 
-# Curation Option Constants
+// Curation Option Constants
 #define MODIO_NO_CURATION   0
 #define MODIO_PAID_CURATION 1
 #define MODIO_FULL_CURATION 2
 
 #define MODIO_ALL_OPTIONS_DISABLED  0
 
-# Community Options Constants
+// Community Options Constants
 #define MODIO_DISCUSSION_BOARD_ENABLED  1
 #define MODIO_GUIDES_AND_NEWS_ENABLED   2
 
-# Revenue Options Constants
+// Revenue Options Constants
 #define MODIO_ALLOW_MODS_TO_BE_SOLD                     1
 #define MODIO_ALLOW_MODS_TO_RECEIVE_DONATIONS           2
 #define MODIO_ALLOW_MODS_TO_BE_TRADED                   4
 #define MODIO_ALLOW_MODS_TO_CONTROL_SUPPLY_AND_SCARCITY 8
 
-# API Access Options Constants
+// API Access Options Constants
 #define MODIO_ALLOW_ACCESS_FROM_3RD_PARTIES         1
 #define MODIO_ALLOW_MODS_TO_BE_DOWNLOADED_DIRECTLY  2
 
