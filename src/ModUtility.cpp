@@ -83,10 +83,10 @@ namespace modio
     }
 
     json installed_mod_json;
-    installed_mod_json["mod"] = mod_json;
     installed_mod_json["path"] = path;
     installed_mod_json["mod_id"] = mod_json["id"];
     installed_mod_json["modfile_id"] = mod_json["modfile"]["id"];
+    installed_mod_json["updated_at"] = modio::getCurrentTime();
 
     installed_mods_json["mods"].push_back(installed_mod_json);
     std::ofstream ofs(modio::getModIODirectory() + "installed_mods.json");
@@ -119,12 +119,11 @@ namespace modio
 
       for(int i=0; i<(int)installed_mods_json["mods"].size(); i++)
       {
-        if(checkIfModIsStillInstalled(installed_mods_json["mods"][i]["path"], installed_mods_json["mods"][i]["mod"]["modfile"]["id"]))
+        if(checkIfModIsStillInstalled(installed_mods_json["mods"][i]["path"], installed_mods_json["mods"][i]["modfile_id"]))
         {
           resulting_json["mods"].push_back(installed_mods_json["mods"][i]);
         }
       }
-
       std::ofstream out(modio::getModIODirectory() + "installed_mods.json");
       out<<std::setw(4)<<resulting_json<<std::endl;
       out.close();
