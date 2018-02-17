@@ -7,9 +7,6 @@ extern "C"
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-
     download_image_callbacks[call_number] = new DownloadImageParams;
     download_image_callbacks[call_number]->callback = callback;
     download_image_callbacks[call_number]->destination_path = path;
@@ -26,14 +23,11 @@ extern "C"
     }
     download_image_callbacks[call_number]->file = file;
 
-    modio::curlwrapper::download(call_number, headers, image_url, path, file, progress, &modioOnImageDownloaded);
+    modio::curlwrapper::download(call_number, modio::getHeaders(), image_url, path, file, progress, &modioOnImageDownloaded);
   }
 
   void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(void* object, ModioResponse response, u32 mod_id))
   {
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
@@ -48,6 +42,6 @@ extern "C"
     std::map<std::string, std::string> curlform_files;
     curlform_files["logo"] = path;
 
-    modio::curlwrapper::postForm(call_number, url, headers, curlform_copycontents, curlform_files, &modioOnModLogoEdited);
+    modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), curlform_copycontents, curlform_files, &modioOnModLogoEdited);
   }
 }

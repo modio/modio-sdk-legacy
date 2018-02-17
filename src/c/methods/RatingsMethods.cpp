@@ -6,10 +6,6 @@ extern "C"
   {
     std::map<std::string, std::string> data;
 
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    headers.push_back("Content-Type: application/x-www-form-urlencoded");
-
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
@@ -27,6 +23,6 @@ extern "C"
       url += "?rating=-1";
     }
 
-    modio::curlwrapper::post(call_number, url, headers, data, &modioOnAddModRating);
+    modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnAddModRating);
   }
 }

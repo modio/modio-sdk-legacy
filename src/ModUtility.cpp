@@ -130,7 +130,32 @@ namespace modio
     }
   }
 
-  std::string getInstalledModPath(u32 modfile_id)
+  std::string getInstalledModPath(u32 mod_id)
+  {
+    std::ifstream installed_mod_file(modio::getModIODirectory() + "installed_mods.json");
+    if(installed_mod_file.is_open())
+    {
+      json installed_mod_json;
+      try
+      {
+        installed_mod_file >> installed_mod_json;
+        installed_mod_file.close();
+        for(int i=0; i<(int)installed_mod_json["mods"].size(); i++)
+        {
+          if(mod_id == installed_mod_json["mods"][i]["mod_id"])
+          {
+            return installed_mod_json["mods"][i]["path"];
+          }
+        }
+      }catch(json::parse_error &e)
+      {
+        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      }
+    }
+    return "";
+  }
+
+  std::string getInstalledModfilePath(u32 modfile_id)
   {
     std::ifstream installed_mod_file(modio::getModIODirectory() + "installed_mods.json");
     if(installed_mod_file.is_open())

@@ -4,8 +4,6 @@ extern "C"
 {
   void modioGetModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id) + "?api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallCount();
@@ -15,14 +13,12 @@ extern "C"
     get_modfile_callbacks[call_number]->callback = callback;
     get_modfile_callbacks[call_number]->object = object;
 
-    modio::curlwrapper::get(call_number, url, headers, &modioOnGetModfile);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModfile);
   }
 
   void modioGetModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files?" + filter_string + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallCount();
@@ -48,14 +44,12 @@ extern "C"
       }
     }
 
-    modio::curlwrapper::get(call_number, url, headers, &modioOnGetModfiles);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModfiles);
   }
 
   void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
     modio::minizipwrapper::compress(modfile_creator.path, modio::getModIODirectory() + "tmp/modfile.zip");
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files";
 
     u32 call_number = modio::curlwrapper::getCallCount();
@@ -68,14 +62,11 @@ extern "C"
     std::map<std::string, std::string> curlform_files;
     curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
 
-    modio::curlwrapper::postForm(call_number, url, headers, modio::convertModfileCreatorToMultimap(&modfile_creator), curlform_files, &modioOnModfileAdded);
+    modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), modio::convertModfileCreatorToMultimap(&modfile_creator), curlform_files, &modioOnModfileAdded);
   }
 
   void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_editor, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
@@ -96,7 +87,7 @@ extern "C"
       url+=(*i).first + "=" + (*i).second;
     }
 
-    modio::curlwrapper::put(call_number, url, headers, modio::convertModfileEditorToMultimap(&modfile_editor), &modioOnModfileEdited);
+    modio::curlwrapper::put(call_number, url, modio::getHeaders(), modio::convertModfileEditorToMultimap(&modfile_editor), &modioOnModfileEdited);
   }
 
   u32 modioGetModfileState(u32 modfile_id)
@@ -130,7 +121,7 @@ extern "C"
   bool modioUninstallModfile(u32 modfile_id)
   {
     modio::updateInstalledModsJson();
-    std::string modfile_path = modio::getInstalledModPath(modfile_id);
+    std::string modfile_path = modio::getInstalledModfilePath(modfile_id);
 
     bool result = modfile_path != "" && modio::checkIfModIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
     modio::updateInstalledModsJson();

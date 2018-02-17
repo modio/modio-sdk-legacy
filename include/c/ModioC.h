@@ -483,12 +483,19 @@ extern "C"
   void MODIO_DLL modioSetModEditorMetadataBlob(ModioModEditor* update_mod_handler, char* metadata_blob);
   void MODIO_DLL modioFreeModEditor(ModioModEditor* update_mod_handler);
 
-  //Me methods
+  //Me Methods
   void MODIO_DLL modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user));
   void MODIO_DLL modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size));
   void MODIO_DLL modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
+
+  //Settings Methods
+  void MODIO_DLL modioInitConfig();
+  u32 MODIO_DLL modioGetAutomaticUpdatesConfig();
+  u32 MODIO_DLL modioGetAllowBackgroundDownloadsConfig();
+  void MODIO_DLL modioSetAutomaticUpdatesConfig(u32 option);
+  void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
 }
 
 #endif

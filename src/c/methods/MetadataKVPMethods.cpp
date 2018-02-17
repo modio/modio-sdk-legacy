@@ -4,8 +4,6 @@ extern "C"
 {
   void modioGetMetadataKVP(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size))
   {
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/metadatakvp/";
 
     u32 call_number = modio::curlwrapper::getCallCount();
@@ -15,16 +13,12 @@ extern "C"
     get_metadata_kvp_callbacks[call_number]->callback = callback;
     get_metadata_kvp_callbacks[call_number]->object = object;
 
-    modio::curlwrapper::get(call_number, url, headers, &modioOnGetMetadataKVP);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetMetadataKVP);
   }
 
   void modioAddMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
-
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    headers.push_back("Content-Type: application/x-www-form-urlencoded");
 
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -44,16 +38,12 @@ extern "C"
       url += std::string("metadata[]=") + metadata_kvp_array[i];
     }
 
-    modio::curlwrapper::post(call_number, url, headers, data, &modioOnAddMetadataKVP);
+    modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnAddMetadataKVP);
   }
 
   void modioDeleteMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
-
-    std::vector<std::string> headers;
-    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    headers.push_back("Content-Type: application/x-www-form-urlencoded");
 
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -73,6 +63,6 @@ extern "C"
       url += std::string("metadata[]=") + metadata_kvp_array[i];
     }
 
-    modio::curlwrapper::deleteCall(call_number, url, headers, &modioOnDeleteMetadataKVP);
+    modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), &modioOnDeleteMetadataKVP);
   }
 }

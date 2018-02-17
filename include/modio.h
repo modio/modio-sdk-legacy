@@ -17,5 +17,6 @@
 #include "c/methods/RatingsMethods.h"
 #include "c/methods/TagMethods.h"
 #include "c++/ModIOInstance.h"
+#include "ModUtility.h"
 
 #endif

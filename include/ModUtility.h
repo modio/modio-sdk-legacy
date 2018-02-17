@@ -12,7 +12,8 @@ namespace modio
   void addToInstalledModsJson(json mod_id, std::string path);
   bool checkIfModIsStillInstalled(std::string path, u32 modfile_id);
   void updateInstalledModsJson();
-  std::string getInstalledModPath(u32 modfile_id);
+  std::string getInstalledModfilePath(u32 modfile_id);
+  std::string getInstalledModPath(u32 mod_id);
 }
 
 #endif

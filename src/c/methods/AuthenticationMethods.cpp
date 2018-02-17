@@ -8,8 +8,6 @@ extern "C"
     data["api_key"] = modio::API_KEY;
     data["email"] = email;
 
-    std::vector<std::string> headers;
-
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
@@ -21,13 +19,12 @@ extern "C"
     url += "?api_key=" + modio::API_KEY;
     url += "&email=" + std::string(email);
 
-    modio::curlwrapper::post(call_number, url, headers, data, &modioOnEmailRequested);
+    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnEmailRequested);
   }
 
   void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
-    std::vector<std::string> headers;
 
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
@@ -37,7 +34,7 @@ extern "C"
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailexchange";
     url += "?api_key=" + modio::API_KEY;
     url += "&security_code=" + std::string(security_code);
-    modio::curlwrapper::post(call_number, url, headers, data, &modioOnEmailExchanged);
+    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnEmailExchanged);
   }
 
   bool modioIsLoggedIn()
