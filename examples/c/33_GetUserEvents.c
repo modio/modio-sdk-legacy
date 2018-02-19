@@ -1,12 +1,12 @@
 #include "modio_c.h"
 #include <time.h>
 
-void onGetAllEvents(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)
+void onGetUserEvents(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)
 {
   bool* wait = object;
-  printf("On get mod events response: %i\n",response.code);
+  printf("On get user events response: %i\n",response.code);
 
-  // Just like the event listener, it returns an array of events
+  // Just like the mod events, it returns an array of events
   for(u32 i=0; i < events_array_size; i++)
   {
     printf("Event found!\n");
@@ -20,17 +20,17 @@ void onGetAllEvents(void* object, ModioResponse response, ModioEvent* events_arr
       case MODIO_EVENT_UNDEFINED:
       printf("Undefined\n");
       break;
-      case MODIO_EVENT_MODFILE_CHANGED:
-      printf("Modfile changed\n");
+      case MODIO_EVENT_USER_TEAM_JOIN:
+      printf("User has joined a team.\n");
       break;
-      case MODIO_EVENT_MOD_AVAILABLE:
-      printf("Mod available\n");
+      case MODIO_EVENT_USER_TEAM_LEAVE:
+      printf("User has left a team.\n");
       break;
-      case MODIO_EVENT_MOD_UNAVAILABLE:
-      printf("Mod unavailable\n");
+      case MODIO_EVENT_USER_SUBSCRIBE:
+      printf("User has subscribed to a mod.\n");
       break;
-      case MODIO_EVENT_MOD_EDITED:
-      printf("Mod edited\n");
+      case MODIO_EVENT_USER_UNSUBSCRIBE:
+      printf("User has un-subscribed from a mod.\n");
       break;
     }
     printf("\n");
@@ -56,10 +56,10 @@ int main(void)
   modioAddFilterMinField(&filter,"date_added", "1514780160");
   modioAddFilterMaxField(&filter,"date_added", current_time_str);
 
-  printf("Getting mod events...\n");
+  printf("Getting users events...\n");
 
   // Everything is setup up, let's retreive the events now
-  modioGetAllEvents(&wait, filter, &onGetAllEvents);
+  modioGetUserEvents(&wait, filter, &onGetUserEvents);
 
   while(wait)
   {

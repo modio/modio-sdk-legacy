@@ -40,19 +40,19 @@ int main(void)
         std::cout << "Event Type: ";
         switch( event.event_type )
         {
-          case EVENT_UNDEFINED:
+          case MODIO_EVENT_UNDEFINED:
           std::cout<<"Undefined"<< std::endl;
           break;
-          case EVENT_MODFILE_CHANGED:
+          case MODIO_EVENT_MODFILE_CHANGED:
           std::cout<<"Modfile changed"<< std::endl;
           break;
-          case EVENT_MOD_AVAILABLE:
+          case MODIO_EVENT_MOD_AVAILABLE:
           std::cout<<"Mod available"<< std::endl;
           break;
-          case EVENT_MOD_UNAVAILABLE:
+          case MODIO_EVENT_MOD_UNAVAILABLE:
           std::cout<<"Mod unavailable"<< std::endl;
           break;
-          case EVENT_MOD_EDITED:
+          case MODIO_EVENT_MOD_EDITED:
           std::cout<<"Mod edited"<< std::endl;
           break;
         }

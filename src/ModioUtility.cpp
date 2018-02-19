@@ -31,27 +31,27 @@ namespace modio
     {
       switch( events_array[i].event_type )
       {
-        case EVENT_UNDEFINED:
+        case MODIO_EVENT_UNDEFINED:
         // TODO: Log error
         break;
-        case EVENT_MODFILE_CHANGED:
+        case MODIO_EVENT_MODFILE_CHANGED:
         {
           // TODO: Reinstall modfile
           std::string modfile_path_str = modio::getInstalledModPath(events_array[i].mod_id);
           modioInstallMod(NULL, events_array[i].mod_id, (char*)modfile_path_str.c_str(), &modio::onModfileChangedEvent);
         }
         break;
-        case EVENT_MOD_AVAILABLE:
+        case MODIO_EVENT_MOD_AVAILABLE:
         {
           // N/A
           break;
         }
-        case EVENT_MOD_UNAVAILABLE:
+        case MODIO_EVENT_MOD_UNAVAILABLE:
         {
           // N/A
           break;
         }
-        case EVENT_MOD_EDITED:
+        case MODIO_EVENT_MOD_EDITED:
         {
           // TODO: Update locally installed mods
           std::string mod_path_str = modio::getInstalledModPath(events_array[i].mod_id);

@@ -102,6 +102,11 @@ extern "C"
     modio::curlwrapper::pauseCurrentDownload();
   }
 
+  void modioResumeCurrentDownload()
+  {
+    //TODO
+  }
+
   double modioGetModfileDownloadPercentage(u32 modfile_id)
   {
     if(install_mod_callbacks.find(modio::curlwrapper::getOngoingCall()) != install_mod_callbacks.end())

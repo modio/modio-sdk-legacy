@@ -33,9 +33,9 @@ int main(void)
   std::cout <<"Getting events..." << std::endl;
 
   // Everything is setup up, let's retreive the events now
-  modio_instance.getAllEvents(filter, [&](const modio::Response& response, const std::vector<modio::Event> & events)
+  modio_instance.getUserEvents(filter, [&](const modio::Response& response, const std::vector<modio::Event> & events)
   {
-    std::cout << "On get events response: " << response.code << std::endl;
+    std::cout << "On user events response: " << response.code << std::endl;
     if(response.code == 200)
     {
       // Just like the event listener, it returns an array of events
@@ -51,17 +51,17 @@ int main(void)
           case MODIO_EVENT_UNDEFINED:
           std::cout<<"Undefined"<< std::endl;
           break;
-          case MODIO_EVENT_MODFILE_CHANGED:
-          std::cout<<"Modfile changed"<< std::endl;
+          case MODIO_EVENT_USER_TEAM_JOIN:
+          std::cout<<"User has joined a team."<< std::endl;
           break;
-          case MODIO_EVENT_MOD_AVAILABLE:
-          std::cout<<"Mod available"<< std::endl;
+          case MODIO_EVENT_USER_TEAM_LEAVE:
+          std::cout<<"User has left a team."<< std::endl;
           break;
-          case MODIO_EVENT_MOD_UNAVAILABLE:
-          std::cout<<"Mod unavailable"<< std::endl;
+          case MODIO_EVENT_USER_SUBSCRIBE:
+          std::cout<<"User has subscribed to a mod."<< std::endl;
           break;
-          case MODIO_EVENT_MOD_EDITED:
-          std::cout<<"Mod edited"<< std::endl;
+          case MODIO_EVENT_USER_UNSUBSCRIBE:
+          std::cout<<"User has un-subscribed from a mod."<< std::endl;
           break;
         }
         std::cout << std::endl;

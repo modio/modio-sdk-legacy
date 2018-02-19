@@ -9,26 +9,6 @@ namespace modio
   std::map<u32, GetUserModsCall*> get_user_mods_calls;
   std::map<u32, GetUserModfilesCall*> get_user_modfiles_calls;
 
-  void onUserGetEvents(void* object, ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size)
-  {
-    u32 call_id = *((u32*)object);
-
-    modio::Response response;
-    response.initialize(modio_response);
-
-    std::vector<modio::Event> event_vector;
-    event_vector.resize(events_array_size);
-    for(u32 i=0; i < events_array_size; i++)
-    {
-      event_vector[i].initialize(events_array[i]);
-    }
-    get_user_events_calls[call_id]->callback((const Response&)response, event_vector);
-
-    delete get_user_events_calls[call_id];
-    delete (u32*)object;
-    get_user_events_calls.erase(call_id);
-  }
-
   void onGetAuthenticatedUser(void* object, ModioResponse modio_response, ModioUser modio_user)
   {
     u32 call_id = *((u32*)object);
@@ -69,6 +49,26 @@ namespace modio
     delete (u32*)object;
     delete get_user_subscriptions_calls[call_id];
     get_user_subscriptions_calls.erase(call_id);
+  }
+
+  void onGetUserEvents(void* object, ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size)
+  {
+    u32 call_id = *((u32*)object);
+
+    modio::Response response;
+    response.initialize(modio_response);
+
+    std::vector<modio::Event> event_vector;
+    event_vector.resize(events_array_size);
+    for(u32 i=0; i < events_array_size; i++)
+    {
+      event_vector[i].initialize(events_array[i]);
+    }
+    get_user_events_calls[call_id]->callback((const Response&)response, event_vector);
+
+    delete get_user_events_calls[call_id];
+    delete (u32*)object;
+    get_user_events_calls.erase(call_id);
   }
 
   void onGetUserGames(void* object, ModioResponse modio_response, ModioGame games[], u32 games_size)

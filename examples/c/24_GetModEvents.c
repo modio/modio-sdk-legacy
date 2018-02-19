@@ -17,19 +17,19 @@ void onGetEvents(void* object, ModioResponse response, ModioEvent* events_array,
     printf("Event type: ");
     switch( events_array[i].event_type )
     {
-      case EVENT_UNDEFINED:
+      case MODIO_EVENT_UNDEFINED:
       printf("Undefined\n");
       break;
-      case EVENT_MODFILE_CHANGED:
+      case MODIO_EVENT_MODFILE_CHANGED:
       printf("Modfile changed\n");
       break;
-      case EVENT_MOD_AVAILABLE:
+      case MODIO_EVENT_MOD_AVAILABLE:
       printf("Mod available\n");
       break;
-      case EVENT_MOD_UNAVAILABLE:
+      case MODIO_EVENT_MOD_UNAVAILABLE:
       printf("Mod unavailable\n");
       break;
-      case EVENT_MOD_EDITED:
+      case MODIO_EVENT_MOD_EDITED:
       printf("Mod edited\n");
       break;
     }

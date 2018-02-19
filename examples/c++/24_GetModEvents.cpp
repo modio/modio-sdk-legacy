@@ -35,12 +35,12 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout <<"Getting mods..." << std::endl;
+  std::cout <<"Getting events..." << std::endl;
 
   // Everything is setup up, let's retreive the events now
   modio_instance.getEvents(mod_id, filter, [&](const modio::Response& response, const std::vector<modio::Event> & events)
   {
-    std::cout << "On mod get response: " << response.code << std::endl;
+    std::cout << "On get events response: " << response.code << std::endl;
     if(response.code == 200)
     {
       // Just like the event listener, it returns an array of events
@@ -53,19 +53,19 @@ int main(void)
         std::cout << "Event Type: ";
         switch( event.event_type )
         {
-          case EVENT_UNDEFINED:
+          case MODIO_EVENT_UNDEFINED:
           std::cout<<"Undefined"<< std::endl;
           break;
-          case EVENT_MODFILE_CHANGED:
+          case MODIO_EVENT_MODFILE_CHANGED:
           std::cout<<"Modfile changed"<< std::endl;
           break;
-          case EVENT_MOD_AVAILABLE:
+          case MODIO_EVENT_MOD_AVAILABLE:
           std::cout<<"Mod available"<< std::endl;
           break;
-          case EVENT_MOD_UNAVAILABLE:
+          case MODIO_EVENT_MOD_UNAVAILABLE:
           std::cout<<"Mod unavailable"<< std::endl;
           break;
-          case EVENT_MOD_EDITED:
+          case MODIO_EVENT_MOD_EDITED:
           std::cout<<"Mod edited"<< std::endl;
           break;
         }

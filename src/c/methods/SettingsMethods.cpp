@@ -30,7 +30,7 @@ extern "C"
   {
     json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
     u32 allow_background_downloads = 0;
-    if(modio::hasKey(config_json, "allow_background_downloads"));
+    if(modio::hasKey(config_json, "allow_background_downloads"))
       allow_background_downloads = config_json["allow_background_downloads"];
     return allow_background_downloads;
   }

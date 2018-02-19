@@ -20,15 +20,23 @@ extern "C"
     if(modio::hasKey(event_json, "event_type"))
     {
       if(event_json["event_type"] == "MODFILE_CHANGED")
-        event->event_type = EVENT_MODFILE_CHANGED;
+        event->event_type = MODIO_EVENT_MODFILE_CHANGED;
       else if(event_json["event_type"] == "MOD_AVAILABLE")
-        event->event_type = EVENT_MOD_AVAILABLE;
+        event->event_type = MODIO_EVENT_MOD_AVAILABLE;
       else if(event_json["event_type"] == "MOD_UNAVAILABLE")
-        event->event_type = EVENT_MOD_UNAVAILABLE;
+        event->event_type = MODIO_EVENT_MOD_UNAVAILABLE;
       else if(event_json["event_type"] == "MOD_EDITED")
-        event->event_type = EVENT_MOD_EDITED;
+        event->event_type = MODIO_EVENT_MOD_EDITED;
+      else if(event_json["event_type"] == "USER_TEAM_JOIN")
+        event->event_type = MODIO_EVENT_USER_TEAM_JOIN;
+      else if(event_json["event_type"] == "USER_TEAM_LEAVE")
+        event->event_type = MODIO_EVENT_USER_TEAM_LEAVE;
+      else if(event_json["event_type"] == "USER_SUBSCRIBE")
+        event->event_type = MODIO_EVENT_USER_SUBSCRIBE;
+      else if(event_json["event_type"] == "USER_UNSUBSCRIBE")
+        event->event_type = MODIO_EVENT_USER_UNSUBSCRIBE;
       else
-        event->event_type = EVENT_UNDEFINED;
+        event->event_type = MODIO_EVENT_UNDEFINED;
     }
 
     event->date_added = 0;
