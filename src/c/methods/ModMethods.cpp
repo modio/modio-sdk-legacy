@@ -99,40 +99,4 @@ extern "C"
 
     modio::curlwrapper::deleteCall(call_number, url, modio::getHeaders(), &modioOnModDeleted);
   }
-
-  void modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response))
-  {
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
-
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
-
-    get_install_mod_callbacks[call_number] = new GetInstallModParams;
-    get_install_mod_callbacks[call_number]->object = object;
-    get_install_mod_callbacks[call_number]->mod_id = mod_id;
-    get_install_mod_callbacks[call_number]->destination_path = modio::addSlashIfNeeded(destination_path);
-    get_install_mod_callbacks[call_number]->callback = callback;
-
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
-  }
-
-  double modioGetModfileDownloadPercentage(u32 modfile_id)
-  {
-    if(install_mod_callbacks.find(modio::curlwrapper::getOngoingCall()) != install_mod_callbacks.end())
-    {
-      InstallModParams* install_modfile_params = install_mod_callbacks[modio::curlwrapper::getOngoingCall()];
-
-      if(install_modfile_params->mod_id == modfile_id)
-      {
-        modio::CurrentDownloadInfo current_download_info = modio::curlwrapper::getCurrentDownloadInfo();
-
-        if(current_download_info.download_progress == 0)
-          return 0;
-        double result = current_download_info.download_progress;
-        result /= current_download_info.download_total;
-        return result * 100;
-      }
-    }
-    return -1;
-  }
 }

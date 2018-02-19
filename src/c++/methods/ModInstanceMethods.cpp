@@ -51,14 +51,4 @@ namespace modio
 
     this->current_call_id++;
   }
-
-  void Instance::installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback)
-  {
-    const struct InstallModCall* install_modfile_call = new InstallModCall{callback};
-    install_mod_calls[this->current_call_id] = (InstallModCall*)install_modfile_call;
-
-    modioInstallMod((void*)new u32(this->current_call_id), mod_id, (char*)destination_path.c_str(), &onInstallModfile);
-
-    this->current_call_id++;
-  }
 }

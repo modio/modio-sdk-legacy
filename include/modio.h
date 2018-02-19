@@ -9,6 +9,7 @@
 #include "c/schemas/ModioMod.h"
 #include "c/schemas/ModioModEvent.h"
 #include "c/methods/AuthenticationMethods.h"
+#include "c/methods/DownloadsMethods.h"
 #include "c/methods/ImageMethods.h"
 #include "c/methods/MeMethods.h"
 #include "c/methods/ModMethods.h"
@@ -18,5 +19,6 @@
 #include "c/methods/TagMethods.h"
 #include "c++/ModIOInstance.h"
 #include "ModUtility.h"
+#include "ModioUtility.h"
 
 #endif

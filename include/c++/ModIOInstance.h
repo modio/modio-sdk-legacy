@@ -22,6 +22,7 @@
 #include "c++/schemas/Tag.h"
 #include "c++/schemas/User.h"
 #include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
+#include "c++/methods/callbacks/DownloadsInstanceCallbacks.h"
 #include "c++/methods/callbacks/ImageInstanceCallbacks.h"
 #include "c++/methods/callbacks/MeInstanceCallbacks.h"
 #include "c++/methods/callbacks/MetadataKVPInstanceCallbacks.h"
@@ -66,17 +67,12 @@ namespace modio
     void getMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
     void editMod(u32 mod_id, modio::ModEditor& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
     void deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
-    void installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
 
     //Modfile Methods
     void getModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
     void getModfiles(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
     void addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
     void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
-    u32 getModfileState(u32 modfile_id);
-    double getModfileDownloadPercentage(u32 modfile_id);
-    bool uninstallModfile(u32 modfile_id);
-    std::vector<u32> getInstalledModfileIds();
 
     //Tag Methods
     void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);
@@ -101,6 +97,13 @@ namespace modio
     void getUserGames(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Game> & games)>& callback);
     void getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
     void getUserModfiles(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
+
+    //Downloads Methods
+    void installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
+    u32 getModfileState(u32 modfile_id);
+    double getModfileDownloadPercentage(u32 modfile_id);
+    bool uninstallModfile(u32 modfile_id);
+    std::vector<u32> getInstalledModfileIds();
   };
 }
 

@@ -59,6 +59,10 @@ typedef int i32;
 #define MODIO_ALLOW_ACCESS_FROM_3RD_PARTIES         1
 #define MODIO_ALLOW_MODS_TO_BE_DOWNLOADED_DIRECTLY  2
 
+// Automatic Updated Options
+#define MODIO_UPDATES_DISABLED  0
+#define MODIO_UPDATES_ENABLED   1
+
 extern "C"
 {
   typedef struct ModioListNode ModioListNode;
@@ -366,7 +370,6 @@ extern "C"
   //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
   void MODIO_DLL modioShutdown();
   //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();
-  void MODIO_DLL modioPauseCurrentDownload();
   void MODIO_DLL modioSetDebugLevel(u32 debug_level);
   void MODIO_DLL modioProcess();
   void MODIO_DLL modioSleep(u32 milliseconds);
@@ -391,11 +394,6 @@ extern "C"
   void MODIO_DLL modioGetModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
   void MODIO_DLL modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
   void MODIO_DLL modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-  u32 MODIO_DLL modioGetModfileState(u32 modfile_id);
-  double MODIO_DLL modioGetModfileDownloadPercentage(u32 modfile_id);
-  bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
-  u32 MODIO_DLL modioGetInstalledModfilesCount();
-  u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
 
   //Mods Methods
   void MODIO_DLL modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
@@ -403,7 +401,6 @@ extern "C"
   void MODIO_DLL modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
-  void MODIO_DLL modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
 
   //Ratings Methods
   void MODIO_DLL modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));
@@ -496,6 +493,15 @@ extern "C"
   u32 MODIO_DLL modioGetAllowBackgroundDownloadsConfig();
   void MODIO_DLL modioSetAutomaticUpdatesConfig(u32 option);
   void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
+
+  //Downloads Methods
+  void MODIO_DLL modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
+  bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
+  u32 MODIO_DLL modioGetInstalledModfilesCount();
+  u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
+  u32 MODIO_DLL modioGetModfileState(u32 modfile_id);
+  void MODIO_DLL modioPauseCurrentDownload();
+  double MODIO_DLL modioGetModfileDownloadPercentage(u32 modfile_id);
 }
 
 #endif
