@@ -2,61 +2,61 @@
 
 namespace modio
 {
-  std::map<u32, GetModEventsCall*> get_mod_events_calls;
-  std::map<u32, GetAllModEventsCall*> get_all_mod_events_calls;
-  SetModEventListenerCall* set_mod_event_listener_call;
+  std::map<u32, GetEventsCall*> get_events_calls;
+  std::map<u32, GetAllEventsCall*> get_all_events_calls;
+  SetEventListenerCall* set_event_listener_call;
 
-  void onGetModEvents(void* object, ModioResponse modio_response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+  void onGetEvents(void* object, ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size)
   {
     u32 call_id = *((u32*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
-    std::vector<modio::ModEvent> mod_event_vector;
-    mod_event_vector.resize(mod_events_array_size);
-    for(u32 i=0; i < mod_events_array_size; i++)
+    std::vector<modio::Event> event_vector;
+    event_vector.resize(events_array_size);
+    for(u32 i=0; i < events_array_size; i++)
     {
-      mod_event_vector[i].initialize(mod_events_array[i]);
+      event_vector[i].initialize(events_array[i]);
     }
-    get_mod_events_calls[call_id]->callback((const Response&)response, mod_event_vector);
+    get_events_calls[call_id]->callback((const Response&)response, event_vector);
 
-    delete get_mod_events_calls[call_id];
+    delete get_events_calls[call_id];
     delete (u32*)object;
-    get_mod_events_calls.erase(call_id);
+    get_events_calls.erase(call_id);
   }
 
-  void onGetAllModEvents(void* object, ModioResponse modio_response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+  void onGetAllEvents(void* object, ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size)
   {
     u32 call_id = *((u32*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
-    std::vector<modio::ModEvent> mod_event_vector;
-    mod_event_vector.resize(mod_events_array_size);
-    for(u32 i=0; i < mod_events_array_size; i++)
+    std::vector<modio::Event> event_vector;
+    event_vector.resize(events_array_size);
+    for(u32 i=0; i < events_array_size; i++)
     {
-      mod_event_vector[i].initialize(mod_events_array[i]);
+      event_vector[i].initialize(events_array[i]);
     }
-    get_all_mod_events_calls[call_id]->callback((const Response&)response, mod_event_vector);
+    get_all_events_calls[call_id]->callback((const Response&)response, event_vector);
 
-    delete get_all_mod_events_calls[call_id];
+    delete get_all_events_calls[call_id];
     delete (u32*)object;
-    get_all_mod_events_calls.erase(call_id);
+    get_all_events_calls.erase(call_id);
   }
 
-  void onSetModEventListener(ModioResponse modio_response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+  void onSetEventListener(ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size)
   {
     modio::Response response;
     response.initialize(modio_response);
 
-    std::vector<modio::ModEvent> mod_events_vector;
-    mod_events_vector.resize(mod_events_array_size);
-    for(u32 i=0; i < mod_events_array_size; i++)
+    std::vector<modio::Event> events_vector;
+    events_vector.resize(events_array_size);
+    for(u32 i=0; i < events_array_size; i++)
     {
-      mod_events_vector[i].initialize(mod_events_array[i]);
+      events_vector[i].initialize(events_array[i]);
     }
-    set_mod_event_listener_call->callback((const Response&)response, mod_events_vector);
+    set_event_listener_call->callback((const Response&)response, events_vector);
   }
 }

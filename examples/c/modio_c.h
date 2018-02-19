@@ -56,7 +56,7 @@ typedef struct ModioModfileCreator ModioModfileCreator;
 typedef struct ModioModfileEditor ModioModfileEditor;
 typedef struct ModioModCreator ModioModCreator;
 typedef struct ModioModEditor ModioModEditor;
-typedef struct ModioModEvent ModioModEvent;
+typedef struct ModioEvent ModioEvent;
 
 struct ModioListNode
 {
@@ -285,7 +285,7 @@ struct ModioModEditor
   char* metadata_blob;
 };
 
-struct ModioModEvent
+struct ModioEvent
 {
   u32 id;
   u32 mod_id;
@@ -342,9 +342,9 @@ void modioProcess();
 void modioSleep(u32 milliseconds);
 
 //Events
-void modioSetModEventListener(void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
-void modioGetModEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
-void modioGetAllModEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
+void modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
 
 //Authentication methods
 void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));

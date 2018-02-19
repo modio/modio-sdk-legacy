@@ -1,20 +1,20 @@
 #include "modio_c.h"
 
-void onModEvent(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+void onEvent(ModioResponse response, ModioEvent* events_array, u32 events_array_size)
 {
   // The mod event callback is triggered in a constant interval of time, 15 seconds by default
   printf("Event listener response: %i\n", response.code);
   if(response.code == 200)
   {
     // it returns an array of events so you can notify the user about it or do the correspoding changes
-    for(u32 i=0; i < mod_events_array_size; i++)
+    for(u32 i=0; i < events_array_size; i++)
     {
       printf("Event found!\n");
-      printf("Id: %i\n",(int)mod_events_array[i].id);
-      printf("Mod id: %i\n",(int)mod_events_array[i].mod_id);
-      printf("User id: %i\n",(int)mod_events_array[i].user_id);
+      printf("Id: %i\n",(int)events_array[i].id);
+      printf("Mod id: %i\n",(int)events_array[i].mod_id);
+      printf("User id: %i\n",(int)events_array[i].user_id);
       printf("Event type: ");
-      switch( mod_events_array[i].event_type )
+      switch( events_array[i].event_type )
       {
         case EVENT_UNDEFINED:
         printf("Undefined\n");
@@ -44,7 +44,7 @@ int main(void)
   bool wait = true;
 
   // You can register a function as callback for mod events
-  modioSetModEventListener(&onModEvent);
+  modioSetEventListener(&onEvent);
 
   printf("Listening to mod events...\n");
 

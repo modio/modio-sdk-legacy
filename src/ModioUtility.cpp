@@ -22,14 +22,14 @@ namespace modio
       delete[] mod_path;
   }
 
-  void onGetAllModEventsPoll(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+  void onGetAllEventsPoll(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)
   {
     if(modio::callback)
-      modio::callback(response, mod_events_array, mod_events_array_size);
+      modio::callback(response, events_array, events_array_size);
 
-    for(int i=0; i<(int)mod_events_array_size; i++)
+    for(int i=0; i<(int)events_array_size; i++)
     {
-      switch( mod_events_array[i].event_type )
+      switch( events_array[i].event_type )
       {
         case EVENT_UNDEFINED:
         // TODO: Log error
@@ -37,8 +37,8 @@ namespace modio
         case EVENT_MODFILE_CHANGED:
         {
           // TODO: Reinstall modfile
-          std::string modfile_path_str = modio::getInstalledModPath(mod_events_array[i].mod_id);
-          modioInstallMod(NULL, mod_events_array[i].mod_id, (char*)modfile_path_str.c_str(), &modio::onModfileChangedEvent);
+          std::string modfile_path_str = modio::getInstalledModPath(events_array[i].mod_id);
+          modioInstallMod(NULL, events_array[i].mod_id, (char*)modfile_path_str.c_str(), &modio::onModfileChangedEvent);
         }
         break;
         case EVENT_MOD_AVAILABLE:
@@ -54,10 +54,10 @@ namespace modio
         case EVENT_MOD_EDITED:
         {
           // TODO: Update locally installed mods
-          std::string mod_path_str = modio::getInstalledModPath(mod_events_array[i].mod_id);
+          std::string mod_path_str = modio::getInstalledModPath(events_array[i].mod_id);
           char* mod_path = new char[mod_path_str.size() + 1];
           strcpy(mod_path, mod_path_str.c_str());
-          modioGetMod(mod_path, mod_events_array[i].mod_id, &modio::onModUpdateEvent);
+          modioGetMod(mod_path, events_array[i].mod_id, &modio::onModUpdateEvent);
           break;
         }
       }
@@ -76,7 +76,7 @@ namespace modio
       modioAddFilterMinField(&filter, (char*)"date_added", (char*)modio::toString(modio::LAST_EVENT_POLL).c_str());
       modioAddFilterSmallerThanField(&filter, (char*)"date_added", (char*)modio::toString(current_time).c_str());
 
-      modioGetAllModEvents(NULL, filter, &modio::onGetAllModEventsPoll);
+      modioGetAllEvents(NULL, filter, &modio::onGetAllEventsPoll);
 
       modio::LAST_EVENT_POLL = current_time;
     }

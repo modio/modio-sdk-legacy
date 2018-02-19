@@ -15,7 +15,7 @@
 #include "c++/schemas/Media.h"
 #include "c++/schemas/MetadataKVP.h"
 #include "c++/schemas/Mod.h"
-#include "c++/schemas/ModEvent.h"
+#include "c++/schemas/Event.h"
 #include "c++/schemas/Modfile.h"
 #include "c++/schemas/RatingSummary.h"
 #include "c++/schemas/Response.h"
@@ -46,9 +46,9 @@ namespace modio
     void sleep(u32 milliseconds);
 
     //Events
-    void getModEvents(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
-    void getAllModEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
-    void setModEventListener(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback);
+    void getEvents(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
+    void getAllEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
+    void setEventListener(const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
 
     //Authentication Methods
     bool isLoggedIn() const;
@@ -94,16 +94,19 @@ namespace modio
     //Me Methods
     void getAuthenticatedUser(const std::function<void(const modio::Response& response, const modio::User& user)>& callback);
     void getUserSubscriptions(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
+    void getUserEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
     void getUserGames(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Game> & games)>& callback);
     void getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
     void getUserModfiles(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
 
     //Downloads Methods
     void installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
-    u32 getModfileState(u32 modfile_id);
-    double getModfileDownloadPercentage(u32 modfile_id);
     bool uninstallModfile(u32 modfile_id);
     std::vector<u32> getInstalledModfileIds();
+    u32 getModfileState(u32 modfile_id);
+    void pauseCurrentDownload();
+    void resumeCurrentDownload();
+    double getModfileDownloadPercentage(u32 modfile_id);
   };
 }
 

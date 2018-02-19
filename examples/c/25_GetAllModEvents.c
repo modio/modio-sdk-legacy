@@ -1,21 +1,21 @@
 #include "modio_c.h"
 #include <time.h>
 
-void onGetAllModEvents(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
+void onGetAllEvents(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)
 {
   bool* wait = object;
   printf("On get mod events response: %i\n",response.code);
 
   // Just like the event listener, it returns an array of events
-  for(u32 i=0; i < mod_events_array_size; i++)
+  for(u32 i=0; i < events_array_size; i++)
   {
     printf("Event found!\n");
-    printf("Id: %i\n",(int)mod_events_array[i].id);
-    printf("Mod id: %i\n",(int)mod_events_array[i].mod_id);
-    printf("User id: %i\n",(int)mod_events_array[i].user_id);
-    printf("Date added: %s\n", (char*)ctime(&mod_events_array[i].date_added));
+    printf("Id: %i\n",(int)events_array[i].id);
+    printf("Mod id: %i\n",(int)events_array[i].mod_id);
+    printf("User id: %i\n",(int)events_array[i].user_id);
+    printf("Date added: %s\n", (char*)ctime(&events_array[i].date_added));
     printf("Event type: ");
-    switch( mod_events_array[i].event_type )
+    switch( events_array[i].event_type )
     {
       case EVENT_UNDEFINED:
       printf("Undefined\n");
@@ -63,7 +63,7 @@ int main(void)
   printf("Getting mod events...\n");
 
   // Everything is setup up, let's retreive the events now
-  modioGetAllModEvents(&wait, filter, &onGetAllModEvents);
+  modioGetAllEvents(&wait, filter, &onGetAllEvents);
 
   while(wait)
   {

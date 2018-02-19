@@ -7,7 +7,7 @@
 #include "wrappers/MinizipWrapper.h"
 #include "c/ModioC.h"
 #include "c/schemas/ModioMod.h"
-#include "c/schemas/ModioModEvent.h"
+#include "c/schemas/ModioEvent.h"
 #include "c/methods/AuthenticationMethods.h"
 #include "c/methods/DownloadsMethods.h"
 #include "c/methods/ImageMethods.h"

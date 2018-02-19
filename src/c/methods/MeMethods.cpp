@@ -47,6 +47,22 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserSubscriptions);
   }
 
+  void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size))
+  {
+    std::string filter_string = modio::getFilterString(&filter);
+
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/events?" + filter_string + "&api_key=" + modio::API_KEY;
+
+    u32 call_number = modio::curlwrapper::getCallCount();
+    modio::curlwrapper::advanceCallCount();
+
+    get_user_events_callbacks[call_number] = new GetUserEventsParams;
+    get_user_events_callbacks[call_number]->callback = callback;
+    get_user_events_callbacks[call_number]->object = object;
+
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserEvents);
+  }
+
   void modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size))
   {
     std::string filter_string = modio::getFilterString(&filter);

@@ -22,6 +22,16 @@ namespace modio
     this->current_call_id++;
   }
 
+  void Instance::getUserEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback)
+  {
+    const struct GetUserEventsCall* get_user_events_call = new GetUserEventsCall{callback};
+    get_user_events_calls[this->current_call_id] = (GetUserEventsCall*)get_user_events_call;
+
+    modioGetUserEvents((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetUserEvents);
+
+    this->current_call_id++;
+  }
+
   void Instance::getUserGames(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Game> & games)>& callback)
   {
     const struct GetUserGamesCall* get_user_games_call = new GetUserGamesCall{callback};

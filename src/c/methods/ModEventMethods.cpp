@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioGetModEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size))
+  void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
 
@@ -11,14 +11,14 @@ extern "C"
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
-    get_mod_events_callbacks[call_number] = new GetModEventsParams;
-    get_mod_events_callbacks[call_number]->callback = callback;
-    get_mod_events_callbacks[call_number]->object = object;
+    get_events_callbacks[call_number] = new GetEventsParams;
+    get_events_callbacks[call_number]->callback = callback;
+    get_events_callbacks[call_number]->object = object;
 
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModEvents);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetEvents);
   }
 
-  void modioGetAllModEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size))
+  void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
 
@@ -27,14 +27,14 @@ extern "C"
     u32 call_number = modio::curlwrapper::getCallCount();
     modio::curlwrapper::advanceCallCount();
 
-    get_all_mod_events_callbacks[call_number] = new GetAllModEventsParams;
-    get_all_mod_events_callbacks[call_number]->callback = callback;
-    get_all_mod_events_callbacks[call_number]->object = object;
+    get_all_events_callbacks[call_number] = new GetAllEventsParams;
+    get_all_events_callbacks[call_number]->callback = callback;
+    get_all_events_callbacks[call_number]->object = object;
 
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllModEvents);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllEvents);
   }
 
-  void modioSetModEventListener(void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size))
+  void modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size))
   {
     modio::callback = callback;
   }

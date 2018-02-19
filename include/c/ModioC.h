@@ -90,7 +90,7 @@ extern "C"
   typedef struct ModioModfileEditor ModioModfileEditor;
   typedef struct ModioModCreator ModioModCreator;
   typedef struct ModioModEditor ModioModEditor;
-  typedef struct ModioModEvent ModioModEvent;
+  typedef struct ModioEvent ModioEvent;
 
   struct ModioListNode
   {
@@ -319,7 +319,7 @@ extern "C"
     char* metadata_blob;
   };
 
-  struct ModioModEvent
+  struct ModioEvent
   {
     u32 id;
     u32 mod_id;
@@ -375,9 +375,9 @@ extern "C"
   void MODIO_DLL modioSleep(u32 milliseconds);
 
   //Events
-  void MODIO_DLL modioSetModEventListener(void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
-  void MODIO_DLL modioGetModEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
-  void MODIO_DLL modioGetAllModEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
+  void MODIO_DLL modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
 
   //Authentication methods
   void MODIO_DLL modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
@@ -483,6 +483,7 @@ extern "C"
   //Me Methods
   void MODIO_DLL modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user));
   void MODIO_DLL modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+  void MODIO_DLL modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
   void MODIO_DLL modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size));
   void MODIO_DLL modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
@@ -501,6 +502,7 @@ extern "C"
   u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
   u32 MODIO_DLL modioGetModfileState(u32 modfile_id);
   void MODIO_DLL modioPauseCurrentDownload();
+  void MODIO_DLL modioResumeCurrentDownload();
   double MODIO_DLL modioGetModfileDownloadPercentage(u32 modfile_id);
 }
 

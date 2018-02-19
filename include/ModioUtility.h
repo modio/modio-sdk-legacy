@@ -7,6 +7,6 @@ namespace modio
 {
   void onModfileChangedEvent(void* object, ModioResponse response);
   void onModUpdateEvent(void* object, ModioResponse response, ModioMod modio_mod);
-  void onGetAllModEventsPoll(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
+  void onGetAllEventsPoll(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size);
   void pollEvents();
 }

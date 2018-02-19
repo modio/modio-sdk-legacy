@@ -37,4 +37,14 @@ namespace modio
     }
     return installed_modfile_ids;
   }
+
+  void pauseCurrentDownload()
+  {
+    modioPauseCurrentDownload();
+  }
+
+  void resumeCurrentDownload()
+  {
+    modioResumeCurrentDownload();
+  }
 }

@@ -190,6 +190,7 @@ namespace modio
     void pauseCurrentDownload()
     {
       std::string path = current_download_handle->path;
+      std::string url = current_download_info.url;
 
       if(path != "")
       {

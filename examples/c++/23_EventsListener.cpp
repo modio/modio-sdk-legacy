@@ -23,22 +23,22 @@ int main(void)
   std::cout << "Listening to mod events..." << std::endl;
 
   // You can register a function as callback for mod events
-  modio_instance.setModEventListener([&](const modio::Response& response, const std::vector<modio::ModEvent> & mod_events)
+  modio_instance.setEventListener([&](const modio::Response& response, const std::vector<modio::Event> & events)
   {
     // The mod event callback is triggered in a constant interval of time, 15 seconds by default
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200)
     {
       // it returns a vector of events so you can notify the user about it or do the correspoding changes
-      for(auto& mod_event : mod_events)
+      for(auto& event : events)
       {
         std::cout << "Event found!" << std::endl;
-        std::cout << "Id: " <<  mod_event.id << std::endl;
-        std::cout << "Mod id: " <<  mod_event.mod_id << std::endl;
-        std::cout << "User id: " <<  mod_event.user_id << std::endl;
-        std::cout << "Date added: " <<  (char*)ctime(&mod_event.date_added);
+        std::cout << "Id: " <<  event.id << std::endl;
+        std::cout << "Mod id: " <<  event.mod_id << std::endl;
+        std::cout << "User id: " <<  event.user_id << std::endl;
+        std::cout << "Date added: " <<  (char*)ctime(&event.date_added);
         std::cout << "Event Type: ";
-        switch( mod_event.event_type )
+        switch( event.event_type )
         {
           case EVENT_UNDEFINED:
           std::cout<<"Undefined"<< std::endl;

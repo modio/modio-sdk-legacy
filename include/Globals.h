@@ -26,7 +26,7 @@ namespace modio
   extern u32 EVENT_POLL_INTERVAL;
   extern u32 AUTOMATIC_UPDATES;
   extern u32 BACKGROUND_DOWNLOADS;
-  extern void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
+  extern void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size);
   std::vector<std::string> getHeaders();
   std::vector<std::string> getUrlEncodedHeaders();
 }

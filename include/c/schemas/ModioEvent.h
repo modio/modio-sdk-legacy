@@ -9,8 +9,8 @@ using json = nlohmann::json;
 
 extern "C"
 {
-  void modioInitModEvent(ModioModEvent* mod_event, json mod_event_json);
-  void modioFreeModEvent(ModioModEvent* mod_event);
+  void modioInitEvent(ModioEvent* event, json event_json);
+  void modioFreeEvent(ModioEvent* event);
 }
 
 #endif

@@ -3,24 +3,24 @@
 
 #include "Globals.h"
 #include "c/schemas/ModioResponse.h"
-#include "c/schemas/ModioModEvent.h"
+#include "c/schemas/ModioEvent.h"
 
-struct GetModEventsParams
+struct GetEventsParams
 {
   void* object;
-  void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
+  void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size);
 };
 
-struct GetAllModEventsParams
+struct GetAllEventsParams
 {
   void* object;
-  void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
+  void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size);
 };
 
-extern std::map< u32, GetModEventsParams* > get_mod_events_callbacks;
-extern std::map< u32, GetAllModEventsParams* > get_all_mod_events_callbacks;
+extern std::map< u32, GetEventsParams* > get_events_callbacks;
+extern std::map< u32, GetAllEventsParams* > get_all_events_callbacks;
 
-void modioOnGetModEvents(u32 call_number, u32 response_code, json response_json);
-void modioOnGetAllModEvents(u32 call_number, u32 response_code, json response_json);
+void modioOnGetEvents(u32 call_number, u32 response_code, json response_json);
+void modioOnGetAllEvents(u32 call_number, u32 response_code, json response_json);
 
 #endif

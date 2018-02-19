@@ -33,20 +33,20 @@ int main(void)
   std::cout <<"Getting mods..." << std::endl;
 
   // Everything is setup up, let's retreive the events now
-  modio_instance.getAllModEvents(filter, [&](const modio::Response& response, const std::vector<modio::ModEvent> & mod_events)
+  modio_instance.getAllEvents(filter, [&](const modio::Response& response, const std::vector<modio::Event> & events)
   {
     std::cout << "On mod get response: " << response.code << std::endl;
     if(response.code == 200)
     {
       // Just like the event listener, it returns an array of events
-      for(auto& mod_event : mod_events)
+      for(auto& event : events)
       {
-        std::cout << "Id: " <<  mod_event.id << std::endl;
-        std::cout << "Mod id: " <<  mod_event.mod_id << std::endl;
-        std::cout << "User id: " <<  mod_event.user_id << std::endl;
-        std::cout << "Date added: " <<  (char*)ctime(&mod_event.date_added);
+        std::cout << "Id: " <<  event.id << std::endl;
+        std::cout << "Mod id: " <<  event.mod_id << std::endl;
+        std::cout << "User id: " <<  event.user_id << std::endl;
+        std::cout << "Date added: " <<  (char*)ctime(&event.date_added);
         std::cout << "Event Type: ";
-        switch( mod_event.event_type )
+        switch( event.event_type )
         {
           case EVENT_UNDEFINED:
           std::cout<<"Undefined"<< std::endl;
