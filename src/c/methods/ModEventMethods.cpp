@@ -8,8 +8,7 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/events?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_events_callbacks[call_number] = new GetEventsParams;
     get_events_callbacks[call_number]->callback = callback;
@@ -24,8 +23,7 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/events?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_all_events_callbacks[call_number] = new GetAllEventsParams;
     get_all_events_callbacks[call_number]->callback = callback;

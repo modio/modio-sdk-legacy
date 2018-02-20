@@ -6,8 +6,7 @@ extern "C"
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id) + "?api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_modfile_callbacks[call_number] = new GetModfileParams;
     get_modfile_callbacks[call_number]->callback = callback;
@@ -21,8 +20,7 @@ extern "C"
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_modfiles_callbacks[call_number] = new GetModfilesParams;
     get_modfiles_callbacks[call_number]->callback = callback;
@@ -52,8 +50,7 @@ extern "C"
     modio::minizipwrapper::compress(modfile_creator.path, modio::getModIODirectory() + "tmp/modfile.zip");
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files";
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_modfile_callbacks[call_number] = new AddModfileParams;
     add_modfile_callbacks[call_number]->callback = callback;
@@ -67,8 +64,7 @@ extern "C"
 
   void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_editor, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     edit_modfile_callbacks[call_number] = new EditModfileParams;
     edit_modfile_callbacks[call_number]->modfile_id = modfile_id;

@@ -6,8 +6,7 @@ extern "C"
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/?api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_authenticated_user_callbacks[call_number] = new GetAuthenticatedUserParams;
     get_authenticated_user_callbacks[call_number]->callback = callback;
@@ -21,8 +20,7 @@ extern "C"
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/subscribed/?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_user_subscriptions_callbacks[call_number] = new GetUserSubscriptionsParams;
     get_user_subscriptions_callbacks[call_number]->callback = callback;
@@ -53,8 +51,7 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/events?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_user_events_callbacks[call_number] = new GetUserEventsParams;
     get_user_events_callbacks[call_number]->callback = callback;
@@ -68,8 +65,7 @@ extern "C"
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/games/?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_user_games_callbacks[call_number] = new GetUserGamesParams;
     get_user_games_callbacks[call_number]->callback = callback;
@@ -99,8 +95,7 @@ extern "C"
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/mods/?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_user_mods_callbacks[call_number] = new GetUserModsParams;
     get_user_mods_callbacks[call_number]->callback = callback;
@@ -130,8 +125,7 @@ extern "C"
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/files/?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_user_modfiles_callbacks[call_number] = new GetUserModfilesParams;
     get_user_modfiles_callbacks[call_number]->callback = callback;

@@ -25,6 +25,7 @@ namespace modio
     void advanceCallCount();
     void advanceOngoingCall();
     void cleanCallQueue();
+    u32 getCallNumber();
 
     class JsonResponseHandler
     {

@@ -6,8 +6,7 @@ extern "C"
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_mod_callbacks[call_number] = new GetModParams;
     get_mod_callbacks[call_number]->callback = callback;
@@ -21,8 +20,7 @@ extern "C"
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_mods_callbacks[call_number] = new GetModsParams;
     get_mods_callbacks[call_number]->callback = callback;
@@ -49,8 +47,7 @@ extern "C"
 
   void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_editor, void (*callback)(void* object, ModioResponse response, ModioMod mod))
   {
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_mod_callback[call_number] = new AddModParams;
     add_mod_callback[call_number]->callback = callback;
@@ -73,8 +70,7 @@ extern "C"
 
   void modioAddMod(void* object, ModioModCreator mod_creator, void (*callback)(void* object, ModioResponse response, ModioMod mod))
   {
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_mod_callback[call_number] = new AddModParams;
     add_mod_callback[call_number]->callback = callback;
@@ -87,8 +83,7 @@ extern "C"
 
   void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id))
   {
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     delete_mod_callbacks[call_number] = new DeleteModParams;
     delete_mod_callbacks[call_number]->callback = callback;

@@ -6,8 +6,7 @@ extern "C"
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/metadatakvp/";
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_metadata_kvp_callbacks[call_number] = new GetMetadataKVPParams;
     get_metadata_kvp_callbacks[call_number]->callback = callback;
@@ -20,8 +19,7 @@ extern "C"
   {
     std::map<std::string, std::string> data;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_metadata_kvp_callbacks[call_number] = new AddMetadataKVPParams;
     add_metadata_kvp_callbacks[call_number]->callback = callback;
@@ -45,8 +43,7 @@ extern "C"
   {
     std::map<std::string, std::string> data;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     delete_metadata_kvp_callbacks[call_number] = new DeleteMetadataKVPParams;
     delete_metadata_kvp_callbacks[call_number]->callback = callback;

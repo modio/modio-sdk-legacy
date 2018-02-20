@@ -11,7 +11,7 @@ namespace modio
   {
     std::string url;
     double download_total;
-	double download_progress;
+    double download_progress;
   };
 
   extern std::string API_KEY;

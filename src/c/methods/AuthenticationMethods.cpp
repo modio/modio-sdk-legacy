@@ -8,8 +8,7 @@ extern "C"
     data["api_key"] = modio::API_KEY;
     data["email"] = email;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     email_request_params[call_number] = new EmailRequestParams;
     email_request_params[call_number]->callback = callback;
@@ -26,8 +25,8 @@ extern "C"
   {
     std::map<std::string, std::string> data;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
     email_exchange_params[call_number] = new EmailExchangeParams;
     email_exchange_params[call_number]->callback = callback;
     email_exchange_params[call_number]->object = object;

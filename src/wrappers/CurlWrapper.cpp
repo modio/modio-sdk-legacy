@@ -54,6 +54,13 @@ namespace modio
       ongoing_call++;
     }
 
+    u32 getCallNumber()
+    {
+      u32 call_number = modio::curlwrapper::getCallCount();
+      modio::curlwrapper::advanceCallCount();
+      return call_number;
+    }
+
     void lockCall(u32 call_number)
     {
       while(call_number!=getOngoingCall());

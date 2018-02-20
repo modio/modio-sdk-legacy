@@ -4,8 +4,7 @@ extern "C"
 {
   void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse modioresponse))
   {
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     download_image_callbacks[call_number] = new DownloadImageParams;
     download_image_callbacks[call_number]->callback = callback;
@@ -28,8 +27,7 @@ extern "C"
 
   void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(void* object, ModioResponse response, u32 mod_id))
   {
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     edit_mod_logo_callbacks[call_number] = new EditModLogoParams;
     edit_mod_logo_callbacks[call_number]->callback = callback;

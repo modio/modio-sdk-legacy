@@ -6,8 +6,7 @@ extern "C"
   {
     std::map<std::string, std::string> data;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_mod_rating_callbacks[call_number] = new AddModRatingParams;
     add_mod_rating_callbacks[call_number]->callback = callback;

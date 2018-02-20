@@ -6,8 +6,7 @@ extern "C"
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags/";
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     get_tags_callbacks[call_number] = new GetTagsParams;
     get_tags_callbacks[call_number]->callback = callback;
@@ -21,8 +20,7 @@ extern "C"
   {
     std::map<std::string, std::string> data;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_tags_callbacks[call_number] = new EditTagsParams;
     add_tags_callbacks[call_number]->callback = callback;
@@ -47,8 +45,7 @@ extern "C"
   {
     std::map<std::string, std::string> data;
 
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     delete_tags_callbacks[call_number] = new DeleteTagsParams;
     delete_tags_callbacks[call_number]->callback = callback;
