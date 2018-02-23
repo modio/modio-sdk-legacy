@@ -4,7 +4,12 @@ namespace modio
 {
   void onModfileChangedEvent(void* object, ModioResponse response)
   {
-    printf("On mod get response: %i\n",response.code);
+    printf("On modfile changed response: %i\n",response.code);
+  }
+
+  void onModSubscriptionInstalled(void* object, ModioResponse response)
+  {
+    printf("On mod subsciption installed response: %i\n",response.code);
   }
 
   void onModUpdateEvent(void* object, ModioResponse response, ModioMod modio_mod)
@@ -64,21 +69,83 @@ namespace modio
     }
   }
 
+  void onGetUserEventsPoll(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)
+  {
+    //TODO: Register User Callback
+    //if(modio::callback)
+    //  modio::callback(response, events_array, events_array_size);
+    writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
+
+    for(int i=0; i<(int)events_array_size; i++)
+    {
+      switch( events_array[i].event_type )
+      {
+        case MODIO_EVENT_UNDEFINED:
+        // TODO: Log error
+        break;
+        case MODIO_EVENT_USER_TEAM_JOIN:
+        {
+          // TODO: N/A
+        }
+        break;
+        case MODIO_EVENT_USER_TEAM_LEAVE:
+        {
+          // N/A
+          break;
+        }
+        case MODIO_EVENT_USER_SUBSCRIBE:
+        {
+          writeLogLine("Current User just subscribed to a Mod ", MODIO_DEBUGLEVEL_LOG);
+          std::string modfile_path_str = modio::getInstalledModPath(events_array[i].mod_id);
+          if(modfile_path_str == "")
+          {
+            writeLogLine("Installing mod. Id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
+            std::string modfile_path = modio::getModIODirectory() + "mods/" + modio::toString(events_array[i].mod_id);
+            modioInstallMod(NULL, events_array[i].mod_id, (char*)modfile_path.c_str(), &modio::onModSubscriptionInstalled);
+          }
+          break;
+        }
+        case MODIO_EVENT_USER_UNSUBSCRIBE:
+        {
+          // TODO: N/A
+          std::cout<<"Unsubscribed!"<<std::endl;
+          modioUninstallMod(events_array[i].mod_id);
+
+          break;
+        }
+      }
+    }
+  }
+
   void pollEvents()
   {
     u32 current_time = modio::getCurrentTime();
 
-    if(current_time - modio::LAST_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+    if(current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
     {
       ModioFilterCreator filter;
       modioInitFilter(&filter);
-      modioSetFilterLimit(&filter,3);
-      modioAddFilterMinField(&filter, (char*)"date_added", (char*)modio::toString(modio::LAST_EVENT_POLL).c_str());
+      modioAddFilterMinField(&filter, (char*)"date_added", (char*)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
       modioAddFilterSmallerThanField(&filter, (char*)"date_added", (char*)modio::toString(current_time).c_str());
 
       modioGetAllEvents(NULL, filter, &modio::onGetAllEventsPoll);
 
-      modio::LAST_EVENT_POLL = current_time;
+      modio::LAST_MOD_EVENT_POLL = current_time;
+    }
+
+    if(current_time - modio::LAST_USER_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+    {
+
+      std::cout<<"User events polling"<<std::endl;
+
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      modioAddFilterMinField(&filter, (char*)"date_added", (char*)modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
+      modioAddFilterSmallerThanField(&filter, (char*)"date_added", (char*)modio::toString(current_time).c_str());
+
+      modioGetUserEvents(NULL, filter, &modio::onGetUserEventsPoll);
+
+      modio::LAST_USER_EVENT_POLL = current_time;
     }
   }
 }

@@ -22,7 +22,17 @@ extern "C"
     modio::updateInstalledModsJson();
     std::string modfile_path = modio::getInstalledModfilePath(modfile_id);
 
-    bool result = modfile_path != "" && modio::checkIfModIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
+    bool result = modfile_path != "" && modio::checkIfModfileIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
+    modio::updateInstalledModsJson();
+    return result;
+  }
+
+  bool modioUninstallMod(u32 mod_id)
+  {
+    modio::updateInstalledModsJson();
+    std::string mod_path = modio::getInstalledModPath(mod_id);
+
+    bool result = mod_path != "" && modio::checkIfModIsStillInstalled(mod_path, mod_id) && modio::removeDirectory(mod_path);
     modio::updateInstalledModsJson();
     return result;
   }

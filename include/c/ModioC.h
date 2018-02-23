@@ -502,6 +502,7 @@ extern "C"
   //Downloads Methods
   void MODIO_DLL modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
   bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
+  bool MODIO_DLL modioUninstallMod(u32 mod_id);
   u32 MODIO_DLL modioGetInstalledModfilesCount();
   u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
   u32 MODIO_DLL modioGetModfileState(u32 modfile_id);

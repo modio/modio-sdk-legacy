@@ -3,7 +3,8 @@
 void modioInit(u32 environment, u32 game_id, char* api_key)
 {
   u32 current_time = modio::getCurrentTime();
-  modio::LAST_EVENT_POLL = current_time;
+  modio::LAST_MOD_EVENT_POLL = current_time;
+  modio::LAST_USER_EVENT_POLL = current_time;
 
   if(environment == MODIO_ENVIRONMENT_TEST)
   {
@@ -34,6 +35,7 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
   modio::updateInstalledModsJson();
 
   modio::createDirectory(modio::getModIODirectory());
+  modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);

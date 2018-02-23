@@ -94,7 +94,20 @@ namespace modio
     ofs.close();
   }
 
-  bool checkIfModIsStillInstalled(std::string path, u32 modfile_id)
+  bool checkIfModIsStillInstalled(std::string path, u32 mod_id)
+  {
+    std::string installed_mod_json_path = path + "modio.json";
+    std::ifstream installed_mod_file(installed_mod_json_path.c_str());
+    if(!installed_mod_file.is_open())
+    {
+      return false;
+    }
+    json installed_mod_json;
+    installed_mod_file >> installed_mod_json;
+    return mod_id == installed_mod_json["id"];
+  }
+
+  bool checkIfModfileIsStillInstalled(std::string path, u32 modfile_id)
   {
     std::string installed_mod_json_path = path + "modio.json";
     std::ifstream installed_mod_file(installed_mod_json_path.c_str());
@@ -119,7 +132,7 @@ namespace modio
 
       for(int i=0; i<(int)installed_mods_json["mods"].size(); i++)
       {
-        if(checkIfModIsStillInstalled(installed_mods_json["mods"][i]["path"], installed_mods_json["mods"][i]["modfile_id"]))
+        if(checkIfModIsStillInstalled(installed_mods_json["mods"][i]["path"], installed_mods_json["mods"][i]["mod_id"]))
         {
           resulting_json["mods"].push_back(installed_mods_json["mods"][i]);
         }

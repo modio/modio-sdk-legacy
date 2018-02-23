@@ -60,6 +60,7 @@ namespace modio
       return;
 
     std::ofstream log_file(getModIODirectory() + "log", std::ios::app);
+    log_file<<"["<<modio::getCurrentTime()<<"] ";
     if(debug_level == MODIO_DEBUGLEVEL_ERROR) { log_file<<"Error: "; }
     else if(debug_level == MODIO_DEBUGLEVEL_WARNING) { log_file<<"Warning: "; }
     log_file<<text.c_str()<<"\n";

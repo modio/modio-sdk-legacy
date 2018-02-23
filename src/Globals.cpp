@@ -11,7 +11,8 @@ namespace modio
   std::string MODIO_URL = "https://api.mod.io/";
   std::string MODIO_VERSION_PATH = "v1/";
   u32 MAX_CALL_CACHE = 10;
-  u32 LAST_EVENT_POLL = 0;
+  u32 LAST_MOD_EVENT_POLL = 0;
+  u32 LAST_USER_EVENT_POLL = 0;
   u32 EVENT_POLL_INTERVAL = 15;
   void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size) = NULL;
   u32 AUTOMATIC_UPDATES = 0;

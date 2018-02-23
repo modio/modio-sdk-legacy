@@ -502,6 +502,7 @@ void modioSetAllowBackgroundDownloadsConfig(u32 option);
 //Downloads Methods
 void modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
 bool modioUninstallModfile(u32 modfile_id);
+bool modioUninstallMod(u32 mod_id);
 u32 modioGetInstalledModfilesCount();
 u32 modioGetInstalledModfileId(u32 index);
 u32 modioGetModfileState(u32 modfile_id);

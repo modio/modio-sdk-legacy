@@ -122,7 +122,7 @@ namespace modio
 
     void get(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
-      writeLogLine("getJsonCall call to " + url, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine("GET: " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
       CURL *curl;
 
@@ -179,6 +179,7 @@ namespace modio
 
       if(dltotal != 0 && dltotal == dlnow)
       {
+        //TODO: Remove from download queue
         if(current_download_handle)
         {
           current_download_handle->path = "";
@@ -249,7 +250,8 @@ namespace modio
 
     void download(u32 call_number, std::vector<std::string> headers, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code, json response)> callback)
     {
-      writeLogLine("downloadFile call to " + url, MODIO_DEBUGLEVEL_LOG);
+      //TODO: Add to download queue
+      writeLogLine("DOWNLOAD: " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
       CURL *curl;
       curl = curl_easy_init();
@@ -289,7 +291,7 @@ namespace modio
 
     void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, json response)> callback)
     {
-      writeLogLine(std::string("postForm call to ") + url, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
       CURL *curl;
 
@@ -355,7 +357,7 @@ namespace modio
 
     void post(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
-      writeLogLine(std::string("post call to ") + url, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine(std::string("POST: ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
 
       CURL *curl;
@@ -390,7 +392,8 @@ namespace modio
 
     void put(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
-      writeLogLine(std::string("put call to ") + url, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine(std::string("PUT: ") + url, MODIO_DEBUGLEVEL_LOG);
+
       //lockCall(call_number);
       CURL *curl;
 
@@ -427,7 +430,7 @@ namespace modio
 
     void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
-      writeLogLine(std::string("delete call to ") + url, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine(std::string("DELETE: ") + url, MODIO_DEBUGLEVEL_LOG);
       //lockCall(call_number);
       CURL *curl;
 
