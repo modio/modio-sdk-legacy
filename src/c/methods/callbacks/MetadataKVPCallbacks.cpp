@@ -18,7 +18,7 @@ void modioOnGetMetadataKVP(u32 call_number, u32 response_code, json response_jso
     {
       if(modio::hasKey(response_json, "data"))
       {
-        metadata_kvp_array_size = response_json["data"].size();
+        metadata_kvp_array_size = (u32)response_json["data"].size();
         metadata_kvp_array = new ModioMetadataKVP[metadata_kvp_array_size];
         for(u32 i=0; i<metadata_kvp_array_size; i++)
         {

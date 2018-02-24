@@ -17,7 +17,7 @@ void modioOnGetAllEvents(u32 call_number, u32 response_code, json response_json)
     {
       if(modio::hasKey(response_json, "data"))
       {
-        events_array_size = response_json["data"].size();
+        events_array_size = (u32)response_json["data"].size();
         events_array = new ModioEvent[events_array_size];
 
         for(u32 i=0; i<events_array_size; i++)
@@ -57,7 +57,7 @@ void modioOnGetEvents(u32 call_number, u32 response_code, json response_json)
     {
       if(modio::hasKey(response_json, "data"))
       {
-        events_array_size = response_json["data"].size();
+        events_array_size = (u32)response_json["data"].size();
         events_array = new ModioEvent[events_array_size];
 
         for(u32 i=0; i<events_array_size; i++)

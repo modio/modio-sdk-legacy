@@ -17,4 +17,9 @@ namespace modio
   {
     modioSleep(milliseconds);
   }
+
+  void Instance::process()
+  {
+    modioProcess();
+  }
 }

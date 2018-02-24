@@ -62,9 +62,9 @@ using json = nlohmann::json;
 
 namespace modio
 {
-  std::string toString(i32 number);
-  std::string toString(u32 number);
-  std::string toString(double number);
+  std::string MODIO_DLL toString(i32 number);
+  std::string MODIO_DLL toString(u32 number);
+  std::string MODIO_DLL toString(double number);
   void createDirectory(std::string directory);
   void clearLog();
   void writeLogLine(std::string text, unsigned int debug_level);

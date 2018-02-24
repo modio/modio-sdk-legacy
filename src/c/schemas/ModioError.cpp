@@ -21,7 +21,7 @@ extern "C"
     if(modio::hasKey(error_json, "errors"))
     {
       json errors_json = error_json["errors"];
-      error->errors_array_size = errors_json.size();
+      error->errors_array_size = (u32)errors_json.size();
       error->errors_array = new char*[error->errors_array_size];
 
       int i = 0;

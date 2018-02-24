@@ -9,7 +9,7 @@ extern "C"
     if(modio::hasKey(media_json, "youtube"))
     {
       json youtube_json = media_json["youtube"];
-      media->youtube_size = youtube_json.size();
+      media->youtube_size = (u32)youtube_json.size();
       media->youtube_array = new char*[media->youtube_size];
       for(int i=0; i<(int)media->youtube_size; i++)
       {
@@ -24,7 +24,7 @@ extern "C"
     if(modio::hasKey(media_json, "sketchfab"))
     {
       json sketchfab_json = media_json["sketchfab"];
-      media->sketchfab_size = sketchfab_json.size();
+      media->sketchfab_size = (u32)sketchfab_json.size();
       media->sketchfab_array = new char*[media->sketchfab_size];
       for(int i=0; i<(int)media->sketchfab_size; i++)
       {
@@ -39,7 +39,7 @@ extern "C"
     if(modio::hasKey(media_json, "images"))
     {
       json images_json = media_json["images"];
-      media->images_size = images_json.size();
+      media->images_size = (u32)images_json.size();
       media->images_array = new ModioImage[media->images_size];
       for(int i=0; i<(int)media->images_size; i++)
       {

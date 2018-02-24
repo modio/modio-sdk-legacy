@@ -12,7 +12,7 @@ int main(void)
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
       if(download_mod_id != -1)
       {
         // Track download progress by providing the modfile id

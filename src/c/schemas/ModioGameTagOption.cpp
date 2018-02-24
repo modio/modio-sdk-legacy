@@ -29,7 +29,7 @@ extern "C"
     if(modio::hasKey(game_tag_option_json, "tags"))
     {
       json sketchfab_json = game_tag_option_json["tags"];
-      game_tag_option->tags_array_size = sketchfab_json.size();
+      game_tag_option->tags_array_size = (u32)sketchfab_json.size();
       game_tag_option->tags_array = new char*[game_tag_option->tags_array_size];
       for(int i=0; i<(int)game_tag_option->tags_array_size; i++)
       {

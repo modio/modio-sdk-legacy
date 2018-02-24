@@ -44,6 +44,7 @@ namespace modio
 
     //General Methods
     void sleep(u32 milliseconds);
+    void process();
 
     //Events
     void getEvents(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);

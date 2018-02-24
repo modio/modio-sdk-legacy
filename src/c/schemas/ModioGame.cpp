@@ -127,7 +127,7 @@ extern "C"
     game->game_tag_option_array_size = 0;
     if(modio::hasKey(game_json, "tag_options"))
     {
-      game->game_tag_option_array_size = game_json["tag_options"].size();
+      game->game_tag_option_array_size = (u32)game_json["tag_options"].size();
       game->game_tag_option_array = new ModioGameTagOption[game->game_tag_option_array_size];
 
       for(u32 i=0; i<game->game_tag_option_array_size; i++)

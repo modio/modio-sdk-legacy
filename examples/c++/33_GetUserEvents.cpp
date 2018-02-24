@@ -11,7 +11,7 @@ int main(void)
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
@@ -41,10 +41,10 @@ int main(void)
       // Just like the event listener, it returns an array of events
       for(auto& event : events)
       {
-        std::cout << "Id: " <<  event.id << std::endl;
-        std::cout << "Mod id: " <<  event.mod_id << std::endl;
-        std::cout << "User id: " <<  event.user_id << std::endl;
-        std::cout << "Date added: " <<  (char*)ctime(&event.date_added);
+        std::cout << "Id: " << event.id << std::endl;
+        std::cout << "Mod id: " << event.mod_id << std::endl;
+        std::cout << "User id: " << event.user_id << std::endl;
+        std::cout << "Date added: " << ctime(&(time_t)event.date_added);
         std::cout << "Event Type: ";
         switch( event.event_type )
         {

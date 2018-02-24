@@ -84,7 +84,7 @@ namespace modio
     size_t get_data(char *ptr, size_t size, size_t nmemb, void *userdata)
     {
       CURL* handle = (CURL*)userdata;
-      u32 data_size = size * nmemb;
+      u32 data_size = (u32)(size * nmemb);
       ongoing_calls[handle]->response.append(ptr, data_size);
       return data_size;
     }

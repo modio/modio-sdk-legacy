@@ -25,7 +25,7 @@ namespace modio
     const struct AddMetadataKVPCall* add_metadata_kvp_call = new AddMetadataKVPCall{metadata_kvp_array, (u32)metadata_kvp.size(), callback};
     add_metadata_kvp_calls[this->current_call_id] = (AddMetadataKVPCall*)add_metadata_kvp_call;
 
-    modioAddMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, metadata_kvp.size(), &onAddMetadataKVP);
+    modioAddMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onAddMetadataKVP);
     this->current_call_id++;
   }
 
@@ -42,7 +42,7 @@ namespace modio
     const struct DeleteMetadataKVPCall* delete_metadata_kvp_call = new DeleteMetadataKVPCall{metadata_kvp_array, (u32)metadata_kvp.size(), callback};
     delete_metadata_kvp_calls[this->current_call_id] = (DeleteMetadataKVPCall*)delete_metadata_kvp_call;
 
-    modioDeleteMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, metadata_kvp.size(), &onDeleteMetadataKVP);
+    modioDeleteMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onDeleteMetadataKVP);
 
     this->current_call_id++;
   }
