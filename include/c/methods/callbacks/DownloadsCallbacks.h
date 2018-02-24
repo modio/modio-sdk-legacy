@@ -31,7 +31,7 @@ struct InstallModParams
 extern std::map< u32, GetInstallModParams* > get_install_mod_callbacks;
 extern std::map< u32, InstallModParams* > install_mod_callbacks;
 
-void modioOnModDownloaded(u32 call_number, u32 response_code, json response_json);
+void modioOnModDownloaded(u32 call_number, u32 response_code);
 void onGetInstallMod(u32 call_number, u32 response_code, json response_json);
 
 #endif

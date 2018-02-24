@@ -3,10 +3,11 @@
 std::map< u32, GetInstallModParams* > get_install_mod_callbacks;
 std::map< u32, InstallModParams* > install_mod_callbacks;
 
-void modioOnModDownloaded(u32 call_number, u32 response_code, json response_json)
+void modioOnModDownloaded(u32 call_number, u32 response_code)
 {
   ModioResponse response;
-  modioInitResponse(&response, response_json);
+  json empty_json;
+  modioInitResponse(&response, empty_json);
   response.code = response_code;
   fclose(install_mod_callbacks[call_number]->file);
 

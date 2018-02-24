@@ -3,10 +3,11 @@
 std::map< u32, DownloadImageParams* > download_image_callbacks;
 std::map< u32, EditModLogoParams* > edit_mod_logo_callbacks;
 
-void modioOnImageDownloaded(u32 call_number, u32 response_code, json response_json)
+void modioOnImageDownloaded(u32 call_number, u32 response_code)
 {
   ModioResponse response;
-  modioInitResponse(&response, response_json);
+  json empty_json;
+  modioInitResponse(&response, empty_json);
   response.code = response_code;
 
   fclose(download_image_callbacks[call_number]->file);

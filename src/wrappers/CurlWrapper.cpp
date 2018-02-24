@@ -7,6 +7,7 @@ namespace modio
     CURLM *curl_multi_handle;
 
     std::map<CURL*, JsonResponseHandler*> ongoing_calls;
+    std::map<CURL*, OngoingDownload*> ongoing_downloads;
 
     CurrentDownloadHandle* current_download_handle;
 
@@ -69,6 +70,13 @@ namespace modio
     JsonResponseHandler::JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
     {
       this->response = "";
+      this->call_number = call_number;
+      this->callback = callback;
+    }
+
+    OngoingDownload::OngoingDownload(u32 call_number, std::string url, std::function<void(u32 call_number, u32 response_code)> callback)
+    {
+      this->url = url;
       this->call_number = call_number;
       this->callback = callback;
     }
@@ -221,6 +229,7 @@ namespace modio
       ongoing_call = -1;
       call_count = -1;
       ongoing_calls.clear();
+      ongoing_downloads.clear();
 
       delete current_download_handle;
     }
@@ -248,7 +257,7 @@ namespace modio
       return current_download_info;
     }
 
-    void download(u32 call_number, std::vector<std::string> headers, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code, json response)> callback)
+    void download(u32 call_number, std::vector<std::string> headers, std::string url, std::string path, FILE* file, curl_off_t progress, std::function<void(u32 call_number, u32 response_code)> callback)
     {
       //TODO: Add to download queue
       writeLogLine("DOWNLOAD: " + url, MODIO_DEBUGLEVEL_LOG);
@@ -262,7 +271,7 @@ namespace modio
 
       current_download_info.url = url;
 
-      ongoing_calls[curl] = new JsonResponseHandler(call_number, callback);
+      ongoing_downloads[curl] = new OngoingDownload(call_number, url, callback);
 
       if(progress!=0)
       {
@@ -477,6 +486,15 @@ namespace modio
             ongoing_calls[curl_handle]->callback(ongoing_calls[curl_handle]->call_number, response_code, response_json);
             advanceOngoingCall();
             delete ongoing_calls[curl_handle];
+          }
+
+          if(ongoing_downloads.find(curl_handle) != ongoing_downloads.end())
+          {
+            u32 response_code;
+            curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
+            ongoing_downloads[curl_handle]->callback(ongoing_downloads[curl_handle]->call_number, response_code);
+            advanceOngoingCall();
+            delete ongoing_downloads[curl_handle];
           }
 
           curl_multi_remove_handle(curl_multi_handle, curl_handle);
