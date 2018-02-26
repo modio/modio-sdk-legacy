@@ -7,6 +7,7 @@
 #include "c++/creators/ModEditor.h"
 #include "c++/creators/ModfileCreator.h"
 #include "c++/creators/ModfileEditor.h"
+#include "c++/schemas/Dependency.h"
 #include "c++/schemas/Error.h"
 #include "c++/schemas/Filehash.h"
 #include "c++/schemas/Game.h"
@@ -22,6 +23,7 @@
 #include "c++/schemas/Tag.h"
 #include "c++/schemas/User.h"
 #include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
+#include "c++/methods/callbacks/DependenciesInstanceCallbacks.h"
 #include "c++/methods/callbacks/DownloadsInstanceCallbacks.h"
 #include "c++/methods/callbacks/ImageInstanceCallbacks.h"
 #include "c++/methods/callbacks/MeInstanceCallbacks.h"
@@ -108,6 +110,11 @@ namespace modio
     void pauseCurrentDownload();
     void resumeCurrentDownload();
     double getModfileDownloadPercentage(u32 modfile_id);
+
+	//Dependencies Methods
+	void getAllModDependencies(u32 mod_id, const std::function<void(const modio::Response& response, const std::vector<modio::Dependency> & mods)>& callback);
+	void addModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response& response)>& callback);
+	void deleteModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response& response)>& callback);
   };
 }
 

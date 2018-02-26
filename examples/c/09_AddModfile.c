@@ -15,10 +15,6 @@ int main(void)
 {
   modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
 
-  {
-    ModioListNode oa;
-  }
-
   if(!modioIsLoggedIn())
   {
     printf("You are not logged in, please login before creating a mod.\n");
