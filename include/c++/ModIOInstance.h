@@ -13,6 +13,7 @@
 #include "c++/schemas/Game.h"
 #include "c++/schemas/GameTagOption.h"
 #include "c++/schemas/Image.h"
+#include "c++/schemas/InstalledMod.h"
 #include "c++/schemas/Media.h"
 #include "c++/schemas/MetadataKVP.h"
 #include "c++/schemas/Mod.h"
@@ -103,13 +104,14 @@ namespace modio
     void getUserModfiles(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
 
     //Downloads Methods
-    void installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback);
+    void installMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
     bool uninstallModfile(u32 modfile_id);
     std::vector<u32> getInstalledModfileIds();
     u32 getModfileState(u32 modfile_id);
     void pauseCurrentDownload();
     void resumeCurrentDownload();
     double getModfileDownloadPercentage(u32 modfile_id);
+	std::vector<modio::InstalledMod> getInstalledMods();
 
 	//Dependencies Methods
 	void getAllModDependencies(u32 mod_id, const std::function<void(const modio::Response& response, const std::vector<modio::Dependency> & mods)>& callback);

@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response))
+  void modioInstallMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response))
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
 
@@ -11,7 +11,7 @@ extern "C"
     get_install_mod_callbacks[call_number] = new GetInstallModParams;
     get_install_mod_callbacks[call_number]->object = object;
     get_install_mod_callbacks[call_number]->mod_id = mod_id;
-    get_install_mod_callbacks[call_number]->destination_path = modio::addSlashIfNeeded(destination_path);
+    get_install_mod_callbacks[call_number]->destination_path = modio::getModIODirectory() + "mods/" + modio::toString(mod_id);
     get_install_mod_callbacks[call_number]->callback = callback;
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
@@ -134,5 +134,48 @@ extern "C"
       }
     }
     return -1;
+  }
+  void modioGetInstalledMods(ModioInstalledMod* installed_mods)
+  {
+	  std::ifstream installed_mod_file(modio::getModIODirectory() + "installed_mods.json");
+	  if (installed_mod_file.is_open())
+	  {
+		  json installed_mod_json;
+		  try
+		  {
+			  installed_mod_file >> installed_mod_json;
+			  installed_mod_file.close();
+
+			  for (u32 i = 0; i< installed_mod_json["mods"].size(); i++)
+			  {
+				  modioInitInstalledMod(&(installed_mods[i]), installed_mod_json["mods"][i]);
+			  }
+		  }
+		  catch (json::parse_error &e)
+		  {
+			  modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+		  }
+	  }
+	  installed_mod_file.close();
+  }
+
+  u32 modioGetInstalledModsSize()
+  {
+	  std::ifstream installed_mod_file(modio::getModIODirectory() + "installed_mods.json");
+	  if (installed_mod_file.is_open())
+	  {
+		  json installed_mod_json;
+		  try
+		  {
+			  installed_mod_file >> installed_mod_json;
+			  installed_mod_file.close();
+			  return (u32)installed_mod_json["mods"].size();
+		  }
+		  catch (json::parse_error &e)
+		  {
+			  modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+		  }
+	  }
+	  return 0;
   }
 }

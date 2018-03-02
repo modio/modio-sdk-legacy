@@ -79,6 +79,7 @@ extern "C"
   typedef struct ModioHeader ModioHeader;
   typedef struct ModioIcon ModioIcon;
   typedef struct ModioImage ModioImage;
+  typedef struct ModioInstalledMod ModioInstalledMod;
   typedef struct ModioLogo ModioLogo;
   typedef struct ModioMedia ModioMedia;
   typedef struct ModioMetadataKVP ModioMetadataKVP;
@@ -369,6 +370,15 @@ extern "C"
     u32 game_tag_option_array_size;
   };
 
+  struct ModioInstalledMod
+  {
+	  u32 mod_id;
+	  u32 modfile_id;
+	  u32 updated_at;
+	  char* path;
+	  ModioMod mod;
+  };
+
   //General Methods
   void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key);
   //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
@@ -500,7 +510,7 @@ extern "C"
   void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
 
   //Downloads Methods
-  void MODIO_DLL modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioInstallMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
   bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
   bool MODIO_DLL modioUninstallMod(u32 mod_id);
   u32 MODIO_DLL modioGetInstalledModfilesCount();
@@ -509,6 +519,8 @@ extern "C"
   void MODIO_DLL modioPauseCurrentDownload();
   void MODIO_DLL modioResumeCurrentDownload();
   double MODIO_DLL modioGetModfileDownloadPercentage(u32 modfile_id);
+  void MODIO_DLL modioGetInstalledMods(ModioInstalledMod* installed_mods);
+  u32 MODIO_DLL modioGetInstalledModsSize();
 
   //Dependencies Methods
   void MODIO_DLL modioGetAllModDependencies(void* object, u32 mod_id, void(*callback)(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size));

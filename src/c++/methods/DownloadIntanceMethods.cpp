@@ -2,12 +2,12 @@
 
 namespace modio
 {
-  void Instance::installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback)
+  void Instance::installMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback)
   {
     const struct InstallModCall* install_modfile_call = new InstallModCall{callback};
     install_mod_calls[this->current_call_id] = (InstallModCall*)install_modfile_call;
 
-    modioInstallMod((void*)new u32(this->current_call_id), mod_id, (char*)destination_path.c_str(), &onInstallModfile);
+    modioInstallMod((void*)new u32(this->current_call_id), mod_id, &onInstallModfile);
 
     this->current_call_id++;
   }
@@ -38,13 +38,32 @@ namespace modio
     return installed_modfile_ids;
   }
 
-  void pauseCurrentDownload()
+  void Instance::pauseCurrentDownload()
   {
     modioPauseCurrentDownload();
   }
 
-  void resumeCurrentDownload()
+  void Instance::resumeCurrentDownload()
   {
     modioResumeCurrentDownload();
+  }
+
+  std::vector<modio::InstalledMod> Instance::getInstalledMods()
+  {
+	  std::vector<modio::InstalledMod> installed_mods;
+
+	  u32 installed_mods_size = modioGetInstalledModsSize();
+	  ModioInstalledMod* modio_installed_mods = new ModioInstalledMod[installed_mods_size];
+
+	  installed_mods.resize(installed_mods_size);
+	  for (u32 i = 0; i<(u32)installed_mods_size; i++)
+	  {
+		modio::InstalledMod installed_mod;
+		installed_mods[i].initialize(modio_installed_mods[i]);
+	  }
+
+	  delete[] modio_installed_mods;
+
+	  return installed_mods;
   }
 }

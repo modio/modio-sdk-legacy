@@ -35,7 +35,7 @@ int main(void)
 
   std::cout <<"Installing mod..." << std::endl;
 
-  modio_instance.installModfile(mod_id, "../mods_dir/modfile", [&](const modio::Response& response)
+  modio_instance.installMod(mod_id, [&](const modio::Response& response)
   {
     std::cout << "Install Modfile response: " << response.code << std::endl;
 

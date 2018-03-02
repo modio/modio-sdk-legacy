@@ -28,11 +28,14 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
     token_file >> token_file_json;
     if(token_file_json.find("access_token") != token_file_json.end())
     {
-      modio::ACCESS_TOKEN = token_file_json["access_token"];
+	  std::string access_token = token_file_json["access_token"];
+      modio::ACCESS_TOKEN = access_token;
     }
   }
 
   modio::updateInstalledModsJson();
+
+  modio::checkForInstalledModsUpdates();
 
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "mods/");
@@ -67,8 +70,8 @@ CurrentDownloadInfo modioGetCurrentDownloadInfo()
 
 void modioProcess()
 {
-  if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
-    modio::pollEvents();
+  //if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+    //modio::pollEvents();
   modio::curlwrapper::process();
 }
 

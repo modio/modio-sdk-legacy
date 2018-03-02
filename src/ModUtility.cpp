@@ -75,7 +75,7 @@ namespace modio
       ifs.close();
       for (auto& it : installed_mods_json["mods"])
       {
-        if(it["id"] == mod_json["id"] && it["path"] == path)
+        if(it["mod_id"] == mod_json["id"] && it["path"] == path)
         {
           return;
         }
@@ -141,6 +141,23 @@ namespace modio
       out<<std::setw(4)<<resulting_json<<std::endl;
       out.close();
     }
+  }
+
+  void checkForInstalledModsUpdates()
+  {
+	  ModioFilterCreator filter;
+	  modioInitFilter(&filter);
+	  u32 installed_mods_size = modioGetInstalledModsSize();
+	  ModioInstalledMod* modio_installed_mods = new ModioInstalledMod[installed_mods_size];
+	  modioGetInstalledMods(modio_installed_mods);
+
+	  for (u32 i = 0; i<(u32)installed_mods_size; i++)
+	  {
+		  modioAddFilterInField(&filter, "id", (char*)modio::toString(modio_installed_mods[i].mod_id).c_str());
+	  }
+	  modioGetMods(NULL, filter, &onGetInstalledMods);
+
+	  delete[] modio_installed_mods;
   }
 
   std::string getInstalledModPath(u32 mod_id)

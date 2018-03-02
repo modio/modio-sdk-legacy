@@ -3,6 +3,7 @@
 
 #include "Utility.h"
 #include "Globals.h"
+#include "ModioUtility.h"
 
 namespace modio
 {
@@ -13,8 +14,10 @@ namespace modio
   bool checkIfModIsStillInstalled(std::string path, u32 mod_id);
   bool checkIfModfileIsStillInstalled(std::string path, u32 modfile_id);
   void updateInstalledModsJson();
+  void checkForInstalledModsUpdates();
   std::string getInstalledModfilePath(u32 modfile_id);
   std::string getInstalledModPath(u32 mod_id);
+  void updateModCache(u32 mod_id);
 }
 
 #endif
