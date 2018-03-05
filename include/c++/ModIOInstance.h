@@ -7,8 +7,8 @@
 #include "c++/creators/ModEditor.h"
 #include "c++/creators/ModfileCreator.h"
 #include "c++/creators/ModfileEditor.h"
+#include "c++/schemas/Comment.h"
 #include "c++/schemas/Dependency.h"
-#include "c++/schemas/Error.h"
 #include "c++/schemas/Filehash.h"
 #include "c++/schemas/Game.h"
 #include "c++/schemas/GameTagOption.h"
@@ -25,6 +25,7 @@
 #include "c++/schemas/Tag.h"
 #include "c++/schemas/User.h"
 #include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
+#include "c++/methods/callbacks/CommentsInstanceCallbacks.h"
 #include "c++/methods/callbacks/DependenciesInstanceCallbacks.h"
 #include "c++/methods/callbacks/DownloadsInstanceCallbacks.h"
 #include "c++/methods/callbacks/ImageInstanceCallbacks.h"
@@ -36,6 +37,7 @@
 #include "c++/methods/callbacks/TagsInstanceCallbacks.h"
 #include "c++/methods/callbacks/SubscriptionInstanceCallbacks.h"
 #include "c++/methods/callbacks/RatingsInstanceCallbacks.h"
+#include "c++/methods/callbacks/ReportsInstanceCallbacks.h"
 
 namespace modio
 {
@@ -119,6 +121,13 @@ public:
   void getAllModDependencies(u32 mod_id, const std::function<void(const modio::Response &response, const std::vector<modio::Dependency> &mods)> &callback);
   void addModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response &response)> &callback);
   void deleteModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response &response)> &callback);
+
+  //Comments Methods
+  void getAllModComments(modio::FilterCreator &filter, u32 mod_id, const std::function<void(const modio::Response &response, const std::vector<modio::Comment> &comments)> &callback);
+  void deleteModComment(u32 mod_id, u32 comment_id, const std::function<void(const modio::Response &response)> &callback);
+
+  //Reports Methods
+  void submitReport(std::string resource, u32 id, u32 type, std::string name, std::string summary, const std::function<void(const modio::Response &response)> &callback);  
 };
 }
 

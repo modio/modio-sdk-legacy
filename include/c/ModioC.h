@@ -67,6 +67,10 @@ typedef int i32;
 #define MODIO_UPDATES_DISABLED  0
 #define MODIO_UPDATES_ENABLED   1
 
+// Report Types
+#define MODIO_GENERIC_REPORT  0
+#define MODIO_DMCA_REPORT     1
+
 extern "C"
 {
   typedef struct ModioListNode ModioListNode;
@@ -390,6 +394,19 @@ extern "C"
     char* path;
   };
 
+  struct ModioComment
+  {
+    u32 id;
+    u32 mod_id;
+    ModioUser submitted_by;
+    u32 date_added;
+    u32 reply_id;
+    u32 karma;
+    u32 karma_guest;
+    char* replay_position;
+    char* content;
+  };
+
   //General Methods
   void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key);
   //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
@@ -537,6 +554,13 @@ extern "C"
   void MODIO_DLL modioGetAllModDependencies(void* object, u32 mod_id, void(*callback)(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size));
   void MODIO_DLL modioAddModDependencies(void* object, u32 mod_id, u32* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioDeleteModDependencies(void* object, u32 mod_id, u32* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response));
+
+  //Comment Methods
+  void MODIO_DLL modioGetAllModComments(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioComment comments[], u32 comments_size));
+  void MODIO_DLL modioDeleteModComment(void* object, u32 mod_id, u32 comment_id, void(*callback)(void* object, ModioResponse response));
+
+  //Reports Methods
+  void MODIO_DLL modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response));
 }
 
 #endif

@@ -16,8 +16,6 @@ namespace modio
     double total_size;
     std::string url;
     std::string path;
-    FILE* file;
-    CURL* curl_handle;
     Mod mod;
 
     void initialize(ModioQueuedModDownload queued_mod_download);

@@ -61,8 +61,9 @@ namespace modio
 
     std::ofstream log_file(getModIODirectory() + "log", std::ios::app);
     log_file<<"["<<modio::getCurrentTime()<<"] ";
-    if(debug_level == MODIO_DEBUGLEVEL_ERROR) { log_file<<"Error: "; }
-    else if(debug_level == MODIO_DEBUGLEVEL_WARNING) { log_file<<"Warning: "; }
+    if(debug_level == MODIO_DEBUGLEVEL_ERROR) { log_file<<"[Error] "; }
+    else if(debug_level == MODIO_DEBUGLEVEL_WARNING) { log_file<<"[WARNING] "; }
+    else if(debug_level == MODIO_DEBUGLEVEL_LOG) { log_file<<"[LOG] "; }
     log_file<<text.c_str()<<"\n";
     log_file.close();
   }
@@ -126,22 +127,22 @@ namespace modio
 
 
     #ifdef LINUX
-      if(remove(path.c_str()) != 0)
-        writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
-      else
+      if(remove(path.c_str()))
         writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
+      else
+        writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
     #endif
 
     #ifdef OSX
-      if(remove(path.c_str()) != 0)
-        writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
-      else
+      if(remove(path.c_str()))
         writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
+      else
+        writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
     #endif
 
     #ifdef WINDOWS
       if(RemoveDirectory(path.c_str()))
-        writeLogLine("File removed " + path, MODIO_DEBUGLEVEL_ERROR);
+        writeLogLine("File removed " + path, MODIO_DEBUGLEVEL_LOG);
       else
         writeLogLine("Could not remove file " + path, MODIO_DEBUGLEVEL_ERROR);
     #endif
