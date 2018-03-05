@@ -9,7 +9,7 @@ void modioOnModDownloaded(u32 call_number, u32 response_code)
   json empty_json;
   modioInitResponse(&response, empty_json);
   response.code = response_code;
-  fclose(install_mod_callbacks[call_number]->file);
+  //fclose(install_mod_callbacks[call_number]->file);
 
   std::string destination_path_str = install_mod_callbacks[call_number]->destination_path;
   modio::createDirectory(destination_path_str);
@@ -45,23 +45,15 @@ void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
     install_mod_callbacks[install_call_number]->object = get_install_mod_callbacks[call_number]->object;
     install_mod_callbacks[install_call_number]->callback = get_install_mod_callbacks[call_number]->callback;
     install_mod_callbacks[install_call_number]->destination_path = get_install_mod_callbacks[call_number]->destination_path;
-    FILE* file;
-    curl_off_t progress = modio::curlwrapper::getProgressIfStored(file_path);
-    if(progress != 0)
-    {
-      file = fopen(file_path.c_str(),"ab");
-    }else
-    {
-      file = fopen(file_path.c_str(),"wb");
-    }
-    install_mod_callbacks[install_call_number]->file = file;
 
     std::string downoad_url = response_json["modfile"]["download"]["binary_url"];
 
     std::vector<std::string> headers;
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-
-    modio::curlwrapper::download(install_call_number, headers, downoad_url, file_path, file, progress, &modioOnModDownloaded);
+    ModioMod modio_mod;
+    modioInitMod(&modio_mod, response_json);
+    ModioMod* modio_modx = &modio_mod;    
+    modio::curlwrapper::queueModDownload(install_call_number, modio_modx, downoad_url);
   }else
   {
     ModioResponse response;

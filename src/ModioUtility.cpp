@@ -68,86 +68,105 @@ namespace modio
 
   void onGetAllEventsPoll(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)
   {
-    if(modio::callback)
-      modio::callback(response, events_array, events_array_size);
-
-    for(int i=0; i<(int)events_array_size; i++)
+    if(response.code == 200)
     {
-      switch( events_array[i].event_type )
+      if(modio::callback)
+        modio::callback(response, events_array, events_array_size);
+
+      for(int i=0; i<(int)events_array_size; i++)
       {
-        case MODIO_EVENT_UNDEFINED:
-        // TODO: Log error
-        break;
-        case MODIO_EVENT_MODFILE_CHANGED:
+        switch( events_array[i].event_type )
         {
-          // TODO: Reinstall modfile
-          modioInstallMod(NULL, events_array[i].mod_id, &modio::onModfileChangedEvent);
-        }
-        break;
-        case MODIO_EVENT_MOD_AVAILABLE:
-        {
-          // N/A
+          case MODIO_EVENT_UNDEFINED:
+          // TODO: Log error
           break;
-        }
-        case MODIO_EVENT_MOD_UNAVAILABLE:
-        {
-          // N/A
+          case MODIO_EVENT_MODFILE_CHANGED:
+          {
+            // TODO: Reinstall modfile
+            writeLogLine("Modfile changed. Mod id: " + modio::toString(events_array[i].mod_id) + " Reisntalling...", MODIO_DEBUGLEVEL_LOG);
+            modioInstallMod(NULL, events_array[i].mod_id, &modio::onModfileChangedEvent);
+          }
           break;
-        }
-        case MODIO_EVENT_MOD_EDITED:
-        {
-          // TODO: Update locally installed mods
-		  updateModCache(events_array[i].mod_id);
-          break;
+          case MODIO_EVENT_MOD_AVAILABLE:
+          {
+            // N/A
+            break;
+          }
+          case MODIO_EVENT_MOD_UNAVAILABLE:
+          {
+            // N/A
+            break;
+          }
+          case MODIO_EVENT_MOD_EDITED:
+          {
+            // TODO: Update locally installed mods
+            writeLogLine("Mod updated. Mod id: " + modio::toString(events_array[i].mod_id) + " Updating cache...", MODIO_DEBUGLEVEL_LOG);
+            updateModCache(events_array[i].mod_id);
+            break;
+          }
         }
       }
+      json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+      installed_mods_json["last_mod_event_poll"] = modio::LAST_MOD_EVENT_POLL;
+      modio::writeJson(modio::getModIODirectory() + "installed_mods.json", installed_mods_json);
+    }else
+    {
+      writeLogLine("Could not poll mod events. Error code: " + modio::toString(response.code), MODIO_DEBUGLEVEL_ERROR);      
     }
   }
 
   void onGetUserEventsPoll(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)
   {
-    //TODO: Register User Callback
-    //if(modio::callback)
-    //  modio::callback(response, events_array, events_array_size);
-    writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
-
-    for(int i=0; i<(int)events_array_size; i++)
+    if(response.code == 200)
     {
-      switch( events_array[i].event_type )
+      //TODO: Register User Callback
+      //if(modio::callback)
+      //  modio::callback(response, events_array, events_array_size);
+      writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
+
+      for(int i=0; i<(int)events_array_size; i++)
       {
-        case MODIO_EVENT_UNDEFINED:
-        // TODO: Log error
-        break;
-        case MODIO_EVENT_USER_TEAM_JOIN:
+        switch( events_array[i].event_type )
         {
-          // TODO: N/A
-        }
-        break;
-        case MODIO_EVENT_USER_TEAM_LEAVE:
-        {
-          // N/A
+          case MODIO_EVENT_UNDEFINED:
+          // TODO: Log error
           break;
-        }
-        case MODIO_EVENT_USER_SUBSCRIBE:
-        {
-          writeLogLine("Current User just subscribed to a Mod ", MODIO_DEBUGLEVEL_LOG);
-          std::string modfile_path_str = modio::getInstalledModPath(events_array[i].mod_id);
-          if(modfile_path_str == "")
+          case MODIO_EVENT_USER_TEAM_JOIN:
           {
-            writeLogLine("Installing mod. Id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
-            modioInstallMod(NULL, events_array[i].mod_id, &modio::onModSubscriptionInstalled);
+            // TODO: N/A
           }
           break;
-        }
-        case MODIO_EVENT_USER_UNSUBSCRIBE:
-        {
-          // TODO: N/A
-		  writeLogLine("Current User just unsubscribed from a Mod. Uninstalling...", MODIO_DEBUGLEVEL_LOG);
-          modioUninstallMod(events_array[i].mod_id);
-
-          break;
+          case MODIO_EVENT_USER_TEAM_LEAVE:
+          {
+            // N/A
+            break;
+          }
+          case MODIO_EVENT_USER_SUBSCRIBE:
+          {
+            writeLogLine("Current User subscribed to a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Installing...", MODIO_DEBUGLEVEL_LOG);
+            std::string modfile_path_str = modio::getInstalledModPath(events_array[i].mod_id);
+            if(modfile_path_str == "")
+            {
+              writeLogLine("Installing mod. Id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
+              modioInstallMod(NULL, events_array[i].mod_id, &modio::onModSubscriptionInstalled);
+            }
+            break;
+          }
+          case MODIO_EVENT_USER_UNSUBSCRIBE:
+          {
+            // TODO: N/A
+            writeLogLine("Current User unsubscribed from a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Uninstalling...", MODIO_DEBUGLEVEL_LOG);
+            modioUninstallMod(events_array[i].mod_id);
+            break;
+          }
         }
       }
+      json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+      installed_mods_json["last_user_event_poll"] = modio::LAST_USER_EVENT_POLL;
+      modio::writeJson(modio::getModIODirectory() + "installed_mods.json", installed_mods_json);
+    }else
+    {
+      writeLogLine("Could not poll user events. Error code: " + modio::toString(response.code), MODIO_DEBUGLEVEL_ERROR);      
     }
   }
 

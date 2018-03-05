@@ -137,6 +137,12 @@ namespace modio
           resulting_json["mods"].push_back(installed_mods_json["mods"][i]);
         }
       }
+
+      if(modio::hasKey(installed_mods_json,"last_user_event_poll"))
+        resulting_json["last_user_event_poll"] = installed_mods_json["last_user_event_poll"];
+      if(modio::hasKey(installed_mods_json,"last_mod_event_poll"))
+        resulting_json["last_mod_event_poll"] = installed_mods_json["last_mod_event_poll"];
+
       std::ofstream out(modio::getModIODirectory() + "installed_mods.json");
       out<<std::setw(4)<<resulting_json<<std::endl;
       out.close();

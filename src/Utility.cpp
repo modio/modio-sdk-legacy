@@ -121,6 +121,32 @@ namespace modio
       writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
   }
 
+  void removeEmptyDirectory(std::string path)
+  {
+
+
+    #ifdef LINUX
+      if(remove(path.c_str()) != 0)
+        writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
+      else
+        writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
+    #endif
+
+    #ifdef OSX
+      if(remove(path.c_str()) != 0)
+        writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
+      else
+        writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
+    #endif
+
+    #ifdef WINDOWS
+      if(RemoveDirectory(path.c_str()))
+        writeLogLine("File removed " + path, MODIO_DEBUGLEVEL_ERROR);
+      else
+        writeLogLine("Could not remove file " + path, MODIO_DEBUGLEVEL_ERROR);
+    #endif
+  }
+
   bool removeDirectory(std::string directory_name)
   {
     DIR *dir;
@@ -141,18 +167,18 @@ namespace modio
     {
       if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
       {
-        snprintf(path, (size_t) PATH_MAX, "%s/%s", directory_name.c_str(), entry->d_name);
+        snprintf(path, (size_t) PATH_MAX, "%s%s", directory_name.c_str(), entry->d_name);
         if(opendir(path) != NULL)
         {
             removeDirectory(path);
         }
         writeLogLine("Deleting: " + std::string(path), MODIO_DEBUGLEVEL_LOG);
-        remove(path);
+        removeFile(path);
       }
     }
     closedir(dir);
     writeLogLine("Deleting: " + directory_name, MODIO_DEBUGLEVEL_LOG);
-    remove(directory_name.c_str());
+    removeEmptyDirectory(directory_name);
 
     return true;
   }

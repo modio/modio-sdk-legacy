@@ -4,11 +4,16 @@
 #include <stdio.h>
 #include <iostream>
 #include <map>
+#include <list>
 
 #include "dependencies/json/json.hpp"
 #include "dependencies/curl/curl.h"
 #include "Utility.h"
+#include "Globals.h"
 #include "wrappers/MinizipWrapper.h"
+#include "c++/schemas/QueuedModDownload.h"
+#include "dependencies/curl/curl.h"
+#include "ModUtility.h"
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
@@ -63,6 +68,12 @@ namespace modio
     void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback);
     void process();
     curl_off_t getProgressIfStored(std::string path);
+
+    std::list< QueuedModDownload* > getModDownloadQueue();
+
+    void queueModDownload(u32 call_number, ModioMod* modio_mod, std::string url);
+    
+    void downloadMod(QueuedModDownload* queued_mod_download);
   }
 }
 

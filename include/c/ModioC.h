@@ -96,6 +96,7 @@ extern "C"
   typedef struct ModioModCreator ModioModCreator;
   typedef struct ModioModEditor ModioModEditor;
   typedef struct ModioEvent ModioEvent;
+  typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 
   struct ModioListNode
   {
@@ -377,6 +378,16 @@ extern "C"
 	  u32 updated_at;
 	  char* path;
 	  ModioMod mod;
+  };
+
+  struct ModioQueuedModDownload
+  {
+    u32 id;
+    u32 mod_id;
+    double current_progress;
+    double total_size;
+    char* url;
+    char* path;
   };
 
   //General Methods

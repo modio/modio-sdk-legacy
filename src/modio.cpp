@@ -6,6 +6,12 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
   modio::LAST_MOD_EVENT_POLL = current_time;
   modio::LAST_USER_EVENT_POLL = current_time;
 
+  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  if(modio::hasKey(installed_mods_json,"last_user_event_poll"))
+    modio::LAST_USER_EVENT_POLL = installed_mods_json["last_user_event_poll"];
+  if(modio::hasKey(installed_mods_json,"last_mod_event_poll"))
+    modio::LAST_MOD_EVENT_POLL = installed_mods_json["last_mod_event_poll"];
+
   if(environment == MODIO_ENVIRONMENT_TEST)
   {
     modio::MODIO_URL = "https://api.test.mod.io/";
@@ -35,7 +41,12 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
 
   modio::updateInstalledModsJson();
 
-  modio::checkForInstalledModsUpdates();
+  /*
+  if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+  {
+    modio::checkForInstalledModsUpdates();  
+  }
+  */
 
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "mods/");
@@ -70,8 +81,8 @@ CurrentDownloadInfo modioGetCurrentDownloadInfo()
 
 void modioProcess()
 {
-  //if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
-    //modio::pollEvents();
+  if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+    modio::pollEvents();
   modio::curlwrapper::process();
 }
 

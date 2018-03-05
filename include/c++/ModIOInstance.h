@@ -19,6 +19,7 @@
 #include "c++/schemas/Mod.h"
 #include "c++/schemas/Event.h"
 #include "c++/schemas/Modfile.h"
+#include "c++/schemas/QueuedModDownload.h"
 #include "c++/schemas/RatingSummary.h"
 #include "c++/schemas/Response.h"
 #include "c++/schemas/Tag.h"
@@ -38,86 +39,87 @@
 
 namespace modio
 {
-  class MODIO_DLL Instance
-  {
-    int current_call_id;
+class MODIO_DLL Instance
+{
+  int current_call_id;
 
-  public:
-    Instance(u32 environment, u32 id, const std::string& guid);
+public:
+  Instance(u32 environment, u32 id, const std::string &guid);
 
-    //General Methods
-    void sleep(u32 milliseconds);
-    void process();
+  //General Methods
+  void sleep(u32 milliseconds);
+  void process();
 
-    //Events
-    void getEvents(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
-    void getAllEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
-    void setEventListener(const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
+  //Events
+  void getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
+  void getAllEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
+  void setEventListener(const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
 
-    //Authentication Methods
-    bool isLoggedIn() const;
-    void logout() const;
-    void setDebugLevel(u32 debug_level);
-    void emailRequest(const std::string& email, const std::function<void(const modio::Response&)>& callback);
-    void emailExchange(const std::string& security_code, const std::function<void(const modio::Response&)>& callback);
+  //Authentication Methods
+  bool isLoggedIn() const;
+  void logout() const;
+  void setDebugLevel(u32 debug_level);
+  void emailRequest(const std::string &email, const std::function<void(const modio::Response &)> &callback);
+  void emailExchange(const std::string &security_code, const std::function<void(const modio::Response &)> &callback);
 
-    //Media Methods
-    void downloadImage(const std::string& image_url, const std::string& path, const std::function<void(const modio::Response&)>& callback);
-    void editModLogo(u32 mod_id, const std::string& path, const std::function<void(const modio::Response&, u32 mod_id)>& callback);
+  //Media Methods
+  void downloadImage(const std::string &image_url, const std::string &path, const std::function<void(const modio::Response &)> &callback);
+  void editModLogo(u32 mod_id, const std::string &path, const std::function<void(const modio::Response &, u32 mod_id)> &callback);
 
-    //Mod Methods
-    void addMod(modio::ModCreator& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
-    void getMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
-    void getMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
-    void editMod(u32 mod_id, modio::ModEditor& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
-    void deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+  //Mod Methods
+  void addMod(modio::ModCreator &mod_handler, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
+  void getMod(u32 mod_id, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
+  void getMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
+  void editMod(u32 mod_id, modio::ModEditor &mod_handler, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
+  void deleteMod(u32 mod_id, const std::function<void(const modio::Response &response, u32 mod_id)> &callback);
 
-    //Modfile Methods
-    void getModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
-    void getModfiles(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
-    void addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
-    void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback);
+  //Modfile Methods
+  void getModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response &response, const modio::Modfile &modfile)> &callback);
+  void getModfiles(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
+  void addModfile(u32 mod_id, modio::ModfileCreator &modfile_handler, const std::function<void(const modio::Response &response, const modio::Modfile &modfile)> &callback);
+  void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor &modfile_handler, const std::function<void(const modio::Response &response, const modio::Modfile &modfile)> &callback);
 
-    //Tag Methods
-    void getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback);
-    void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
-    void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback);
+  //Tag Methods
+  void getTags(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::Tag> tags)> &callback);
+  void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response, u32 mod_id)> &callback);
+  void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response, u32 mod_id)> &callback);
 
-    //Metadata KVP methods
-    void getMetadataKVP(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::MetadataKVP> metadata_kvp)>& callback);
-    void addMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback);
-    void deleteMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback);
+  //Metadata KVP methods
+  void getMetadataKVP(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp)> &callback);
+  void addMetadataKVP(u32 mod_id, std::vector<std::pair<std::string, std::string>> metadata_kvp, const std::function<void(const modio::Response &response)> &callback);
+  void deleteMetadataKVP(u32 mod_id, std::vector<std::pair<std::string, std::string>> metadata_kvp, const std::function<void(const modio::Response &response)> &callback);
 
-    //Ratings Methods
-    void addModRating(u32 mod_id, bool vote_up, const std::function<void(const modio::Response& response)>& callback);
+  //Ratings Methods
+  void addModRating(u32 mod_id, bool vote_up, const std::function<void(const modio::Response &response)> &callback);
 
-    //Subscription Methods
-    void subscribeToMod(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback);
-    void unsubscribeFromMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
+  //Subscription Methods
+  void subscribeToMod(u32 mod_id, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
+  void unsubscribeFromMod(u32 mod_id, const std::function<void(const modio::Response &response)> &callback);
 
-    //Me Methods
-    void getAuthenticatedUser(const std::function<void(const modio::Response& response, const modio::User& user)>& callback);
-    void getUserSubscriptions(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
-    void getUserEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback);
-    void getUserGames(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Game> & games)>& callback);
-    void getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Mod> & mods)>& callback);
-    void getUserModfiles(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Modfile> & modfiles)>& callback);
+  //Me Methods
+  void getAuthenticatedUser(const std::function<void(const modio::Response &response, const modio::User &user)> &callback);
+  void getUserSubscriptions(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
+  void getUserEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
+  void getUserGames(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Game> &games)> &callback);
+  void getUserMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
+  void getUserModfiles(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
 
-    //Downloads Methods
-    void installMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback);
-    bool uninstallModfile(u32 modfile_id);
-    std::vector<u32> getInstalledModfileIds();
-    u32 getModfileState(u32 modfile_id);
-    void pauseCurrentDownload();
-    void resumeCurrentDownload();
-    double getModfileDownloadPercentage(u32 modfile_id);
-	std::vector<modio::InstalledMod> getInstalledMods();
+  //Downloads Methods
+  void installMod(u32 mod_id, const std::function<void(const modio::Response &response)> &callback);
+  bool uninstallModfile(u32 modfile_id);
+  void pauseCurrentDownload();
+  void resumeCurrentDownload();
+  std::vector<modio::InstalledMod> getInstalledMods();
 
-	//Dependencies Methods
-	void getAllModDependencies(u32 mod_id, const std::function<void(const modio::Response& response, const std::vector<modio::Dependency> & mods)>& callback);
-	void addModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response& response)>& callback);
-	void deleteModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response& response)>& callback);
-  };
+  std::vector<u32> getInstalledModfileIds();
+  u32 getModfileState(u32 modfile_id);
+  double getModfileDownloadPercentage(u32 modfile_id);
+
+  //Dependencies Methods
+  void getAllModDependencies(u32 mod_id, const std::function<void(const modio::Response &response, const std::vector<modio::Dependency> &mods)> &callback);
+  void addModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response &response)> &callback);
+  void deleteModDependencies(u32 mod_id, std::vector<u32> dependencies, const std::function<void(const modio::Response &response)> &callback);
+};
 }
 
 #endif
