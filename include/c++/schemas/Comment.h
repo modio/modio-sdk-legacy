@@ -15,9 +15,9 @@ namespace modio
         u32 mod_id;
         u32 date_added;
         u32 reply_id;
-        u32 karma;
-        u32 karma_guest;
-        std::string replay_position;
+        i32 karma;
+        i32 karma_guest;
+        std::string reply_position;
         std::string content;
         User submitted_by;
 

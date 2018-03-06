@@ -27,14 +27,14 @@ void modioInitComment(ModioComment *comment, json comment_json)
     if (modio::hasKey(comment_json, "karma_guest"))
         comment->karma_guest = comment_json["karma_guest"];
 
-    comment->replay_position = NULL;
-    if (modio::hasKey(comment_json, "replay_position"))
+    comment->reply_position = NULL;
+    if (modio::hasKey(comment_json, "reply_position"))
     {
-        std::string replay_position_str = comment_json["replay_position"];
-        comment->replay_position = new char[replay_position_str.size() + 1];
-        strcpy(comment->replay_position, replay_position_str.c_str());
+        std::string reply_position_str = comment_json["reply_position"];
+        comment->reply_position = new char[reply_position_str.size() + 1];
+        strcpy(comment->reply_position, reply_position_str.c_str());
     }
-
+    
     comment->content = NULL;
     if (modio::hasKey(comment_json, "content"))
     {

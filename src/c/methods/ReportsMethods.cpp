@@ -13,6 +13,6 @@ extern "C" {
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "report?resource=" + resource + "&id=" + modio::toString(id) + "&type=" + modio::toString(type) + "&name=" + name + "&summary=" + summary;
 
-    modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), &modioOnSubmitReport);
+    modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnSubmitReport);
   }
 }

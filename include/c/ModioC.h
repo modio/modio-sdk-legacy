@@ -75,6 +75,7 @@ extern "C"
 {
   typedef struct ModioListNode ModioListNode;
   typedef struct ModioAvatar ModioAvatar;
+  typedef struct ModioComment ModioComment;
   typedef struct ModioDependency ModioDependency;
   typedef struct ModioError ModioError;
   typedef struct ModioFilehash ModioFilehash;
@@ -403,7 +404,7 @@ extern "C"
     u32 reply_id;
     u32 karma;
     u32 karma_guest;
-    char* replay_position;
+    char* reply_position;
     char* content;
   };
 

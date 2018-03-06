@@ -62,6 +62,7 @@
         "filesystem": "cpp",
         "chrono": "cpp",
         "codecvt": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "modio_c.h": "c"
     }
 }
