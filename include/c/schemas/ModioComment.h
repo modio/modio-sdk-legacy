@@ -4,6 +4,7 @@
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
 #include "c/ModioC.h"
+#include "c/schemas/ModioUser.h"
 
 using json = nlohmann::json;
 

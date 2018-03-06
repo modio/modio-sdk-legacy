@@ -2,11 +2,14 @@
 #define MODIO_COMMENTS_CALLBACKS_H
 
 #include "Globals.h"
+#include "c/schemas/ModioResponse.h"
 #include "c/schemas/ModioComment.h"
 
 struct GetAllModCommentsParams
 {
 	void* object;
+	std::string url;
+  	bool is_cache;
     void (*callback)(void* object, ModioResponse response, ModioComment comments[], u32 comments_size);
 };
 

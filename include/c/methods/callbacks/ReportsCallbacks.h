@@ -2,7 +2,7 @@
 #define MODIO_REPORTS_CALLBACKS_H
 
 #include "Globals.h"
-#include "c/schemas/ModioReports.h"
+#include "c/schemas/ModioResponse.h"
 
 struct SubmitReportParams
 {
@@ -12,6 +12,6 @@ struct SubmitReportParams
 
 extern std::map< u32, SubmitReportParams* > submit_report_callbacks;
 
-void modioOnSumbitReport(u32 call_number, u32 response_code, json response_json);
+void modioOnSubmitReport(u32 call_number, u32 response_code, json response_json);
 
 #endif

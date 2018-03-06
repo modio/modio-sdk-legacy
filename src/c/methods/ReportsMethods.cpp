@@ -1,0 +1,18 @@
+#include "c/methods/ReportsMethods.h"
+
+extern "C" {
+
+  void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response))
+  {
+    std::map<std::string, std::string> data;
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
+    submit_report_callbacks[call_number] = new SubmitReportParams;
+    submit_report_callbacks[call_number]->callback = callback;
+    submit_report_callbacks[call_number]->object = object;
+
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "report?resource=" + resource + "&id=" + modio::toString(id) + "&type=" + modio::toString(type) + "&name=" + name + "&summary=" + summary;
+
+    modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), &modioOnSubmitReport);
+  }
+}
