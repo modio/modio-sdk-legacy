@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -25,11 +23,10 @@ int main(void)
   std::cin >> mod_id;
 
   // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
-  modio_instance.editModLogo(mod_id, "../ModExample/logo.png", [&](const modio::Response& response, u32 mod_id)
-  {
+  modio_instance.editModLogo(mod_id, "../ModExample/logo.png", [&](const modio::Response &response, u32 mod_id) {
     std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Image uploaded successfully!" << std::endl;
     }

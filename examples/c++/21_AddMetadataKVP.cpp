@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -25,13 +23,12 @@ int main(void)
   std::cin >> mod_id;
 
   // We add metadata key value pairs to a mod by providing the key and the value contained on a std::pair
-  std::vector< std::pair<std::string,std::string> > metadata_kvp;
-  metadata_kvp.push_back(std::pair<std::string,std::string>("pistol-dmg","800"));
+  std::vector<std::pair<std::string, std::string>> metadata_kvp;
+  metadata_kvp.push_back(std::pair<std::string, std::string>("pistol-dmg", "800"));
 
-  modio_instance.addMetadataKVP(mod_id, metadata_kvp, [&](const modio::Response& response)
-  {
+  modio_instance.addMetadataKVP(mod_id, metadata_kvp, [&](const modio::Response &response) {
     std::cout << "Add metadta kvp response: " << response.code << std::endl;
-    if(response.code == 201)
+    if (response.code == 201)
     {
       std::cout << "Metadata KVP added successfully" << std::endl;
     }

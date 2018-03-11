@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -32,13 +30,12 @@ int main(void)
   mod_creator.setMetadataBlob("Optional metadata");
   mod_creator.setVisible(MODIO_PUBLIC);
 
-  std::cout <<"Creating mod..." << std::endl;
+  std::cout << "Creating mod..." << std::endl;
 
   // Now we can create the new mod. Remember, this mod wont have a Modfile right away, you should be adding one after the mod was created successfully
-  modio_instance.addMod(mod_creator, [&](const modio::Response& response, const modio::Mod& mod)
-  {
+  modio_instance.addMod(mod_creator, [&](const modio::Response &response, const modio::Mod &mod) {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 201)
+    if (response.code == 201)
     {
       std::cout << "Mod created successfully" << std::endl;
       std::cout << "Mod id:" << mod.id << std::endl;

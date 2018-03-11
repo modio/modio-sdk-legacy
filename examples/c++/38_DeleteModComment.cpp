@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -28,13 +26,12 @@ int main(void)
   std::cout << "Enter the comment id: " << std::endl;
   std::cin >> comment_id;
 
-  std::cout <<"Getting mods..." << std::endl;
+  std::cout << "Getting mods..." << std::endl;
 
   // Now we finished setting up the filters we are ready to request the mods
-  modio_instance.deleteModComment(mod_id, comment_id, [&](const modio::Response& response)
-  {
+  modio_instance.deleteModComment(mod_id, comment_id, [&](const modio::Response &response) {
     std::cout << "On delete mod comment response: " << response.code << std::endl;
-    if(response.code == 204)
+    if (response.code == 204)
     {
       std::cout << "Success" << std::endl;
     }

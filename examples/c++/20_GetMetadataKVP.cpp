@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -25,14 +23,13 @@ int main(void)
   std::cin >> mod_id;
 
   // We request the list of metadata key value pairs by providing the Mod's id
-  modio_instance.getMetadataKVP(mod_id, [&](const modio::Response& response, std::vector<modio::MetadataKVP> metadata_kvp)
-  {
+  modio_instance.getMetadataKVP(mod_id, [&](const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp) {
     std::cout << "Get metadata response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Listing Metadata KVP" << std::endl;
       std::cout << "====================" << std::endl;
-      for(auto& metadata : metadata_kvp)
+      for (auto &metadata : metadata_kvp)
       {
         std::cout << metadata.metakey << ":" << metadata.metavalue << std::endl;
       }

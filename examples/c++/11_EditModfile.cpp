@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -24,12 +22,11 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout <<"Getting mods..." << std::endl;
+  std::cout << "Getting mods..." << std::endl;
 
-  modio_instance.getMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
-  {
+  modio_instance.getMod(mod_id, [&](const modio::Response &response, const modio::Mod &mod) {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Requested mod: " << mod.name << std::endl;
 
@@ -41,18 +38,18 @@ int main(void)
 
       std::cout << "Uploading modfile..." << std::endl;
 
-      modio_instance.editModfile(mod.id, mod.modfile.id, modfile_editor, [&](const modio::Response& response, const modio::Modfile& modfile)
-      {
+      modio_instance.editModfile(mod.id, mod.modfile.id, modfile_editor, [&](const modio::Response &response, const modio::Modfile &modfile) {
         std::cout << "Add Modfile response: " << response.code << std::endl;
 
-        if(response.code == 200)
+        if (response.code == 200)
         {
           std::cout << "Modfile added successfully!" << std::endl;
         }
 
         finish();
       });
-    }else
+    }
+    else
     {
       finish();
     }

@@ -6,8 +6,7 @@ int main()
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main()
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -29,8 +27,7 @@ int main()
     std::cin >> email;
 
     // Auth works by sending an email with a code. Lets trigger that now
-    modio_instance.emailRequest(email, [&](const modio::Response& response)
-    {
+    modio_instance.emailRequest(email, [&](const modio::Response &response) {
       std::cout << "Response code: " << response.code << std::endl;
 
       if (response.code == 200)
@@ -40,8 +37,7 @@ int main()
         std::cin >> securityCode;
 
         // Finish the auth process by entering the security code
-        modio_instance.emailExchange(securityCode, [&](const modio::Response& response)
-        {
+        modio_instance.emailExchange(securityCode, [&](const modio::Response &response) {
           std::cout << "Response code: " << response.code << std::endl;
           if (response.code == 200)
           {

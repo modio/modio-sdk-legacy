@@ -6,8 +6,7 @@ int main(void)
 
 	volatile static bool finished = false;
 
-	auto wait = [&]()
-	{
+	auto wait = [&]() {
 		while (!finished)
 		{
 			modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
 		}
 	};
 
-	auto finish = [&]()
-	{
+	auto finish = [&]() {
 		finished = true;
 	};
 
@@ -25,14 +23,13 @@ int main(void)
 	std::cin >> mod_id;
 
 	// We request the list of dependencies by providing the Mod's id
-	modio_instance.getAllModDependencies(mod_id, [&](const modio::Response& response, std::vector<modio::Dependency> dependencies)
-	{
+	modio_instance.getAllModDependencies(mod_id, [&](const modio::Response &response, std::vector<modio::Dependency> dependencies) {
 		std::cout << "Get metadata response: " << response.code << std::endl;
 		if (response.code == 200)
 		{
 			std::cout << "Listing Dependencies:" << std::endl;
 			std::cout << "=====================" << std::endl;
-			for (auto& dependency : dependencies)
+			for (auto &dependency : dependencies)
 			{
 				std::cout << dependency.mod_id << std::endl;
 			}

@@ -7,24 +7,22 @@ int main(void)
   volatile static bool finished = false;
   volatile static u32 download_mod_id = -1;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
       modio_instance.process();
-      if(download_mod_id != -1)
+      if (download_mod_id != -1)
       {
         // Track download progress by providing the modfile id
         double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
-        if(progress > 0)
+        if (progress > 0)
           std::cout << "Download progress: " << progress << "%" << std::endl;
       }
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -33,13 +31,12 @@ int main(void)
   std::cin >> mod_id;
   download_mod_id = mod_id;
 
-  std::cout <<"Installing mod..." << std::endl;
+  std::cout << "Installing mod..." << std::endl;
 
-  modio_instance.installMod(mod_id, [&](const modio::Response& response)
-  {
+  modio_instance.installMod(mod_id, [&](const modio::Response &response) {
     std::cout << "Install Modfile response: " << response.code << std::endl;
 
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Modfile installed successfully!" << std::endl;
     }

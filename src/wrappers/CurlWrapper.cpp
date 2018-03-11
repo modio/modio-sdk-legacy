@@ -215,6 +215,7 @@ i32 mod_download_progress_callback(void *clientp, double dltotal, double dlnow, 
   QueuedModDownload *queued_mod_download = (QueuedModDownload *)clientp;
   queued_mod_download->current_progress = dlnow;
   queued_mod_download->total_size = dltotal;
+
   return 0;
 }
 
@@ -540,21 +541,27 @@ void deleteCall(u32 call_number, std::string url, std::vector<std::string> heade
 
 void onJsonRequestFinished(CURL* curl)
 {
-  json response_json = parseJsonResonse(ongoing_calls[curl]->response);
+  JsonResponseHandler* ongoing_call = ongoing_calls[curl];
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-  ongoing_calls[curl]->callback(ongoing_calls[curl]->call_number, response_code, response_json);
+  json response_json = parseJsonResonse(ongoing_call->response);
+  writeLogLine("Json request Finished. Response code: " + toString(response_code), MODIO_DEBUGLEVEL_LOG);  
+  ongoing_call->callback(ongoing_call->call_number, response_code, response_json);
   advanceOngoingCall();
-  delete ongoing_calls[curl];
+  ongoing_calls.erase(curl);
+  delete ongoing_call;
 }
 
 void onDownloadFinished(CURL* curl)
 {
+  OngoingDownload* ongoing_download = ongoing_downloads[curl];
+  writeLogLine("Download finished.", MODIO_DEBUGLEVEL_LOG);    
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-  ongoing_downloads[curl]->callback(ongoing_downloads[curl]->call_number, response_code);
+  ongoing_download->callback(ongoing_download->call_number, response_code);
   advanceOngoingCall();
-  delete ongoing_downloads[curl];
+  ongoing_downloads.erase(curl);  
+  delete ongoing_download;
 }
 
 void onModDownloadFinished(CURL* curl)
@@ -603,6 +610,7 @@ void process()
   {
     i32 msgq = 0;
     curl_message = curl_multi_info_read(curl_multi_handle, &msgq);
+
     if (curl_message && (curl_message->msg == CURLMSG_DONE))
     {
       CURL *curl_handle = curl_message->easy_handle;
@@ -624,6 +632,9 @@ void process()
 
       curl_multi_remove_handle(curl_multi_handle, curl_handle);
       curl_easy_cleanup(curl_handle);
+    }else if(curl_message)
+    {
+      writeLogLine("Unhandled curl message returned" + modio::toString((u32)curl_message->msg), MODIO_DEBUGLEVEL_ERROR);  
     }
   } while (curl_message);
 }

@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -25,10 +23,9 @@ int main(void)
   std::cin >> mod_id;
 
   // We delete a mod providing the Mod id
-  modio_instance.deleteMod(mod_id, [&](const modio::Response& response, u32 mod_id)
-  {
+  modio_instance.deleteMod(mod_id, [&](const modio::Response &response, u32 mod_id) {
     std::cout << "Mod Delete response: " << response.code << std::endl;
-    if(response.code == 204)
+    if (response.code == 204)
     {
       std::cout << "Mod delete successfully" << std::endl;
     }

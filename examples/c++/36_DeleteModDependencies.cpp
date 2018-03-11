@@ -6,8 +6,7 @@ int main(void)
 
 	volatile static bool finished = false;
 
-	auto wait = [&]()
-	{
+	auto wait = [&]() {
 		while (!finished)
 		{
 			modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
 		}
 	};
 
-	auto finish = [&]()
-	{
+	auto finish = [&]() {
 		finished = true;
 	};
 
@@ -33,8 +31,7 @@ int main(void)
 
 	// We delete dependencies from a mod by providing the mod and dependencies ids
 	// Dependencies to be deleted are contained in a vector
-	modio_instance.deleteModDependencies(mod_id, dependencies, [&](const modio::Response& response)
-	{
+	modio_instance.deleteModDependencies(mod_id, dependencies, [&](const modio::Response &response) {
 		std::cout << "Delete mod dependencies response: " << response.code << std::endl;
 		if (response.code == 204)
 		{

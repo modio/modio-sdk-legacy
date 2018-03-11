@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -25,17 +23,16 @@ int main(void)
   filter.setLimit(7);
   filter.setCacheMaxAgeSeconds(100);
 
-  std::cout <<"Getting mods..." << std::endl;
+  std::cout << "Getting mods..." << std::endl;
 
   // Now we finished setting up the filters we are ready to request the mods
-  modio_instance.getUserModfiles(filter, [&](const modio::Response& response, const std::vector<modio::Modfile> & modfiles)
-  {
+  modio_instance.getUserModfiles(filter, [&](const modio::Response &response, const std::vector<modio::Modfile> &modfiles) {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Listing mods" << std::endl;
       std::cout << "============" << std::endl;
-      for(auto& modfile : modfiles)
+      for (auto &modfile : modfiles)
       {
         std::cout << "Id: \t" << modfile.id << std::endl;
         std::cout << "Version:\t" << modfile.version << std::endl;

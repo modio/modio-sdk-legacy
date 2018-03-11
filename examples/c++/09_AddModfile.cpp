@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -33,11 +31,10 @@ int main(void)
 
   std::cout << "Uploading modfile..." << std::endl;
 
-  modio_instance.addModfile(mod_id, modfile_creator, [&](const modio::Response& response, const modio::Modfile& modfile)
-  {
+  modio_instance.addModfile(mod_id, modfile_creator, [&](const modio::Response &response, const modio::Modfile &modfile) {
     std::cout << "Add Modfile response: " << response.code << std::endl;
 
-    if(response.code == 201)
+    if (response.code == 201)
     {
       std::cout << "Modfile added successfully!" << std::endl;
     }

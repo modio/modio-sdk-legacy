@@ -6,8 +6,7 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -15,8 +14,7 @@ int main(void)
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -25,24 +23,24 @@ int main(void)
   filter.setLimit(999);
   filter.addFieldValue("id", "-1");
 
-  std::cout <<"Getting mods..." << std::endl;
+  std::cout << "Getting mods..." << std::endl;
 
-  modio_instance.getMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
-  {
+  modio_instance.getMods(filter, [&](const modio::Response &response, const std::vector<modio::Mod> &mods) {
     std::cout << "On mod get response: " << response.code << std::endl;
 
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Success!" << std::endl;
-    }else
+    }
+    else
     {
       // A general error message is returned
       std::cout << "Error message: " << response.error.message << std::endl;
-      if(response.error.errors.size() > 0)
+      if (response.error.errors.size() > 0)
       {
         std::cout << "Errors:" << std::endl;
         // and we can go into details on the error list
-        for(auto& error : response.error.errors)
+        for (auto &error : response.error.errors)
         {
           std::cout << error << std::endl;
         }
