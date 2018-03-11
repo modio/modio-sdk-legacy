@@ -1,10 +1,10 @@
 #include "modio_c.h"
 
-void onSubmitReport(void* object, ModioResponse response)
+void onSubmitReport(void *object, ModioResponse response)
 {
-  bool* wait = object;
-  printf("On submit report response: %i\n",response.code);
-  if(response.code == 201)
+  bool *wait = object;
+  printf("On submit report response: %i\n", response.code);
+  if (response.code == 201)
   {
     printf("Success\n");
   }
@@ -13,14 +13,14 @@ void onSubmitReport(void* object, ModioResponse response)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 
   // Before requesting mods, let's define the query filters
   ModioFilterCreator filter;
   modioInitFilter(&filter);
-  modioSetFilterLimit(&filter,3);
+  modioSetFilterLimit(&filter, 3);
 
   // Let's start by requesting a single mod
   char resource[50];
@@ -51,7 +51,7 @@ int main(void)
   // Now we finished setting up the filters we are ready to request the mods
   modioSubmitReport(&wait, resource, id, type, name, summary, &onSubmitReport);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

@@ -1,8 +1,8 @@
 #include "modio_c.h"
 
-void onAddModDepencies(void* object, ModioResponse response)
+void onAddModDepencies(void *object, ModioResponse response)
 {
-	bool* wait = object;
+	bool *wait = object;
 	printf("Add mod dependencies response: %i\n", response.code);
 	if (response.code == 201)
 	{
@@ -13,7 +13,7 @@ void onAddModDepencies(void* object, ModioResponse response)
 
 int main(void)
 {
-	modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+	modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
 	bool wait = true;
 
@@ -26,7 +26,7 @@ int main(void)
 	scanf("%i", &dependency_id);
 
 	u32 dependencies_array_size = 1;
-	u32* dependencies_array = (u32*)malloc(dependencies_array_size);
+	u32 *dependencies_array = (u32 *)malloc(dependencies_array_size);
 	dependencies_array[0] = dependency_id;
 
 	// We add dependencies to a mod by providing the mod and dependencies ids

@@ -1,24 +1,24 @@
 #include "modio_c.h"
 
-void onModfileEdited(void* object, ModioResponse response, ModioModfile modfile)
+void onModfileEdited(void *object, ModioResponse response, ModioModfile modfile)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Edit Mod response: %i\n", response.code);
-  if(response.code == 200)
+  if (response.code == 200)
   {
     printf("Mod edited successfully!\n");
   }
   *wait = false;
 }
 
-void onModGet(void* object, ModioResponse response, ModioMod mod)
+void onModGet(void *object, ModioResponse response, ModioMod mod)
 {
-  bool* wait = object;
-  printf("On mod get response: %i\n",response.code);
-  if(response.code == 200)
+  bool *wait = object;
+  printf("On mod get response: %i\n", response.code);
+  if (response.code == 200)
   {
-    printf("Id:\t%i\n",mod.id);
-    printf("Name:\t%s\n",mod.name);
+    printf("Id:\t%i\n", mod.id);
+    printf("Name:\t%s\n", mod.name);
 
     printf("Editing modfile...\n");
 
@@ -26,13 +26,14 @@ void onModGet(void* object, ModioResponse response, ModioMod mod)
     // Notice that the version field and modfile zip can't be edited, you should be uploading another modfile instead
     ModioModfileEditor modfile_editor;
     modioInitModfileEditor(&modfile_editor);
-    modioSetModfileEditorActive(&modfile_editor,false);
-    modioSetModfileEditorChangelog(&modfile_editor,(char*)"Stuff was changed on this mod via the examples.");
+    modioSetModfileEditorActive(&modfile_editor, false);
+    modioSetModfileEditorChangelog(&modfile_editor, (char *)"Stuff was changed on this mod via the examples.");
 
     modioEditModfile(wait, mod.id, mod.modfile.id, modfile_editor, &onModfileEdited);
 
     modioFreeModfileEditor(&modfile_editor);
-  }else
+  }
+  else
   {
     *wait = false;
   }
@@ -40,7 +41,7 @@ void onModGet(void* object, ModioResponse response, ModioMod mod)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 
@@ -52,7 +53,7 @@ int main(void)
   printf("Getting mod...\n");
   modioGetMod(&wait, mod_id, &onModGet);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

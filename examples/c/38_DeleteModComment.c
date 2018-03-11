@@ -1,10 +1,10 @@
 #include "modio_c.h"
 
-void onDeleteModComment(void* object, ModioResponse response)
+void onDeleteModComment(void *object, ModioResponse response)
 {
-  bool* wait = object;
-  printf("On delete mod comment response: %i\n",response.code);
-  if(response.code == 204)
+  bool *wait = object;
+  printf("On delete mod comment response: %i\n", response.code);
+  if (response.code == 204)
   {
     printf("Success\n");
   }
@@ -13,7 +13,7 @@ void onDeleteModComment(void* object, ModioResponse response)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 
@@ -31,7 +31,7 @@ int main(void)
   // Now we finished setting up the filters we are ready to request the mods
   modioDeleteModComment(&wait, mod_id, comment_id, &onDeleteModComment);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

@@ -1,11 +1,11 @@
 #include "modio_c.h"
 
-void onModAdded(void* object, ModioResponse response, ModioMod mod)
+void onModAdded(void *object, ModioResponse response, ModioMod mod)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Add Mod Response code: %i\n", response.code);
 
-  if(response.code == 201)
+  if (response.code == 201)
   {
     printf("Mod added!\n");
     printf("Mod id: %i\n", mod.id);
@@ -16,9 +16,9 @@ void onModAdded(void* object, ModioResponse response, ModioMod mod)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
-  if(!modioIsLoggedIn())
+  if (!modioIsLoggedIn())
   {
     printf("You are not logged in, please login before creating a mod.\n");
     return 0;
@@ -29,14 +29,14 @@ int main(void)
   // The Mod Creator helps setting up the fields before creating a Mod
   ModioModCreator mod_creator;
   modioInitModCreator(&mod_creator);
-  modioSetModCreatorLogoPath(&mod_creator, (char*)"../ModExample/logo.png");
-  modioSetModCreatorName(&mod_creator, (char*)"Example Mod Test");
-  modioSetModCreatorHomepage(&mod_creator, (char*)"http://www.webpage.com");
-  modioSetModCreatorSummary(&mod_creator, (char*)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
-  modioAddModCreatorTag(&mod_creator, (char*)"Easy");
-  modioAddModCreatorTag(&mod_creator, (char*)"Medium");
-  modioSetModCreatorDescription(&mod_creator, (char*)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
-  modioSetModCreatorMetadataBlob(&mod_creator, (char*)"Optional metadata");
+  modioSetModCreatorLogoPath(&mod_creator, (char *)"../ModExample/logo.png");
+  modioSetModCreatorName(&mod_creator, (char *)"Example Mod Test");
+  modioSetModCreatorHomepage(&mod_creator, (char *)"http://www.webpage.com");
+  modioSetModCreatorSummary(&mod_creator, (char *)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
+  modioAddModCreatorTag(&mod_creator, (char *)"Easy");
+  modioAddModCreatorTag(&mod_creator, (char *)"Medium");
+  modioSetModCreatorDescription(&mod_creator, (char *)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
+  modioSetModCreatorMetadataBlob(&mod_creator, (char *)"Optional metadata");
 
   printf("Adding mod...\n");
 
@@ -45,7 +45,7 @@ int main(void)
 
   modioFreeModCreator(&mod_creator);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

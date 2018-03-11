@@ -1,8 +1,8 @@
 #include "modio_c.h"
 
-void onGetAllDependencies(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size)
+void onGetAllDependencies(void *object, ModioResponse response, ModioDependency *dependencies_array, u32 dependencies_array_size)
 {
-	bool* wait = object;
+	bool *wait = object;
 	printf("Get all dependencies response: %i\n", response.code);
 	if (response.code == 200)
 	{
@@ -17,7 +17,7 @@ void onGetAllDependencies(void* object, ModioResponse response, ModioDependency*
 
 int main(void)
 {
-	modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+	modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
 	bool wait = true;
 

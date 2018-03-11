@@ -1,10 +1,10 @@
 #include "modio_c.h"
 
-void onModfileAdded(void* object, ModioResponse response, ModioModfile modfile)
+void onModfileAdded(void *object, ModioResponse response, ModioModfile modfile)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Add Modfile Response: %i\n", response.code);
-  if(response.code == 201)
+  if (response.code == 201)
   {
     printf("Modfile added!\n");
   }
@@ -13,9 +13,9 @@ void onModfileAdded(void* object, ModioResponse response, ModioModfile modfile)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
-  if(!modioIsLoggedIn())
+  if (!modioIsLoggedIn())
   {
     printf("You are not logged in, please login before creating a mod.\n");
     return 0;
@@ -39,7 +39,7 @@ int main(void)
   modioAddModfile(&wait, mod_id, modfile_creator, &onModfileAdded);
 
   modioFreeModfileCreator(&modfile_creator);
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }
