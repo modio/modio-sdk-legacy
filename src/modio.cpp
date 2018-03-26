@@ -24,19 +24,16 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
 
   modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
   modio::GAME_ID = game_id;
+
   modio::API_KEY = api_key;
   modio::ACCESS_TOKEN = "";
 
-  std::ifstream token_file(modio::getModIODirectory() + "token.json");
-  if(token_file.is_open())
+  json token_file_json = modio::openJson(modio::getModIODirectory() + "token.json");
+
+  if(modio::hasKey(token_file_json,"access_token"))
   {
-    json token_file_json;
-    token_file >> token_file_json;
-    if(token_file_json.find("access_token") != token_file_json.end())
-    {
-	  std::string access_token = token_file_json["access_token"];
-      modio::ACCESS_TOKEN = access_token;
-    }
+    std::string access_token = token_file_json["access_token"];
+    modio::ACCESS_TOKEN = access_token;
   }
 
   modio::updateInstalledModsJson();
@@ -71,13 +68,6 @@ void modioShutdown()
 {
   modio::curlwrapper::shutdownCurl();
 }
-
-/*
-CurrentDownloadInfo modioGetCurrentDownloadInfo()
-{
-  return curlwrapper::getCurrentDownloadInfo();
-}
-*/
 
 void modioProcess()
 {

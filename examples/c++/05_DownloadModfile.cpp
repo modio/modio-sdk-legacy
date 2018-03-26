@@ -15,9 +15,9 @@ int main(void)
       if (download_mod_id != -1)
       {
         // Track download progress by providing the modfile id
-        double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
-        if (progress > 0)
-          std::cout << "Download progress: " << progress << "%" << std::endl;
+        //double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
+        //if (progress > 0)
+        //  std::cout << "Download progress: " << progress << "%" << std::endl;
       }
     }
   };
@@ -33,12 +33,13 @@ int main(void)
 
   std::cout << "Installing mod..." << std::endl;
 
-  modio_instance.installMod(mod_id, [&](const modio::Response &response) {
-    std::cout << "Install Modfile response: " << response.code << std::endl;
+  modio_instance.installMod(mod_id);
+  modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
+    std::cout << "Install mod response: " << response_code << std::endl;
 
-    if (response.code == 200)
+    if (response_code == 200)
     {
-      std::cout << "Modfile installed successfully!" << std::endl;
+      std::cout << "Mod " << mod_id << " installed successfully" << std::endl;
     }
 
     finish();

@@ -412,7 +412,6 @@ struct ModioComment
 void modioInit(u32 environment, u32 game_id, char* api_key);
 //void init(int game_id, char* api_key, char* root_path);
 void modioShutdown();
-//CurrentDownloadInfo modioGetCurrentDownloadInfo();
 void modioSetDebugLevel(u32 debug_level);
 void modioProcess();
 void modioSleep(u32 milliseconds);
@@ -539,15 +538,14 @@ void modioSetAutomaticUpdatesConfig(u32 option);
 void modioSetAllowBackgroundDownloadsConfig(u32 option);
 
 //Downloads Methods
-void modioInstallMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
+void modioInstallMod(void* object, u32 mod_id);
 bool modioUninstallModfile(u32 modfile_id);
 bool modioUninstallMod(u32 mod_id);
 u32 modioGetInstalledModfilesCount();
 u32 modioGetInstalledModfileId(u32 index);
 u32 modioGetModfileState(u32 modfile_id);
-void modioPauseCurrentDownload();
-void modioResumeCurrentDownload();
-double modioGetModfileDownloadPercentage(u32 modfile_id);
+void modioPauseDownloads();
+void modioResumeDownloads();
 void modioGetInstalledMods(ModioInstalledMod* installed_mods);
 u32 modioGetInstalledModsSize();
 

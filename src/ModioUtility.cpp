@@ -26,7 +26,7 @@ namespace modio
 				  {
 					  if (mods[i].modfile.date_added != modio_installed_mods[j].mod.modfile.date_added)
 					  {
-						  modioInstallMod(NULL, mods[i].id, &modio::onModfileChangedEvent);
+						  modioInstallMod(NULL, mods[i].id);
 					  }
 					  else if (mods[i].date_updated != modio_installed_mods[j].mod.date_updated)
 					  {
@@ -38,16 +38,6 @@ namespace modio
 
 		  delete[] modio_installed_mods;
 	  }
-  }
-
-  void onModfileChangedEvent(void* object, ModioResponse response)
-  {
-	modio::writeLogLine("Modfile changed", MODIO_DEBUGLEVEL_LOG);
-  }
-
-  void onModSubscriptionInstalled(void* object, ModioResponse response)
-  {
-	modio::writeLogLine("Mod subscription installed", MODIO_DEBUGLEVEL_LOG);
   }
 
   void onModUpdateEvent(void* object, ModioResponse response, ModioMod modio_mod)
@@ -84,7 +74,7 @@ namespace modio
           {
             // TODO: Reinstall modfile
             writeLogLine("Modfile changed. Mod id: " + modio::toString(events_array[i].mod_id) + " Reisntalling...", MODIO_DEBUGLEVEL_LOG);
-            modioInstallMod(NULL, events_array[i].mod_id, &modio::onModfileChangedEvent);
+            modioInstallMod(NULL, events_array[i].mod_id);
           }
           break;
           case MODIO_EVENT_MOD_AVAILABLE:
@@ -148,7 +138,7 @@ namespace modio
             if(modfile_path_str == "")
             {
               writeLogLine("Installing mod. Id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
-              modioInstallMod(NULL, events_array[i].mod_id, &modio::onModSubscriptionInstalled);
+              modioInstallMod(NULL, events_array[i].mod_id);
             }
             break;
           }

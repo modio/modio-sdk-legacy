@@ -15,6 +15,7 @@ namespace modio
   u32 LAST_USER_EVENT_POLL = 0;
   u32 EVENT_POLL_INTERVAL = 15;
   void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size) = NULL;
+  void (*download_callback)(u32 response_code, u32 mod_id) = NULL;
   u32 AUTOMATIC_UPDATES = 0;
   u32 BACKGROUND_DOWNLOADS = 0;
 

@@ -11,18 +11,10 @@ extern "C"
     download_image_callbacks[call_number]->destination_path = path;
     download_image_callbacks[call_number]->object = object;
 
-    FILE* file;
-    curl_off_t progress = modio::curlwrapper::getProgressIfStored(path);
-    if(progress != 0)
-    {
-      file = fopen(path,"ab");
-    }else
-    {
-      file = fopen(path,"wb");
-    }
+    FILE* file = fopen(path,"wb");
     download_image_callbacks[call_number]->file = file;
 
-    modio::curlwrapper::download(call_number, modio::getHeaders(), image_url, path, file, progress, &modioOnImageDownloaded);
+    modio::curlwrapper::download(call_number, modio::getHeaders(), image_url, path, file, &modioOnImageDownloaded);
   }
 
   void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(void* object, ModioResponse response, u32 mod_id))

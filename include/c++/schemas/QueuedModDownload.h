@@ -10,7 +10,7 @@ namespace modio
   class QueuedModDownload
   {
   public:
-    u32 id;
+    u32 state;
     u32 mod_id;
     double current_progress;
     double total_size;

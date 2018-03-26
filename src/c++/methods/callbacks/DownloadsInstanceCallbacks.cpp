@@ -2,16 +2,10 @@
 
 namespace modio
 {
-  std::map<u32, InstallModCall*> install_mod_calls;
+  SetDownloadListenerCall* set_download_listener_call;    
 
-  void onInstallModfile(void* object, ModioResponse modio_response)
+  void onDownloadListener(u32 response_code, u32 mod_id)
   {
-    u32 call_id = *((u32*)object);
-    modio::Response response;
-    response.initialize(modio_response);
-    install_mod_calls[call_id]->callback(response);
-    delete (u32*)object;
-    delete install_mod_calls[call_id];
-    install_mod_calls.erase(call_id);
+    set_download_listener_call->callback(response_code, mod_id);
   }
 }

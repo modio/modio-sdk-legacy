@@ -106,16 +106,19 @@ public:
   void getUserMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
   void getUserModfiles(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
 
-  //Downloads Methods
-  void installMod(u32 mod_id, const std::function<void(const modio::Response &response)> &callback);
   bool uninstallModfile(u32 modfile_id);
-  void pauseCurrentDownload();
-  void resumeCurrentDownload();
-  std::vector<modio::InstalledMod> getInstalledMods();
-
   std::vector<u32> getInstalledModfileIds();
   u32 getModfileState(u32 modfile_id);
-  double getModfileDownloadPercentage(u32 modfile_id);
+  //Downloads Methods
+  void installMod(u32 mod_id);
+  void uninstallMod(u32 mod_id);
+  void pauseDownloads();
+  void resumeDownloads();
+  void prioritizeModDownload(u32 mod_id);  
+  void setDownloadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback);
+  std::list<QueuedModDownload *> getModDownloadQueue();
+  std::vector<modio::InstalledMod> getInstalledMods();
+  u32 getModState(u32 mod_id);
 
   //Dependencies Methods
   void getAllModDependencies(u32 mod_id, const std::function<void(const modio::Response &response, const std::vector<modio::Dependency> &mods)> &callback);

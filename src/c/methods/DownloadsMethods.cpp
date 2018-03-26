@@ -1,181 +1,115 @@
 #include "c/methods/DownloadsMethods.h"
 
-extern "C"
+extern "C" {
+void modioInstallMod(void *object, u32 mod_id)
 {
-  void modioInstallMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response))
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
+
+  u32 call_number = modio::curlwrapper::getCallNumber();
+
+  get_install_mod_callbacks[call_number] = new GetInstallModParams;
+  get_install_mod_callbacks[call_number]->object = object;
+  get_install_mod_callbacks[call_number]->mod_id = mod_id;
+  get_install_mod_callbacks[call_number]->destination_path = modio::getModIODirectory() + "mods/" + modio::toString(mod_id);
+
+  modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
+}
+
+bool modioUninstallModfile(u32 modfile_id)
+{
+  modio::updateInstalledModsJson();
+  std::string modfile_path = modio::getInstalledModfilePath(modfile_id);
+
+  bool result = modfile_path != "" && modio::checkIfModfileIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
+  modio::updateInstalledModsJson();
+  return result;
+}
+
+bool modioUninstallMod(u32 mod_id)
+{
+  modio::updateInstalledModsJson();
+  std::string mod_path = modio::getInstalledModPath(mod_id);
+
+  bool result = mod_path != "" && modio::checkIfModIsStillInstalled(mod_path, mod_id) && modio::removeDirectory(mod_path);
+  modio::updateInstalledModsJson();
+  return result;
+}
+
+u32 modioGetInstalledModfilesCount()
+{
+  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  if (!installed_mods_json.empty())
   {
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
-
-    u32 call_number = modio::curlwrapper::getCallNumber();
-
-    get_install_mod_callbacks[call_number] = new GetInstallModParams;
-    get_install_mod_callbacks[call_number]->object = object;
-    get_install_mod_callbacks[call_number]->mod_id = mod_id;
-    get_install_mod_callbacks[call_number]->destination_path = modio::getModIODirectory() + "mods/" + modio::toString(mod_id);
-    get_install_mod_callbacks[call_number]->callback = callback;
-
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
+    return (u32)installed_mods_json["mods"].size();
   }
+  return 0;
+}
 
-  bool modioUninstallModfile(u32 modfile_id)
+u32 modioGetInstalledModfileId(u32 index)
+{
+  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  if (!installed_mods_json.empty())
   {
-    modio::updateInstalledModsJson();
-    std::string modfile_path = modio::getInstalledModfilePath(modfile_id);
-
-    bool result = modfile_path != "" && modio::checkIfModfileIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
-    modio::updateInstalledModsJson();
-    return result;
-  }
-
-  bool modioUninstallMod(u32 mod_id)
-  {
-    modio::updateInstalledModsJson();
-    std::string mod_path = modio::getInstalledModPath(mod_id);
-
-    bool result = mod_path != "" && modio::checkIfModIsStillInstalled(mod_path, mod_id) && modio::removeDirectory(mod_path);
-    modio::updateInstalledModsJson();
-    return result;
-  }
-
-  u32 modioGetInstalledModfilesCount()
-  {
-    std::ifstream installed_mods_file(modio::getModIODirectory() + "installed_mods.json");
-    if(installed_mods_file.is_open())
+    if (index >= installed_mods_json["mods"].size())
     {
-      json installed_mods_json;
-      try
+      return 0;
+    }
+    return installed_mods_json["mods"][index]["modfile_id"];
+  }
+  return 0;
+}
+
+u32 modioGetModfileState(u32 modfile_id)
+{
+  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+
+  if (!installed_mods_json.empty())
+  {
+    for (u32 i = 0; i < installed_mods_json["mods"].size(); i++)
+    {
+      if (modfile_id == installed_mods_json["mods"][i]["id"])
       {
-        installed_mods_file >> installed_mods_json;
-        installed_mods_json = installed_mods_json["mods"];
-        return (u32)installed_mods_json.size();
-      }catch(json::parse_error &e)
-      {
-        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+        return MODIO_MODFILE_INSTALLED;
       }
     }
-    return 0;
   }
+  return MODIO_MODFILE_NOT_INSTALLED;
+}
 
-  u32 modioGetInstalledModfileId(u32 index)
+void modioPauseDownloads()
+{
+  modio::curlwrapper::pauseModDownloads();
+}
+
+void modioResumeDownloads()
+{
+  modio::curlwrapper::resumeModDownloads();
+}
+
+void modioGetInstalledMods(ModioInstalledMod *installed_mods)
+{
+  json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  if (!installed_mod_json.empty())
   {
-    std::ifstream installed_mods_file(modio::getModIODirectory() + "installed_mods.json");
-    if(installed_mods_file.is_open())
+    for (u32 i = 0; i < installed_mod_json["mods"].size(); i++)
     {
-      json installed_mods_json;
-      try
-      {
-        installed_mods_file >> installed_mods_json;
-        if(index >= installed_mods_json["mods"].size())
-        {
-          return 0;
-        }
-        return installed_mods_json["mods"][index]["modfile_id"];
-      }catch(json::parse_error &e)
-      {
-        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
-      }
+      modioInitInstalledMod(&(installed_mods[i]), installed_mod_json["mods"][i]);
     }
-    return 0;
   }
+}
 
-  u32 modioGetModfileState(u32 modfile_id)
+u32 modioGetInstalledModsSize()
+{
+  json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  if (modio::hasKey(installed_mod_json, "mod"))
   {
-    if(modioGetModfileDownloadPercentage(modfile_id) != -1)
-    {
-      return MODIO_MODFILE_INSTALLING;
-    }
-    std::ifstream installed_mods_file(modio::getModIODirectory() + "installed_mods.json");
-    if(installed_mods_file.is_open())
-    {
-      json installed_mods_json;
-      try
-      {
-        installed_mods_file >> installed_mods_json;
-        for(u32 i=0; i<installed_mods_json["mods"].size(); i++)
-        {
-          if(modfile_id == installed_mods_json["mods"][i]["id"])
-          {
-            return MODIO_MODFILE_INSTALLED;
-          }
-        }
-      }catch(json::parse_error &e)
-      {
-        modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
-      }
-    }
-    return MODIO_MODFILE_NOT_INSTALLED;
+    return (u32)installed_mod_json["mods"].size();
   }
+  return 0;
+}
 
-  void modioPauseCurrentDownload()
-  {
-    modio::curlwrapper::pauseCurrentDownload();
-  }
-
-  void modioResumeCurrentDownload()
-  {
-    //TODO
-  }
-
-  double modioGetModfileDownloadPercentage(u32 modfile_id)
-  {
-    if(install_mod_callbacks.find(modio::curlwrapper::getOngoingCall()) != install_mod_callbacks.end())
-    {
-      InstallModParams* install_modfile_params = install_mod_callbacks[modio::curlwrapper::getOngoingCall()];
-
-      if(install_modfile_params->mod_id == modfile_id)
-      {
-        modio::CurrentDownloadInfo current_download_info = modio::curlwrapper::getCurrentDownloadInfo();
-
-        if(current_download_info.download_progress == 0)
-          return 0;
-        double result = current_download_info.download_progress;
-        result /= current_download_info.download_total;
-        return result * 100;
-      }
-    }
-    return -1;
-  }
-  void modioGetInstalledMods(ModioInstalledMod* installed_mods)
-  {
-	  std::ifstream installed_mod_file(modio::getModIODirectory() + "installed_mods.json");
-	  if (installed_mod_file.is_open())
-	  {
-		  json installed_mod_json;
-		  try
-		  {
-			  installed_mod_file >> installed_mod_json;
-			  installed_mod_file.close();
-
-			  for (u32 i = 0; i< installed_mod_json["mods"].size(); i++)
-			  {
-				  modioInitInstalledMod(&(installed_mods[i]), installed_mod_json["mods"][i]);
-			  }
-		  }
-		  catch (json::parse_error &e)
-		  {
-			  modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
-		  }
-	  }
-	  installed_mod_file.close();
-  }
-
-  u32 modioGetInstalledModsSize()
-  {
-	  std::ifstream installed_mod_file(modio::getModIODirectory() + "installed_mods.json");
-	  if (installed_mod_file.is_open())
-	  {
-		  json installed_mod_json;
-		  try
-		  {
-			  installed_mod_file >> installed_mod_json;
-			  installed_mod_file.close();
-			  return (u32)installed_mod_json["mods"].size();
-		  }
-		  catch (json::parse_error &e)
-		  {
-			  modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
-		  }
-	  }
-	  return 0;
-  }
+void modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id))
+{
+  modio::download_callback = callback;
+}
 }

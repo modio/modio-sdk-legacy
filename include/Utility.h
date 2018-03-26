@@ -74,6 +74,7 @@ namespace modio
   void removeFile(std::string filename);
   bool removeDirectory(std::string directory_name);
   std::string addSlashIfNeeded(std::string directory_path);
+  json toJson(std::string json_str);
   json openJson(std::string file_path);
   void writeJson(std::string file_path, json json_object);
   u32 getCurrentTime();

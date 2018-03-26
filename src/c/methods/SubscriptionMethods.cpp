@@ -19,8 +19,7 @@ extern "C"
 
   void modioUnsubscribeFromMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response))
   {
-    u32 call_number = modio::curlwrapper::getCallCount();
-    modio::curlwrapper::advanceCallCount();
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
     unsubscribe_from_mod_callbacks[call_number] = new UnsubscribeFromModParams;
     unsubscribe_from_mod_callbacks[call_number]->callback = callback;

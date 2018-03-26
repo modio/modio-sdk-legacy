@@ -1,12 +1,11 @@
-
 namespace modio
 {
-  struct InstallModCall
+  struct SetDownloadListenerCall
   {
-    const std::function<void(const modio::Response& response)> callback;
+    const std::function<void(u32 response_code, u32 mod_id)> callback;
   };
 
-  extern std::map<u32, InstallModCall*> install_mod_calls;
+  extern SetDownloadListenerCall* set_download_listener_call;  
 
-  void onInstallModfile(void* object, ModioResponse modio_response);
+  void onDownloadListener(u32 response_code, u32 mod_id);  
 }

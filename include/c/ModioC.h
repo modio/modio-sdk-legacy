@@ -71,6 +71,17 @@ typedef int i32;
 #define MODIO_GENERIC_REPORT  0
 #define MODIO_DMCA_REPORT     1
 
+// Mod states
+#define MODIO_MOD_UNDEFINED         0
+#define MODIO_MOD_NOT_INSTALLED     1
+#define MODIO_MOD_QUEUED            2
+#define MODIO_MOD_STARTING_DOWNLOAD 3
+#define MODIO_MOD_DOWNLOADING       4
+#define MODIO_MOD_PAUSING           5
+#define MODIO_MOD_PAUSED            6
+#define MODIO_MOD_EXTRACTING        7
+#define MODIO_MOD_INSTALLED         8
+
 extern "C"
 {
   typedef struct ModioListNode ModioListNode;
@@ -387,12 +398,13 @@ extern "C"
 
   struct ModioQueuedModDownload
   {
-    u32 id;
+    u32 state;
     u32 mod_id;
     double current_progress;
     double total_size;
     char* url;
     char* path;
+    ModioMod mod;
   };
 
   struct ModioComment
@@ -412,7 +424,6 @@ extern "C"
   void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key);
   //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
   void MODIO_DLL modioShutdown();
-  //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();
   void MODIO_DLL modioSetDebugLevel(u32 debug_level);
   void MODIO_DLL modioProcess();
   void MODIO_DLL modioSleep(u32 milliseconds);
@@ -539,17 +550,18 @@ extern "C"
   void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
 
   //Downloads Methods
-  void MODIO_DLL modioInstallMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioInstallMod(void* object, u32 mod_id);
   bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
   bool MODIO_DLL modioUninstallMod(u32 mod_id);
   u32 MODIO_DLL modioGetInstalledModfilesCount();
   u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
   u32 MODIO_DLL modioGetModfileState(u32 modfile_id);
-  void MODIO_DLL modioPauseCurrentDownload();
-  void MODIO_DLL modioResumeCurrentDownload();
-  double MODIO_DLL modioGetModfileDownloadPercentage(u32 modfile_id);
+  void MODIO_DLL modioPauseDownloads();
+  void MODIO_DLL modioResumeDownloads();
   void MODIO_DLL modioGetInstalledMods(ModioInstalledMod* installed_mods);
   u32 MODIO_DLL modioGetInstalledModsSize();
+
+  void MODIO_DLL modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
 
   //Dependencies Methods
   void MODIO_DLL modioGetAllModDependencies(void* object, u32 mod_id, void(*callback)(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size));

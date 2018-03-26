@@ -1,9 +1,10 @@
-#ifndef MODIO_QUEUEDMODDOWNLOAD_H
-#define MODIO_QUEUEDMODDOWNLOAD_H
+#ifndef MODIO_MODIOQUEUEDMODDOWNLOAD_H
+#define MODIO_MODIOQUEUEDMODDOWNLOAD_H
 
 #include "dependencies/json/json.hpp"
 #include "Utility.h"
 #include "c/ModioC.h"
+#include "c/schemas/ModioMod.h"
 
 using json = nlohmann::json;
 

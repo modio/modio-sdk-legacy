@@ -4,13 +4,13 @@ extern "C"
 {
   void modioInitQueuedModDownload(ModioQueuedModDownload* queued_mod_download, json queued_mod_download_json)
   {
-    queued_mod_download->id = 0;
-    if(modio::hasKey(queued_mod_download_json, "id"))
-      queued_mod_download->id = queued_mod_download_json["id"];
-    
     queued_mod_download->mod_id = 0;
     if(modio::hasKey(queued_mod_download_json, "mod_id"))
       queued_mod_download->mod_id = queued_mod_download_json["mod_id"];
+
+    queued_mod_download->state = 0;
+    if(modio::hasKey(queued_mod_download_json, "state"))
+      queued_mod_download->state = queued_mod_download_json["state"];
 
     queued_mod_download->current_progress = 0;
     if(modio::hasKey(queued_mod_download_json, "current_progress"))
@@ -35,6 +35,11 @@ extern "C"
       queued_mod_download->path = new char[path_str.size() + 1];
       strcpy(queued_mod_download->path, path_str.c_str());
     }
+
+    json mod_json;
+    if(modio::hasKey(queued_mod_download_json, "mod"))
+      mod_json = queued_mod_download_json["mod"];
+    modioInitMod(&(queued_mod_download->mod), mod_json);
   }
 
   void modioFreeQueuedModDownload(ModioQueuedModDownload* queued_mod_download)
@@ -45,6 +50,7 @@ extern "C"
         delete[] queued_mod_download->url;
       if(queued_mod_download->path)
         delete[] queued_mod_download->path;
+      modioFreeMod(&(queued_mod_download->mod));      
     }
   }
 }

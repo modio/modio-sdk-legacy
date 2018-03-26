@@ -31,11 +31,10 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
-      std::ifstream cache_file(modio::getModIODirectory() + "cache/" + cache_filename);
-      json cache_file_json;
-      if(cache_file.is_open())
+      json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+
+      if(!cache_file_json.empty())
       {
-        cache_file >> cache_file_json;
         get_modfiles_callbacks[call_number]->is_cache = true;
         modioOnGetModfiles(call_number, 200, cache_file_json);
         return;

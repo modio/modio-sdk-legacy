@@ -17,11 +17,9 @@ void modioGetAllModComments(void *object, u32 mod_id, ModioFilterCreator filter,
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if (cache_filename != "")
     {
-        std::ifstream cache_file(modio::getModIODirectory() + "cache/" + cache_filename);
-        json cache_file_json;
-        if (cache_file.is_open())
+        json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+        if (!cache_file_json.empty())
         {
-            cache_file >> cache_file_json;
             get_all_mod_comments_callbacks[call_number]->is_cache = true;
             modioOnGetAllModComments(call_number, 200, cache_file_json);
             return;
@@ -30,7 +28,7 @@ void modioGetAllModComments(void *object, u32 mod_id, ModioFilterCreator filter,
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllModComments);
 }
 
-void modioDeleteModComment(void* object, u32 mod_id, u32 comment_id, void(*callback)(void* object, ModioResponse response))
+void modioDeleteModComment(void *object, u32 mod_id, u32 comment_id, void (*callback)(void *object, ModioResponse response))
 {
     std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
