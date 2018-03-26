@@ -6,8 +6,8 @@ void addCallToCache(std::string url, json response_json)
 {
   std::time_t datetime = std::time(nullptr);
   std::string filename = modio::toString((u32)datetime) + ".json";
-  std::ofstream o(modio::getModIODirectory() + "cache/" + filename);
-  o << std::setw(4) << response_json << std::endl;
+
+  modio::writeJson(modio::getModIODirectory() + "cache/" + filename, response_json);
 
   json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
 
@@ -56,13 +56,6 @@ std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
     }
   }
   return "";
-}
-
-void createInstalledModJson(json mod_json, std::string file_path)
-{
-  std::ofstream out(file_path.c_str());
-  out << std::setw(4) << mod_json << std::endl;
-  out.close();
 }
 
 void addToInstalledModsJson(json mod_json, std::string path)

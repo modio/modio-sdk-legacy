@@ -48,7 +48,7 @@ void onModDownloadFinished(CURL* curl)
     if (destination_path_str[destination_path_str.size() - 1] != '/')
       destination_path_str += "/";
 
-    modio::createInstalledModJson(current_queued_mod_download->mod.toJson(), destination_path_str + std::string("modio.json"));
+    modio::writeJson(current_queued_mod_download->mod.toJson(), destination_path_str + std::string("modio.json"));
 
     modio::addToInstalledModsJson(current_queued_mod_download->mod.toJson(), destination_path_str);
 

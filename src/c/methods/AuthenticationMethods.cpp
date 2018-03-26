@@ -44,10 +44,6 @@ extern "C"
   void modioLogout()
   {
     modio::ACCESS_TOKEN = "";
-
-    json empty_json;
-    std::ofstream out(modio::getModIODirectory() + "token.json");
-    out<<std::setw(4)<<empty_json<<std::endl;
-    out.close();
+    modio::writeJson(modio::getModIODirectory() + "token.json", json({}));
   }
 }

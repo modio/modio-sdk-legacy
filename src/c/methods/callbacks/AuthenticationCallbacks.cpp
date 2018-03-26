@@ -25,9 +25,7 @@ void modioOnEmailExchanged(u32 call_number, u32 response_code, json response_jso
     modio::ACCESS_TOKEN = response_json["access_token"];
     json token_json;
     token_json["access_token"] = response_json["access_token"];
-    std::ofstream out(modio::getModIODirectory() + "token.json");
-    out<<std::setw(4)<<token_json<<std::endl;
-    out.close();
+    modio::writeJson(modio::getModIODirectory() + "token.json", token_json);
   }
   email_exchange_params[call_number]->callback(email_exchange_params[call_number]->object, response);
   delete email_exchange_params[call_number];
