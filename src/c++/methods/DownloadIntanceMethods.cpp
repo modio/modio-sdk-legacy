@@ -56,7 +56,8 @@ namespace modio
 
 	  u32 installed_mods_size = modioGetInstalledModsSize();
 	  ModioInstalledMod* modio_installed_mods = new ModioInstalledMod[installed_mods_size];
-
+    modioGetInstalledMods(modio_installed_mods);
+    
 	  installed_mods.resize(installed_mods_size);
 	  for (u32 i = 0; i<(u32)installed_mods_size; i++)
 	  {
