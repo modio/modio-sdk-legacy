@@ -269,14 +269,12 @@ double getFileSize(std::string file_path)
 void createPath(std::string path)
 {
   std::string current_path;
-  int slash_position;
+  u32 slash_position;
 
   while (path.length())
   {
     slash_position = (int)path.find('/');
-    if (slash_position == std::string::npos)
-      slash_position = INT_MAX;
-    if (slash_position == INT_MAX)
+    if (slash_position == (u32)std::string::npos)
       break;
     current_path += path.substr(0, slash_position) + "/";
     path.erase(path.begin(), path.begin() + slash_position + 1);
