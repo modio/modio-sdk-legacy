@@ -13,9 +13,14 @@ i32 onModDownloadProgress(void *clientp, double dltotal, double dlnow, double ul
 
   if(queued_mod_download->state == MODIO_MOD_PAUSING)
   {
-    //curl_easy_pause(current_mod_download_curl_handle, CURLPAUSE_RECV);
     writeLogLine("Download paused at " + toString(dlnow), MODIO_DEBUGLEVEL_LOG);      
     updateModDownloadQueueFile();    
+    return -1;
+  }
+
+  if(queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
+  {
+    writeLogLine("Download paused at " + toString(dlnow) + " in order to prioritize other download.", MODIO_DEBUGLEVEL_LOG);      
     return -1;
   }
 

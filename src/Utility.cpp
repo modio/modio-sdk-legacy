@@ -34,6 +34,7 @@ std::string toString(double number)
 
 void createDirectory(std::string directory)
 {
+  writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
 #ifdef LINUX
   mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
@@ -249,5 +250,37 @@ void writeJson(std::string file_path, json json_object)
 u32 getCurrentTime()
 {
   return (u32)std::time(nullptr);
+}
+
+double getFileSize(std::string file_path)
+{
+  double file_size = 0;
+  FILE *fp = fopen(file_path.c_str(), "rb");
+  if (fp)
+  {
+    fseek(fp, 0, SEEK_END);
+    long fileSize = ftell(fp);
+    file_size = ftell(fp);
+    fclose(fp);
+  }
+  return file_size;
+}
+
+void createPath(std::string path)
+{
+  std::string current_path;
+  int slash_position;
+
+  while (path.length())
+  {
+    slash_position = (int)path.find('/');
+    if (slash_position == std::string::npos)
+      slash_position = INT_MAX;
+    if (slash_position == INT_MAX)
+      break;
+    current_path += path.substr(0, slash_position) + "/";
+    path.erase(path.begin(), path.begin() + slash_position + 1);
+    createDirectory(current_path);
+  }
 }
 }

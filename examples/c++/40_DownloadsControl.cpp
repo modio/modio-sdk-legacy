@@ -6,28 +6,47 @@ int main(void)
 
   volatile static bool finished = false;
   volatile static bool prompt_menu = true;
-  volatile static u32 download_mod_id = -1;
 
   auto finish = [&]() {
     finished = true;
   };
 
+  // In this example we are going to queue two mods downloads.
   u32 mod_id;
-  std::cout << "Enter the mod id: " << std::endl;
+  std::cout << "Enter a mod id to install: " << std::endl;
   std::cin >> mod_id;
-  download_mod_id = mod_id;
-
-  std::cout << "Installing mod..." << std::endl;
-
   modio_instance.installMod(mod_id);
+
+  std::cout << "Enter another mod id to install: " << std::endl;
+  std::cin >> mod_id;
+  modio_instance.installMod(mod_id);
+
+  std::cout << "Installing mods..." << std::endl;
+
+  modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
+    std::cout << "Install mod response: " << response_code << std::endl;
+    if (response_code == 200)
+    {
+      std::cout << "Mod " << mod_id << " installed successfully" << std::endl;
+    }
+    if (modio_instance.getModDownloadQueue().size() == 0)
+      finish();
+  });
 
   while (!finished)
   {
     modio_instance.sleep(10);
+
+#ifdef WINDOWS
+	system("cls");
+#endif
+
     modio_instance.process();
 
+	// The download queue contains all the information of the current downloads
     std::list<modio::QueuedModDownload *> mod_download_queue = modio_instance.getModDownloadQueue();
-    system("cls");
+
+    std::cout << std::endl;
     std::cout << "Download queue:" << std::endl;
     std::cout << "===============" << std::endl;
     for (auto &queued_mod_download : mod_download_queue)
@@ -47,6 +66,7 @@ int main(void)
 
       modio::QueuedModDownload *current_download = *(modio_instance.getModDownloadQueue().begin());
 
+      // Depending on the current download state, there are multiple options that can be given to the user to control their downloads
       switch (current_download->state)
       {
       case MODIO_MOD_STARTING_DOWNLOAD:
@@ -56,21 +76,36 @@ int main(void)
       }
       case MODIO_MOD_DOWNLOADING:
       {
-        std::cout << "Menu:" << std::endl;
-        std::cout << "=====" << std::endl;
-        std::cout << "1. Continue" << std::endl;
-        std::cout << "2. Pause" << std::endl;
-        std::cout << "3. Stop asking" << std::endl;
-        std::cout << "4. Exit" << std::endl;
-        std::cout << "Option: " << std::endl;
-        std::cin >> option;
+        if (current_download->current_progress == 0)
+        {
+          std::cout << "Download started. Please wait..." << std::endl;
+        }
+        else
+        {
+          std::cout << "Menu:" << std::endl;
+          std::cout << "=====" << std::endl;
+          std::cout << "1. Continue" << std::endl;
+          std::cout << "2. Pause" << std::endl;
+          std::cout << "3. Stop asking" << std::endl;
+          std::cout << "4. Prioritize download" << std::endl;
+          std::cout << "5. Exit" << std::endl;
+          std::cout << "Option: " << std::endl;
+          std::cin >> option;
 
-        if (option == "2")
-          modio_instance.pauseDownloads();
-        if (option == "3")
-          prompt_menu = false;
-        if (option == "4")
-          finish();
+          if (option == "2")
+            modio_instance.pauseDownloads();
+          if (option == "3")
+            prompt_menu = false;
+          if (option == "4")
+          {
+            u32 mod_id;
+            std::cout << "Enter the mod id to prioritize: " << std::endl;
+            std::cin >> mod_id;
+            modio_instance.prioritizeModDownload(mod_id);
+          }
+          if (option == "5")
+            finish();
+        }
         break;
       }
       case MODIO_MOD_PAUSING:

@@ -95,6 +95,9 @@ void prioritizeModDownload(u32 mod_id)
   }
 
   writeJson(modio::getModIODirectory() + "mod_download_queue.json",result_json);
+
+  if(current_queued_mod_download)
+    current_queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
 }
 
 void setHeaders(std::vector<std::string> headers, CURL *curl)
