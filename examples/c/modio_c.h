@@ -73,6 +73,18 @@ typedef int i32;
 #define MODIO_GENERIC_REPORT  0
 #define MODIO_DMCA_REPORT     1
 
+// Mod states
+#define MODIO_MOD_UNDEFINED               0
+#define MODIO_MOD_NOT_INSTALLED           1
+#define MODIO_MOD_QUEUED                  2
+#define MODIO_MOD_STARTING_DOWNLOAD       3
+#define MODIO_MOD_DOWNLOADING             4
+#define MODIO_MOD_PAUSING                 5
+#define MODIO_MOD_PAUSED                  6
+#define MODIO_MOD_EXTRACTING              7
+#define MODIO_MOD_INSTALLED               8
+#define MODIO_PRIORITIZING_OTHER_DOWNLOAD 9
+
 typedef struct ModioListNode ModioListNode;
 typedef struct ModioAvatar ModioAvatar;
 typedef struct ModioComment ModioComment;
@@ -387,25 +399,26 @@ struct ModioInstalledMod
 
 struct ModioQueuedModDownload
 {
-  u32 id;
+  u32 state;
   u32 mod_id;
   double current_progress;
   double total_size;
   char* url;
   char* path;
+  ModioMod mod;
 };
 
 struct ModioComment
 {
   u32 id;
   u32 mod_id;
+  ModioUser submitted_by;
   u32 date_added;
   u32 reply_id;
   u32 karma;
   u32 karma_guest;
   char* reply_position;
   char* content;
-  ModioUser submitted_by;
 };
 
 //General Methods
@@ -538,16 +551,17 @@ void modioSetAutomaticUpdatesConfig(u32 option);
 void modioSetAllowBackgroundDownloadsConfig(u32 option);
 
 //Downloads Methods
-void modioInstallMod(void* object, u32 mod_id);
-bool modioUninstallModfile(u32 modfile_id);
+void modioInstallMod(u32 mod_id);
 bool modioUninstallMod(u32 mod_id);
-u32 modioGetInstalledModfilesCount();
-u32 modioGetInstalledModfileId(u32 index);
-u32 modioGetModfileState(u32 modfile_id);
 void modioPauseDownloads();
 void modioResumeDownloads();
+void modioPrioritizeModDownload(u32 mod_id);
+void modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
+void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
+u32 modioGetModDownloadQueueSize();
 void modioGetInstalledMods(ModioInstalledMod* installed_mods);
 u32 modioGetInstalledModsSize();
+u32 modioGetModState(u32 mod_id);
 
 //Dependencies Methods
 void modioGetAllModDependencies(void* object, u32 mod_id, void(*callback)(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size));

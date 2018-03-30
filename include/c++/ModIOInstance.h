@@ -106,9 +106,6 @@ public:
   void getUserMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
   void getUserModfiles(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
 
-  bool uninstallModfile(u32 modfile_id);
-  std::vector<u32> getInstalledModfileIds();
-  u32 getModfileState(u32 modfile_id);
   //Downloads Methods
   void installMod(u32 mod_id);
   void uninstallMod(u32 mod_id);

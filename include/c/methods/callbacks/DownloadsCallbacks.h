@@ -10,7 +10,6 @@
 struct GetInstallModParams
 {
   u32 mod_id;
-  void* object;
   std::string destination_path;
 };
 

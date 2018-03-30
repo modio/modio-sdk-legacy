@@ -4,30 +4,12 @@ namespace modio
 {
   void Instance::installMod(u32 mod_id)
   {
-    modioInstallMod((void*)new u32(this->current_call_id), mod_id);
-
-    this->current_call_id++;
+    modioInstallMod(mod_id);
   }
 
-  u32 Instance::getModfileState(u32 modfile_id)
+  void Instance::uninstallMod(u32 mod_id)
   {
-    return modioGetModfileState(modfile_id);
-  }
-
-  bool Instance::uninstallModfile(u32 modfile_id)
-  {
-    return modioUninstallModfile(modfile_id);
-  }
-
-  std::vector<u32> Instance::getInstalledModfileIds()
-  {
-    std::vector<u32> installed_modfile_ids;
-    u32 installed_modfiles_count = modioGetInstalledModfilesCount();
-    for(u32 i=0; i<installed_modfiles_count; i++)
-    {
-      installed_modfile_ids.push_back(modioGetInstalledModfileId(i));
-    }
-    return installed_modfile_ids;
+    modioUninstallMod(mod_id);
   }
 
   void Instance::pauseDownloads()
@@ -42,7 +24,7 @@ namespace modio
 
   void Instance::prioritizeModDownload(u32 mod_id)
   {
-    modio::curlwrapper::prioritizeModDownload(mod_id);
+    modioPrioritizeModDownload(mod_id);
   }
 
   std::list<QueuedModDownload *> Instance::getModDownloadQueue()
@@ -74,5 +56,10 @@ namespace modio
   {
     set_download_listener_call = new SetDownloadListenerCall{callback};
     modioSetDownloadListener(&onDownloadListener);
+  }
+
+  u32 Instance::getModState(u32 mod_id)
+  {
+    return modioGetModState(mod_id);
   }
 }

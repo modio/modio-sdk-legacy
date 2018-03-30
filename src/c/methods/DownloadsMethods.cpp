@@ -1,28 +1,17 @@
 #include "c/methods/DownloadsMethods.h"
 
 extern "C" {
-void modioInstallMod(void *object, u32 mod_id)
+void modioInstallMod(u32 mod_id)
 {
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
 
   u32 call_number = modio::curlwrapper::getCallNumber();
 
   get_install_mod_callbacks[call_number] = new GetInstallModParams;
-  get_install_mod_callbacks[call_number]->object = object;
   get_install_mod_callbacks[call_number]->mod_id = mod_id;
   get_install_mod_callbacks[call_number]->destination_path = modio::getModIODirectory() + "mods/" + modio::toString(mod_id);
 
   modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
-}
-
-bool modioUninstallModfile(u32 modfile_id)
-{
-  modio::updateInstalledModsJson();
-  std::string modfile_path = modio::getInstalledModfilePath(modfile_id);
-
-  bool result = modfile_path != "" && modio::checkIfModfileIsStillInstalled(modfile_path, modfile_id) && modio::removeDirectory(modfile_path);
-  modio::updateInstalledModsJson();
-  return result;
 }
 
 bool modioUninstallMod(u32 mod_id)
@@ -35,47 +24,6 @@ bool modioUninstallMod(u32 mod_id)
   return result;
 }
 
-u32 modioGetInstalledModfilesCount()
-{
-  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
-  if (!installed_mods_json.empty())
-  {
-    return (u32)installed_mods_json["mods"].size();
-  }
-  return 0;
-}
-
-u32 modioGetInstalledModfileId(u32 index)
-{
-  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
-  if (!installed_mods_json.empty())
-  {
-    if (index >= installed_mods_json["mods"].size())
-    {
-      return 0;
-    }
-    return installed_mods_json["mods"][index]["modfile_id"];
-  }
-  return 0;
-}
-
-u32 modioGetModfileState(u32 modfile_id)
-{
-  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
-
-  if (!installed_mods_json.empty())
-  {
-    for (u32 i = 0; i < installed_mods_json["mods"].size(); i++)
-    {
-      if (modfile_id == installed_mods_json["mods"][i]["id"])
-      {
-        return MODIO_MODFILE_INSTALLED;
-      }
-    }
-  }
-  return MODIO_MODFILE_NOT_INSTALLED;
-}
-
 void modioPauseDownloads()
 {
   modio::curlwrapper::pauseModDownloads();
@@ -84,6 +32,33 @@ void modioPauseDownloads()
 void modioResumeDownloads()
 {
   modio::curlwrapper::resumeModDownloads();
+}
+
+void modioPrioritizeModDownload(u32 mod_id)
+{
+  modio::curlwrapper::prioritizeModDownload(mod_id);
+}
+
+void modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id))
+{
+  modio::download_callback = callback;
+}
+
+void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue)
+{
+  std::list<modio::QueuedModDownload *> mod_download_queue = modio::curlwrapper::getModDownloadQueue();
+  u32 i = 0;
+  for (auto &queued_mod_download : mod_download_queue)
+  {
+    modioInitQueuedModDownload(&(download_queue[i]), queued_mod_download->toJson());
+    i++;
+  }
+}
+
+u32 modioGetModDownloadQueueSize()
+{
+  json mod_download_queue_json = modio::openJson(modio::getModIODirectory() + "mod_download_queue.json");
+  return (u32)mod_download_queue_json.size();
 }
 
 void modioGetInstalledMods(ModioInstalledMod *installed_mods)
@@ -108,8 +83,26 @@ u32 modioGetInstalledModsSize()
   return 0;
 }
 
-void modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id))
+u32 modioGetModState(u32 mod_id)
 {
-  modio::download_callback = callback;
+  u32 queue_size = modioGetModDownloadQueueSize();
+  ModioQueuedModDownload* download_queue = new ModioQueuedModDownload[queue_size];
+  modioGetModDownloadQueue(download_queue);
+  
+  for(u32 i = 0; i<queue_size; i++)
+    if(download_queue[i].mod_id == mod_id)
+      return download_queue[i].state;
+  
+  delete[] download_queue;
+
+  u32 installed_mods_size = modioGetInstalledModsSize();
+  ModioInstalledMod* installed_mods = new ModioInstalledMod[installed_mods_size];
+  modioGetInstalledMods(installed_mods);
+  
+  for(u32 i = 0; i<installed_mods_size; i++)
+    if(installed_mods[i].mod_id == mod_id)
+      return MODIO_MOD_INSTALLED;
+
+  return MODIO_MOD_NOT_INSTALLED;
 }
 }

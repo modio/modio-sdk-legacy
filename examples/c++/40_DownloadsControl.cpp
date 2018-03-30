@@ -38,12 +38,12 @@ int main(void)
     modio_instance.sleep(10);
 
 #ifdef WINDOWS
-	system("cls");
+    system("cls");
 #endif
 
     modio_instance.process();
 
-	// The download queue contains all the information of the current downloads
+    // The download queue contains all the information about the current downloads
     std::list<modio::QueuedModDownload *> mod_download_queue = modio_instance.getModDownloadQueue();
 
     std::cout << std::endl;

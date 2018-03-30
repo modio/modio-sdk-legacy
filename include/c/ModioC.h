@@ -551,18 +551,17 @@ extern "C"
   void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
 
   //Downloads Methods
-  void MODIO_DLL modioInstallMod(void* object, u32 mod_id);
-  bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
+  void MODIO_DLL modioInstallMod(u32 mod_id);
   bool MODIO_DLL modioUninstallMod(u32 mod_id);
-  u32 MODIO_DLL modioGetInstalledModfilesCount();
-  u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
-  u32 MODIO_DLL modioGetModfileState(u32 modfile_id);
   void MODIO_DLL modioPauseDownloads();
   void MODIO_DLL modioResumeDownloads();
-  void MODIO_DLL modioGetInstalledMods(ModioInstalledMod* installed_mods);
-  u32 MODIO_DLL modioGetInstalledModsSize();
-
+  void MODIO_DLL modioPrioritizeModDownload(u32 mod_id);
   void MODIO_DLL modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
+  u32 MODIO_DLL modioGetModDownloadQueueSize();
+  void MODIO_DLL modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
+  u32 MODIO_DLL modioGetInstalledModsSize();
+  void MODIO_DLL modioGetInstalledMods(ModioInstalledMod* installed_mods);
+  u32 MODIO_DLL modioGetModState(u32 mod_id);
 
   //Dependencies Methods
   void MODIO_DLL modioGetAllModDependencies(void* object, u32 mod_id, void(*callback)(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size));
