@@ -41,30 +41,4 @@ namespace modio
 
     this->current_call_id++;
   }
-
-  u32 Instance::getModfileState(u32 modfile_id)
-  {
-    return modioGetModfileState(modfile_id);
-  }
-
-  double Instance::getModfileDownloadPercentage(u32 modfile_id)
-  {
-    return modioGetModfileDownloadPercentage(modfile_id);
-  }
-
-  bool Instance::uninstallModfile(u32 modfile_id)
-  {
-    return modioUninstallModfile(modfile_id);
-  }
-
-  std::vector<u32> Instance::getInstalledModfileIds()
-  {
-    std::vector<u32> installed_modfile_ids;
-    u32 installed_modfiles_count = modioGetInstalledModfilesCount();
-    for(u32 i=0; i<installed_modfiles_count; i++)
-    {
-      installed_modfile_ids.push_back(modioGetInstalledModfileId(i));
-    }
-    return installed_modfile_ids;
-  }
 }

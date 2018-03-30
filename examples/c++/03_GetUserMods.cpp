@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -26,14 +24,13 @@ int main(void)
 
   // Mods created by the current user can be retreived using the getUserMods function
   // This function will return mods even if they are still not acceped or visible
-  modio_instance.getUserMods(filter, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
-  {
+  modio_instance.getUserMods(filter, [&](const modio::Response &response, const std::vector<modio::Mod> &mods) {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Listing mods" << std::endl;
       std::cout << "============" << std::endl;
-      for(auto& mod : mods)
+      for (auto &mod : mods)
       {
         std::cout << "Id: \t" << mod.id << std::endl;
         std::cout << "Name:\t" << mod.name << std::endl;

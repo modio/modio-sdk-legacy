@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -24,12 +22,11 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout <<"Getting mod..." << std::endl;
+  std::cout << "Getting mod..." << std::endl;
 
-  modio_instance.getMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
-  {
+  modio_instance.getMod(mod_id, [&](const modio::Response &response, const modio::Mod &mod) {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Requested mod: " << mod.name << std::endl;
 
@@ -37,18 +34,18 @@ int main(void)
 
       // Now let's download the original logo full size to the selected path
       // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
-      modio_instance.downloadImage(mod.logo.original, "../mods_dir/original.png", [&](const modio::Response& response)
-      {
+      modio_instance.downloadImage(mod.logo.original, "../mods_dir/original.png", [&](const modio::Response &response) {
         std::cout << "Download Image response: " << response.code << std::endl;
 
-        if(response.code == 200)
+        if (response.code == 200)
         {
           std::cout << "Image downloaded successfully!" << std::endl;
         }
 
         finish();
       });
-    }else
+    }
+    else
     {
       finish();
     }

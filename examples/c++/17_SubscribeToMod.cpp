@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -24,12 +22,11 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout <<"Subscribing to mod..." << std::endl;
+  std::cout << "Subscribing to mod..." << std::endl;
 
-  modio_instance.subscribeToMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
-  {
+  modio_instance.subscribeToMod(mod_id, [&](const modio::Response &response, const modio::Mod &mod) {
     std::cout << "Subscribe mod response: " << response.code << std::endl;
-    if(response.code == 201)
+    if (response.code == 201)
     {
       std::cout << "Subscribed to mod!" << std::endl;
     }

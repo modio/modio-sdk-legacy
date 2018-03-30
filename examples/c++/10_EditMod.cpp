@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -33,12 +31,11 @@ int main(void)
   mod_editor.setMetadataBlob("Optional updated metadata");
   mod_editor.setVisible(MODIO_PUBLIC);
 
-  std::cout <<"Editing mod..." << std::endl;
+  std::cout << "Editing mod..." << std::endl;
 
-  modio_instance.editMod(mod_id, mod_editor, [&](const modio::Response& response, const modio::Mod& mod)
-  {
+  modio_instance.editMod(mod_id, mod_editor, [&](const modio::Response &response, const modio::Mod &mod) {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Mod edited successfully" << std::endl;
     }

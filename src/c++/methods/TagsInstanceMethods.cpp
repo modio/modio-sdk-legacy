@@ -24,7 +24,7 @@ namespace modio
     const struct AddTagsCall* add_tags_call = new AddTagsCall{tags_array, (u32)tags.size(), callback};
     add_tags_calls[this->current_call_id] = (AddTagsCall*)add_tags_call;
 
-    modioAddTags((void*)new u32(this->current_call_id), mod_id, tags_array, tags.size(), &onAddTags);
+    modioAddTags((void*)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onAddTags);
     this->current_call_id++;
   }
 
@@ -40,7 +40,7 @@ namespace modio
     const struct DeleteTagsCall* delete_tags_call = new DeleteTagsCall{tags_array, (u32)tags.size(), callback};
     delete_tags_calls[this->current_call_id] = (DeleteTagsCall*)delete_tags_call;
 
-    modioDeleteTags((void*)new u32(this->current_call_id), mod_id, tags_array, tags.size(), &onDeleteTags);
+    modioDeleteTags((void*)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onDeleteTags);
 
     this->current_call_id++;
   }

@@ -2,25 +2,26 @@
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   u32 installed_modfiles_count = modioGetInstalledModfilesCount();
 
   // First, let's check if there is at least one modfile installed
-  if( installed_modfiles_count > 0 )
+  if (installed_modfiles_count > 0)
   {
     u32 modfile_id = modioGetInstalledModfileId(0);
 
     // Now we delete the local modfile folder by providing the modfile id
-    if( modioUninstallModfile(modfile_id) )
+    if (modioUninstallModfile(modfile_id))
     {
       printf("Modfile uninstalled successfully.\n");
-
-    }else
+    }
+    else
     {
       printf("Error uninstalling modfile.\n");
     }
-  }else
+  }
+  else
   {
     printf("There are no Modfiles installed, please try installing one before running this example again.\n");
   }

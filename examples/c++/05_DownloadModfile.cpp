@@ -5,43 +5,43 @@ int main(void)
   modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
 
   volatile static bool finished = false;
-  volatile static u32 download_mod_id = -1;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
-      if(download_mod_id != -1)
+      modio_instance.process();
+
+      std::list<modio::QueuedModDownload *> mod_download_queue = modio_instance.getModDownloadQueue();
+
+      if (mod_download_queue.size() > 0)
       {
-        // Track download progress by providing the modfile id
-        double progress = modio_instance.getModfileDownloadPercentage(download_mod_id);
-        if(progress > 0)
-          std::cout << "Download progress: " << progress << "%" << std::endl;
+        // We can track download progress by looking into the mod download queue      
+        modio::QueuedModDownload *current_download = *(mod_download_queue.begin());
+        double current_progress = current_download->current_progress;
+        double total_size = current_download->total_size;
+        std::cout << "Progress: " << (current_progress / total_size) * 100.0 << "%" << std::endl;
       }
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
   u32 mod_id;
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
-  download_mod_id = mod_id;
 
-  std::cout <<"Installing mod..." << std::endl;
+  std::cout << "Installing mod..." << std::endl;
 
-  modio_instance.installModfile(mod_id, "../mods_dir/modfile", [&](const modio::Response& response)
-  {
-    std::cout << "Install Modfile response: " << response.code << std::endl;
+  modio_instance.installMod(mod_id);
+  modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
+    std::cout << "Install mod response: " << response_code << std::endl;
 
-    if(response.code == 200)
+    if (response_code == 200)
     {
-      std::cout << "Modfile installed successfully!" << std::endl;
+      std::cout << "Mod " << mod_id << " installed successfully" << std::endl;
     }
 
     finish();

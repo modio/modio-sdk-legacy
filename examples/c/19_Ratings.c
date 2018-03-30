@@ -1,11 +1,11 @@
 #include "modio_c.h"
 
-void onModVoted(void* object, ModioResponse response)
+void onModVoted(void *object, ModioResponse response)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Set user mod vote code: %i\n", response.code);
 
-  if(response.code == 201)
+  if (response.code == 201)
   {
     printf("Mod rated!\n");
   }
@@ -14,7 +14,7 @@ void onModVoted(void* object, ModioResponse response)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 
@@ -31,7 +31,7 @@ int main(void)
   printf("Rating mod...\n");
   modioAddModRating(&wait, mod_id, rating, &onModVoted);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

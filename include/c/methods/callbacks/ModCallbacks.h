@@ -42,41 +42,16 @@ struct CallbackParamReturnsId
   void (*callback)(void* object, ModioResponse response, u32 mod_id);
 };
 
-struct GetInstallModParams
-{
-  u32 mod_id;
-  void* object;
-  std::string destination_path;
-  void (*callback)(void* object, ModioResponse response);
-};
-
-struct InstallModParams
-{
-  u32 mod_id;
-  json mod_json;
-  u32 get_install_mod_call;
-  void* object;
-  u32 modfile_id;
-  std::string zip_path;
-  std::string destination_path;
-  FILE* file;
-  void (*callback)(void* object, ModioResponse response);
-};
-
 extern std::map< u32,GetModParams* > get_mod_callbacks;
 extern std::map< u32,AddModParams* > add_mod_callback;
 extern std::map< u32,DeleteModParams* > delete_mod_callbacks;
 extern std::map< u32,GetModsParams* > get_mods_callbacks;
 extern std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
-extern std::map< u32, GetInstallModParams* > get_install_mod_callbacks;
-extern std::map< u32, InstallModParams* > install_mod_callbacks;
 
 void modioOnGetMod(u32 call_number, u32 response_code, json response_json);
 void modioOnGetMods(u32 call_number, u32 response_code, json response_json);
 void modioOnModAdded(u32 call_number, u32 response_code, json response_json);
 void modioOnModDeleted(u32 call_number, u32 response_code, json response_json);
 void modioOnReturnIdCallback(u32 call_number, u32 response_code, json response_json);
-void modioOnModDownloaded(u32 call_number, u32 response_code, json response_json);
-void onGetInstallMod(u32 call_number, u32 response_code, json response_json);
 
 #endif

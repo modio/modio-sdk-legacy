@@ -18,7 +18,7 @@ void modioOnGetTags(u32 call_number, u32 response_code, json response_json)
     {
       if(modio::hasKey(response_json, "data"))
       {
-        tags_array_size = response_json["data"].size();
+        tags_array_size = (u32)response_json["data"].size();
         tags_array = new ModioTag[tags_array_size];
         for(u32 i=0; i<tags_array_size; i++)
         {

@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -28,10 +26,9 @@ int main(void)
   tags.push_back("Hard");
 
   // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-  modio_instance.addTags(mod_id, tags, [&](const modio::Response& response, u32 mod_id)
-  {
+  modio_instance.addTags(mod_id, tags, [&](const modio::Response &response, u32 mod_id) {
     std::cout << "Add tags response: " << response.code << std::endl;
-    if(response.code == 204)
+    if (response.code == 204)
     {
       std::cout << "Tags added successfully" << std::endl;
     }

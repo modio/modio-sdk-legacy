@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -29,12 +27,11 @@ int main(void)
   std::cout << "Enter the modfie id: " << std::endl;
   std::cin >> modfile_id;
 
-  std::cout <<"Getting mods..." << std::endl;
+  std::cout << "Getting mods..." << std::endl;
 
-  modio_instance.getModfile(mod_id, modfile_id, [&](const modio::Response& response, const modio::Modfile& modfile)
-  {
+  modio_instance.getModfile(mod_id, modfile_id, [&](const modio::Response &response, const modio::Modfile &modfile) {
     std::cout << "On mod get response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Id: \t" << modfile.id << std::endl;
       std::cout << "Version:\t" << modfile.version << std::endl;

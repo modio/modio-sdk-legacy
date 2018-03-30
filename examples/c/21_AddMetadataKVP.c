@@ -1,34 +1,35 @@
 #include "modio_c.h"
 
-void onAddMetadataKVP(void* object, ModioResponse response)
+void onAddMetadataKVP(void *object, ModioResponse response)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Add Metdata KVP response: %i\n", response.code);
-  if(response.code == 201)
+  if (response.code == 201)
   {
     printf("Metadata KVP added successfully!\n");
   }
   *wait = false;
 }
 
-void onModGet(void* object, ModioResponse response, ModioMod mod)
+void onModGet(void *object, ModioResponse response, ModioMod mod)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("On mod get response: %i\n", response.code);
-  if(response.code == 200)
+  if (response.code == 200)
   {
-    printf("Id:\t%i\n",mod.id);
-    printf("Name:\t%s\n",mod.name);
+    printf("Id:\t%i\n", mod.id);
+    printf("Name:\t%s\n", mod.name);
 
     printf("Adding metadata kvp...\n");
 
-    char** metadata_kvp_array = (char**) malloc(1);
-    metadata_kvp_array[0] = (char*) malloc(50);
+    char **metadata_kvp_array = (char **)malloc(1);
+    metadata_kvp_array[0] = (char *)malloc(50);
     strcpy(metadata_kvp_array[0], "pistol-dmg:800\0");
 
     // We add metadata key value pairs to a mod by providing the key and the value on a string separated by a colon :
-    modioAddMetadataKVP(wait, mod.id, (char**)metadata_kvp_array, 1, &onAddMetadataKVP);
-  }else
+    modioAddMetadataKVP(wait, mod.id, (char **)metadata_kvp_array, 1, &onAddMetadataKVP);
+  }
+  else
   {
     *wait = false;
   }
@@ -36,7 +37,7 @@ void onModGet(void* object, ModioResponse response, ModioMod mod)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 
@@ -48,7 +49,7 @@ int main(void)
   printf("Getting mod...\n");
   modioGetMod(&wait, mod_id, &onModGet);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

@@ -2,29 +2,29 @@
 
 namespace modio
 {
-  void Instance::getModEvents(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback)
+  void Instance::getEvents(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback)
   {
-    const struct GetModEventsCall* get_mod_events_call = new GetModEventsCall{callback};
-    get_mod_events_calls[this->current_call_id] = (GetModEventsCall*)get_mod_events_call;
+    const struct GetEventsCall* get_events_call = new GetEventsCall{callback};
+    get_events_calls[this->current_call_id] = (GetEventsCall*)get_events_call;
 
-    modioGetModEvents((void*)new u32(this->current_call_id), mod_id, *filter.getFilter(), &onGetModEvents);
+    modioGetEvents((void*)new u32(this->current_call_id), mod_id, *filter.getFilter(), &onGetEvents);
 
     this->current_call_id++;
   }
 
-  void Instance::getAllModEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback)
+  void Instance::getAllEvents(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback)
   {
-    const struct GetAllModEventsCall* get_all_mod_events_call = new GetAllModEventsCall{callback};
-    get_all_mod_events_calls[this->current_call_id] = (GetAllModEventsCall*)get_all_mod_events_call;
+    const struct GetAllEventsCall* get_all_events_call = new GetAllEventsCall{callback};
+    get_all_events_calls[this->current_call_id] = (GetAllEventsCall*)get_all_events_call;
 
-    modioGetAllModEvents((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetAllModEvents);
+    modioGetAllEvents((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetAllEvents);
 
     this->current_call_id++;
   }
 
-  void Instance::setModEventListener(const std::function<void(const modio::Response&, const std::vector<modio::ModEvent> & mod_events)>& callback)
+  void Instance::setEventListener(const std::function<void(const modio::Response&, const std::vector<modio::Event> & events)>& callback)
   {
-    set_mod_event_listener_call = new SetModEventListenerCall{callback};
-    modioSetModEventListener(&onSetModEventListener);
+    set_event_listener_call = new SetEventListenerCall{callback};
+    modioSetEventListener(&onSetEventListener);
   }
 }

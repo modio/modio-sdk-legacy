@@ -15,6 +15,7 @@ typedef int i32;
 #define MODIO_MODFILE_INSTALLED     1
 #define MODIO_MODFILE_INSTALLING    2
 
+// Status Constants
 #define MODIO_NOT_ACCEPTED 0
 #define MODIO_ACCEPTED     1
 #define MODIO_ARCHIVED     2
@@ -23,22 +24,79 @@ typedef int i32;
 #define MODIO_HIDDEN 0
 #define MODIO_PUBLIC 1
 
-#define EVENT_UNDEFINED       0
-#define EVENT_MODFILE_CHANGED 1
-#define EVENT_MOD_AVAILABLE   2
-#define EVENT_MOD_UNAVAILABLE 3
-#define EVENT_MOD_EDITED      4
+#define MODIO_EVENT_UNDEFINED         0
+#define MODIO_EVENT_MODFILE_CHANGED   1
+#define MODIO_EVENT_MOD_AVAILABLE     2
+#define MODIO_EVENT_MOD_UNAVAILABLE   3
+#define MODIO_EVENT_MOD_EDITED        4
+#define MODIO_EVENT_USER_TEAM_JOIN    5
+#define MODIO_EVENT_USER_TEAM_LEAVE   6
+#define MODIO_EVENT_USER_SUBSCRIBE    7
+#define MODIO_EVENT_USER_UNSUBSCRIBE  8
+
+// Presentation Option Constants
+#define MODIO_GRID_VIEW   0
+#define MODIO_TABLE_VIEW  1
+
+// Submission Option Constants
+#define MODIO_MOD_UPLOADS_CONTROLED     0
+#define MODIO_MOD_UPLOADS_FROM_ANYWHERE 1
+
+// Curation Option Constants
+#define MODIO_NO_CURATION   0
+#define MODIO_PAID_CURATION 1
+#define MODIO_FULL_CURATION 2
+
+#define MODIO_ALL_OPTIONS_DISABLED  0
+
+// Community Options Constants
+#define MODIO_DISCUSSION_BOARD_ENABLED  1
+#define MODIO_GUIDES_AND_NEWS_ENABLED   2
+
+// Revenue Options Constants
+#define MODIO_ALLOW_MODS_TO_BE_SOLD                     1
+#define MODIO_ALLOW_MODS_TO_RECEIVE_DONATIONS           2
+#define MODIO_ALLOW_MODS_TO_BE_TRADED                   4
+#define MODIO_ALLOW_MODS_TO_CONTROL_SUPPLY_AND_SCARCITY 8
+
+// API Access Options Constants
+#define MODIO_ALLOW_ACCESS_FROM_3RD_PARTIES         1
+#define MODIO_ALLOW_MODS_TO_BE_DOWNLOADED_DIRECTLY  2
+
+// Automatic Updated Options
+#define MODIO_UPDATES_DISABLED  0
+#define MODIO_UPDATES_ENABLED   1
+
+// Report Types
+#define MODIO_GENERIC_REPORT  0
+#define MODIO_DMCA_REPORT     1
+
+// Mod states
+#define MODIO_MOD_UNDEFINED               0
+#define MODIO_MOD_NOT_INSTALLED           1
+#define MODIO_MOD_QUEUED                  2
+#define MODIO_MOD_STARTING_DOWNLOAD       3
+#define MODIO_MOD_DOWNLOADING             4
+#define MODIO_MOD_PAUSING                 5
+#define MODIO_MOD_PAUSED                  6
+#define MODIO_MOD_EXTRACTING              7
+#define MODIO_MOD_INSTALLED               8
+#define MODIO_PRIORITIZING_OTHER_DOWNLOAD 9
 
 extern "C"
 {
   typedef struct ModioListNode ModioListNode;
   typedef struct ModioAvatar ModioAvatar;
+  typedef struct ModioComment ModioComment;
   typedef struct ModioDependency ModioDependency;
   typedef struct ModioError ModioError;
   typedef struct ModioFilehash ModioFilehash;
+  typedef struct ModioGame ModioGame;
+  typedef struct ModioGameTagOption ModioGameTagOption;
   typedef struct ModioHeader ModioHeader;
   typedef struct ModioIcon ModioIcon;
   typedef struct ModioImage ModioImage;
+  typedef struct ModioInstalledMod ModioInstalledMod;
   typedef struct ModioLogo ModioLogo;
   typedef struct ModioMedia ModioMedia;
   typedef struct ModioMetadataKVP ModioMetadataKVP;
@@ -54,7 +112,8 @@ extern "C"
   typedef struct ModioModfileEditor ModioModfileEditor;
   typedef struct ModioModCreator ModioModCreator;
   typedef struct ModioModEditor ModioModEditor;
-  typedef struct ModioModEvent ModioModEvent;
+  typedef struct ModioEvent ModioEvent;
+  typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 
   struct ModioListNode
   {
@@ -283,7 +342,7 @@ extern "C"
     char* metadata_blob;
   };
 
-  struct ModioModEvent
+  struct ModioEvent
   {
     u32 id;
     u32 mod_id;
@@ -292,20 +351,88 @@ extern "C"
     long date_added;
   };
 
+  struct ModioGameTagOption
+  {
+    u32 hidden;
+    char* name;
+    char* type;
+    char** tags_array;
+    u32 tags_array_size;
+  };
+
+  struct ModioGame
+  {
+    u32 id;
+    u32 status;
+    u32 date_added;
+    u32 date_updated;
+    u32 presentation_option;
+    u32 date_live;
+    u32 community_options;
+    u32 submission_option;
+    u32 curation_option;
+    u32 revenue_options;
+    u32 api_access_options;
+    char* ugc_name;
+    char* homepage;
+    char* name;
+    char* name_id;
+    char* summary;
+    char* instructions;
+    char* profile_url;
+    ModioUser submitted_by;
+    ModioIcon icon;
+    ModioLogo logo;
+    ModioHeader header;
+    ModioGameTagOption* game_tag_option_array;
+    u32 game_tag_option_array_size;
+  };
+
+  struct ModioInstalledMod
+  {
+	  u32 mod_id;
+	  u32 modfile_id;
+	  u32 updated_at;
+	  char* path;
+	  ModioMod mod;
+  };
+
+  struct ModioQueuedModDownload
+  {
+    u32 state;
+    u32 mod_id;
+    double current_progress;
+    double total_size;
+    char* url;
+    char* path;
+    ModioMod mod;
+  };
+
+  struct ModioComment
+  {
+    u32 id;
+    u32 mod_id;
+    ModioUser submitted_by;
+    u32 date_added;
+    u32 reply_id;
+    u32 karma;
+    u32 karma_guest;
+    char* reply_position;
+    char* content;
+  };
+
   //General Methods
   void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key);
   //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
   void MODIO_DLL modioShutdown();
-  //CurrentDownloadInfo MODIO_DLL modioGetCurrentDownloadInfo();
-  void MODIO_DLL modioPauseCurrentDownload();
   void MODIO_DLL modioSetDebugLevel(u32 debug_level);
   void MODIO_DLL modioProcess();
   void MODIO_DLL modioSleep(u32 milliseconds);
 
   //Events
-  void MODIO_DLL modioSetModEventListener(void (*callback)(ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
-  void MODIO_DLL modioGetModEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
-  void MODIO_DLL modioGetAllModEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size));
+  void MODIO_DLL modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
 
   //Authentication methods
   void MODIO_DLL modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
@@ -322,20 +449,13 @@ extern "C"
   void MODIO_DLL modioGetModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
   void MODIO_DLL modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
   void MODIO_DLL modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-  u32 MODIO_DLL modioGetModfileState(u32 modfile_id);
-  double MODIO_DLL modioGetModfileDownloadPercentage(u32 modfile_id);
-  bool MODIO_DLL modioUninstallModfile(u32 modfile_id);
-  u32 MODIO_DLL modioGetInstalledModfilesCount();
-  u32 MODIO_DLL modioGetInstalledModfileId(u32 index);
 
   //Mods Methods
   void MODIO_DLL modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
-  void MODIO_DLL modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id));
-  void MODIO_DLL modioInstallMod(void* object, u32 mod_id, char* destination_path, void (*callback)(void* object, ModioResponse response));
 
   //Ratings Methods
   void MODIO_DLL modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));
@@ -350,9 +470,9 @@ extern "C"
   void MODIO_DLL modioDeleteTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response, u32 mod_id));
 
   //Metadata KVP Methods
-  void modioGetMetadataKVP(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size));
-  void modioAddMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response));
-  void modioDeleteMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioGetMetadataKVP(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size));
+  void MODIO_DLL modioAddMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioDeleteMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response));
 
   //Filter Handler Methods
   void MODIO_DLL modioInitFilter(ModioFilterCreator* filter);
@@ -414,6 +534,46 @@ extern "C"
   void MODIO_DLL modioSetModEditorModfile(ModioModEditor* update_mod_handler, u32 modfile);
   void MODIO_DLL modioSetModEditorMetadataBlob(ModioModEditor* update_mod_handler, char* metadata_blob);
   void MODIO_DLL modioFreeModEditor(ModioModEditor* update_mod_handler);
+
+  //Me Methods
+  void MODIO_DLL modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user));
+  void MODIO_DLL modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+  void MODIO_DLL modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size));
+  void MODIO_DLL modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+  void MODIO_DLL modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
+
+  //Settings Methods
+  void MODIO_DLL modioInitConfig();
+  u32 MODIO_DLL modioGetAutomaticUpdatesConfig();
+  u32 MODIO_DLL modioGetAllowBackgroundDownloadsConfig();
+  void MODIO_DLL modioSetAutomaticUpdatesConfig(u32 option);
+  void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
+
+  //Downloads Methods
+  void MODIO_DLL modioInstallMod(u32 mod_id);
+  bool MODIO_DLL modioUninstallMod(u32 mod_id);
+  void MODIO_DLL modioPauseDownloads();
+  void MODIO_DLL modioResumeDownloads();
+  void MODIO_DLL modioPrioritizeModDownload(u32 mod_id);
+  void MODIO_DLL modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
+  u32 MODIO_DLL modioGetModDownloadQueueSize();
+  void MODIO_DLL modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
+  u32 MODIO_DLL modioGetInstalledModsSize();
+  void MODIO_DLL modioGetInstalledMods(ModioInstalledMod* installed_mods);
+  u32 MODIO_DLL modioGetModState(u32 mod_id);
+
+  //Dependencies Methods
+  void MODIO_DLL modioGetAllModDependencies(void* object, u32 mod_id, void(*callback)(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size));
+  void MODIO_DLL modioAddModDependencies(void* object, u32 mod_id, u32* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioDeleteModDependencies(void* object, u32 mod_id, u32* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response));
+
+  //Comment Methods
+  void MODIO_DLL modioGetAllModComments(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioComment comments[], u32 comments_size));
+  void MODIO_DLL modioDeleteModComment(void* object, u32 mod_id, u32 comment_id, void(*callback)(void* object, ModioResponse response));
+
+  //Reports Methods
+  void MODIO_DLL modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response));
 }
 
 #endif

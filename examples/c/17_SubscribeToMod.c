@@ -1,11 +1,11 @@
 #include "modio_c.h"
 
-void onModSubscribed(void* object, ModioResponse response, ModioMod mod)
+void onModSubscribed(void *object, ModioResponse response, ModioMod mod)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Subscribe to Mod Response code: %i\n", response.code);
 
-  if(response.code == 201)
+  if (response.code == 201)
   {
     printf("Subscribed to mod!\n");
     printf("Mod id: %i\n", mod.id);
@@ -16,7 +16,7 @@ void onModSubscribed(void* object, ModioResponse response, ModioMod mod)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 
@@ -28,7 +28,7 @@ int main(void)
   printf("Subscribing to mod...\n");
   modioSubscribeToMod(&wait, mod_id, &onModSubscribed);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

@@ -1,31 +1,32 @@
 #include "modio_c.h"
 
-void onImageDownloaded(void* object, ModioResponse response)
+void onImageDownloaded(void *object, ModioResponse response)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Download Image response: %i\n", response.code);
-  if(response.code == 200)
+  if (response.code == 200)
   {
     printf("Image downloaded successfully!\n");
   }
   *wait = false;
 }
 
-void onModGet(void* object, ModioResponse response, ModioMod mod)
+void onModGet(void *object, ModioResponse response, ModioMod mod)
 {
-  bool* wait = object;
-  printf("On mod get response: %i\n",response.code);
-  if(response.code == 200)
+  bool *wait = object;
+  printf("On mod get response: %i\n", response.code);
+  if (response.code == 200)
   {
-    printf("Id:\t%i\n",mod.id);
-    printf("Name:\t%s\n",mod.name);
+    printf("Id:\t%i\n", mod.id);
+    printf("Name:\t%s\n", mod.name);
 
     printf("Downloading log image...\n");
 
     // Now let's download the original logo full size to the selected path
     // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
-    modioDownloadImage(wait, mod.logo.original, (char*)"../mods_dir/full.png", &onImageDownloaded);
-  }else
+    modioDownloadImage(wait, mod.logo.original, (char *)"../mods_dir/full.png", &onImageDownloaded);
+  }
+  else
   {
     *wait = false;
   }
@@ -33,7 +34,7 @@ void onModGet(void* object, ModioResponse response, ModioMod mod)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   bool wait = true;
 
@@ -45,7 +46,7 @@ int main(void)
   printf("Getting mod...\n");
   modioGetMod(&wait, mod_id, &onModGet);
 
-  while(wait)
+  while (wait)
   {
     modioProcess();
   }

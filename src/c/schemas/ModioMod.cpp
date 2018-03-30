@@ -117,7 +117,7 @@ extern "C"
     mod->tags_array_size = 0;
     if(modio::hasKey(mod_json, "tags"))
     {
-      mod->tags_array_size = mod_json["tags"].size();
+      mod->tags_array_size = (u32)mod_json["tags"].size();
       mod->tags_array = new ModioTag[mod->tags_array_size];
       for(u32 i=0; i<mod->tags_array_size; i++)
       {

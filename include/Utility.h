@@ -20,13 +20,13 @@
 #endif
 
 #ifdef WINDOWS
-#  ifdef BUILDING_MODIO_DLL
-#    define MODIO_DLL __declspec(dllexport)
-#  else
-#    define MODIO_DLL __declspec(dllimport)
-#  endif
+#ifdef BUILDING_MODIO_DLL
+#define MODIO_DLL __declspec(dllexport)
 #else
-#  define MODIO_DLL
+#define MODIO_DLL __declspec(dllimport)
+#endif
+#else
+#define MODIO_DLL
 #endif
 
 #include <iostream>
@@ -62,21 +62,24 @@ using json = nlohmann::json;
 
 namespace modio
 {
-  std::string toString(i32 number);
-  std::string toString(u32 number);
-  std::string toString(double number);
-  void createDirectory(std::string directory);
-  void clearLog();
-  void writeLogLine(std::string text, unsigned int debug_level);
-  std::vector<std::string> getFilenames(std::string directory);
-  std::string getModIODirectory();
-  bool hasKey(json json_object, std::string key);
-  void removeFile(std::string filename);
-  bool removeDirectory(std::string directory_name);
-  std::string addSlashIfNeeded(std::string directory_path);
-  json openJson(std::string file_path);
-  void writeJson(std::string file_path, json json_object);
-  u32 getCurrentTime();
+std::string MODIO_DLL toString(i32 number);
+std::string MODIO_DLL toString(u32 number);
+std::string MODIO_DLL toString(double number);
+void createDirectory(std::string directory);
+void clearLog();
+void writeLogLine(std::string text, unsigned int debug_level);
+std::vector<std::string> getFilenames(std::string directory);
+std::string getModIODirectory();
+bool hasKey(json json_object, std::string key);
+void removeFile(std::string filename);
+bool removeDirectory(std::string directory_name);
+std::string addSlashIfNeeded(std::string directory_path);
+json toJson(std::string json_str);
+json openJson(std::string file_path);
+void writeJson(std::string file_path, json json_object);
+u32 getCurrentTime();
+double getFileSize(std::string file_path);
+void createPath(std::string strPathAndFile);
 }
 
 #endif

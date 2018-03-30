@@ -1,26 +1,26 @@
 
 namespace modio
 {
-  struct GetModEventsCall
+  struct GetEventsCall
   {
-    const std::function<void(const modio::Response& response, std::vector<modio::ModEvent> mod_events)> callback;
+    const std::function<void(const modio::Response& response, std::vector<modio::Event> events)> callback;
   };
 
-  struct GetAllModEventsCall
+  struct GetAllEventsCall
   {
-    const std::function<void(const modio::Response& response, std::vector<modio::ModEvent> mod_events)> callback;
+    const std::function<void(const modio::Response& response, std::vector<modio::Event> events)> callback;
   };
 
-  struct SetModEventListenerCall
+  struct SetEventListenerCall
   {
-    const std::function<void(const modio::Response& response, std::vector<modio::ModEvent> mod_events)> callback;
+    const std::function<void(const modio::Response& response, std::vector<modio::Event> events)> callback;
   };
 
-  extern std::map<u32, GetModEventsCall*> get_mod_events_calls;
-  extern std::map<u32, GetAllModEventsCall*> get_all_mod_events_calls;
-  extern SetModEventListenerCall* set_mod_event_listener_call;
+  extern std::map<u32, GetEventsCall*> get_events_calls;
+  extern std::map<u32, GetAllEventsCall*> get_all_events_calls;
+  extern SetEventListenerCall* set_event_listener_call;
 
-  void onGetModEvents(void* object, ModioResponse modio_response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
-  void onGetAllModEvents(void* object, ModioResponse modio_response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
-  void onSetModEventListener(ModioResponse modio_response, ModioModEvent* mod_events_array, u32 mod_events_array_size);
+  void onGetEvents(void* object, ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size);
+  void onGetAllEvents(void* object, ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size);
+  void onSetEventListener(ModioResponse modio_response, ModioEvent* events_array, u32 events_array_size);
 }

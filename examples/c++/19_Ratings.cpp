@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -28,12 +26,11 @@ int main(void)
   std::cout << "Enter 1 for a positive rating or 0 for a negative one: " << std::endl;
   std::cin >> vote;
 
-  std::cout <<"Adding mod rating..." << std::endl;
+  std::cout << "Adding mod rating..." << std::endl;
 
-  modio_instance.addModRating(mod_id, vote, [&](const modio::Response& response)
-  {
+  modio_instance.addModRating(mod_id, vote, [&](const modio::Response &response) {
     std::cout << "Add mod rating response: " << response.code << std::endl;
-    if(response.code == 201)
+    if (response.code == 201)
     {
       std::cout << "Ratting added!" << std::endl;
     }

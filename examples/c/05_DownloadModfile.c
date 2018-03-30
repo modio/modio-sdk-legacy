@@ -4,13 +4,13 @@ typedef struct
 {
   bool wait;
   u32 modfile_id;
-}ContextObject;
+} ContextObject;
 
-void onModfileInstalled(void* object, ModioResponse response)
+void onModfileInstalled(void *object, ModioResponse response)
 {
-  bool* wait = object;
+  bool *wait = object;
   printf("Install Mod response: %i\n", response.code);
-  if(response.code == 200)
+  if (response.code == 200)
   {
     printf("Mod installed successfully!\n");
   }
@@ -19,7 +19,7 @@ void onModfileInstalled(void* object, ModioResponse response)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char*)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   ContextObject context_object;
   context_object.wait = true;
@@ -37,15 +37,15 @@ int main(void)
   strcat(instalation_path, "../mods_dir/modfile");
 
   // Now we provide the Modfile id and the local path where the modfile will be installed
-  modioInstallMod(&context_object.wait, mod_id, (char*)instalation_path, &onModfileInstalled);
+  modioInstallMod(&context_object.wait, mod_id, (char *)instalation_path, &onModfileInstalled);
 
-  while(context_object.wait)
+  while (context_object.wait)
   {
     // Track download progress by providing the modfile id
-    if(modioGetModfileState(context_object.modfile_id) == MODIO_MODFILE_INSTALLING)
+    if (modioGetModfileState(context_object.modfile_id) == MODIO_MODFILE_INSTALLING)
     {
       double modfile_download_progress = modioGetModfileDownloadPercentage(context_object.modfile_id);
-      if(modfile_download_progress != 0)
+      if (modfile_download_progress != 0)
         printf("Download progress: %f%%\n", modfile_download_progress);
     }
     modioProcess();

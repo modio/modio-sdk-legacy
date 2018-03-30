@@ -22,16 +22,6 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::getUserMods(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Mod> & mods)>& callback)
-  {
-    const struct GetModsCall* get_mods_call = new GetModsCall{callback};
-    get_mods_calls[this->current_call_id] = (GetModsCall*)get_mods_call;
-
-    modioGetUserMods((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetMods);
-
-    this->current_call_id++;
-  }
-
   void Instance::addMod(modio::ModCreator& mod_handler, const std::function<void(const modio::Response& response, const modio::Mod& mod)>& callback)
   {
     const struct AddModCall* add_mod_call = new AddModCall{callback};
@@ -58,16 +48,6 @@ namespace modio
     delete_mod_calls[this->current_call_id] = (DeleteModCall*)delete_mod_call;
 
     modioDeleteMod((void*)new u32(this->current_call_id), mod_id, &onDeleteMod);
-
-    this->current_call_id++;
-  }
-
-  void Instance::installModfile(u32 mod_id, const std::string& destination_path, const std::function<void(const modio::Response& response)>& callback)
-  {
-    const struct InstallModCall* install_modfile_call = new InstallModCall{callback};
-    install_mod_calls[this->current_call_id] = (InstallModCall*)install_modfile_call;
-
-    modioInstallMod((void*)new u32(this->current_call_id), mod_id, (char*)destination_path.c_str(), &onInstallModfile);
 
     this->current_call_id++;
   }

@@ -6,17 +6,15 @@ int main(void)
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
-  {
+  auto wait = [&]() {
     while (!finished)
     {
       modio_instance.sleep(10);
-      modioProcess();
+      modio_instance.process();
     }
   };
 
-  auto finish = [&]()
-  {
+  auto finish = [&]() {
     finished = true;
   };
 
@@ -25,14 +23,13 @@ int main(void)
   std::cin >> mod_id;
 
   // We request the list of tags by providing the Mod's id
-  modio_instance.getTags(mod_id, [&](const modio::Response& response, std::vector<modio::Tag> tags)
-  {
+  modio_instance.getTags(mod_id, [&](const modio::Response &response, std::vector<modio::Tag> tags) {
     std::cout << "Get tags response: " << response.code << std::endl;
-    if(response.code == 200)
+    if (response.code == 200)
     {
       std::cout << "Listing Tags" << std::endl;
       std::cout << "============" << std::endl;
-      for(auto& tag : tags)
+      for (auto &tag : tags)
       {
         std::cout << tag.name << std::endl;
       }

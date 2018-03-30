@@ -3,7 +3,14 @@
 void modioInit(u32 environment, u32 game_id, char* api_key)
 {
   u32 current_time = modio::getCurrentTime();
-  modio::LAST_EVENT_POLL = current_time;
+  modio::LAST_MOD_EVENT_POLL = current_time;
+  modio::LAST_USER_EVENT_POLL = current_time;
+
+  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  if(modio::hasKey(installed_mods_json,"last_user_event_poll"))
+    modio::LAST_USER_EVENT_POLL = installed_mods_json["last_user_event_poll"];
+  if(modio::hasKey(installed_mods_json,"last_mod_event_poll"))
+    modio::LAST_MOD_EVENT_POLL = installed_mods_json["last_mod_event_poll"];
 
   if(environment == MODIO_ENVIRONMENT_TEST)
   {
@@ -13,25 +20,33 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
 
   modio::curlwrapper::initCurl();
 
+  modioInitConfig();
+
   modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
   modio::GAME_ID = game_id;
+
   modio::API_KEY = api_key;
   modio::ACCESS_TOKEN = "";
 
-  std::ifstream token_file(modio::getModIODirectory() + "token.json");
-  if(token_file.is_open())
+  json token_file_json = modio::openJson(modio::getModIODirectory() + "token.json");
+
+  if(modio::hasKey(token_file_json,"access_token"))
   {
-    json token_file_json;
-    token_file >> token_file_json;
-    if(token_file_json.find("access_token") != token_file_json.end())
-    {
-      modio::ACCESS_TOKEN = token_file_json["access_token"];
-    }
+    std::string access_token = token_file_json["access_token"];
+    modio::ACCESS_TOKEN = access_token;
   }
 
   modio::updateInstalledModsJson();
 
+  /*
+  if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+  {
+    modio::checkForInstalledModsUpdates();  
+  }
+  */
+
   modio::createDirectory(modio::getModIODirectory());
+  modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
@@ -54,62 +69,10 @@ void modioShutdown()
   modio::curlwrapper::shutdownCurl();
 }
 
-/*
-CurrentDownloadInfo modioGetCurrentDownloadInfo()
-{
-  return curlwrapper::getCurrentDownloadInfo();
-}
-*/
-
-void modioPauseCurrentDownload()
-{
-  modio::curlwrapper::pauseCurrentDownload();
-}
-
-void onGetAllModEvents(void* object, ModioResponse response, ModioModEvent* mod_events_array, u32 mod_events_array_size)
-{
-  if(modio::callback)
-    modio::callback(response, mod_events_array, mod_events_array_size);
-
-  for(int i=0; i<(int)mod_events_array_size; i++)
-  {
-    switch( mod_events_array[i].event_type )
-    {
-      case EVENT_UNDEFINED:
-      // TODO: Log error
-      break;
-      case EVENT_MODFILE_CHANGED:
-      // TODO: Reinstall modfile
-      break;
-      case EVENT_MOD_AVAILABLE:
-      // N/A
-      break;
-      case EVENT_MOD_UNAVAILABLE:
-      // N/A
-      break;
-      case EVENT_MOD_EDITED:
-      // TODO: Update locally installed mods
-      break;
-    }
-  }
-}
-
 void modioProcess()
 {
-  u32 current_time = modio::getCurrentTime();
-
-  if(current_time - modio::LAST_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
-  {
-    ModioFilterCreator filter;
-    modioInitFilter(&filter);
-    modioSetFilterLimit(&filter,3);
-    modioAddFilterMinField(&filter, (char*)"date_added", (char*)modio::toString(modio::LAST_EVENT_POLL).c_str());
-    modioAddFilterSmallerThanField(&filter, (char*)"date_added", (char*)modio::toString(current_time).c_str());
-
-    modioGetAllModEvents(NULL, filter, &onGetAllModEvents);
-
-    modio::LAST_EVENT_POLL = current_time;
-  }
+  if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+    modio::pollEvents();
   modio::curlwrapper::process();
 }
 
