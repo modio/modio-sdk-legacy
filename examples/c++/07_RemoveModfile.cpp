@@ -4,20 +4,14 @@ int main(void)
 {
   modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
 
-  std::vector<u32> modfile_ids = modio_instance.getInstalledModfileIds();
+  std::vector<modio::InstalledMod> installed_mods = modio_instance.getInstalledMods();
 
   // First, let's check if there is at least one modfile installed
-  if (modfile_ids.size() > 0)
+  if (installed_mods.size() > 0)
   {
     // Now we delete the local modfile folder by providing the modfile id
-    if (modio_instance.uninstallModfile(modfile_ids[0]))
-    {
-      std::cout << "Modfile uninstalled successfully." << std::endl;
-    }
-    else
-    {
-      std::cout << "Error uninstalling modfile." << std::endl;
-    }
+    modio_instance.uninstallMod(installed_mods[0].mod.id);
+    std::cout << "Modfile uninstalled successfully." << std::endl;
   }
   else
   {
