@@ -1,9 +1,9 @@
 #ifndef MODIO_USER_H
 #define MODIO_USER_H
 
-#include "Globals.h"
-#include "c/schemas/ModioUser.h"
-#include "c++/schemas/Avatar.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioUser.h"
+#include "Avatar.h"
 
 namespace modio
 {

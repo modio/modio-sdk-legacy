@@ -6,16 +6,16 @@
 #include <map>
 #include <list>
 
-#include "dependencies/json/json.hpp"
-#include "dependencies/curl/curl.h"
-#include "Utility.h"
-#include "Globals.h"
-#include "wrappers/MinizipWrapper.h"
-#include "wrappers/CurlProgressFunctions.h"
-#include "wrappers/CurlWriteFunctions.h"
-#include "c++/schemas/QueuedModDownload.h"
-#include "c/schemas/ModioQueuedModDownload.h"
-#include "ModUtility.h"
+#include "../dependencies/json/json.hpp"
+#include "../dependencies/curl/curl.h"
+#include "../Utility.h"
+#include "../Globals.h"
+#include "MinizipWrapper.h"
+#include "CurlProgressFunctions.h"
+#include "CurlWriteFunctions.h"
+#include "../c++/schemas/QueuedModDownload.h"
+#include "../c/schemas/ModioQueuedModDownload.h"
+#include "../ModUtility.h"
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION

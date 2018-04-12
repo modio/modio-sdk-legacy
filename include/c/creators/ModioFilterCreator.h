@@ -3,10 +3,10 @@
 
 #include <map>
 
-#include "Globals.h"
-#include "Utility.h"
-#include "c/ModioC.h"
-#include "c/schemas/ModioListNode.h"
+#include "../../Globals.h"
+#include "../../Utility.h"
+#include "../ModioC.h"
+#include "../schemas/ModioListNode.h"
 
 #ifdef WINDOWS
 #  ifdef BUILDING_MODIO_DLL

@@ -1,8 +1,8 @@
 #ifndef MODIO_FILEHASH_H
 #define MODIO_FILEHASH_H
 
-#include "c/schemas/ModioFilehash.h"
-#include "Globals.h"
+#include "../../c/schemas/ModioFilehash.h"
+#include "../../Globals.h"
 
 namespace modio
 {

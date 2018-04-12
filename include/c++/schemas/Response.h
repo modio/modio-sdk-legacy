@@ -1,9 +1,9 @@
 #ifndef MODIO_RESPONSE_H
 #define MODIO_RESPONSE_H
 
-#include "Globals.h"
-#include "c/schemas/ModioResponse.h"
-#include "c++/schemas/Error.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioResponse.h"
+#include "Error.h"
 
 namespace modio
 {

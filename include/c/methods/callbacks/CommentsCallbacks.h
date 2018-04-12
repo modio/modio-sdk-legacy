@@ -1,9 +1,9 @@
 #ifndef MODIO_COMMENTS_CALLBACKS_H
 #define MODIO_COMMENTS_CALLBACKS_H
 
-#include "Globals.h"
-#include "c/schemas/ModioResponse.h"
-#include "c/schemas/ModioComment.h"
+#include "../../../Globals.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../schemas/ModioComment.h"
 
 struct GetAllModCommentsParams
 {

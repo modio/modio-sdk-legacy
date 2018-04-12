@@ -1,9 +1,9 @@
 #ifndef MODIO_AVATAR_H
 #define MODIO_AVATAR_H
 
-#include "c/schemas/ModioAvatar.h"
-#include "Globals.h"
-#include "Utility.h"
+#include "../../c/schemas/ModioAvatar.h"
+#include "../../Globals.h"
+#include "../../Utility.h"
 
 namespace modio
 {

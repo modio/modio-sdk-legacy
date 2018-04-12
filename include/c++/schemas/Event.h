@@ -1,8 +1,8 @@
 #ifndef MODIO_MODEVENT_H
 #define MODIO_MODEVENT_H
 
-#include "Globals.h"
-#include "c/schemas/ModioEvent.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioEvent.h"
 
 namespace modio
 {

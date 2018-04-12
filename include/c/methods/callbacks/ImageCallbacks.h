@@ -1,8 +1,8 @@
 #ifndef MODIO_IMAGECALLBACKS_H
 #define MODIO_IMAGECALLBACKS_H
 
-#include "c/schemas/ModioResponse.h"
-#include "Globals.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../../Globals.h"
 
 struct DownloadImageParams
 {

@@ -1,7 +1,7 @@
 #ifndef MODIO_FilterCreator_H
 #define MODIO_FilterCreator_H
 
-#include "c/creators/ModioFilterCreator.h"
+#include "../../c/creators/ModioFilterCreator.h"
 
 namespace modio
 {

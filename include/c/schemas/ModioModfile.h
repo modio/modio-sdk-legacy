@@ -1,11 +1,11 @@
 #ifndef MODIO_MODIOMODFILE_H
 #define MODIO_MODIOMODFILE_H
 
-#include "dependencies/json/json.hpp"
-#include "Utility.h"
-#include "c/ModioC.h"
-#include "c/schemas/ModioFilehash.h"
-#include "c/schemas/ModioDownload.h"
+#include "../../dependencies/json/json.hpp"
+#include "../../Utility.h"
+#include "../ModioC.h"
+#include "ModioFilehash.h"
+#include "ModioDownload.h"
 
 using json = nlohmann::json;
 

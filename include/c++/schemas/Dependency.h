@@ -1,9 +1,9 @@
 #ifndef MODIO_DEPENDENCY_H
 #define MODIO_DEPENDENCY_H
 
-#include "c/schemas/ModioDependency.h"
-#include "Globals.h"
-#include "Utility.h"
+#include "../../c/schemas/ModioDependency.h"
+#include "../../Globals.h"
+#include "../../Utility.h"
 
 namespace modio
 {

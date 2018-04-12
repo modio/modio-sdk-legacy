@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIO_MODFILE_EDITOR_H
 #define MODIO_MODIO_MODFILE_EDITOR_H
 
-#include "Globals.h"
-#include "c/ModioC.h"
+#include "../../Globals.h"
+#include "../ModioC.h"
 
 namespace modio
 {

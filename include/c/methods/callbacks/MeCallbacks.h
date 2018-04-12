@@ -1,13 +1,13 @@
 #ifndef MODIO_MECALLBACKS_H
 #define MODIO_MECALLBACKS_H
 
-#include "c/schemas/ModioResponse.h"
-#include "c/schemas/ModioUser.h"
-#include "c/schemas/ModioMod.h"
-#include "c/schemas/ModioGame.h"
-#include "c/schemas/ModioEvent.h"
-#include "Globals.h"
-#include "ModUtility.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../schemas/ModioUser.h"
+#include "../../schemas/ModioMod.h"
+#include "../../schemas/ModioGame.h"
+#include "../../schemas/ModioEvent.h"
+#include "../../../Globals.h"
+#include "../../../ModUtility.h"
 
 struct GetAuthenticatedUserParams
 {

@@ -1,8 +1,8 @@
 #ifndef MODIO_CURL_WRAPPER_H
 #define MODIO_CURL_WRAPPER_H
 
-#include "wrappers/CurlUtility.h"
-#include "wrappers/CurlCallbacks.h"
+#include "CurlUtility.h"
+#include "CurlCallbacks.h"
 
 using json = nlohmann::json;
 

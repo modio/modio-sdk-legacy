@@ -1,10 +1,10 @@
 #ifndef MODIO_MODFILE_H
 #define MODIO_MODFILE_H
 
-#include "Globals.h"
-#include "c/schemas/ModioModfile.h"
-#include "c++/schemas/Filehash.h"
-#include "c++/schemas/Download.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioModfile.h"
+#include "Filehash.h"
+#include "Download.h"
 
 namespace modio
 {

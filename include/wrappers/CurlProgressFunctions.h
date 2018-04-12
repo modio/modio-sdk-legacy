@@ -1,7 +1,7 @@
 #ifndef MODIO_CURL_PROGRESS_FUNCTIONS_H
 #define MODIO_CURL_PROGRESS_FUNCTIONS_H
 
-#include "wrappers/CurlUtility.h"
+#include "CurlUtility.h"
 
 namespace modio
 {

@@ -1,10 +1,10 @@
 #ifndef MODIO_COMMENT_H
 #define MODIO_COMMENT_H
 
-#include "c/schemas/ModioComment.h"
-#include "c++/schemas/User.h"
-#include "Globals.h"
-#include "Utility.h"
+#include "../../c/schemas/ModioComment.h"
+#include "User.h"
+#include "../../Globals.h"
+#include "../../Utility.h"
 
 namespace modio
 {

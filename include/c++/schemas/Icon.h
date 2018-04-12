@@ -1,9 +1,9 @@
 #ifndef MODIO_ICON_H
 #define MODIO_ICON_H
 
-#include "c/schemas/ModioIcon.h"
-#include "Globals.h"
-#include "Utility.h"
+#include "../../c/schemas/ModioIcon.h"
+#include "../../Globals.h"
+#include "../../Utility.h"
 
 namespace modio
 {

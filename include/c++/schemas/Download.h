@@ -1,8 +1,8 @@
 #ifndef MODIO_DOWNLOAD_H
 #define MODIO_DOWNLOAD_H
 
-#include "Globals.h"
-#include "c/schemas/ModioDownload.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioDownload.h"
 
 namespace modio
 {

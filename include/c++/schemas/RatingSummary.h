@@ -1,8 +1,8 @@
 #ifndef MODIO_RATINGSUMMARY_H
 #define MODIO_RATINGSUMMARY_H
 
-#include "Globals.h"
-#include "c/schemas/ModioRatingSummary.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioRatingSummary.h"
 
 namespace modio
 {

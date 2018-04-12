@@ -1,10 +1,10 @@
 #ifndef MODIO_MODIO_MOD_EDITOR_H
 #define MODIO_MODIO_MOD_EDITOR_H
 
-#include "Globals.h"
-#include "Utility.h"
-#include "c/ModioC.h"
-#include "c/schemas/ModioListNode.h"
+#include "../../Globals.h"
+#include "../../Utility.h"
+#include "../ModioC.h"
+#include "../schemas/ModioListNode.h"
 
 namespace modio
 {

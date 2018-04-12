@@ -1,8 +1,8 @@
 #ifndef MODIO_AUTHENTICATIONCALLBACKS_H
 #define MODIO_AUTHENTICATIONCALLBACKS_H
 
-#include "c/schemas/ModioResponse.h"
-#include "Globals.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../../Globals.h"
 
 struct EmailRequestParams
 {

@@ -1,8 +1,8 @@
 #ifndef MODIO_METADATAKVP_H
 #define MODIO_METADATAKVP_H
 
-#include "Globals.h"
-#include "c/schemas/ModioMetadataKVP.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioMetadataKVP.h"
 
 namespace modio
 {

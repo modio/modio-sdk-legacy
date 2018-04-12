@@ -1,9 +1,9 @@
 #ifndef MODIO_MODEVENTCALLBACKS_H
 #define MODIO_MODEVENTCALLBACKS_H
 
-#include "Globals.h"
-#include "c/schemas/ModioResponse.h"
-#include "c/schemas/ModioEvent.h"
+#include "../../../Globals.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../schemas/ModioEvent.h"
 
 struct GetEventsParams
 {

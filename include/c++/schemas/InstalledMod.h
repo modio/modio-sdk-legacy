@@ -1,10 +1,10 @@
 #ifndef MODIO_INSTALLEDMOD_H
 #define MODIO_INSTALLEDMOD_H
 
-#include "Utility.h"
-#include "Globals.h"
-#include "c/schemas/ModioInstalledMod.h"
-#include "c++/schemas/Mod.h"
+#include "../../Utility.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioInstalledMod.h"
+#include "Mod.h"
 
 namespace modio
 {
