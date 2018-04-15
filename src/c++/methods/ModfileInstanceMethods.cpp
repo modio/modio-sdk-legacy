@@ -22,6 +22,7 @@ namespace modio
     this->current_call_id++;
   }
 
+/*
   void Instance::addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback)
   {
     const struct AddModfileCall* add_modfile_call = new AddModfileCall{callback};
@@ -30,6 +31,12 @@ namespace modio
     modioAddModfile((void*)new u32(this->current_call_id), mod_id, *modfile_handler.getModioModfileCreator(), &onAddModfile);
 
     this->current_call_id++;
+  }
+  */
+
+  void Instance::addModfile(u32 mod_id, modio::ModfileCreator& modfile_handler)
+  {
+    modioAddModfile(mod_id, *modfile_handler.getModioModfileCreator());
   }
 
   void Instance::editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor& modfile_handler, const std::function<void(const modio::Response& response, const modio::Modfile& modfile)>& callback)

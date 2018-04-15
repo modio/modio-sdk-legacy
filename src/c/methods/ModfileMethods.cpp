@@ -44,6 +44,11 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModfiles);
   }
 
+  void modioAddModfile(u32 mod_id, ModioModfileCreator modfile_creator)
+  {
+    modio::curlwrapper::queueModfileUpload(mod_id, &modfile_creator);
+  }
+/*
   void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
     modio::minizipwrapper::compress(modfile_creator.path, modio::getModIODirectory() + "tmp/modfile.zip");
@@ -60,6 +65,7 @@ extern "C"
 
     modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), modio::convertModfileCreatorToMultimap(&modfile_creator), curlform_files, &modioOnModfileAdded);
   }
+  */
 
   void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_editor, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {

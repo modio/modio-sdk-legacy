@@ -14,6 +14,7 @@ namespace curlwrapper
 void onJsonRequestFinished(CURL* curl);
 void onDownloadFinished(CURL* curl);
 void onModDownloadFinished(CURL* curl);
+void onModfileUploadFinished(CURL* curl);
 
 }
 }

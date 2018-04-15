@@ -102,4 +102,47 @@ namespace modio
 
     return result;
   }
+
+  void modioInitModfileCreatorFromJson(ModioModfileCreator* modfile_creator, json modfile_creator_json)
+  {
+    modfile_creator->path = NULL;
+    if(modio::hasKey(modfile_creator_json, "path"))
+    {
+      std::string path_str = modfile_creator_json["path"];
+      modfile_creator->path = new char[path_str.size() + 1];
+      strcpy(modfile_creator->path, path_str.c_str());
+    }
+
+    modfile_creator->version = NULL;
+    if(modio::hasKey(modfile_creator_json, "version"))
+    {
+      std::string version_str = modfile_creator_json["version"];
+      modfile_creator->version = new char[version_str.size() + 1];
+      strcpy(modfile_creator->version, version_str.c_str());
+    }
+
+    modfile_creator->changelog = NULL;
+    if(modio::hasKey(modfile_creator_json, "changelog"))
+    {
+      std::string changelog_str = modfile_creator_json["changelog"];
+      modfile_creator->changelog = new char[changelog_str.size() + 1];
+      strcpy(modfile_creator->changelog, changelog_str.c_str());
+    }
+
+    modfile_creator->active = NULL;
+    if(modio::hasKey(modfile_creator_json, "active"))
+    {
+      std::string active_str = modfile_creator_json["active"];
+      modfile_creator->active = new char[active_str.size() + 1];
+      strcpy(modfile_creator->active, active_str.c_str());
+    }
+
+    modfile_creator->filehash = NULL;
+    if(modio::hasKey(modfile_creator_json, "filehash"))
+    {
+      std::string filehash_str = modfile_creator_json["filehash"];
+      modfile_creator->filehash = new char[filehash_str.size() + 1];
+      strcpy(modfile_creator->filehash, filehash_str.c_str());
+    }
+  }
 }

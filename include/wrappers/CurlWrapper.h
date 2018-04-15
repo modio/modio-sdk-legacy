@@ -29,6 +29,9 @@ void resumeModDownloads();
 void download(u32 call_number, std::vector<std::string> headers, std::string url, std::string path, FILE *file, std::function<void(u32 call_number, u32 response_code)> callback);
 void downloadMod(QueuedModDownload *queued_mod_download);
 void queueModDownload(ModioMod *modio_mod);
+void uploadModfile(QueuedModfileUpload *queued_modfile_upload);
+void queueModfileUpload(u32 mod_id, ModioModfileCreator *modio_modfile_creator);
+
 }
 }
 

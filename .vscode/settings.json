@@ -63,6 +63,11 @@
         "chrono": "cpp",
         "codecvt": "cpp",
         "ratio": "cpp",
-        "modio_c.h": "c"
+        "modio_c.h": "c",
+        "*.tcc": "cpp",
+        "cctype": "cpp",
+        "cwctype": "cpp",
+        "optional": "cpp",
+        "string_view": "cpp"
     }
 }

@@ -2,36 +2,36 @@
 
 extern "C"
 {
-  void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse modioresponse))
-  {
-    u32 call_number = modio::curlwrapper::getCallNumber();
+void modioDownloadImage(void *object, char *image_url, char *path, void (*callback)(void *object, ModioResponse modioresponse))
+{
+  u32 call_number = modio::curlwrapper::getCallNumber();
 
-    download_image_callbacks[call_number] = new DownloadImageParams;
-    download_image_callbacks[call_number]->callback = callback;
-    download_image_callbacks[call_number]->destination_path = path;
-    download_image_callbacks[call_number]->object = object;
+  download_image_callbacks[call_number] = new DownloadImageParams;
+  download_image_callbacks[call_number]->callback = callback;
+  download_image_callbacks[call_number]->destination_path = path;
+  download_image_callbacks[call_number]->object = object;
 
-    FILE* file = fopen(path,"wb");
-    download_image_callbacks[call_number]->file = file;
+  FILE *file = fopen(path, "wb");
+  download_image_callbacks[call_number]->file = file;
 
-    modio::curlwrapper::download(call_number, modio::getHeaders(), image_url, path, file, &modioOnImageDownloaded);
-  }
+  modio::curlwrapper::download(call_number, modio::getHeaders(), image_url, path, file, &modioOnImageDownloaded);
+}
 
-  void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(void* object, ModioResponse response, u32 mod_id))
-  {
-    u32 call_number = modio::curlwrapper::getCallNumber();
+void modioEditModLogo(void *object, u32 mod_id, char *path, void (*callback)(void *object, ModioResponse response, u32 mod_id))
+{
+  u32 call_number = modio::curlwrapper::getCallNumber();
 
-    edit_mod_logo_callbacks[call_number] = new EditModLogoParams;
-    edit_mod_logo_callbacks[call_number]->callback = callback;
-    edit_mod_logo_callbacks[call_number]->mod_id = mod_id;
-    edit_mod_logo_callbacks[call_number]->object = object;
+  edit_mod_logo_callbacks[call_number] = new EditModLogoParams;
+  edit_mod_logo_callbacks[call_number]->callback = callback;
+  edit_mod_logo_callbacks[call_number]->mod_id = mod_id;
+  edit_mod_logo_callbacks[call_number]->object = object;
 
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
 
-    std::multimap<std::string, std::string> curlform_copycontents;
-    std::map<std::string, std::string> curlform_files;
-    curlform_files["logo"] = path;
+  std::multimap<std::string, std::string> curlform_copycontents;
+  std::map<std::string, std::string> curlform_files;
+  curlform_files["logo"] = path;
 
-    modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), curlform_copycontents, curlform_files, &modioOnModLogoEdited);
-  }
+  modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), curlform_copycontents, curlform_files, &modioOnModLogoEdited);
+}
 }
