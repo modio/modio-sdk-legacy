@@ -17,6 +17,10 @@ IF (APPLE)
   target_link_libraries(modio ${CURL_LIBRARIES} ZLIB::ZLIB)
 ENDIF()
 
+IF (UNIX AND NOT APPLE)
+  target_link_libraries (modio curl z)
+ENDIF ()
+
 IF (MINGW)
   target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MinGW/libcurl.a ${CMAKE_SOURCE_DIR}/lib/MinGW/libz.a wldap32 ws2_32 ssl eay32 crypto)
 ENDIF()
