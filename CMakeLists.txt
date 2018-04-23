@@ -22,7 +22,13 @@ IF (UNIX AND NOT APPLE)
 ENDIF ()
 
 IF (MINGW)
-  target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MinGW/libcurl.a ${CMAKE_SOURCE_DIR}/lib/MinGW/libz.a wldap32 ws2_32 ssl eay32 crypto)
+  target_link_libraries(modio
+    ${CMAKE_SOURCE_DIR}/lib/MinGW/libcurl.a
+    ${CMAKE_SOURCE_DIR}/lib/MinGW/libz.a
+    ${CMAKE_SOURCE_DIR}/lib/MinGW/libcrypto.dll.a
+    ${CMAKE_SOURCE_DIR}/lib/MinGW/libeay32.dll
+    ${CMAKE_SOURCE_DIR}/lib/MinGW/libssl.dll.a
+    wldap32 ws2_32)
 ENDIF()
 
 IF (MSVC)
