@@ -19,5 +19,5 @@ Open a terminal, go to this project directory and run the `Makefile` by using th
 Once the `MyProject.exe` binary file is generated add the `libmodio.dll` next to it and execute by typing:
 
 ```bash
-> MyProject.exe
+> main.exe
 ```
