@@ -13,7 +13,7 @@ By default, Zlib will be compiled on `debug` mode, usually you will want to comp
 In order to compile the NMake version we need to execute the `Makefile.msc` under the `win32` directory:
 
 ```bash
-$ nmake /f win32/Makefile.msc
+> nmake /f win32/Makefile.msc
 ```
 
 This will generate the `zlib.lib` file. It will be compatible with x86 or x64 depending on the Microsoft native compiler you used. 
@@ -23,7 +23,7 @@ This will generate the `zlib.lib` file. It will be compatible with x86 or x64 de
 MinGW does not need extra setup, just execute the `Makefile.gcc` under the `win32` directory.
 
 ```bash
-$ mingw32-make.exe -fwin32/Makefile.gcc
+> mingw32-make.exe -fwin32/Makefile.gcc
 ```
 
 This will generate the `libz.a` file ready to be statically linked.
@@ -37,13 +37,13 @@ Before you start, please download the source at the official [Curl website](http
 In addition to running the commands in the correspoinding x86 or x64 version of the Microsoft native compiler, you have to explicitly setup the target machine.
 
 ```bash
-# For x86
-$ nmake /f makefile.vc ENABLE_WINSSL=yes mode=static MACHINE=x86 VC=17
+# Compiling x86 version
+> nmake /f makefile.vc ENABLE_WINSSL=yes mode=static MACHINE=x86 VC=17
 ```
 
 ```bash
-# For x64
-$ nmake /f makefile.vc ENABLE_WINSSL=yes mode=static MACHINE=x64 VC=17
+# Compiling x64 version
+> nmake /f makefile.vc ENABLE_WINSSL=yes mode=static MACHINE=x64 VC=17
 ```
 
 This will generate the `libcurl_a.lib` file ready to be statically linked.
@@ -59,7 +59,7 @@ This will generate the `libcurl.a` file ready to be statically linked. Curl will
 ### Building MinGW dependencies
 
 ```bash
-$ perl Configure mingw --prefix=/c/openssl
-$ make depend
-$ make
+> perl Configure mingw --prefix=/c/openssl
+> make depend
+> make
 ```
