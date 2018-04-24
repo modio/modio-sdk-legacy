@@ -23,5 +23,5 @@ $ make
 Once the `MyProject` binary file is generated you can execute it by typing:
 
 ```bash
-$ ./example
+$ ./MyProject
 ```
