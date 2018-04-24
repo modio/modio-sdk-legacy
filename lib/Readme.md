@@ -51,7 +51,7 @@ This will generate the `libcurl_a.lib` file ready to be statically linked.
 ## MinGW
 
 ```bash
-$ mingw32-make mingw32
+> mingw32-make mingw32
 ```
 
 This will generate the `libcurl.a` file ready to be statically linked. Curl will depend on the following libraries: `libcrypto`, `libeay` and `libssl`. They should be part of the MinGW default lib directory. In case they are not present, you can grab them from the `MinGW/` directory.
