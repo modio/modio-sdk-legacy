@@ -6,9 +6,9 @@ Before you start, please install the GNU C++ compiler.
 
 ```bash
 # on Debian machines:
-sudo apt install g++
+$ sudo apt install g++
 # on Fedora machines:
-sudo yum install gcc-c++
+$ sudo yum install gcc-c++
 ```
 
 
