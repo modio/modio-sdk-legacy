@@ -41,7 +41,8 @@ int main(void)
         std::cout << "Id: " << event.id << std::endl;
         std::cout << "Mod id: " << event.mod_id << std::endl;
         std::cout << "User id: " << event.user_id << std::endl;
-        std::cout << "Date added: " << ctime(&(time_t)event.date_added);
+        const time_t date_added = (time_t)event.date_added;                        
+        std::cout << "Date added: " << ctime(&date_added);
         std::cout << "Event Type: ";
         switch (event.event_type)
         {

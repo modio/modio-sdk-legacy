@@ -44,6 +44,11 @@ void modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id))
   modio::download_callback = callback;
 }
 
+void modioSetUploadListener(void (*callback)(u32 response_code, u32 mod_id))
+{
+  modio::upload_callback = callback;
+}
+
 void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue)
 {
   std::list<modio::QueuedModDownload *> mod_download_queue = modio::curlwrapper::getModDownloadQueue();
@@ -59,6 +64,23 @@ u32 modioGetModDownloadQueueSize()
 {
   json mod_download_queue_json = modio::openJson(modio::getModIODirectory() + "mod_download_queue.json");
   return (u32)mod_download_queue_json.size();
+}
+
+void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue)
+{
+  std::list<modio::QueuedModfileUpload *> modfile_upload_queue = modio::curlwrapper::getModfileUploadQueue();
+  u32 i = 0;
+  for (auto &queued_modfile_upload : modfile_upload_queue)
+  {
+    modioInitQueuedModfileUpload(&(upload_queue[i]), queued_modfile_upload->toJson());
+    i++;
+  }
+}
+
+u32 modioGetModUploadQueueSize()
+{
+  json mod_upload_queue_json = modio::openJson(modio::getModIODirectory() + "mod_upload_queue.json");
+  return (u32)mod_upload_queue_json.size();
 }
 
 void modioGetInstalledMods(ModioInstalledMod *installed_mods)

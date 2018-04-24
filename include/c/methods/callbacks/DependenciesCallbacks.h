@@ -1,9 +1,9 @@
 #ifndef MODIO_DEPENDENCIES_CALLBACKS_H
 #define MODIO_DEPENDENCIES_CALLBACKS_H
 
-#include "Globals.h"
-#include "c/schemas/ModioResponse.h"
-#include "c/schemas/ModioDependency.h"
+#include "../../../Globals.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../schemas/ModioDependency.h"
 
 struct GetAllModDependenciesParams
 {

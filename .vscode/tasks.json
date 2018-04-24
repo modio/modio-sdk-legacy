@@ -12,6 +12,16 @@
                 "/property:GenerateFullPaths=true",
                 "/t:build"
             ],
+            "presentation": {
+                // Reveal the output only if unrecognized errors occur.
+                "reveal": "silent"
+            },
+            // Use the standard MS compiler pattern to detect errors, warnings and infos
+            "problemMatcher": "$msCompile"
+        },{
+            "label": "linux build",
+            "type": "shell",
+            "command": "cd build; make -j8",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -20,8 +30,6 @@
                 // Reveal the output only if unrecognized errors occur.
                 "reveal": "silent"
             },
-            // Use the standard MS compiler pattern to detect errors, warnings and infos
-            "problemMatcher": "$msCompile"
         }
     ]
 }

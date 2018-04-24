@@ -11,6 +11,17 @@ int main(void)
     {
       modio_instance.sleep(10);
       modio_instance.process();
+
+      std::list<modio::QueuedModfileUpload *> modfile_upload_queue = modio_instance.getModfileUploadQueue();
+
+      if (modfile_upload_queue.size() > 0)
+      {
+        // We can track the upload progress by looking into the mod upload queue      
+        modio::QueuedModfileUpload *current_upload = *(modfile_upload_queue.begin());
+        double current_progress = current_upload->current_progress;
+        double total_size = current_upload->total_size;
+        std::cout << "Progress: " << (current_progress / total_size) * 100.0 << "%" << std::endl;
+      }
     }
   };
 
@@ -31,10 +42,12 @@ int main(void)
 
   std::cout << "Uploading modfile..." << std::endl;
 
-  modio_instance.addModfile(mod_id, modfile_creator, [&](const modio::Response &response, const modio::Modfile &modfile) {
-    std::cout << "Add Modfile response: " << response.code << std::endl;
+  modio_instance.addModfile(mod_id, modfile_creator);
+  
+  modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
+    std::cout << "Add Modfile response: " << response_code << std::endl;
 
-    if (response.code == 201)
+    if (response_code == 201)
     {
       std::cout << "Modfile added successfully!" << std::endl;
     }

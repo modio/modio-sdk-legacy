@@ -1,11 +1,11 @@
 #ifndef MODIO_DOWNLOADSCALLBACKS_H
 #define MODIO_DOWNLOADSCALLBACKS_H
 
-#include "c/schemas/ModioResponse.h"
-#include "wrappers/MinizipWrapper.h"
-#include "wrappers/CurlWrapper.h"
-#include "Globals.h"
-#include "ModUtility.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../../wrappers/MinizipWrapper.h"
+#include "../../../wrappers/CurlWrapper.h"
+#include "../../../Globals.h"
+#include "../../../ModUtility.h"
 
 struct GetInstallModParams
 {

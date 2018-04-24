@@ -1,8 +1,8 @@
 #ifndef MODIO_TAG_H
 #define MODIO_TAG_H
 
-#include "Globals.h"
-#include "c/schemas/ModioTag.h"
+#include "../../Globals.h"
+#include "../../c/schemas/ModioTag.h"
 
 namespace modio
 {

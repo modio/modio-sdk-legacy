@@ -1,7 +1,7 @@
 #ifndef MODIO_MODFILE_EDITOR_H
 #define MODIO_MODFILE_EDITOR_H
 
-#include "c/creators/ModioModfileEditor.h"
+#include "../../c/creators/ModioModfileEditor.h"
 
 namespace modio
 {

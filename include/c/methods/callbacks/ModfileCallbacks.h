@@ -1,10 +1,10 @@
 #ifndef MODIO_MODFILECALLBACKS_H
 #define MODIO_MODFILECALLBACKS_H
 
-#include "c/schemas/ModioResponse.h"
-#include "Globals.h"
-#include "c/schemas/ModioModfile.h"
-#include "ModUtility.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../../Globals.h"
+#include "../../schemas/ModioModfile.h"
+#include "../../../ModUtility.h"
 
 struct GetModfileParams
 {

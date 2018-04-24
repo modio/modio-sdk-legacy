@@ -82,6 +82,8 @@ typedef int i32;
 #define MODIO_MOD_EXTRACTING              7
 #define MODIO_MOD_INSTALLED               8
 #define MODIO_PRIORITIZING_OTHER_DOWNLOAD 9
+#define MODIO_MOD_STARTING_UPLOAD         10
+#define MODIO_MOD_UPLOADING               11
 
 extern "C"
 {
@@ -114,6 +116,7 @@ extern "C"
   typedef struct ModioModEditor ModioModEditor;
   typedef struct ModioEvent ModioEvent;
   typedef struct ModioQueuedModDownload ModioQueuedModDownload;
+  typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
 
   struct ModioListNode
   {
@@ -408,6 +411,16 @@ extern "C"
     ModioMod mod;
   };
 
+  struct ModioQueuedModfileUpload
+  {
+    u32 state;
+    u32 mod_id;
+    double current_progress;
+    double total_size;
+    char* path;
+    ModioModfileCreator modio_modfile_creator;
+  };
+
   struct ModioComment
   {
     u32 id;
@@ -447,7 +460,7 @@ extern "C"
   //Modfile Methods
   void MODIO_DLL modioGetModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
   void MODIO_DLL modioGetModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
-  void MODIO_DLL modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+  void MODIO_DLL modioAddModfile(u32 mod_id, ModioModfileCreator modfile_creator);
   void MODIO_DLL modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
 
   //Mods Methods
@@ -557,8 +570,11 @@ extern "C"
   void MODIO_DLL modioResumeDownloads();
   void MODIO_DLL modioPrioritizeModDownload(u32 mod_id);
   void MODIO_DLL modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
+  void MODIO_DLL modioSetUploadListener(void (*callback)(u32 response_code, u32 mod_id));  
   u32 MODIO_DLL modioGetModDownloadQueueSize();
   void MODIO_DLL modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
+  u32 MODIO_DLL modioGetModUploadQueueSize();
+  void MODIO_DLL modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
   u32 MODIO_DLL modioGetInstalledModsSize();
   void MODIO_DLL modioGetInstalledMods(ModioInstalledMod* installed_mods);
   u32 MODIO_DLL modioGetModState(u32 mod_id);

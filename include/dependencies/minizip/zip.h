@@ -18,7 +18,7 @@
 #define INCLUDECRYPTINGCODE_IFCRYPTALLOWED
 
 #ifndef NOCRYPT
-#include "dependencies/minizip/crypt.h"
+#include "../minizip/crypt.h"
 #endif
 
 #ifdef __cplusplus
@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 #ifndef _ZLIB_H
-#  include "dependencies/zlib/zlib.h"
+#  include "../zlib/zlib.h"
 #endif
 
 #ifndef _ZLIBIOAPI_H

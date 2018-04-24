@@ -1,7 +1,7 @@
 #ifndef MODIO_MOD_CREATOR_H
 #define MODIO_MOD_CREATOR_H
 
-#include "c/creators/ModioModCreator.h"
+#include "../../c/creators/ModioModCreator.h"
 
 namespace modio
 {

@@ -5,10 +5,14 @@ namespace modio
 namespace curlwrapper
 {
 std::list<QueuedModDownload *> mod_download_queue;
+std::list<QueuedModfileUpload *> modfile_upload_queue;
 
 FILE *current_mod_download_file;
 CURL *current_mod_download_curl_handle;
 QueuedModDownload *current_queued_mod_download;
+
+CURL *current_modfile_upload_curl_handle;
+QueuedModfileUpload *current_queued_modfile_upload;
 
 CURLM *curl_multi_handle;
 
@@ -23,6 +27,11 @@ u32 ongoing_call = 0;
 std::list<QueuedModDownload *> getModDownloadQueue()
 {
   return mod_download_queue;
+}
+
+std::list<QueuedModfileUpload *> getModfileUploadQueue()
+{
+  return modfile_upload_queue;
 }
 
 JsonResponseHandler::JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
@@ -67,6 +76,16 @@ void updateModDownloadQueueFile()
     mod_download_queue_json.push_back(queued_mod_download->toJson());
   }
   writeJson(modio::getModIODirectory() + "mod_download_queue.json",mod_download_queue_json);
+}
+
+void updateModUploadQueueFile()
+{
+  json mod_upload_queue_json;
+  for(auto &queued_mod_upload : modfile_upload_queue)
+  {
+    mod_upload_queue_json.push_back(queued_mod_upload->toJson());
+  }
+  writeJson(modio::getModIODirectory() + "mod_upload_queue.json",mod_upload_queue_json);
 }
 
 void prioritizeModDownload(u32 mod_id)

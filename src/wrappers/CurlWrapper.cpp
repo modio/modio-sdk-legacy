@@ -74,6 +74,11 @@ void process()
         onModDownloadFinished(curl_handle);
       }
 
+      if (current_modfile_upload_curl_handle && current_modfile_upload_curl_handle == curl_handle)
+      {
+        onModfileUploadFinished(curl_handle);
+      }
+
       curl_multi_remove_handle(curl_multi_handle, curl_handle);
       curl_easy_cleanup(curl_handle);
     }
@@ -235,6 +240,10 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
     //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
     curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
 
+    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+
+
     curl_multi_add_handle(curl_multi_handle, curl);
 
     //curl_easy_cleanup(curl);
@@ -383,6 +392,70 @@ void downloadMod(QueuedModDownload *queued_mod_download)
   }
 }
 
+void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
+{
+  std::string modfile_path = queued_modfile_upload->modfile_creator.getModioModfileCreator()->path;
+  std::string modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
+  modio::minizipwrapper::compress(modfile_path, modfile_zip_path);
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(queued_modfile_upload->mod_id) + "/files";
+
+  writeLogLine("Upload started. Mod id: " + toString(queued_modfile_upload->mod_id) + " Path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
+
+  writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
+  CURL *curl;
+
+  struct curl_httppost *formpost = NULL;
+  struct curl_httppost *lastptr = NULL;
+  struct curl_slist *headerlist = NULL;
+  static const char buf[] = "Expect:";
+
+  curl_global_init(CURL_GLOBAL_ALL);
+
+  std::multimap<std::string, std::string> curlform_copycontents = modio::convertModfileCreatorToMultimap(queued_modfile_upload->modfile_creator.getModioModfileCreator());
+
+  curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, "filedata",
+                CURLFORM_FILE, modfile_zip_path.c_str(), CURLFORM_END);
+
+  for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin();
+       i != curlform_copycontents.end();
+       i++)
+  {
+    curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
+                 CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
+  }
+
+  curl_formadd(&formpost,
+               &lastptr,
+               CURLFORM_COPYNAME, "submit",
+               CURLFORM_COPYCONTENTS, "send",
+               CURLFORM_END);
+
+  curl = curl_easy_init();
+
+  queued_modfile_upload->state = MODIO_MOD_STARTING_UPLOAD;
+  current_modfile_upload_curl_handle = curl;
+  current_queued_modfile_upload = queued_modfile_upload;
+
+  setHeaders(modio::getHeaders(), curl);
+
+  headerlist = curl_slist_append(headerlist, buf);
+  if (curl)
+  {
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+    setVerifies(curl);
+    //setJsonResponseWrite(curl);
+
+    curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+
+    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
+    curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, queued_modfile_upload);    
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+
+    curl_multi_add_handle(curl_multi_handle, curl);
+  }
+}
+
 void queueModDownload(ModioMod *modio_mod)
 {
   for (auto &queued_mod_download : mod_download_queue)
@@ -406,13 +479,42 @@ void queueModDownload(ModioMod *modio_mod)
   queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(modio_mod->id) + "_modfile.zip";
   mod_download_queue.push_back(queued_mod_download);
 
-  updateModDownloadQueueFile();
+  //updateModDownloadQueueFile();
 
   writeLogLine("Download queued. Mod id: " + toString(modio_mod->id) + " Url: " + url, MODIO_DEBUGLEVEL_LOG);
 
   if (mod_download_queue.size() == 1)
   {
     downloadMod(queued_mod_download);
+  }
+}
+
+void queueModfileUpload(u32 mod_id, ModioModfileCreator *modio_modfile_creator)
+{
+  for (auto &queued_modfile_upload : modfile_upload_queue)
+  {
+    if (queued_modfile_upload->mod_id == mod_id)
+    {
+      writeLogLine("Could not queue the mod: " + toString(mod_id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
+      return;
+    }
+  }
+
+  QueuedModfileUpload *queued_modfile_upload = new QueuedModfileUpload();
+  queued_modfile_upload->state = MODIO_MOD_QUEUED;
+  queued_modfile_upload->mod_id = mod_id;
+  queued_modfile_upload->current_progress = 0;
+  queued_modfile_upload->total_size = 0;
+  queued_modfile_upload->modfile_creator.initializeFromModioModfileCreator(modio_modfile_creator);
+  modfile_upload_queue.push_back(queued_modfile_upload);
+
+  //updateModUploadQueueFile();
+
+  writeLogLine("Upload queued. Mod id: " + toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+
+  if (modfile_upload_queue.size() == 1)
+  {
+    uploadModfile(queued_modfile_upload);
   }
 }
 }

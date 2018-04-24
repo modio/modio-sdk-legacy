@@ -1,8 +1,8 @@
 #ifndef MODIO_ERROR_H
 #define MODIO_ERROR_H
 
-#include "c/schemas/ModioError.h"
-#include "Globals.h"
+#include "../../c/schemas/ModioError.h"
+#include "../../Globals.h"
 
 namespace modio
 {

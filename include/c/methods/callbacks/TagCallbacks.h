@@ -1,9 +1,9 @@
 #ifndef MODIO_TAGCALLBACKS_H
 #define MODIO_TAGCALLBACKS_H
 
-#include "Globals.h"
-#include "c/schemas/ModioResponse.h"
-#include "c/schemas/ModioTag.h"
+#include "../../../Globals.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../schemas/ModioTag.h"
 
 struct GetTagsParams
 {

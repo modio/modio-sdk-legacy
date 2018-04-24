@@ -1,8 +1,8 @@
 #ifndef MODIO_GAMETAGOPTION_H
 #define MODIO_GAMETAGOPTION_H
 
-#include "c/schemas/ModioGameTagOption.h"
-#include "Globals.h"
+#include "../../c/schemas/ModioGameTagOption.h"
+#include "../../Globals.h"
 
 namespace modio
 {

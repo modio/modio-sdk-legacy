@@ -32,6 +32,11 @@ namespace modio
     return curlwrapper::getModDownloadQueue();
   }
 
+  std::list<QueuedModfileUpload *> Instance::getModfileUploadQueue()
+  {
+    return curlwrapper::getModfileUploadQueue();
+  }
+
   std::vector<modio::InstalledMod> Instance::getInstalledMods()
   {
 	  std::vector<modio::InstalledMod> installed_mods;
@@ -56,6 +61,12 @@ namespace modio
   {
     set_download_listener_call = new SetDownloadListenerCall{callback};
     modioSetDownloadListener(&onDownloadListener);
+  }
+
+  void Instance::setUploadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback)
+  {
+    set_upload_listener_call = new SetUploadListenerCall{callback};
+    modioSetUploadListener(&onUploadListener);
   }
 
   u32 Instance::getModState(u32 mod_id)

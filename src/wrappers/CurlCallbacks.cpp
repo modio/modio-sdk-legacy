@@ -59,7 +59,7 @@ void onModDownloadFinished(CURL *curl)
 
     updateModDownloadQueueFile();
 
-    writeLogLine("Finished installing modd", MODIO_DEBUGLEVEL_LOG);
+    writeLogLine("Finished installing mod", MODIO_DEBUGLEVEL_LOG);
 
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
@@ -89,6 +89,35 @@ void onModDownloadFinished(CURL *curl)
     }
   }
   updateModDownloadQueueFile();
+}
+
+void onModfileUploadFinished(CURL *curl)
+{
+  writeLogLine("Upload Finished. Mod id: " + toString(current_queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
+
+  if (current_queued_modfile_upload->state == MODIO_MOD_UPLOADING)
+  {
+    modfile_upload_queue.remove(current_queued_modfile_upload);
+
+    updateModUploadQueueFile();
+
+    u32 response_code;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
+    if (modio::upload_callback)
+    {
+      modio::upload_callback(response_code, current_queued_modfile_upload->mod_id);
+    }
+
+    delete current_queued_modfile_upload;
+    current_queued_modfile_upload = NULL;
+
+    if (modfile_upload_queue.size() > 0)
+    {
+      uploadModfile(modfile_upload_queue.front());
+    }
+  }
+  updateModUploadQueueFile();
 }
 }
 }

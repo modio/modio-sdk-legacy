@@ -1,12 +1,12 @@
 #ifndef MODIO_SUBSCRIPTIONCALLBACKS_H
 #define MODIO_SUBSCRIPTIONCALLBACKS_H
 
-#include "Globals.h"
-#include "wrappers/MinizipWrapper.h"
-#include "wrappers/CurlWrapper.h"
-#include "c/schemas/ModioResponse.h"
-#include "c/schemas/ModioMod.h"
-#include "ModUtility.h"
+#include "../../../Globals.h"
+#include "../../../wrappers/MinizipWrapper.h"
+#include "../../../wrappers/CurlWrapper.h"
+#include "../../schemas/ModioResponse.h"
+#include "../../schemas/ModioMod.h"
+#include "../../../ModUtility.h"
 
 struct SubscribeToModParams
 {

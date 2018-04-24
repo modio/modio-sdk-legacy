@@ -30,5 +30,17 @@ i32 onModDownloadProgress(void *clientp, double dltotal, double dlnow, double ul
   return 0;
 }
 
+i32 onModUploadProgress(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)
+{
+  QueuedModfileUpload *queued_mod_upload = (QueuedModfileUpload*)clientp;
+  queued_mod_upload->current_progress = ulnow;
+  queued_mod_upload->total_size = ultotal;
+
+  if(ultotal!=0)
+    queued_mod_upload->state = MODIO_MOD_UPLOADING;
+  
+  return 0;
+}
+
 }
 }

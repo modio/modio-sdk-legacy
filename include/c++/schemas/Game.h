@@ -1,13 +1,13 @@
 #ifndef MODIO_GAME_H
 #define MODIO_GAME_H
 
-#include "c/schemas/ModioGame.h"
-#include "Globals.h"
-#include "c++/schemas/User.h"
-#include "c++/schemas/Icon.h"
-#include "c++/schemas/Logo.h"
-#include "c++/schemas/Header.h"
-#include "c++/schemas/GameTagOption.h"
+#include "../../c/schemas/ModioGame.h"
+#include "../../Globals.h"
+#include "User.h"
+#include "Icon.h"
+#include "Logo.h"
+#include "Header.h"
+#include "GameTagOption.h"
 
 namespace modio
 {

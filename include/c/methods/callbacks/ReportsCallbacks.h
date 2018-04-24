@@ -1,8 +1,8 @@
 #ifndef MODIO_REPORTS_CALLBACKS_H
 #define MODIO_REPORTS_CALLBACKS_H
 
-#include "Globals.h"
-#include "c/schemas/ModioResponse.h"
+#include "../../../Globals.h"
+#include "../../schemas/ModioResponse.h"
 
 struct SubmitReportParams
 {

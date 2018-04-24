@@ -1,15 +1,15 @@
 #ifndef MODIO_MODFILE_METHODS_H
 #define MODIO_MODFILE_METHODS_H
 
-#include "wrappers/CurlWrapper.h"
-#include "wrappers/MinizipWrapper.h"
-#include "c/creators/ModioFilterCreator.h"
-#include "c/creators/ModioModfileCreator.h"
-#include "c/creators/ModioModfileEditor.h"
-#include "Globals.h"
-#include "c/schemas/ModioResponse.h"
-#include "c/ModioC.h"
-#include "ModUtility.h"
-#include "c/methods/callbacks/ModfileCallbacks.h"
+#include "../../wrappers/CurlWrapper.h"
+#include "../../wrappers/MinizipWrapper.h"
+#include "../creators/ModioFilterCreator.h"
+#include "../creators/ModioModfileCreator.h"
+#include "../creators/ModioModfileEditor.h"
+#include "../../Globals.h"
+#include "../schemas/ModioResponse.h"
+#include "../ModioC.h"
+#include "../../ModUtility.h"
+#include "callbacks/ModfileCallbacks.h"
 
 #endif
