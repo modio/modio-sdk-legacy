@@ -16,7 +16,7 @@ Open a terminal, go to this project directory and run the `Makefile` by using th
 > mingw32-make
 ```
 
-Once the `MyProject.exe` binary file is generated you can execute it by typing:
+Once the `MyProject.exe` binary file is generated add the `libmodio.dll` next to it and execute by typing:
 
 ```bash
 > MyProject.exe
