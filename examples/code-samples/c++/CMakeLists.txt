@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
-include_directories(../../include)
+include_directories(../../../include)
 set (CMAKE_CXX_STANDARD 11)
-link_directories(../../build)
+link_directories(../../../build)
 
 file( GLOB EXAMPLE_SOURCES *.cpp )
 
