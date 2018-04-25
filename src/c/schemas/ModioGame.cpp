@@ -55,12 +55,12 @@ extern "C"
       strcpy(game->ugc_name, ugc_name_str.c_str());
     }
 
-    game->homepage = NULL;
-    if(modio::hasKey(game_json, "homepage"))
+    game->instructions_url = NULL;
+    if(modio::hasKey(game_json, "instructions_url"))
     {
-      std::string homepage_str = game_json["homepage"];
-      game->homepage = new char[homepage_str.size() + 1];
-      strcpy(game->homepage, homepage_str.c_str());
+      std::string instructions_url_str = game_json["instructions_url"];
+      game->instructions_url = new char[instructions_url_str.size() + 1];
+      strcpy(game->instructions_url, instructions_url_str.c_str());
     }
 
     game->name = NULL;
@@ -144,8 +144,8 @@ extern "C"
       if(game->ugc_name)
         delete[] game->ugc_name;
 
-      if(game->homepage)
-        delete[] game->homepage;
+      if(game->instructions_url)
+        delete[] game->instructions_url;
 
       if(game->name)
         delete[] game->name;

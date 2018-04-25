@@ -16,7 +16,7 @@ namespace modio
     void setNameid(const std::string& name_id);
     void setSummary(const std::string& summary);
     void setDescription(const std::string& description);
-    void setHomepage(const std::string& homepage);
+    void setHomepageURL(const std::string& homepage_url);
     void setModfile(u32 modfile);
     void setMetadataBlob(const std::string& metadata_blob);
     ModioModEditor* getModioModEditor();

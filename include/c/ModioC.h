@@ -258,7 +258,7 @@ extern "C"
     long date_added;
     long date_updated;
     long date_live;
-    char* homepage;
+    char* homepage_url;
     char* name;
     char* name_id;
     char* summary;
@@ -327,7 +327,7 @@ extern "C"
     char* name_id;
     char* summary;
     char* description;
-    char* homepage;
+    char* homepage_url;
     char* metadata_blob;
     ModioListNode* tags;
   };
@@ -340,7 +340,7 @@ extern "C"
     char* name_id;
     char* summary;
     char* description;
-    char* homepage;
+    char* homepage_url;
     char* modfile;
     char* metadata_blob;
   };
@@ -377,7 +377,7 @@ extern "C"
     u32 revenue_options;
     u32 api_access_options;
     char* ugc_name;
-    char* homepage;
+    char* instructions_url;
     char* name;
     char* name_id;
     char* summary;
@@ -530,7 +530,7 @@ extern "C"
   void MODIO_DLL modioSetModCreatorNameid(ModioModCreator* mod_creator, char* name_id);
   void MODIO_DLL modioSetModCreatorSummary(ModioModCreator* mod_creator, char* summary);
   void MODIO_DLL modioSetModCreatorDescription(ModioModCreator* mod_creator, char* description);
-  void MODIO_DLL modioSetModCreatorHomepage(ModioModCreator* mod_creator, char* homepage);
+  void MODIO_DLL modioSetModCreatorHomepageURL(ModioModCreator* mod_creator, char* homepage_url);
   void MODIO_DLL modioSetModCreatorMetadataBlob(ModioModCreator* mod_creator, char* metadata_blob);
   void MODIO_DLL modioAddModCreatorTag(ModioModCreator* mod_creator, char* tag);
   void MODIO_DLL modioFreeModCreator(ModioModCreator* mod_creator);
@@ -543,7 +543,7 @@ extern "C"
   void MODIO_DLL modioSetModEditorNameid(ModioModEditor* update_mod_handler, char* name_id);
   void MODIO_DLL modioSetModEditorSummary(ModioModEditor* update_mod_handler, char* summary);
   void MODIO_DLL modioSetModEditorDescription(ModioModEditor* update_mod_handler, char* description);
-  void MODIO_DLL modioSetModEditorHomepage(ModioModEditor* update_mod_handler, char* homepage);
+  void MODIO_DLL modioSetModEditorHomepageURL(ModioModEditor* update_mod_handler, char* homepage_url);
   void MODIO_DLL modioSetModEditorModfile(ModioModEditor* update_mod_handler, u32 modfile);
   void MODIO_DLL modioSetModEditorMetadataBlob(ModioModEditor* update_mod_handler, char* metadata_blob);
   void MODIO_DLL modioFreeModEditor(ModioModEditor* update_mod_handler);

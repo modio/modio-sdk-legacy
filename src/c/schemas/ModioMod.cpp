@@ -32,12 +32,12 @@ extern "C"
     if(modio::hasKey(mod_json, "date_live"))
       mod->date_live = mod_json["date_live"];
 
-    mod->homepage = NULL;
-    if(modio::hasKey(mod_json, "homepage"))
+    mod->homepage_url = NULL;
+    if(modio::hasKey(mod_json, "homepage_url"))
     {
-      std::string homepage_str = mod_json["homepage"];
-      mod->homepage = new char[homepage_str.size() + 1];
-      strcpy(mod->homepage, homepage_str.c_str());
+      std::string homepage_url_str = mod_json["homepage_url"];
+      mod->homepage_url = new char[homepage_url_str.size() + 1];
+      strcpy(mod->homepage_url, homepage_url_str.c_str());
     }
 
     mod->name = NULL;
@@ -130,8 +130,8 @@ extern "C"
   {
     if(mod)
     {
-      if(mod->homepage)
-        delete mod->homepage;
+      if(mod->homepage_url)
+        delete mod->homepage_url;
       if(mod->name)
         delete[] mod->name;
       if(mod->name_id)

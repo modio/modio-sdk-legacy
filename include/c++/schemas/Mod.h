@@ -24,7 +24,7 @@ namespace modio
     long date_added;
     long date_updated;
     long date_live;
-    std::string homepage;
+    std::string homepage_url;
     std::string name;
     std::string name_id;
     std::string summary;

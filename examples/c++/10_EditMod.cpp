@@ -25,7 +25,7 @@ int main(void)
   // The Mod Editor helps setting up the fields that will be updated
   modio::ModEditor mod_editor;
   mod_editor.setName("Update Example");
-  mod_editor.setHomepage("http://www.updated.com");
+  mod_editor.setHomepageURL("http://www.updated.com");
   mod_editor.setSummary("Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
   mod_editor.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   mod_editor.setMetadataBlob("Optional updated metadata");

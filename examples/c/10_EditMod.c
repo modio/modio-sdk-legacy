@@ -26,7 +26,7 @@ int main(void)
   ModioModEditor mod_editor;
   modioInitModEditor(&mod_editor);
   modioSetModEditorName(&mod_editor, (char *)"Update Example Non admin");
-  modioSetModEditorHomepage(&mod_editor, (char *)"http://www.updated.com");
+  modioSetModEditorHomepageURL(&mod_editor, (char *)"http://www.updated.com");
   modioSetModEditorSummary(&mod_editor, (char *)"Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
   modioSetModEditorDescription(&mod_editor, (char *)"This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   modioSetModEditorMetadataBlob(&mod_editor, (char *)"Optional updated metadata");

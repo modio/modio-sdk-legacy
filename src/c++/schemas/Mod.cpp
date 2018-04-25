@@ -11,8 +11,8 @@ namespace modio
     this->date_added = modio_mod.date_added;
     this->date_updated = modio_mod.date_updated;
     this->date_live = modio_mod.date_live;
-    if(modio_mod.homepage)
-      this->homepage = modio_mod.homepage;
+    if(modio_mod.homepage_url)
+      this->homepage_url = modio_mod.homepage_url;
     if(modio_mod.name)
       this->name = modio_mod.name;
     if(modio_mod.name_id)
@@ -48,7 +48,7 @@ namespace modio
     mod_json["date_added"] = this->date_added;
     mod_json["date_updated"] = this->date_updated;
     mod_json["date_live"] = this->date_live;
-    mod_json["homepage"] = this->homepage;
+    mod_json["homepage_url"] = this->homepage_url;
     mod_json["name"] = this->name;
     mod_json["name_id"] = this->name_id;
     mod_json["summary"] = this->summary;

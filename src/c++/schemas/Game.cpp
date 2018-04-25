@@ -18,8 +18,8 @@ namespace modio
 
     if(modio_game.ugc_name)
       this->ugc_name = modio_game.ugc_name;
-    if(modio_game.homepage)
-      this->homepage = modio_game.homepage;
+    if(modio_game.instructions_url)
+      this->instructions_url = modio_game.instructions_url;
     if(modio_game.name)
       this->name = modio_game.name;
     if(modio_game.name_id)
@@ -59,7 +59,7 @@ namespace modio
     game_json["revenue_options"] = this->revenue_options;
     game_json["api_access_options"] = this->api_access_options;
     game_json["ugc_name"] = this->ugc_name;
-    game_json["homepage"] = this->homepage;
+    game_json["instructions_url"] = this->instructions_url;
     game_json["name"] = this->name;
     game_json["name_id"] = this->name_id;
     game_json["summary"] = this->summary;
