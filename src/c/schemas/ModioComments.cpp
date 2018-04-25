@@ -27,12 +27,12 @@ void modioInitComment(ModioComment *comment, json comment_json)
     if (modio::hasKey(comment_json, "karma_guest"))
         comment->karma_guest = comment_json["karma_guest"];
 
-    comment->reply_position = NULL;
-    if (modio::hasKey(comment_json, "reply_position"))
+    comment->thread_position = NULL;
+    if (modio::hasKey(comment_json, "thread_position"))
     {
-        std::string reply_position_str = comment_json["reply_position"];
-        comment->reply_position = new char[reply_position_str.size() + 1];
-        strcpy(comment->reply_position, reply_position_str.c_str());
+        std::string thread_position_str = comment_json["thread_position"];
+        comment->thread_position = new char[thread_position_str.size() + 1];
+        strcpy(comment->thread_position, thread_position_str.c_str());
     }
     
     comment->content = NULL;

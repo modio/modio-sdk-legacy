@@ -417,7 +417,7 @@ struct ModioComment
   u32 reply_id;
   u32 karma;
   u32 karma_guest;
-  char* reply_position;
+  char* thread_position;
   char* content;
 };
 

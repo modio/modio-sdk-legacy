@@ -17,7 +17,7 @@ namespace modio
         u32 reply_id;
         i32 karma;
         i32 karma_guest;
-        std::string reply_position;
+        std::string thread_position;
         std::string content;
         User submitted_by;
 
