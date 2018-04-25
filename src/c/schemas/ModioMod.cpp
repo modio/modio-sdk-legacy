@@ -124,6 +124,18 @@ extern "C"
         modioInitTag(&(mod->tags_array[i]), mod_json["tags"][i]);
       }
     }
+
+    mod->metadata_kvp_array = NULL;
+    mod->metadata_kvp_array_size = 0;
+    if(modio::hasKey(mod_json, "metadata_kvp"))
+    {
+      mod->metadata_kvp_array_size = (u32)mod_json["metadata_kvp"].size();
+      mod->metadata_kvp_array = new ModioMetadataKVP[mod->metadata_kvp_array_size];
+      for(u32 i=0; i<mod->metadata_kvp_array_size; i++)
+      {
+        modioInitMetadataKVP(&(mod->metadata_kvp_array[i]), mod_json["metadata_kvp"][i]);
+      }
+    }
   }
 
   void modioFreeMod(ModioMod* mod)
@@ -157,6 +169,13 @@ extern "C"
       }
       if(mod->tags_array)
         delete[] mod->tags_array;
+
+      for(u32 i=0; i<mod->metadata_kvp_array_size; i++)
+      {
+        modioFreeMetadataKVP(&(mod->metadata_kvp_array[i]));
+      }
+      if(mod->metadata_kvp_array)
+        delete[] mod->metadata_kvp_array;
     }
   }
 }

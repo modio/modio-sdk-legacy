@@ -10,6 +10,7 @@
 #include "ModioModfile.h"
 #include "ModioRatingSummary.h"
 #include "ModioTag.h"
+#include "ModioMetadataKVP.h"
 
 using json = nlohmann::json;
 

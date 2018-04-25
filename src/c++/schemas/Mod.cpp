@@ -35,6 +35,11 @@ namespace modio
     {
       this->tags[i].initialize(modio_mod.tags_array[i]);
     }
+    this->metadata_kvps.resize(modio_mod.metadata_kvp_array_size);
+    for(u32 i = 0; i < modio_mod.metadata_kvp_array_size; i++)
+    {
+      this->metadata_kvps[i].initialize(modio_mod.metadata_kvp_array[i]);
+    }
   }
 
   json Mod::toJson()
@@ -67,6 +72,13 @@ namespace modio
       tags_json.push_back(tag.toJson());
     }
     mod_json["tags"] = tags_json;
+
+    json metadata_kvps_json;
+    for(auto& metadata_kvp : metadata_kvps)
+    {
+      metadata_kvps_json.push_back(metadata_kvp.toJson());
+    }
+    mod_json["metadata_kvp"] = metadata_kvps_json;
 
     return mod_json;
   }

@@ -10,6 +10,7 @@
 #include "Modfile.h"
 #include "RatingSummary.h"
 #include "Tag.h"
+#include "MetadataKVP.h"
 #include "../../c/schemas/ModioMod.h"
 
 namespace modio
@@ -37,6 +38,7 @@ namespace modio
     Media media;
     RatingSummary rating_summary;
     std::vector<Tag> tags;
+    std::vector<MetadataKVP> metadata_kvps;
 
     void initialize(ModioMod mod);
     json toJson();

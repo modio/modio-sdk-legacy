@@ -272,6 +272,8 @@ extern "C"
     ModioRatingSummary rating_summary;
     ModioTag* tags_array;
     u32 tags_array_size;
+    ModioMetadataKVP* metadata_kvp_array;
+    u32 metadata_kvp_array_size;
   };
 
   struct ModioResponse
