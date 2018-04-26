@@ -115,6 +115,37 @@ typedef struct ModioModEditor ModioModEditor;
 typedef struct ModioEvent ModioEvent;
 typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 
+typedef struct ModioListNode ModioListNode;
+typedef struct ModioAvatar ModioAvatar;
+typedef struct ModioComment ModioComment;
+typedef struct ModioDependency ModioDependency;
+typedef struct ModioError ModioError;
+typedef struct ModioFilehash ModioFilehash;
+typedef struct ModioGame ModioGame;
+typedef struct ModioGameTagOption ModioGameTagOption;
+typedef struct ModioHeader ModioHeader;
+typedef struct ModioIcon ModioIcon;
+typedef struct ModioImage ModioImage;
+typedef struct ModioInstalledMod ModioInstalledMod;
+typedef struct ModioLogo ModioLogo;
+typedef struct ModioMedia ModioMedia;
+typedef struct ModioMetadataKVP ModioMetadataKVP;
+typedef struct ModioUser ModioUser;
+typedef struct ModioDownload ModioDownload;
+typedef struct ModioModfile ModioModfile;
+typedef struct ModioRatingSummary ModioRatingSummary;
+typedef struct ModioTag ModioTag;
+typedef struct ModioMod ModioMod;
+typedef struct ModioResponse ModioResponse;
+typedef struct ModioFilterCreator ModioFilterCreator;
+typedef struct ModioModfileCreator ModioModfileCreator;
+typedef struct ModioModfileEditor ModioModfileEditor;
+typedef struct ModioModCreator ModioModCreator;
+typedef struct ModioModEditor ModioModEditor;
+typedef struct ModioEvent ModioEvent;
+typedef struct ModioQueuedModDownload ModioQueuedModDownload;
+typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
+
 struct ModioListNode
 {
   char* value;
@@ -269,6 +300,8 @@ struct ModioMod
   ModioRatingSummary rating_summary;
   ModioTag* tags_array;
   u32 tags_array_size;
+  ModioMetadataKVP* metadata_kvp_array;
+  u32 metadata_kvp_array_size;
 };
 
 struct ModioResponse
@@ -408,6 +441,16 @@ struct ModioQueuedModDownload
   ModioMod mod;
 };
 
+struct ModioQueuedModfileUpload
+{
+  u32 state;
+  u32 mod_id;
+  double current_progress;
+  double total_size;
+  char* path;
+  ModioModfileCreator modio_modfile_creator;
+};
+
 struct ModioComment
 {
   u32 id;
@@ -447,7 +490,7 @@ void modioEditModLogo(void* object, u32 mod_id, char* path, void (*callback)(voi
 //Modfile Methods
 void modioGetModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
 void modioGetModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
-void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
+void modioAddModfile(u32 mod_id, ModioModfileCreator modfile_creator);
 void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
 
 //Mods Methods
@@ -557,10 +600,13 @@ void modioPauseDownloads();
 void modioResumeDownloads();
 void modioPrioritizeModDownload(u32 mod_id);
 void modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
-void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
+void modioSetUploadListener(void (*callback)(u32 response_code, u32 mod_id));  
 u32 modioGetModDownloadQueueSize();
-void modioGetInstalledMods(ModioInstalledMod* installed_mods);
+void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
+u32 modioGetModUploadQueueSize();
+void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
 u32 modioGetInstalledModsSize();
+void modioGetInstalledMods(ModioInstalledMod* installed_mods);
 u32 modioGetModState(u32 mod_id);
 
 //Dependencies Methods

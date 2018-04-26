@@ -62,8 +62,7 @@ void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue)
 
 u32 modioGetModDownloadQueueSize()
 {
-  json mod_download_queue_json = modio::openJson(modio::getModIODirectory() + "mod_download_queue.json");
-  return (u32)mod_download_queue_json.size();
+  return (u32)modio::curlwrapper::getModDownloadQueue().size();
 }
 
 void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue)
@@ -98,7 +97,7 @@ void modioGetInstalledMods(ModioInstalledMod *installed_mods)
 u32 modioGetInstalledModsSize()
 {
   json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
-  if (modio::hasKey(installed_mod_json, "mod"))
+  if (modio::hasKey(installed_mod_json, "mods"))
   {
     return (u32)installed_mod_json["mods"].size();
   }

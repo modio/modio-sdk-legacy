@@ -1,14 +1,15 @@
 #include "modio_c.h"
 
-void onModfileAdded(void *object, ModioResponse response, ModioModfile modfile)
+bool wait = true;
+
+void onModfileAdded(u32 response_code, u32 mod_id)
 {
-  bool *wait = object;
-  printf("Add Modfile Response: %i\n", response.code);
-  if (response.code == 201)
+  printf("Add Modfile Response: %i\n", response_code);
+  if (response_code == 201)
   {
     printf("Modfile added!\n");
   }
-  *wait = false;
+  wait = false;
 }
 
 int main(void)
@@ -20,8 +21,6 @@ int main(void)
     printf("You are not logged in, please login before creating a mod.\n");
     return 0;
   }
-
-  bool wait = true;
 
   // Let's start by requesting a single mod
   printf("Please enter the mod id: \n");
@@ -36,9 +35,13 @@ int main(void)
   modioSetModfileCreatorChangelog(&modfile_creator, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
   modioSetModfileCreatorActive(&modfile_creator, true);
 
-  modioAddModfile(&wait, mod_id, modfile_creator, &onModfileAdded);
+  // Just like the download listener, we can register a function to be called every time a mod us uploaded
+  modioSetUploadListener(&onModfileAdded);
 
+  // To start the modfile upload, we provide the mod id and the modfile creator object
+  modioAddModfile(mod_id, modfile_creator);
   modioFreeModfileCreator(&modfile_creator);
+  
   while (wait)
   {
     modioProcess();

@@ -83,7 +83,6 @@ void prioritizeModDownload(u32 mod_id);
 void setHeaders(std::vector<std::string> headers, CURL *curl);
 void setVerifies(CURL *curl);
 void setJsonResponseWrite(CURL *curl);
-
 }
 }
 

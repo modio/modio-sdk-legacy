@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
-include_directories(../../include)
-link_directories(../../build)
+include_directories(../../../include)
+link_directories(../../../build)
 
 file( GLOB EXAMPLE_SOURCES *.c )
 

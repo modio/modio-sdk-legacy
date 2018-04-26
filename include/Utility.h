@@ -80,6 +80,7 @@ void writeJson(std::string file_path, json json_object);
 u32 getCurrentTime();
 double getFileSize(std::string file_path);
 void createPath(std::string strPathAndFile);
+std::string replaceSubstrings(std::string str, const std::string &from, const std::string &to);
 }
 
 #endif

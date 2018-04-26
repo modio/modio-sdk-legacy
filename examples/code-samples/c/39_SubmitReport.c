@@ -46,7 +46,7 @@ int main(void)
   u32 type;
   scanf("%i", &type);
 
-  printf("Getting comments...\n");
+  printf("Submitting report...\n");
 
   // Now we finished setting up the filters we are ready to request the mods
   modioSubmitReport(&wait, resource, id, type, name, summary, &onSubmitReport);
