@@ -8,7 +8,7 @@ Before you start, please download the source at the official [Zlib website](http
 
 ## NMake
 
-By default, Zlib will be compiled on `debug` mode, usually you will want to compile it on `release` mode so you don't get some warnings every time you use it later on. To do so, edit the `min32/Makefile.msc` file by replacing the `-debug` flag with `-release` and remove all the `-Zi` flags. Once you hace done this you will be ready for building.
+By default, Zlib will be compiled on `debug` mode, usually you will want to compile it on `release` mode so you don't get a couple of warnings every time you use it later on. To do so, edit the `min32/Makefile.msc` file by replacing the `-debug` flag with `-release` and remove all the `-Zi` flags. Once you have done this you will be ready for building.
 
 In order to compile the NMake version we need to execute the `Makefile.msc` under the `win32` directory:
 
