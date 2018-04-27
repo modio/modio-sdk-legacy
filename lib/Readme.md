@@ -8,7 +8,7 @@ Before you start, please download the source at the official [Zlib website](http
 
 ## NMake
 
-By default, Zlib will be compiled on `debug` mode, usually you will want to compile it on `release` mode so you don't get some warnings every time you use it later on. To do so, edit the `min32/Makefile.msc` file by replacing the `-debug` flag with `-release` and remove all the `-Zi` flags. Once you hace done this you will be ready for building.
+By default, Zlib will be compiled on `debug` mode, usually you will want to compile it on `release` mode so you don't get a couple of warnings every time you use it later on. To do so, edit the `min32/Makefile.msc` file by replacing the `-debug` flag with `-release` and remove all the `-Zi` flags. Once you have done this you will be ready for building.
 
 In order to compile the NMake version we need to execute the `Makefile.msc` under the `win32` directory:
 
@@ -57,6 +57,8 @@ This will generate the `libcurl_a.lib` file ready to be statically linked.
 This will generate the `libcurl.a` file ready to be statically linked. Curl will depend on the following libraries: `libcrypto`, `libeay` and `libssl`. They should be part of the MinGW default lib directory. In case they are not present, you can grab them from the `MinGW/` directory.
 
 ### Building MinGW dependencies
+
+Curl depends on OpenSSL for making `https` requests. It's usually already shipped by the compilers, but it's not the case for some MinGW versions. You can download it from the [official site](https://www.openssl.org/) and build it by running the following commands.
 
 ```bash
 > perl Configure mingw --prefix=/c/openssl

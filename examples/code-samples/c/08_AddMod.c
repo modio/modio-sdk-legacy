@@ -31,7 +31,7 @@ int main(void)
   modioInitModCreator(&mod_creator);
   modioSetModCreatorLogoPath(&mod_creator, (char *)"../ModExample/logo.png");
   modioSetModCreatorName(&mod_creator, (char *)"Example Mod Test");
-  modioSetModCreatorHomepage(&mod_creator, (char *)"http://www.webpage.com");
+  modioSetModCreatorHomepageURL(&mod_creator, (char *)"http://www.webpage.com");
   modioSetModCreatorSummary(&mod_creator, (char *)"Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
   modioAddModCreatorTag(&mod_creator, (char *)"Easy");
   modioAddModCreatorTag(&mod_creator, (char *)"Medium");

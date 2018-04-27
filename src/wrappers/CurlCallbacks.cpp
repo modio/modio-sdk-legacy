@@ -12,7 +12,7 @@ void onJsonRequestFinished(CURL *curl)
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
   json response_json = modio::toJson(ongoing_call->response);
   writeLogLine("Json request Finished. Response code: " + toString(response_code), MODIO_DEBUGLEVEL_LOG);
-  if (response_code >= 400 && response_code < 500)
+  if (response_code >= 400 && response_code <= 599)
   {
     writeLogLine(response_json.dump(), MODIO_DEBUGLEVEL_ERROR);
   }

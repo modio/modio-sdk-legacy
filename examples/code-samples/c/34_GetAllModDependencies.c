@@ -27,7 +27,7 @@ int main(void)
 
 	// We request the list of dependencies by providing the Mod's id
 	printf("Getting mod all dependencies...\n");
-	modioGetAllModDependencies(wait, mod_id, &onGetAllDependencies);
+	modioGetAllModDependencies(&wait, mod_id, &onGetAllDependencies);
 
 	while (wait)
 	{

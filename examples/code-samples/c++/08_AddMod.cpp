@@ -22,7 +22,7 @@ int main(void)
   modio::ModCreator mod_creator;
   mod_creator.setLogoPath("../ModExample/logo.png");
   mod_creator.setName("Example Mod Test30");
-  mod_creator.setHomepage("http://www.webpage.com");
+  mod_creator.setHomepageURL("http://www.webpage.com");
   mod_creator.setSummary("Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
   mod_creator.addTag("Easy");
   mod_creator.addTag("Medium");

@@ -103,6 +103,7 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
   {
     setHeaders(headers, curl);
 
+    url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     setVerifies(curl);
@@ -125,6 +126,7 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
 
   if (curl)
   {
+    url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     setHeaders(headers, curl);
@@ -160,6 +162,7 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
 
   if (curl)
   {
+    url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
 
@@ -230,6 +233,7 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
   if (curl)
   {
     /* what URL that receives this POST */
+    url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     setVerifies(curl);
@@ -264,6 +268,7 @@ void deleteCall(u32 call_number, std::string url, std::vector<std::string> heade
 
   if (curl)
   {
+    url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
@@ -326,6 +331,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
   if (curl)
   {
+    url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     setHeaders(headers, curl);
@@ -367,6 +373,7 @@ void downloadMod(QueuedModDownload *queued_mod_download)
 
   if (curl)
   {
+    queued_mod_download->url = modio::replaceSubstrings(queued_mod_download->url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, queued_mod_download->url.c_str());
 
     if (progress != 0)
@@ -441,6 +448,7 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   headerlist = curl_slist_append(headerlist, buf);
   if (curl)
   {
+    url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     setVerifies(curl);

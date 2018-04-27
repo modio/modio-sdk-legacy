@@ -23,9 +23,9 @@ namespace modio
     modioSetModCreatorName(this->mod_creator, (char*)name.c_str());
   }
 
-  void ModCreator::setHomepage(const std::string& homepage)
+  void ModCreator::setHomepageURL(const std::string& homepage_url)
   {
-    modioSetModCreatorHomepage(this->mod_creator, (char*)homepage.c_str());
+    modioSetModCreatorHomepageURL(this->mod_creator, (char*)homepage_url.c_str());
   }
 
   void ModCreator::setSummary(const std::string& summary)

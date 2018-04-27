@@ -26,7 +26,7 @@ namespace modio
     u32 revenue_options;
     u32 api_access_options;
     std::string ugc_name;
-    std::string homepage;
+    std::string instructions_url;
     std::string name;
     std::string name_id;
     std::string summary;

@@ -10,7 +10,7 @@ extern "C"
     mod_creator->name_id = NULL;
     mod_creator->summary = NULL;
     mod_creator->description = NULL;
-    mod_creator->homepage = NULL;
+    mod_creator->homepage_url = NULL;
     mod_creator->metadata_blob = NULL;
     mod_creator->tags = NULL;
   }
@@ -69,13 +69,13 @@ extern "C"
     strcpy(mod_creator->description, description);
   }
 
-  void modioSetModCreatorHomepage(ModioModCreator* mod_creator, char* homepage)
+  void modioSetModCreatorHomepageURL(ModioModCreator* mod_creator, char* homepage_url)
   {
-    if(mod_creator->homepage)
-      delete[] mod_creator->homepage;
+    if(mod_creator->homepage_url)
+      delete[] mod_creator->homepage_url;
 
-    mod_creator->homepage = new char[strlen(homepage) + 1];
-    strcpy(mod_creator->homepage, homepage);
+    mod_creator->homepage_url = new char[strlen(homepage_url) + 1];
+    strcpy(mod_creator->homepage_url, homepage_url);
   }
 
   void modioSetModCreatorMetadataBlob(ModioModCreator* mod_creator, char* metadata_blob)
@@ -116,8 +116,8 @@ extern "C"
       delete[] mod_creator->logo;
     if(mod_creator->name)
       delete[] mod_creator->name;
-    if(mod_creator->homepage)
-      delete[] mod_creator->homepage;
+    if(mod_creator->homepage_url)
+      delete[] mod_creator->homepage_url;
     if(mod_creator->summary)
       delete[] mod_creator->summary;
     if(mod_creator->description)
@@ -163,8 +163,8 @@ namespace modio
     if(mod_creator->description)
       result.insert(std::pair<std::string,std::string>("description",mod_creator->description));
 
-    if(mod_creator->homepage)
-      result.insert(std::pair<std::string,std::string>("homepage",mod_creator->homepage));
+    if(mod_creator->homepage_url)
+      result.insert(std::pair<std::string,std::string>("homepage_url",mod_creator->homepage_url));
 
     if(mod_creator->metadata_blob)
       result.insert(std::pair<std::string,std::string>("metadata_blob",mod_creator->metadata_blob));

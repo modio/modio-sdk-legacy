@@ -32,12 +32,12 @@ extern "C"
     if(modio::hasKey(mod_json, "date_live"))
       mod->date_live = mod_json["date_live"];
 
-    mod->homepage = NULL;
-    if(modio::hasKey(mod_json, "homepage"))
+    mod->homepage_url = NULL;
+    if(modio::hasKey(mod_json, "homepage_url"))
     {
-      std::string homepage_str = mod_json["homepage"];
-      mod->homepage = new char[homepage_str.size() + 1];
-      strcpy(mod->homepage, homepage_str.c_str());
+      std::string homepage_url_str = mod_json["homepage_url"];
+      mod->homepage_url = new char[homepage_url_str.size() + 1];
+      strcpy(mod->homepage_url, homepage_url_str.c_str());
     }
 
     mod->name = NULL;
@@ -124,14 +124,26 @@ extern "C"
         modioInitTag(&(mod->tags_array[i]), mod_json["tags"][i]);
       }
     }
+
+    mod->metadata_kvp_array = NULL;
+    mod->metadata_kvp_array_size = 0;
+    if(modio::hasKey(mod_json, "metadata_kvp"))
+    {
+      mod->metadata_kvp_array_size = (u32)mod_json["metadata_kvp"].size();
+      mod->metadata_kvp_array = new ModioMetadataKVP[mod->metadata_kvp_array_size];
+      for(u32 i=0; i<mod->metadata_kvp_array_size; i++)
+      {
+        modioInitMetadataKVP(&(mod->metadata_kvp_array[i]), mod_json["metadata_kvp"][i]);
+      }
+    }
   }
 
   void modioFreeMod(ModioMod* mod)
   {
     if(mod)
     {
-      if(mod->homepage)
-        delete mod->homepage;
+      if(mod->homepage_url)
+        delete mod->homepage_url;
       if(mod->name)
         delete[] mod->name;
       if(mod->name_id)
@@ -157,6 +169,13 @@ extern "C"
       }
       if(mod->tags_array)
         delete[] mod->tags_array;
+
+      for(u32 i=0; i<mod->metadata_kvp_array_size; i++)
+      {
+        modioFreeMetadataKVP(&(mod->metadata_kvp_array[i]));
+      }
+      if(mod->metadata_kvp_array)
+        delete[] mod->metadata_kvp_array;
     }
   }
 }
