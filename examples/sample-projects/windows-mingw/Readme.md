@@ -16,10 +16,10 @@ Open a terminal, go to this project directory and run the `Makefile` by using th
 > mingw32-make
 ```
 
-The `MyProject.exe` binary should be generated, now add the `libmodio.dll` next to it and execute by typing:
+The `main.exe` binary should be generated, now add the `libmodio.dll` next to it and execute by typing:
 
 ```bash
-> MyProject.exe
+> main.exe
 ```
 
 You can find a detailed explanation on how to setup mod.io in the [Getting Started](https://github.com/DBolical/modioSDK/wiki/Getting-Started) guide. Once you finished setting up mod.io on your project you can complete your integration by following our [documentation](https://github.com/DBolical/modioSDK/wiki).
