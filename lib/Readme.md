@@ -58,6 +58,8 @@ This will generate the `libcurl.a` file ready to be statically linked. Curl will
 
 ### Building MinGW dependencies
 
+Curl depends on OpenSSL for making `https` requests. It's usually already shipped by the compilers, but it's not the case for some MinGW versions. You can download it from the [official site](https://www.openssl.org/) and build it by running the following commands.
+
 ```bash
 > perl Configure mingw --prefix=/c/openssl
 > make depend
