@@ -244,8 +244,8 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
     //curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
     curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
 
-    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
-    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+    //curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
 
 
     curl_multi_add_handle(curl_multi_handle, curl);
@@ -473,6 +473,12 @@ void queueModDownload(ModioMod *modio_mod)
       writeLogLine("Could not queue the mod: " + toString(modio_mod->id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
       return;
     }
+  }
+
+  if(modio_mod->modfile.download.binary_url == NULL)
+  {
+    writeLogLine("Could not queue the mod: " + toString(modio_mod->id) + ". It doesn't has a modfile.", MODIO_DEBUGLEVEL_ERROR);
+    return;
   }
 
   std::string url = modio_mod->modfile.download.binary_url;
