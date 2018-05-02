@@ -3,7 +3,7 @@ Welcome to [mod.io](https://mod.io) SDK, built using C++. It allows game develop
 
 ## Getting started
 
-If you are a game developer and want to add mod.io SDK functionality to your project visit our [documentation overview](https://github.com/DBolical/modioSDK/wiki).
+If you are a game developer and want to add mod.io SDK functionality to your project visit our [documentation overview](https://github.com/DBolical/modioSDK/wiki). We also have a generic [getting started guide](https://apps.mod.io/guides/getting-started) which covers the basics.
 
 ## Contributions Welcome
 Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://apps.mod.io) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.
