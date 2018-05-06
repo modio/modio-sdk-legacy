@@ -23,7 +23,7 @@ void onModGet(void *object, ModioResponse response, ModioMod mod)
     printf("Adding tags...\n");
 
     char **tags_array = (char **)malloc(1);
-    tags_array[0] = (char *)malloc(50);
+    tags_array[0] = (char *)malloc(100);
     strcpy(tags_array[0], "Hard\0");
 
     // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game

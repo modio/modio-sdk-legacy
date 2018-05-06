@@ -23,7 +23,7 @@ int main(void)
   scanf("%i", &mod_id);
   
   char **images_array = (char **)malloc(1);
-  images_array[0] = (char *)malloc(50);
+  images_array[0] = (char *)malloc(100);
   strcpy(images_array[0], "../ModExample/logo.png\0");
 
   printf("Getting mod...\n");

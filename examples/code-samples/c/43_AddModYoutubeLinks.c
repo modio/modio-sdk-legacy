@@ -23,7 +23,7 @@ int main(void)
   scanf("%i", &mod_id);
   
   char **youtube_links_array = (char **)malloc(1);
-  youtube_links_array[0] = (char *)malloc(50);
+  youtube_links_array[0] = (char *)malloc(100);
   strcpy(youtube_links_array[0], "https://www.youtube.com/watch?v=dQw4w9WgXcQ\0");
 
   printf("Getting mod...\n");

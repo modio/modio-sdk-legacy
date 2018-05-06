@@ -23,7 +23,7 @@ void onModGet(void *object, ModioResponse response, ModioMod mod)
     printf("Adding metadata kvp...\n");
 
     char **metadata_kvp_array = (char **)malloc(1);
-    metadata_kvp_array[0] = (char *)malloc(50);
+    metadata_kvp_array[0] = (char *)malloc(100);
     strcpy(metadata_kvp_array[0], "pistol-dmg:800\0");
 
     // We add metadata key value pairs to a mod by providing the key and the value on a string separated by a colon :

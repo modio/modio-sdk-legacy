@@ -66,9 +66,9 @@ void modioOnDeleteModImages(u32 call_number, u32 response_code, json response_js
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  add_mod_images_callbacks[call_number]->callback(add_mod_images_callbacks[call_number]->object, response);
-  delete add_mod_images_callbacks[call_number];
-  add_mod_images_callbacks.erase(call_number);
+  delete_mod_images_callbacks[call_number]->callback(delete_mod_images_callbacks[call_number]->object, response);
+  delete delete_mod_images_callbacks[call_number];
+  delete_mod_images_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
 }
@@ -79,9 +79,9 @@ void modioOnDeleteModYoutubeLinks(u32 call_number, u32 response_code, json respo
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  add_mod_youtube_links_callbacks[call_number]->callback(add_mod_youtube_links_callbacks[call_number]->object, response);
-  delete add_mod_youtube_links_callbacks[call_number];
-  add_mod_youtube_links_callbacks.erase(call_number);
+  delete_mod_youtube_links_callbacks[call_number]->callback(delete_mod_youtube_links_callbacks[call_number]->object, response);
+  delete delete_mod_youtube_links_callbacks[call_number];
+  delete_mod_youtube_links_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
 }
@@ -92,9 +92,9 @@ void modioOnDeleteModSketchfabLinks(u32 call_number, u32 response_code, json res
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  add_mod_sketchfab_links_callbacks[call_number]->callback(add_mod_sketchfab_links_callbacks[call_number]->object, response);
-  delete add_mod_sketchfab_links_callbacks[call_number];
-  add_mod_sketchfab_links_callbacks.erase(call_number);
+  delete_mod_sketchfab_links_callbacks[call_number]->callback(delete_mod_sketchfab_links_callbacks[call_number]->object, response);
+  delete delete_mod_sketchfab_links_callbacks[call_number];
+  delete_mod_sketchfab_links_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
 }

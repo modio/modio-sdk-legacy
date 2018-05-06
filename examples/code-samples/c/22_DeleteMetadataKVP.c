@@ -23,7 +23,7 @@ void onModGet(void *object, ModioResponse response, ModioMod mod)
     printf("Deleting metadata kvp...\n");
 
     char **metadata_kvp_array = (char **)malloc(1);
-    metadata_kvp_array[0] = (char *)malloc(50);
+    metadata_kvp_array[0] = (char *)malloc(100);
     strcpy(metadata_kvp_array[0], "pistol-dmg:800\0");
 
     // We delete metadata key value pairs from a mod by providing a string with the same format we added it

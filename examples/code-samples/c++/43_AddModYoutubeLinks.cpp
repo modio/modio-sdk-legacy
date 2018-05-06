@@ -25,7 +25,7 @@ int main(void)
   std::vector<std::string> youtube_links;
   youtube_links.push_back("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
-  modio_instance.addModImages(mod_id, youtube_links, [&](const modio::Response &response) {
+  modio_instance.addModYoutubeLinks(mod_id, youtube_links, [&](const modio::Response &response) {
     std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
     if (response.code == 200)

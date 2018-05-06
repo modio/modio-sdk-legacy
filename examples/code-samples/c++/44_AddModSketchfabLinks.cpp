@@ -25,7 +25,7 @@ int main(void)
   std::vector<std::string> sketchfab_links;
   sketchfab_links.push_back("https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74");
   // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
-  modio_instance.addModImages(mod_id, sketchfab_links, [&](const modio::Response &response) {
+  modio_instance.addModSketchfabLinks(mod_id, sketchfab_links, [&](const modio::Response &response) {
     std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
     if (response.code == 200)
