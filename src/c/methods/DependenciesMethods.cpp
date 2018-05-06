@@ -58,6 +58,6 @@ extern "C"
 			url += std::string("dependencies[]=") + modio::toString(dependencies_array[i]);
 		}
 
-		modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), &modioOnDeleteModDependencies);
+		modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteModDependencies);
 	}
 }

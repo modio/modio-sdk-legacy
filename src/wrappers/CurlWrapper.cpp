@@ -256,7 +256,7 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
   }
 }
 
-void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
 {
   writeLogLine(std::string("DELETE: ") + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
@@ -274,6 +274,16 @@ void deleteCall(u32 call_number, std::string url, std::vector<std::string> heade
 
     headers.push_back("Content-Type: application/x-www-form-urlencoded");
     setHeaders(headers, curl);
+
+    std::string str_data = "";
+    for (std::map<std::string, std::string>::iterator i = data.begin(); i != data.end(); i++)
+    {
+      if (i != data.begin())
+        str_data += "&";
+      str_data += (*i).first + "=" + (*i).second;
+    }
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
+
     setVerifies(curl);
     setJsonResponseWrite(curl);
 

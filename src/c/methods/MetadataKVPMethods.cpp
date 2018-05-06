@@ -60,6 +60,6 @@ extern "C"
       url += std::string("metadata[]=") + metadata_kvp_array[i];
     }
 
-    modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), &modioOnDeleteMetadataKVP);
+    modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteMetadataKVP);
   }
 }

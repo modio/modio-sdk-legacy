@@ -82,6 +82,7 @@ extern "C"
 
   void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id))
   {
+    std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     delete_mod_callbacks[call_number] = new DeleteModParams;
@@ -91,6 +92,6 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 
-    modio::curlwrapper::deleteCall(call_number, url, modio::getHeaders(), &modioOnModDeleted);
+    modio::curlwrapper::deleteCall(call_number, url, modio::getHeaders(), data, &modioOnModDeleted);
   }
 }

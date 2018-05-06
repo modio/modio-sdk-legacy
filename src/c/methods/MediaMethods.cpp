@@ -83,4 +83,61 @@ void modioAddModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_
   modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), curlform_copycontents, curlform_files, &modioOnAddModSketchfabLinks);
 }
 
+void modioDeleteModImages(void* object, u32 mod_id, char** image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
+{
+  std::map<std::string, std::string> data;
+  u32 call_number = modio::curlwrapper::getCallNumber();
+
+  delete_mod_images_callbacks[call_number] = new DeleteModImagesParams;
+  delete_mod_images_callbacks[call_number]->callback = callback;
+  delete_mod_images_callbacks[call_number]->object = object;
+
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
+
+  for(int i=0; i<image_paths_array_size; i++)
+  {
+    data["images[]"] = image_paths_array[i];
+  }
+
+  modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteModImages);
+}
+
+void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
+{
+  std::map<std::string, std::string> data;
+  u32 call_number = modio::curlwrapper::getCallNumber();
+
+  delete_mod_youtube_links_callbacks[call_number] = new DeleteModYoutubeLinksParams;
+  delete_mod_youtube_links_callbacks[call_number]->callback = callback;
+  delete_mod_youtube_links_callbacks[call_number]->object = object;
+
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
+
+  for(int i=0; i<youtube_links_array_size; i++)
+  {
+    data["youtube_links[]"] = youtube_links_array[i];
+  }
+
+  modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteModYoutubeLinks);
+}
+
+void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
+{
+  std::map<std::string, std::string> data;
+  u32 call_number = modio::curlwrapper::getCallNumber();
+
+  delete_mod_sketchfab_links_callbacks[call_number] = new DeleteModSketchfabLinksParams;
+  delete_mod_sketchfab_links_callbacks[call_number]->callback = callback;
+  delete_mod_sketchfab_links_callbacks[call_number]->object = object;
+
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
+
+  for(int i=0; i<sketchfab_links_array_size; i++)
+  {
+    data["sketchfab_links[]"] = sketchfab_links_array[i];
+  }
+
+  modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteModSketchfabLinks);
+}
+
 }
