@@ -25,6 +25,13 @@ namespace modio
     add_tags_calls[this->current_call_id] = (AddTagsCall*)add_tags_call;
 
     modioAddTags((void*)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onAddTags);
+    
+    for(int i=0; i<(int)tags.size(); i++)
+    {
+      delete[] tags_array[i];
+    }
+    delete[] tags_array;
+    
     this->current_call_id++;
   }
 
@@ -42,6 +49,12 @@ namespace modio
 
     modioDeleteTags((void*)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onDeleteTags);
 
+    for(int i=0; i<(int)tags.size(); i++)
+    {
+      delete[] tags_array[i];
+    }
+    delete[] tags_array;
+    
     this->current_call_id++;
   }
 }
