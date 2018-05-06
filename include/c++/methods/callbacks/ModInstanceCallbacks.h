@@ -23,7 +23,7 @@ namespace modio
 
   struct DeleteModCall
   {
-    const std::function<void(const modio::Response& response, u32 mod_id)> callback;
+    const std::function<void(const modio::Response& response)> callback;
   };
 
   extern std::map<u32, GetModCall*> get_mod_calls;
@@ -36,5 +36,5 @@ namespace modio
   void onGetMods(void* object, ModioResponse modio_response, ModioMod mods[], u32 mods_size);
   void onAddMod(void* object, ModioResponse modio_response, ModioMod mod);
   void onEditMod(void* object, ModioResponse modio_response, ModioMod mod);
-  void onDeleteMod(void* object, ModioResponse modio_response, u32 mod_id);
+  void onDeleteMod(void* object, ModioResponse modio_response);
 }

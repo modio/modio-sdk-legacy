@@ -86,14 +86,14 @@ namespace modio
     edit_mod_calls.erase(call_id);
   }
 
-  void onDeleteMod(void* object, ModioResponse modio_response, u32 mod_id)
+  void onDeleteMod(void* object, ModioResponse modio_response)
   {
     u32 call_id = *((u32*)object);
 
     modio::Response response;
     response.initialize(modio_response);
 
-    delete_mod_calls[call_id]->callback((const modio::Response&)response, mod_id);
+    delete_mod_calls[call_id]->callback((const modio::Response&)response);
 
     delete (u32*)object;
     delete delete_mod_calls[call_id];

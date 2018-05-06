@@ -12,7 +12,7 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback)
+  void Instance::addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response)>& callback)
   {
     char** tags_array = new char*[tags.size()];
     for(int i=0; i<(int)tags.size(); i++)
@@ -21,7 +21,7 @@ namespace modio
       strcpy(tags_array[i], (char*)tags[i].c_str());
     }
 
-    const struct AddTagsCall* add_tags_call = new AddTagsCall{tags_array, (u32)tags.size(), callback};
+    const struct AddTagsCall* add_tags_call = new AddTagsCall{callback};
     add_tags_calls[this->current_call_id] = (AddTagsCall*)add_tags_call;
 
     modioAddTags((void*)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onAddTags);
@@ -35,7 +35,7 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response, u32 mod_id)>& callback)
+  void Instance::deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response& response)>& callback)
   {
     char** tags_array = new char*[tags.size()];
     for(int i=0; i<(int)tags.size(); i++)
@@ -44,7 +44,7 @@ namespace modio
       strcpy(tags_array[i], (char*)tags[i].c_str());
     }
 
-    const struct DeleteTagsCall* delete_tags_call = new DeleteTagsCall{tags_array, (u32)tags.size(), callback};
+    const struct DeleteTagsCall* delete_tags_call = new DeleteTagsCall{callback};
     delete_tags_calls[this->current_call_id] = (DeleteTagsCall*)delete_tags_call;
 
     modioDeleteTags((void*)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onDeleteTags);

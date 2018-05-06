@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioGetTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id, ModioTag* tags_array, u32 tags_array_size))
+  void modioGetTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioTag* tags_array, u32 tags_array_size))
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags/";
 
@@ -10,13 +10,12 @@ extern "C"
 
     get_tags_callbacks[call_number] = new GetTagsParams;
     get_tags_callbacks[call_number]->callback = callback;
-    get_tags_callbacks[call_number]->mod_id = mod_id;
     get_tags_callbacks[call_number]->object = object;
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetTags);
   }
 
-  void modioAddTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response, u32 mod_id))
+  void modioAddTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
@@ -24,7 +23,6 @@ extern "C"
 
     add_tags_callbacks[call_number] = new EditTagsParams;
     add_tags_callbacks[call_number]->callback = callback;
-    add_tags_callbacks[call_number]->mod_id = mod_id;
     add_tags_callbacks[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags";
@@ -41,7 +39,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnTagsAdded);
   }
 
-  void modioDeleteTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response, u32 mod_id))
+  void modioDeleteTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
@@ -49,7 +47,6 @@ extern "C"
 
     delete_tags_callbacks[call_number] = new DeleteTagsParams;
     delete_tags_callbacks[call_number]->callback = callback;
-    delete_tags_callbacks[call_number]->mod_id = mod_id;
     delete_tags_callbacks[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags";

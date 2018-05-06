@@ -42,7 +42,7 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::deleteMod(u32 mod_id, const std::function<void(const modio::Response& response, u32 mod_id)>& callback)
+  void Instance::deleteMod(u32 mod_id, const std::function<void(const modio::Response& response)>& callback)
   {
     const struct DeleteModCall* delete_mod_call = new DeleteModCall{callback};
     delete_mod_calls[this->current_call_id] = (DeleteModCall*)delete_mod_call;

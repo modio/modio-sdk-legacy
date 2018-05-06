@@ -12,17 +12,8 @@ struct DownloadImageParams
   void (*callback)(void* object, ModioResponse response);
 };
 
-struct EditModLogoParams
-{
-  void* object;
-  u32 mod_id;
-  void (*callback)(void* object, ModioResponse response, u32 mod_id);
-};
-
 extern std::map< u32, DownloadImageParams* > download_image_callbacks;
-extern std::map< u32, EditModLogoParams* > edit_mod_logo_callbacks;
 
 void modioOnImageDownloaded(u32 call_number, u32 response_code);
-void modioOnModLogoEdited(u32 call_number, u32 response_code, json response_json);
 
 #endif

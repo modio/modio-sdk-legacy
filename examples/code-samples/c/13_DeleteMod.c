@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onModDeleted(void *object, ModioResponse response, u32 mod_id)
+void onModDeleted(void *object, ModioResponse response)
 {
   bool *wait = object;
   printf("Mod Delete response: %i\n", response.code);
