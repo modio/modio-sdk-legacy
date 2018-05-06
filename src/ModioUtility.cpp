@@ -47,18 +47,12 @@ namespace modio
     printf("On mod get response: %i\n",response.code);
     if(response.code == 200)
     {
-    printf("Endoa: %i\n",response.code);
-      
       modio::Mod mod;
       mod.initialize(modio_mod);
       modio::writeJson(mod_path_str,mod.toJson());
-    printf("Endob: %i\n",response.code);
-
     }
     if(mod_path)
       delete[] mod_path;
-    printf("Endo: %i\n",response.code);
-    
   }
 
   void onGetAllEventsPoll(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size)

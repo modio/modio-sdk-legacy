@@ -17,21 +17,12 @@ void modioOnGetMod(u32 call_number, u32 response_code, json response_json)
 
   get_mod_callbacks[call_number]->callback(get_mod_callbacks[call_number]->object, response, mod);
 
-std::cout<<"just finished A"<<std::endl;
-
   delete get_mod_callbacks[call_number];
-
-std::cout<<"just finished B"<<std::endl;
 
   get_mod_callbacks.erase(call_number);
 
-std::cout<<"just finished C"<<std::endl;
-
-
   modioFreeResponse(&response);
-std::cout<<"just finished D"<<std::endl;
   modioFreeMod(&mod);
-std::cout<<"just finished E"<<std::endl;
 }
 
 void modioOnGetMods(u32 call_number, u32 response_code, json response_json)
@@ -45,30 +36,21 @@ void modioOnGetMods(u32 call_number, u32 response_code, json response_json)
     if(!get_mods_callbacks[call_number]->is_cache)
       modio::addCallToCache(get_mods_callbacks[call_number]->url, response_json);
 
-std::cout<<"A"<<std::endl;
-
     u32 mods_size = (u32)response_json["data"].size();
     ModioMod* mods = new ModioMod[mods_size];
     for(u32 i=0; i<mods_size; i++)
     {
       modioInitMod(&mods[i], response_json["data"][i]);
     }
-std::cout<<"V"<<std::endl;
 
     get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, mods, mods_size);
     
-std::cout<<"VV"<<std::endl;
-
-
     for(u32 i=0; i<mods_size; i++)
     {
       modioFreeMod(&mods[i]);
     }
-std::cout<<"C"<<std::endl;
 
     delete[] mods;
-std::cout<<"D"<<std::endl;
-
   }else
   {
     get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, NULL, 0);
