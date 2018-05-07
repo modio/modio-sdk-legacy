@@ -476,7 +476,7 @@ void modioAddModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_arra
 void modioAddModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response));
 void modioDeleteModImages(void* object, u32 mod_id, char** image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response));
 void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response));
-void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response));
+void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response));
 
 //Ratings Methods
 void modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));

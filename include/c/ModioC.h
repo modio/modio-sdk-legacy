@@ -478,7 +478,7 @@ extern "C"
   void MODIO_DLL modioAddModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioDeleteModImages(void* object, u32 mod_id, char** image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioDeleteModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response));
-  void MODIO_DLL modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response));
 
   //Ratings Methods
   void MODIO_DLL modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));

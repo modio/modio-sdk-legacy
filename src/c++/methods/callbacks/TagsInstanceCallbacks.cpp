@@ -39,7 +39,7 @@ namespace modio
     add_tags_calls.erase(call_id);
   }
 
-  void onDeleteTags(void* object, ModioResponse modio_response, u32 mod_id)
+  void onDeleteTags(void* object, ModioResponse modio_response)
   {
     u32 call_id = *((u32*)object);
 

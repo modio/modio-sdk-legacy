@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onDeleteTags(void *object, ModioResponse response, u32 mod_id)
+void onDeleteTags(void *object, ModioResponse response)
 {
   bool *wait = object;
   printf("Delete Tags response: %i\n", response.code);

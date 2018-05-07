@@ -25,12 +25,12 @@ int main(void)
   std::vector<std::string> tags;
   tags.push_back("Hard");
 
-  // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-  modio_instance.addTags(mod_id, tags, [&](const modio::Response &response, u32 mod_id) {
+  // We delete tags by providing the selected Mod id and the tag names
+  modio_instance.deleteTags(mod_id, tags, [&](const modio::Response &response) {
     std::cout << "Add tags response: " << response.code << std::endl;
     if (response.code == 204)
     {
-      std::cout << "Tags added successfully" << std::endl;
+      std::cout << "Tags deleted successfully" << std::endl;
     }
     finish();
   });

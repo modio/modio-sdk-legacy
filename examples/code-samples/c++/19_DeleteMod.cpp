@@ -23,7 +23,7 @@ int main(void)
   std::cin >> mod_id;
 
   // We delete a mod providing the Mod id
-  modio_instance.deleteMod(mod_id, [&](const modio::Response &response, u32 mod_id) {
+  modio_instance.deleteMod(mod_id, [&](const modio::Response &response) {
     std::cout << "Mod Delete response: " << response.code << std::endl;
     if (response.code == 204)
     {
