@@ -1,12 +1,12 @@
 #include "modio_c.h"
 
-void onModDeleted(void *object, ModioResponse response, u32 mod_id)
+void onAddTags(void *object, ModioResponse response, u32 mod_id)
 {
   bool *wait = object;
-  printf("Mod Delete response: %i\n", response.code);
-  if (response.code == 204)
+  printf("Add Tags response: %i\n", response.code);
+  if (response.code == 201)
   {
-    printf("Mod deleted successfully!\n");
+    printf("Tag added successfully!\n");
   }
   *wait = false;
 }
@@ -20,10 +20,14 @@ void onModGet(void *object, ModioResponse response, ModioMod mod)
     printf("Id:\t%i\n", mod.id);
     printf("Name:\t%s\n", mod.name);
 
-    printf("Deleting mod...\n");
+    printf("Adding tags...\n");
 
-    // We delete a mod providing the Mod id
-    modioDeleteMod(wait, mod.id, &onModDeleted);
+    char **tags_array = (char **)malloc(1);
+    tags_array[0] = (char *)malloc(100);
+    strcpy(tags_array[0], "Hard\0");
+
+    // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
+    modioAddTags(wait, mod.id, (char **)tags_array, 1, &onAddTags);
   }
   else
   {

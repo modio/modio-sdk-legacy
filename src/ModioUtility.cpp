@@ -8,7 +8,6 @@ namespace modio
     char* mod_path = new char[mod_path_str.size() + 1];
     strcpy(mod_path, mod_path_str.c_str());
     modioGetMod(mod_path, mod_id, &modio::onModUpdateEvent);
-    delete[] mod_path;
   }
 
   void onGetInstalledMods(void* object, ModioResponse response, ModioMod* mods, u32 mods_size)

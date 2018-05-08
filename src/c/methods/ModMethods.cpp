@@ -80,17 +80,17 @@ extern "C"
     modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), modio::getModCreatorCurlFormCopyContentsParams(&mod_creator), modio::getModCreatorCurlFormFilesParams(&mod_creator), &modioOnModAdded);
   }
 
-  void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, u32 mod_id))
+  void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response))
   {
+    std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     delete_mod_callbacks[call_number] = new DeleteModParams;
     delete_mod_callbacks[call_number]->callback = callback;
     delete_mod_callbacks[call_number]->object = object;
-    delete_mod_callbacks[call_number]->mod_id = mod_id;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 
-    modio::curlwrapper::deleteCall(call_number, url, modio::getHeaders(), &modioOnModDeleted);
+    modio::curlwrapper::deleteCall(call_number, url, modio::getHeaders(), data, &modioOnModDeleted);
   }
 }

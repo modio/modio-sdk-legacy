@@ -8,22 +8,19 @@
 struct GetTagsParams
 {
   void* object;
-  u32 mod_id;
-  void (*callback)(void* object, ModioResponse response, u32 mod_id, ModioTag* tags_array, u32 tags_array_size);
+  void (*callback)(void* object, ModioResponse response, ModioTag* tags_array, u32 tags_array_size);
 };
 
 struct EditTagsParams
 {
   void* object;
-  u32 mod_id;
-  void (*callback)(void* object, ModioResponse response, u32 mod_id);
+  void (*callback)(void* object, ModioResponse response);
 };
 
 struct DeleteTagsParams
 {
   void* object;
-  u32 mod_id;
-  void (*callback)(void* object, ModioResponse response, u32 mod_id);
+  void (*callback)(void* object, ModioResponse response);
 };
 
 extern std::map< u32, GetTagsParams* > get_tags_callbacks;

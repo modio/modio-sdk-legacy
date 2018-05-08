@@ -26,6 +26,13 @@ namespace modio
     add_metadata_kvp_calls[this->current_call_id] = (AddMetadataKVPCall*)add_metadata_kvp_call;
 
     modioAddMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onAddMetadataKVP);
+    
+    for(int i=0; i<(int)metadata_kvp.size(); i++)
+    {
+      delete[] metadata_kvp_array[i];
+    }
+    delete[] metadata_kvp_array;
+    
     this->current_call_id++;
   }
 
@@ -43,6 +50,12 @@ namespace modio
     delete_metadata_kvp_calls[this->current_call_id] = (DeleteMetadataKVPCall*)delete_metadata_kvp_call;
 
     modioDeleteMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onDeleteMetadataKVP);
+
+    for(int i=0; i<(int)metadata_kvp.size(); i++)
+    {
+      delete[] metadata_kvp_array[i];
+    }
+    delete[] metadata_kvp_array;
 
     this->current_call_id++;
   }

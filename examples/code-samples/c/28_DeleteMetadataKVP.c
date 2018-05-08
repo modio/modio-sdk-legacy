@@ -1,12 +1,12 @@
 #include "modio_c.h"
 
-void onAddTags(void *object, ModioResponse response, u32 mod_id)
+void onDeleteMetadataKVP(void *object, ModioResponse response)
 {
   bool *wait = object;
-  printf("Add Tags response: %i\n", response.code);
+  printf("Delete Metdata KVP response: %i\n", response.code);
   if (response.code == 201)
   {
-    printf("Tag added successfully!\n");
+    printf("Metadata KVP deleted successfully!\n");
   }
   *wait = false;
 }
@@ -20,14 +20,15 @@ void onModGet(void *object, ModioResponse response, ModioMod mod)
     printf("Id:\t%i\n", mod.id);
     printf("Name:\t%s\n", mod.name);
 
-    printf("Adding tags...\n");
+    printf("Deleting metadata kvp...\n");
 
-    char **tags_array = (char **)malloc(1);
-    tags_array[0] = (char *)malloc(50);
-    strcpy(tags_array[0], "Hard\0");
+    char **metadata_kvp_array = (char **)malloc(1);
+    metadata_kvp_array[0] = (char *)malloc(100);
+    strcpy(metadata_kvp_array[0], "pistol-dmg:800\0");
 
-    // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-    modioAddTags(wait, mod.id, (char **)tags_array, 1, &onAddTags);
+    // We delete metadata key value pairs from a mod by providing a string with the same format we added it
+    // Keep in mind the value can be omited, in that case all the values with the key provided will be deleted
+    modioDeleteMetadataKVP(wait, mod.id, (char **)metadata_kvp_array, 1, &onDeleteMetadataKVP);
   }
   else
   {

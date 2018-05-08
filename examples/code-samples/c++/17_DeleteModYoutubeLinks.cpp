@@ -22,16 +22,17 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::vector<std::string> tags;
-  tags.push_back("Hard");
+  std::vector<std::string> youtube_links;
+  youtube_links.push_back("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+  // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
+  modio_instance.deleteModYoutubeLinks(mod_id, youtube_links, [&](const modio::Response &response) {
+    std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
-  // We delete tags by providing the selected Mod id and the tag names
-  modio_instance.deleteTags(mod_id, tags, [&](const modio::Response &response, u32 mod_id) {
-    std::cout << "Add tags response: " << response.code << std::endl;
-    if (response.code == 204)
+    if (response.code == 200)
     {
-      std::cout << "Tags deleted successfully" << std::endl;
+      std::cout << "Image uploaded successfully!" << std::endl;
     }
+
     finish();
   });
 

@@ -29,6 +29,7 @@
 #include "methods/callbacks/DependenciesInstanceCallbacks.h"
 #include "methods/callbacks/DownloadsInstanceCallbacks.h"
 #include "methods/callbacks/ImageInstanceCallbacks.h"
+#include "methods/callbacks/MediaInstanceCallbacks.h"
 #include "methods/callbacks/MeInstanceCallbacks.h"
 #include "methods/callbacks/MetadataKVPInstanceCallbacks.h"
 #include "methods/callbacks/ModfileInstanceCallbacks.h"
@@ -66,14 +67,22 @@ public:
 
   //Media Methods
   void downloadImage(const std::string &image_url, const std::string &path, const std::function<void(const modio::Response &)> &callback);
-  void editModLogo(u32 mod_id, const std::string &path, const std::function<void(const modio::Response &, u32 mod_id)> &callback);
 
   //Mod Methods
   void addMod(modio::ModCreator &mod_handler, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
   void getMod(u32 mod_id, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
   void getMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
   void editMod(u32 mod_id, modio::ModEditor &mod_handler, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
-  void deleteMod(u32 mod_id, const std::function<void(const modio::Response &response, u32 mod_id)> &callback);
+  void deleteMod(u32 mod_id, const std::function<void(const modio::Response &response)> &callback);
+
+  //Media Methods
+  void addModLogo(u32 mod_id, std::string logo_path, const std::function<void(const modio::Response &response)> &callback);
+  void addModImages(u32 mod_id, std::vector<std::string> image_paths, const std::function<void(const modio::Response &response)> &callback);
+  void addModYoutubeLinks(u32 mod_id, std::vector<std::string> youtube_links, const std::function<void(const modio::Response &response)> &callback);
+  void addModSketchfabLinks(u32 mod_id, std::vector<std::string> sketchfab_links, const std::function<void(const modio::Response &response)> &callback);
+  void deleteModImages(u32 mod_id, std::vector<std::string> image_paths, const std::function<void(const modio::Response &response)> &callback);
+  void deleteModYoutubeLinks(u32 mod_id, std::vector<std::string> youtube_links, const std::function<void(const modio::Response &response)> &callback);
+  void deleteModSketchfabLinks(u32 mod_id, std::vector<std::string> sketchfab_links, const std::function<void(const modio::Response &response)> &callback);
 
   //Modfile Methods
   void getModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response &response, const modio::Modfile &modfile)> &callback);
@@ -83,8 +92,8 @@ public:
 
   //Tag Methods
   void getTags(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::Tag> tags)> &callback);
-  void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response, u32 mod_id)> &callback);
-  void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response, u32 mod_id)> &callback);
+  void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback);
+  void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback);
 
   //Metadata KVP methods
   void getMetadataKVP(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp)> &callback);

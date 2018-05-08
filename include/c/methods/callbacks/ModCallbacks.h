@@ -31,8 +31,7 @@ struct AddModParams
 struct DeleteModParams
 {
   void* object;
-  u32 mod_id;
-  void (*callback)(void* object, ModioResponse response, u32 mod_id);
+  void (*callback)(void* object, ModioResponse response);
 };
 
 struct CallbackParamReturnsId

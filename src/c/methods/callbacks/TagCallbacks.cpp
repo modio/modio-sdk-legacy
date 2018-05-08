@@ -30,7 +30,7 @@ void modioOnGetTags(u32 call_number, u32 response_code, json response_json)
       modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
     }
   }
-  get_tags_callbacks[call_number]->callback(get_tags_callbacks[call_number]->object, response, get_tags_callbacks[call_number]->mod_id, tags_array, tags_array_size);
+  get_tags_callbacks[call_number]->callback(get_tags_callbacks[call_number]->object, response, tags_array, tags_array_size);
   for(u32 i=0; i<tags_array_size; i++)
   {
     modioFreeTag(&(tags_array[i]));
@@ -47,7 +47,7 @@ void modioOnTagsAdded(u32 call_number, u32 response_code, json response_json)
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  add_tags_callbacks[call_number]->callback(add_tags_callbacks[call_number]->object, response, add_tags_callbacks[call_number]->mod_id);
+  add_tags_callbacks[call_number]->callback(add_tags_callbacks[call_number]->object, response);
   delete add_tags_callbacks[call_number];
   add_tags_callbacks.erase(call_number);
 }
@@ -58,7 +58,7 @@ void modioOnTagsDeleted(u32 call_number, u32 response_code, json response_json)
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  delete_tags_callbacks[call_number]->callback(delete_tags_callbacks[call_number]->object, response, delete_tags_callbacks[call_number]->mod_id);
+  delete_tags_callbacks[call_number]->callback(delete_tags_callbacks[call_number]->object, response);
   delete delete_tags_callbacks[call_number];
   delete_tags_callbacks.erase(call_number);
 }

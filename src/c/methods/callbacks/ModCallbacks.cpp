@@ -16,7 +16,9 @@ void modioOnGetMod(u32 call_number, u32 response_code, json response_json)
   modioInitMod(&mod, response_json);
 
   get_mod_callbacks[call_number]->callback(get_mod_callbacks[call_number]->object, response, mod);
+
   delete get_mod_callbacks[call_number];
+
   get_mod_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
@@ -40,11 +42,14 @@ void modioOnGetMods(u32 call_number, u32 response_code, json response_json)
     {
       modioInitMod(&mods[i], response_json["data"][i]);
     }
+
     get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, mods, mods_size);
+    
     for(u32 i=0; i<mods_size; i++)
     {
       modioFreeMod(&mods[i]);
     }
+
     delete[] mods;
   }else
   {
@@ -75,7 +80,7 @@ void modioOnModDeleted(u32 call_number, u32 response_code, json response_json)
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  delete_mod_callbacks[call_number]->callback(delete_mod_callbacks[call_number]->object, response, delete_mod_callbacks[call_number]->mod_id);
+  delete_mod_callbacks[call_number]->callback(delete_mod_callbacks[call_number]->object, response);
   delete delete_mod_callbacks[call_number];
   delete_mod_callbacks.erase(call_number);
 }

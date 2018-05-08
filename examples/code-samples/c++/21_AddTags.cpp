@@ -22,12 +22,15 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  // We delete a mod providing the Mod id
-  modio_instance.deleteMod(mod_id, [&](const modio::Response &response, u32 mod_id) {
-    std::cout << "Mod Delete response: " << response.code << std::endl;
+  std::vector<std::string> tags;
+  tags.push_back("Hard");
+
+  // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
+  modio_instance.addTags(mod_id, tags, [&](const modio::Response &response) {
+    std::cout << "Add tags response: " << response.code << std::endl;
     if (response.code == 204)
     {
-      std::cout << "Mod delete successfully" << std::endl;
+      std::cout << "Tags added successfully" << std::endl;
     }
     finish();
   });

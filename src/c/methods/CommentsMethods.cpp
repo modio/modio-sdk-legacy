@@ -39,6 +39,6 @@ void modioDeleteModComment(void *object, u32 mod_id, u32 comment_id, void (*call
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/comments/" + modio::toString(comment_id);
 
-    modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), &modioOnDeleteModComment);
+    modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteModComment);
 }
 }

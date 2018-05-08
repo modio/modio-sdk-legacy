@@ -1,12 +1,12 @@
 #include "modio_c.h"
 
-void onDeleteMetadataKVP(void *object, ModioResponse response)
+void onAddMetadataKVP(void *object, ModioResponse response)
 {
   bool *wait = object;
-  printf("Delete Metdata KVP response: %i\n", response.code);
+  printf("Add Metdata KVP response: %i\n", response.code);
   if (response.code == 201)
   {
-    printf("Metadata KVP deleted successfully!\n");
+    printf("Metadata KVP added successfully!\n");
   }
   *wait = false;
 }
@@ -20,15 +20,14 @@ void onModGet(void *object, ModioResponse response, ModioMod mod)
     printf("Id:\t%i\n", mod.id);
     printf("Name:\t%s\n", mod.name);
 
-    printf("Deleting metadata kvp...\n");
+    printf("Adding metadata kvp...\n");
 
     char **metadata_kvp_array = (char **)malloc(1);
-    metadata_kvp_array[0] = (char *)malloc(50);
+    metadata_kvp_array[0] = (char *)malloc(100);
     strcpy(metadata_kvp_array[0], "pistol-dmg:800\0");
 
-    // We delete metadata key value pairs from a mod by providing a string with the same format we added it
-    // Keep in mind the value can be omited, in that case all the values with the key provided will be deleted
-    modioDeleteMetadataKVP(wait, mod.id, (char **)metadata_kvp_array, 1, &onDeleteMetadataKVP);
+    // We add metadata key value pairs to a mod by providing the key and the value on a string separated by a colon :
+    modioAddMetadataKVP(wait, mod.id, (char **)metadata_kvp_array, 1, &onAddMetadataKVP);
   }
   else
   {

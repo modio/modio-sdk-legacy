@@ -22,8 +22,10 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
+  std::vector<std::string> images;
+  images.push_back("example.png");
   // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
-  modio_instance.editModLogo(mod_id, "../ModExample/logo.png", [&](const modio::Response &response, u32 mod_id) {
+  modio_instance.deleteModImages(mod_id, images, [&](const modio::Response &response) {
     std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
     if (response.code == 200)

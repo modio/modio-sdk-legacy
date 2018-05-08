@@ -22,16 +22,17 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::vector<std::string> tags;
-  tags.push_back("Hard");
+  std::vector<std::string> sketchfab_links;
+  sketchfab_links.push_back("https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74");
+  // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
+  modio_instance.addModSketchfabLinks(mod_id, sketchfab_links, [&](const modio::Response &response) {
+    std::cout << "Edit Mod Logo response: " << response.code << std::endl;
 
-  // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-  modio_instance.addTags(mod_id, tags, [&](const modio::Response &response, u32 mod_id) {
-    std::cout << "Add tags response: " << response.code << std::endl;
-    if (response.code == 204)
+    if (response.code == 200)
     {
-      std::cout << "Tags added successfully" << std::endl;
+      std::cout << "Image uploaded successfully!" << std::endl;
     }
+
     finish();
   });
 
