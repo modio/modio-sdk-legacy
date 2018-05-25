@@ -12,14 +12,17 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::addMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback)
+  void Instance::addMetadataKVP(u32 mod_id, std::map<std::string, std::string> metadata_kvp, const std::function<void(const modio::Response& response)>& callback)
   {
     char** metadata_kvp_array = new char*[metadata_kvp.size()];
-    for(int i=0; i<(int)metadata_kvp.size(); i++)
+
+    u32 i = 0;
+    for(const auto &current_metadata_kvp : metadata_kvp)
     {
-      std::string metadata_kvp_parameterized = metadata_kvp[i].first + ":" + metadata_kvp[i].first;
+      std::string metadata_kvp_parameterized = current_metadata_kvp.first + ":" + current_metadata_kvp.second;
       metadata_kvp_array[i] = new char[metadata_kvp_parameterized.size() + 1];
       strcpy(metadata_kvp_array[i], (char*)metadata_kvp_parameterized.c_str());
+      i++;
     }
 
     const struct AddMetadataKVPCall* add_metadata_kvp_call = new AddMetadataKVPCall{metadata_kvp_array, (u32)metadata_kvp.size(), callback};
@@ -36,14 +39,16 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::deleteMetadataKVP(u32 mod_id, std::vector< std::pair< std::string, std::string > > metadata_kvp, const std::function<void(const modio::Response& response)>& callback)
+  void Instance::deleteMetadataKVP(u32 mod_id, std::map< std::string, std::string > metadata_kvp, const std::function<void(const modio::Response& response)>& callback)
   {
     char** metadata_kvp_array = new char*[metadata_kvp.size()];
-    for(int i=0; i<(int)metadata_kvp.size(); i++)
+    u32 i = 0;
+    for(const auto &current_metadata_kvp : metadata_kvp)
     {
-      std::string metadata_kvp_parameterized = metadata_kvp[i].first + ":" + metadata_kvp[i].first;
+      std::string metadata_kvp_parameterized = current_metadata_kvp.first + ":" + current_metadata_kvp.second;
       metadata_kvp_array[i] = new char[metadata_kvp_parameterized.size() + 1];
       strcpy(metadata_kvp_array[i], (char*)metadata_kvp_parameterized.c_str());
+      i++;
     }
 
     const struct DeleteMetadataKVPCall* delete_metadata_kvp_call = new DeleteMetadataKVPCall{metadata_kvp_array, (u32)metadata_kvp.size(), callback};

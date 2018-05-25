@@ -22,8 +22,8 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::vector<std::pair<std::string, std::string>> metadata_kvp;
-  metadata_kvp.push_back(std::pair<std::string, std::string>("pistol-dmg", "800"));
+  std::map<std::string, std::string> metadata_kvp;
+  metadata_kvp["pistol-dmg"] = "800";
 
   // We delete metadata key value pairs from a mod by providing the std::pair just like adding it
   // Keep in mind the value can be omited, in that case all the values with the key provided will be deleted
