@@ -1,9 +1,9 @@
 #include "modio_c.h"
 
-void onModEdited(void *object, ModioResponse response, ModioMod mod)
+void onEditMod(void *object, ModioResponse response, ModioMod mod)
 {
   bool *wait = object;
-  printf("Mod Edit response: %i\n", response.code);
+  printf("Edit mod response: %i\n", response.code);
   if (response.code == 200)
   {
     printf("Mod edited successfully!\n");
@@ -31,7 +31,7 @@ int main(void)
   modioSetModEditorDescription(&mod_editor, (char *)"This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   modioSetModEditorMetadataBlob(&mod_editor, (char *)"Optional updated metadata");
 
-  modioEditMod(&wait, mod_id, mod_editor, &onModEdited);
+  modioEditMod(&wait, mod_id, mod_editor, &onEditMod);
 
   modioFreeModEditor(&mod_editor);
 

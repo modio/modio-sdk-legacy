@@ -2,9 +2,9 @@
 
 bool wait = true;
 
-void onModfileAdded(u32 response_code, u32 mod_id)
+void onAddModfile(u32 response_code, u32 mod_id)
 {
-  printf("Add Modfile Response: %i\n", response_code);
+  printf("Add modfile response: %i\n", response_code);
   if (response_code == 201)
   {
     printf("Modfile added!\n");
@@ -36,7 +36,7 @@ int main(void)
   modioSetModfileCreatorActive(&modfile_creator, true);
 
   // Just like the download listener, we can register a function to be called every time a mod us uploaded
-  modioSetUploadListener(&onModfileAdded);
+  modioSetUploadListener(&onAddModfile);
 
   // To start the modfile upload, we provide the mod id and the modfile creator object
   modioAddModfile(mod_id, modfile_creator);

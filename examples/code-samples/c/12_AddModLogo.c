@@ -3,10 +3,10 @@
 void onAddModLogo(void *object, ModioResponse response)
 {
   bool *wait = object;
-  printf("Edit mod logo response: %i\n", response.code);
+  printf("Add mod logo response: %i\n", response.code);
   if (response.code == 201)
   {
-    printf("Image downloaded successfully!\n");
+    printf("Mod logo added successfully!\n");
   }
   *wait = false;
 }

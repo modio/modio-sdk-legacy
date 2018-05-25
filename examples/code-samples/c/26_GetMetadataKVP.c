@@ -15,25 +15,6 @@ void onGetMetadataKVP(void *object, ModioResponse response, ModioMetadataKVP *me
   *wait = false;
 }
 
-void onModGet(void *object, ModioResponse response, ModioMod mod)
-{
-  bool *wait = object;
-  printf("On mod get response: %i\n", response.code);
-  if (response.code == 200)
-  {
-    printf("Id:\t%i\n", mod.id);
-    printf("Name:\t%s\n", mod.name);
-
-    printf("Getting metadata kvp...\n");
-
-    // We request the list of metadata key value pairs by providing the Mod's id
-    modioGetMetadataKVP(wait, mod.id, &onGetMetadataKVP);
-  }
-  else
-  {
-    *wait = false;
-  }
-}
 
 int main(void)
 {
@@ -46,8 +27,10 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  printf("Getting mod...\n");
-  modioGetMod(&wait, mod_id, &onModGet);
+  printf("Getting metadata kvp...\n");
+
+  // We request the list of metadata key value pairs by providing the Mod's id
+  modioGetMetadataKVP(wait, mod_id, &onGetMetadataKVP);
 
   while (wait)
   {

@@ -3,10 +3,10 @@
 void onDeleteModImages(void *object, ModioResponse response)
 {
   bool *wait = object;
-  printf("Edit mod logo response: %i\n", response.code);
+  printf("Delete mod images response: %i\n", response.code);
   if (response.code == 201)
   {
-    printf("Image downloaded successfully!\n");
+    printf("Images deleted successfully!\n");
   }
   *wait = false;
 }

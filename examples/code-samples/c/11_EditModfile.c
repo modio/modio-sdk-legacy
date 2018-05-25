@@ -1,9 +1,9 @@
 #include "modio_c.h"
 
-void onModfileEdited(void *object, ModioResponse response, ModioModfile modfile)
+void onEditModfile(void *object, ModioResponse response, ModioModfile modfile)
 {
   bool *wait = object;
-  printf("Edit Mod response: %i\n", response.code);
+  printf("Edit modfile response: %i\n", response.code);
   if (response.code == 200)
   {
     printf("Mod edited successfully!\n");
@@ -11,7 +11,7 @@ void onModfileEdited(void *object, ModioResponse response, ModioModfile modfile)
   *wait = false;
 }
 
-void onModGet(void *object, ModioResponse response, ModioMod mod)
+void onGetMod(void *object, ModioResponse response, ModioMod mod)
 {
   bool *wait = object;
   printf("On mod get response: %i\n", response.code);
@@ -29,7 +29,7 @@ void onModGet(void *object, ModioResponse response, ModioMod mod)
     modioSetModfileEditorActive(&modfile_editor, false);
     modioSetModfileEditorChangelog(&modfile_editor, (char *)"Stuff was changed on this mod via the examples.");
 
-    modioEditModfile(wait, mod.id, mod.modfile.id, modfile_editor, &onModfileEdited);
+    modioEditModfile(wait, mod.id, mod.modfile.id, modfile_editor, &onEditModfile);
 
     modioFreeModfileEditor(&modfile_editor);
   }
@@ -51,7 +51,7 @@ int main(void)
   scanf("%i", &mod_id);
 
   printf("Getting mod...\n");
-  modioGetMod(&wait, mod_id, &onModGet);
+  modioGetMod(&wait, mod_id, &onGetMod);
 
   while (wait)
   {
