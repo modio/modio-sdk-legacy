@@ -30,6 +30,7 @@ int main(void)
   mod_editor.setDescription("This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   mod_editor.setMetadataBlob("Optional updated metadata");
   mod_editor.setVisible(MODIO_PUBLIC);
+  mod_creator.setMaturityOption(MODIO_MATURITY_ALCOHOL | MODIO_MATURITY_EXPLICIT);  
 
   std::cout << "Editing mod..." << std::endl;
 

@@ -29,7 +29,7 @@ int main(void)
   strcpy(metadata_kvp_array[0], "pistol-dmg:800\0");
 
   // We add metadata key value pairs to a mod by providing the key and the value on a string separated by a colon :
-  modioAddMetadataKVP(wait, mod_id, (char **)metadata_kvp_array, 1, &onAddMetadataKVP);
+  modioAddMetadataKVP(&wait, mod_id, (char **)metadata_kvp_array, 1, &onAddMetadataKVP);
 
   while (wait)
   {

@@ -6,6 +6,7 @@ namespace modio
   {
     this->id = modio_game.id;
     this->status = modio_game.status;
+    this->maturity_options = modio_game.maturity_options;
     this->date_added = modio_game.date_added;
     this->date_updated = modio_game.date_updated;
     this->presentation_option = modio_game.presentation_option;
@@ -49,6 +50,7 @@ namespace modio
 
     game_json["id"] = this->id;
     game_json["status"] = this->status;
+    game_json["maturity_options"] = this->maturity_options;
     game_json["date_added"] = this->date_added;
     game_json["date_updated"] = this->date_updated;
     game_json["presentation_option"] = this->presentation_option;

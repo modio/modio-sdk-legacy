@@ -6,6 +6,7 @@ extern "C"
   {
     mod_editor->visible = NULL;
     mod_editor->status = NULL;
+    mod_editor->maturity_option = NULL;
     mod_editor->name = NULL;
     mod_editor->name_id = NULL;
     mod_editor->summary = NULL;
@@ -112,6 +113,8 @@ extern "C"
       delete[] mod_editor->visible;
     if(mod_editor->status)
       delete[] mod_editor->status;
+    if(mod_editor->maturity_option)
+      delete[] mod_editor->maturity_option;
     if(mod_editor->name)
       delete[] mod_editor->name;
     if(mod_editor->name_id)

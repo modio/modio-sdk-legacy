@@ -8,6 +8,7 @@ namespace modio
     this->game_id = modio_mod.game_id;
     this->status = modio_mod.status;
     this->visible = modio_mod.visible;
+    this->maturity_option = modio_mod.maturity_option;
     this->date_added = modio_mod.date_added;
     this->date_updated = modio_mod.date_updated;
     this->date_live = modio_mod.date_live;
@@ -50,6 +51,7 @@ namespace modio
     mod_json["game_id"] = this->game_id;
     mod_json["status"] = this->status;
     mod_json["visible"] = this->visible;
+    mod_json["maturity_option"] = this->maturity_option;
     mod_json["date_added"] = this->date_added;
     mod_json["date_updated"] = this->date_updated;
     mod_json["date_live"] = this->date_live;

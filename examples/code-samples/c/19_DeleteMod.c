@@ -24,7 +24,7 @@ int main(void)
 
   // We delete a mod providing the Mod id
   printf("Deleting mod...\n");
-  modioDeleteMod(wait, mod_id, &onModDeleted);
+  modioDeleteMod(&wait, mod_id, &onModDeleted);
 
   while (wait)
   {

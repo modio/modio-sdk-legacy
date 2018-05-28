@@ -121,6 +121,8 @@ extern "C"
   {
     if(mod_creator->visible)
       delete[] mod_creator->visible;
+    if(mod_creator->maturity_option)
+      delete[] mod_creator->maturity_option;
     if(mod_creator->logo)
       delete[] mod_creator->logo;
     if(mod_creator->name)
@@ -159,6 +161,9 @@ namespace modio
 
     if(mod_creator->visible)
       result.insert(std::pair<std::string,std::string>("visible",mod_creator->visible));
+
+    if(mod_creator->maturity_option)
+      result.insert(std::pair<std::string,std::string>("maturity_option",mod_creator->maturity_option));
 
     if(mod_creator->name)
       result.insert(std::pair<std::string,std::string>("name",mod_creator->name));

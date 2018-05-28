@@ -12,6 +12,10 @@ extern "C"
     if(modio::hasKey(game_json, "status"))
       game->status = game_json["status"];
 
+    game->maturity_options = 0;
+    if(modio::hasKey(game_json, "maturity_options"))
+      game->maturity_options = game_json["maturity_options"];
+
     game->date_added = 0;
     if(modio::hasKey(game_json, "date_added"))
       game->date_added = game_json["date_added"];

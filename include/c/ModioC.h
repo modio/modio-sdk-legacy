@@ -85,6 +85,13 @@ typedef int i32;
 #define MODIO_MOD_STARTING_UPLOAD         10
 #define MODIO_MOD_UPLOADING               11
 
+// Maturity options
+#define MODIO_MATURITY_NONE     0
+#define MODIO_MATURITY_ALCOHOL  1
+#define MODIO_MATURITY_DRUGS    2
+#define MODIO_MATURITY_VIOLENCE 4
+#define MODIO_MATURITY_EXPLICIT 8
+
 extern "C"
 {
   typedef struct ModioListNode ModioListNode;
@@ -201,7 +208,7 @@ extern "C"
   struct ModioUser
   {
     u32 id;
-    long date_online;
+    u32 date_online;
     char* username;
     char* name_id;
     char* timezone;
@@ -222,8 +229,8 @@ extern "C"
     u32 mod_id;
     u32 virus_status;
     u32 virus_positive;
-    long date_added;
-    long date_scanned;
+    u32 date_added;
+    u32 date_scanned;
     long filesize;
     char* filename;
     char* version;
@@ -256,9 +263,9 @@ extern "C"
     u32 status;
     u32 visible;
     u32 maturity_option;
-    long date_added;
-    long date_updated;
-    long date_live;
+    u32 date_added;
+    u32 date_updated;
+    u32 date_live;
     char* homepage_url;
     char* name;
     char* name_id;
@@ -356,7 +363,7 @@ extern "C"
     u32 mod_id;
     u32 user_id;
     u32 event_type;
-    long date_added;
+    u32 date_added;
   };
 
   struct ModioGameTagOption

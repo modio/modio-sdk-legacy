@@ -37,6 +37,7 @@ int main(void)
   modioAddModCreatorTag(&mod_creator, (char *)"Medium");
   modioSetModCreatorDescription(&mod_creator, (char *)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
   modioSetModCreatorMetadataBlob(&mod_creator, (char *)"Optional metadata");
+  modioSetModCreatorMaturityOption(&mod_creator, MODIO_MATURITY_VIOLENCE | MODIO_MATURITY_ALCOHOL);
 
   printf("Adding mod...\n");
 

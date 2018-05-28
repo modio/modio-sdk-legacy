@@ -29,7 +29,7 @@ int main(void)
   strcpy(tags_array[0], "Hard\0");
 
   // We delete tags by providing the selected Mod id and the tag names
-  modioDeleteTags(wait, mod_id, (char **)tags_array, 1, &onDeleteTags);
+  modioDeleteTags(&wait, mod_id, (char **)tags_array, 1, &onDeleteTags);
 
   while (wait)
   {

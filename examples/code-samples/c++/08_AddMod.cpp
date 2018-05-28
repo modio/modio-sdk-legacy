@@ -29,6 +29,7 @@ int main(void)
   mod_creator.setDescription("This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
   mod_creator.setMetadataBlob("Optional metadata");
   mod_creator.setVisible(MODIO_PUBLIC);
+  mod_creator.setMaturityOption(MODIO_MATURITY_ALCOHOL | MODIO_MATURITY_VIOLENCE);
 
   std::cout << "Creating mod..." << std::endl;
 

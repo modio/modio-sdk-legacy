@@ -28,7 +28,7 @@ int main(void)
 
   printf("Getting tags...\n");
   // We request the list of tags by providing the Mod's id
-  modioGetTags(wait, mod_id, &onGetTags);
+  modioGetTags(&wait, mod_id, &onGetTags);
 
   while (wait)
   {

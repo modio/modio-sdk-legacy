@@ -30,6 +30,7 @@ int main(void)
   modioSetModEditorSummary(&mod_editor, (char *)"Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples. Mod updated via the SDK examples.");
   modioSetModEditorDescription(&mod_editor, (char *)"This mod description was updated via the SDK examples. This mod description was updated via the SDK examples.");
   modioSetModEditorMetadataBlob(&mod_editor, (char *)"Optional updated metadata");
+  modioSetModEditorMaturityOption(&mod_editor, MODIO_MATURITY_ALCOHOL | MODIO_MATURITY_EXPLICIT);
 
   modioEditMod(&wait, mod_id, mod_editor, &onEditMod);
 

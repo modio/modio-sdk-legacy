@@ -30,7 +30,7 @@ int main(void)
   printf("Getting metadata kvp...\n");
 
   // We request the list of metadata key value pairs by providing the Mod's id
-  modioGetMetadataKVP(wait, mod_id, &onGetMetadataKVP);
+  modioGetMetadataKVP(&wait, mod_id, &onGetMetadataKVP);
 
   while (wait)
   {

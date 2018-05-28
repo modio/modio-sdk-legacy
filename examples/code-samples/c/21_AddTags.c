@@ -29,7 +29,7 @@ int main(void)
   strcpy(tags_array[0], "Hard\0");
 
   // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-  modioAddTags(wait, mod_id, (char **)tags_array, 1, &onAddTags);
+  modioAddTags(&wait, mod_id, (char **)tags_array, 1, &onAddTags);
 
   while (wait)
   {
