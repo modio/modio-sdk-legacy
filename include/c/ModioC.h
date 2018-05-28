@@ -255,6 +255,7 @@ extern "C"
     u32 game_id;
     u32 status;
     u32 visible;
+    u32 maturity_option;
     long date_added;
     long date_updated;
     long date_live;
@@ -324,6 +325,7 @@ extern "C"
   struct ModioModCreator
   {
     char* visible;
+    char* maturity_option;
     char* logo;
     char* name;
     char* name_id;
@@ -338,6 +340,7 @@ extern "C"
   {
     char* visible;
     char* status;
+    char* maturity_option;
     char* name;
     char* name_id;
     char* summary;
@@ -378,6 +381,7 @@ extern "C"
     u32 curation_option;
     u32 revenue_options;
     u32 api_access_options;
+    u32 maturity_options;
     char* ugc_name;
     char* instructions_url;
     char* name;
@@ -535,6 +539,7 @@ extern "C"
   //Mod Creator Methods
   void MODIO_DLL modioInitModCreator(ModioModCreator* mod_creator);
   void MODIO_DLL modioSetModCreatorVisible(ModioModCreator* mod_creator, u32 visible);
+  void MODIO_DLL modioSetModCreatorMaturityOption(ModioModCreator* mod_creator, u32 maturity_option);
   void MODIO_DLL modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char* logo_path);
   void MODIO_DLL modioSetModCreatorName(ModioModCreator* mod_creator, char* name);
   void MODIO_DLL modioSetModCreatorNameid(ModioModCreator* mod_creator, char* name_id);
@@ -549,6 +554,7 @@ extern "C"
   void MODIO_DLL modioInitModEditor(ModioModEditor* update_mod_handler);
   void MODIO_DLL modioSetModEditorVisible(ModioModEditor* update_mod_handler, u32 visible);
   void MODIO_DLL modioSetModEditorStatus(ModioModEditor* update_mod_handler, u32 status);
+  void MODIO_DLL modioSetModEditorMaturityOption(ModioModEditor* mod_editor, u32 maturity_option);
   void MODIO_DLL modioSetModEditorName(ModioModEditor* update_mod_handler, char* name);
   void MODIO_DLL modioSetModEditorNameid(ModioModEditor* update_mod_handler, char* name_id);
   void MODIO_DLL modioSetModEditorSummary(ModioModEditor* update_mod_handler, char* summary);

@@ -34,6 +34,15 @@ extern "C"
     strcpy(mod_editor->status, modio::toString(status).c_str());
   }
 
+  void modioSetModEditorMaturityOption(ModioModEditor* mod_editor, u32 maturity_option)
+  {
+    if(mod_editor->maturity_option)
+      delete[] mod_editor->maturity_option;
+
+    mod_editor->maturity_option = new char[modio::toString(maturity_option).size() + 1];
+    strcpy(mod_editor->maturity_option, modio::toString(maturity_option).c_str());
+  }
+
   void modioSetModEditorName(ModioModEditor* mod_editor, char* name)
   {
     if(mod_editor->name)

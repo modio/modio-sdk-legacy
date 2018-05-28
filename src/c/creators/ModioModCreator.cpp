@@ -18,10 +18,19 @@ extern "C"
   void modioSetModCreatorVisible(ModioModCreator* mod_creator, u32 visible)
   {
     if(mod_creator->visible)
-    delete[] mod_creator->visible;
+      delete[] mod_creator->visible;
 
     mod_creator->visible = new char[modio::toString(visible).size() + 1];
     strcpy(mod_creator->visible, modio::toString(visible).c_str());
+  }
+
+  void modioSetModCreatorMaturityOption(ModioModCreator* mod_creator, u32 maturity_option)
+  {
+    if(mod_creator->maturity_option)
+      delete[] mod_creator->maturity_option;
+
+    mod_creator->maturity_option = new char[modio::toString(maturity_option).size() + 1];
+    strcpy(mod_creator->maturity_option, modio::toString(maturity_option).c_str());
   }
 
   void modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char* logo_path)
