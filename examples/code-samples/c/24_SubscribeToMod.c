@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onModSubscribed(void *object, ModioResponse response, ModioMod mod)
+void onSubscribeToMod(void *object, ModioResponse response, ModioMod mod)
 {
   bool *wait = object;
   printf("Subscribe to Mod Response code: %i\n", response.code);
@@ -26,7 +26,7 @@ int main(void)
   scanf("%i", &mod_id);
 
   printf("Subscribing to mod...\n");
-  modioSubscribeToMod(&wait, mod_id, &onModSubscribed);
+  modioSubscribeToMod(&wait, mod_id, &onSubscribeToMod);
 
   while (wait)
   {

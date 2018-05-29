@@ -16,7 +16,7 @@ int main(void)
 
       if (mod_download_queue.size() > 0)
       {
-        // We can track download progress by looking into the mod download queue      
+        // We can track download progress by looking into the mod download queue
         modio::QueuedModDownload *current_download = *(mod_download_queue.begin());
         double current_progress = current_download->current_progress;
         double total_size = current_download->total_size;

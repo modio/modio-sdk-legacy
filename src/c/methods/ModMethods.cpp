@@ -76,8 +76,8 @@ extern "C"
     add_mod_callback[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
-
     modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), modio::getModCreatorCurlFormCopyContentsParams(&mod_creator), modio::getModCreatorCurlFormFilesParams(&mod_creator), &modioOnModAdded);
+
   }
 
   void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response))

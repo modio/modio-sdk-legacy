@@ -13,6 +13,11 @@ namespace modio
     modioSetModCreatorVisible(this->mod_creator, visible);
   }
 
+  void ModCreator::setMaturityOption(u32 maturity_option)
+  {
+    modioSetModCreatorMaturityOption(this->mod_creator, maturity_option);
+  }
+
   void ModCreator::setLogoPath(const std::string& path)
   {
     modioSetModCreatorLogoPath(this->mod_creator, (char*)path.c_str());

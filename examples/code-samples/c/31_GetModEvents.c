@@ -1,36 +1,36 @@
 #include "modio_c.h"
 #include <time.h>
 
-void onGetUserEvents(void *object, ModioResponse response, ModioEvent *events_array, u32 events_array_size)
+void onGetEvents(void *object, ModioResponse response, ModioEvent *events_array, u32 events_array_size)
 {
   bool *wait = object;
-  printf("On get user events response: %i\n", response.code);
+  printf("On get mod events response: %i\n", response.code);
 
-  // Just like the mod events, it returns an array of events
+  // Just like the event listener, it returns an array of events
   for (u32 i = 0; i < events_array_size; i++)
   {
     printf("Event found!\n");
     printf("Id: %i\n", (int)events_array[i].id);
     printf("Mod id: %i\n", (int)events_array[i].mod_id);
     printf("User id: %i\n", (int)events_array[i].user_id);
-    printf("Date added: %s\n", (char *)ctime(&events_array[i].date_added));
+    printf("Date added: %s\n", (char *)ctime((const time_t *)&events_array[i].date_added));
     printf("Event type: ");
     switch (events_array[i].event_type)
     {
     case MODIO_EVENT_UNDEFINED:
       printf("Undefined\n");
       break;
-    case MODIO_EVENT_USER_TEAM_JOIN:
-      printf("User has joined a team.\n");
+    case MODIO_EVENT_MODFILE_CHANGED:
+      printf("Modfile changed\n");
       break;
-    case MODIO_EVENT_USER_TEAM_LEAVE:
-      printf("User has left a team.\n");
+    case MODIO_EVENT_MOD_AVAILABLE:
+      printf("Mod available\n");
       break;
-    case MODIO_EVENT_USER_SUBSCRIBE:
-      printf("User has subscribed to a mod.\n");
+    case MODIO_EVENT_MOD_UNAVAILABLE:
+      printf("Mod unavailable\n");
       break;
-    case MODIO_EVENT_USER_UNSUBSCRIBE:
-      printf("User has un-subscribed from a mod.\n");
+    case MODIO_EVENT_MOD_EDITED:
+      printf("Mod edited\n");
       break;
     }
     printf("\n");
@@ -56,10 +56,14 @@ int main(void)
   modioAddFilterMinField(&filter, "date_added", "1514780160");
   modioAddFilterMaxField(&filter, "date_added", current_time_str);
 
-  printf("Getting users events...\n");
+  printf("Please enter the mod id: \n");
+  u32 mod_id;
+  scanf("%i", &mod_id);
+
+  printf("Getting mod events...\n");
 
   // Everything is setup up, let's retreive the events now
-  modioGetUserEvents(&wait, filter, &onGetUserEvents);
+  modioGetEvents(&wait, mod_id, filter, &onGetEvents);
 
   while (wait)
   {

@@ -6,6 +6,7 @@ extern "C"
   {
     mod_editor->visible = NULL;
     mod_editor->status = NULL;
+    mod_editor->maturity_option = NULL;
     mod_editor->name = NULL;
     mod_editor->name_id = NULL;
     mod_editor->summary = NULL;
@@ -32,6 +33,15 @@ extern "C"
 
     mod_editor->status = new char[modio::toString(status).size() + 1];
     strcpy(mod_editor->status, modio::toString(status).c_str());
+  }
+
+  void modioSetModEditorMaturityOption(ModioModEditor* mod_editor, u32 maturity_option)
+  {
+    if(mod_editor->maturity_option)
+      delete[] mod_editor->maturity_option;
+
+    mod_editor->maturity_option = new char[modio::toString(maturity_option).size() + 1];
+    strcpy(mod_editor->maturity_option, modio::toString(maturity_option).c_str());
   }
 
   void modioSetModEditorName(ModioModEditor* mod_editor, char* name)
@@ -103,6 +113,8 @@ extern "C"
       delete[] mod_editor->visible;
     if(mod_editor->status)
       delete[] mod_editor->status;
+    if(mod_editor->maturity_option)
+      delete[] mod_editor->maturity_option;
     if(mod_editor->name)
       delete[] mod_editor->name;
     if(mod_editor->name_id)
@@ -130,6 +142,9 @@ namespace modio
 
     if(mod_editor->visible)
       result.insert(std::pair<std::string,std::string>("visible",mod_editor->visible));
+
+    if(mod_editor->maturity_option)
+      result.insert(std::pair<std::string,std::string>("maturity_option",mod_editor->maturity_option));
 
     if(mod_editor->name)
       result.insert(std::pair<std::string,std::string>("name",mod_editor->name));

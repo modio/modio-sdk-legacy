@@ -18,6 +18,11 @@ namespace modio
     modioSetModEditorStatus(this->mod_editor, status);
   }
 
+  void ModEditor::setMaturityOption(u32 maturity_option)
+  {
+    modioSetModEditorMaturityOption(this->mod_editor, maturity_option);
+  }
+
   void ModEditor::setName(const std::string& name)
   {
     modioSetModEditorName(this->mod_editor, (char*)name.c_str());

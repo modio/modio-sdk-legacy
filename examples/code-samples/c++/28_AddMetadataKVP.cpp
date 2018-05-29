@@ -23,8 +23,8 @@ int main(void)
   std::cin >> mod_id;
 
   // We add metadata key value pairs to a mod by providing the key and the value contained on a std::pair
-  std::vector<std::pair<std::string, std::string>> metadata_kvp;
-  metadata_kvp.push_back(std::pair<std::string, std::string>("pistol-dmg", "800"));
+  std::map<std::string, std::string> metadata_kvp;
+  metadata_kvp["pistol-dmg"] = "800";
 
   modio_instance.addMetadataKVP(mod_id, metadata_kvp, [&](const modio::Response &response) {
     std::cout << "Add metadta kvp response: " << response.code << std::endl;

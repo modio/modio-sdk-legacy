@@ -1,12 +1,12 @@
 #include "modio_c.h"
 
-void onAddModSketchfabLinks(void *object, ModioResponse response)
+void onDeleteModSketchfabLinks(void *object, ModioResponse response)
 {
   bool *wait = object;
-  printf("Edit mod logo response: %i\n", response.code);
+  printf("Delete mod sketchfab links response: %i\n", response.code);
   if (response.code == 201)
   {
-    printf("Image downloaded successfully!\n");
+    printf("Sketchfab links deleted successfully!\n");
   }
   *wait = false;
 }
@@ -21,14 +21,14 @@ int main(void)
   printf("Please enter the mod id: \n");
   u32 mod_id;
   scanf("%i", &mod_id);
-  
+
   char **sketchfab_links_array = (char **)malloc(1);
   sketchfab_links_array[0] = (char *)malloc(100);
   strcpy(sketchfab_links_array[0], "https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74\0");
 
   printf("Getting mod...\n");
-  modioAddModSketchfabLinks(&wait, mod_id, sketchfab_links_array, 1, &onAddModSketchfabLinks);
-  
+  modioDeleteModSketchfabLinks(&wait, mod_id, sketchfab_links_array, 1, &onDeleteModSketchfabLinks);
+
   while (wait)
   {
     modioProcess();

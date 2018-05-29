@@ -1,7 +1,7 @@
 #include "modio_c.h"
 #include <time.h>
 
-void onGetEvents(void *object, ModioResponse response, ModioEvent *events_array, u32 events_array_size)
+void onGetAllEvents(void *object, ModioResponse response, ModioEvent *events_array, u32 events_array_size)
 {
   bool *wait = object;
   printf("On get mod events response: %i\n", response.code);
@@ -13,7 +13,7 @@ void onGetEvents(void *object, ModioResponse response, ModioEvent *events_array,
     printf("Id: %i\n", (int)events_array[i].id);
     printf("Mod id: %i\n", (int)events_array[i].mod_id);
     printf("User id: %i\n", (int)events_array[i].user_id);
-    printf("Date added: %s\n", (char *)ctime(&events_array[i].date_added));
+    printf("Date added: %s\n", (char *)ctime((const time_t *)&events_array[i].date_added));
     printf("Event type: ");
     switch (events_array[i].event_type)
     {
@@ -56,14 +56,10 @@ int main(void)
   modioAddFilterMinField(&filter, "date_added", "1514780160");
   modioAddFilterMaxField(&filter, "date_added", current_time_str);
 
-  printf("Please enter the mod id: \n");
-  u32 mod_id;
-  scanf("%i", &mod_id);
-
   printf("Getting mod events...\n");
 
   // Everything is setup up, let's retreive the events now
-  modioGetEvents(&wait, mod_id, filter, &onGetEvents);
+  modioGetAllEvents(&wait, filter, &onGetAllEvents);
 
   while (wait)
   {

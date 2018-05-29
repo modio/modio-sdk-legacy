@@ -1,9 +1,9 @@
 #include "modio_c.h"
 
-void onModAdded(void *object, ModioResponse response, ModioMod mod)
+void onAddMod(void *object, ModioResponse response, ModioMod mod)
 {
   bool *wait = object;
-  printf("Add Mod Response code: %i\n", response.code);
+  printf("Add mod response code: %i\n", response.code);
 
   if (response.code == 201)
   {
@@ -37,11 +37,12 @@ int main(void)
   modioAddModCreatorTag(&mod_creator, (char *)"Medium");
   modioSetModCreatorDescription(&mod_creator, (char *)"This mod description was added via the SDK examples. This mod description was added via the SDK examples.");
   modioSetModCreatorMetadataBlob(&mod_creator, (char *)"Optional metadata");
+  modioSetModCreatorMaturityOption(&mod_creator, MODIO_MATURITY_VIOLENCE | MODIO_MATURITY_ALCOHOL);
 
   printf("Adding mod...\n");
 
   // Now we can create the new mod. Remember, this mod wont have a Modfile right away, you should be adding one after the mod was created successfully
-  modioAddMod(&wait, mod_creator, &onModAdded);
+  modioAddMod(&wait, mod_creator, &onAddMod);
 
   modioFreeModCreator(&mod_creator);
 

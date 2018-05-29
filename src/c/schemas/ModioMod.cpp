@@ -20,6 +20,10 @@ extern "C"
     if(modio::hasKey(mod_json, "visible"))
       mod->visible = mod_json["visible"];
 
+    mod->maturity_option = 0;
+    if(modio::hasKey(mod_json, "maturity_option"))
+      mod->maturity_option = mod_json["maturity_option"];
+
     mod->date_added = -1;
     if(modio::hasKey(mod_json, "date_added"))
       mod->date_added = mod_json["date_added"];

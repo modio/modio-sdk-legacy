@@ -2,9 +2,9 @@
 
 bool wait = true;
 
-void onModInstalled(u32 response_code, u32 mod_id)
+void onInstallMod(u32 response_code, u32 mod_id)
 {
-  printf("Install Mod response: %i\n", response_code);
+  printf("Install mod response: %i\n", response_code);
   if (response_code == 200)
   {
     printf("Mod installed successfully!\n");
@@ -24,7 +24,7 @@ int main(void)
   printf("Installing modfile...\n");
 
   // In order to know when a mod has been downloaded we can register a function as a listener
-  modioSetDownloadListener(&onModInstalled);    
+  modioSetDownloadListener(&onInstallMod);
   // To download the mod we only have to provide it's id
   modioInstallMod(mod_id);
 
@@ -32,28 +32,28 @@ int main(void)
   {
     // While a mod is being downloaded, we can track it's progress by using the mod download queue related functions
     u32 queue_size = modioGetModDownloadQueueSize();
-		if (queue_size != 0)
-		{
-			// The download queue contains all the information about the current downloads
-			ModioQueuedModDownload *download_queue = malloc(queue_size * sizeof(*download_queue));
-			modioGetModDownloadQueue(download_queue);
+    if (queue_size != 0)
+    {
+      // The download queue contains all the information about the current downloads
+      ModioQueuedModDownload *download_queue = malloc(queue_size * sizeof(*download_queue));
+      modioGetModDownloadQueue(download_queue);
 
-			printf("\n");
-			printf("Download queue:\n");
-			printf("===============\n");
+      printf("\n");
+      printf("Download queue:\n");
+      printf("===============\n");
 
-			for (u32 i = 0; i < queue_size; i++)
-			{
-				ModioQueuedModDownload *queued_mod_download = &(download_queue[i]);
-				printf("Name: %s\n", queued_mod_download->mod.name);
-				printf("Id: %d\n", queued_mod_download->mod.id);
-				double current_progress = queued_mod_download->current_progress;
-				double total_size = queued_mod_download->total_size;
-				printf("Download progress: %f%%\n", (current_progress / total_size) * 100.0);
-				printf("\n");
-			}
+      for (u32 i = 0; i < queue_size; i++)
+      {
+        ModioQueuedModDownload *queued_mod_download = &(download_queue[i]);
+        printf("Name: %s\n", queued_mod_download->mod.name);
+        printf("Id: %d\n", queued_mod_download->mod.id);
+        double current_progress = queued_mod_download->current_progress;
+        double total_size = queued_mod_download->total_size;
+        printf("Download progress: %f%%\n", (current_progress / total_size) * 100.0);
+        printf("\n");
+      }
     }
-    
+
     modioProcess();
     modioSleep(10);
   }
