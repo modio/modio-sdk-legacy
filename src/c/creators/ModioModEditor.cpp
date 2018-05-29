@@ -143,6 +143,9 @@ namespace modio
     if(mod_editor->visible)
       result.insert(std::pair<std::string,std::string>("visible",mod_editor->visible));
 
+    if(mod_editor->maturity_option)
+      result.insert(std::pair<std::string,std::string>("maturity_option",mod_editor->maturity_option));
+
     if(mod_editor->name)
       result.insert(std::pair<std::string,std::string>("name",mod_editor->name));
 

@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onAddTags(void *object, ModioResponse response, u32 mod_id)
+void onAddTags(void *object, ModioResponse response)
 {
   bool *wait = object;
   printf("Add tags response: %i\n", response.code);

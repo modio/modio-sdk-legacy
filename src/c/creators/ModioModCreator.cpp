@@ -5,6 +5,7 @@ extern "C"
   void modioInitModCreator(ModioModCreator* mod_creator)
   {
     mod_creator->visible = NULL;
+    mod_creator->maturity_option = NULL;
     mod_creator->logo = NULL;
     mod_creator->name = NULL;
     mod_creator->name_id = NULL;

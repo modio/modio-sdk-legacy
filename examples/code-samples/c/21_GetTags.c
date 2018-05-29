@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onGetTags(void *object, ModioResponse response, u32 mod_id, ModioTag *tags_array, u32 tags_array_size)
+void onGetTags(void *object, ModioResponse response, ModioTag *tags_array, u32 tags_array_size)
 {
   bool *wait = object;
   printf("Get Tags response: %i\n", response.code);

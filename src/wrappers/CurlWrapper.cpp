@@ -210,7 +210,6 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
        i != curlform_copycontents.end();
        i++)
   {
-    std::cout<<(*i).first.c_str()<<","<<(*i).second.c_str()<<std::endl;
     curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
                  CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
   }
