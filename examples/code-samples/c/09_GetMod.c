@@ -11,8 +11,8 @@ void onGetMod(void *object, ModioResponse response, ModioMod mod)
     printf("Homapage url: %s\n", mod.homepage_url);
     printf("Summary: %s\n", mod.summary);
     printf("Tags:\n");
-    for(int i = 0; i < mod.tags_array_size; i++)
-      printf("* %s\n", mod.tags_array[i].name);      
+    for (int i = 0; i < mod.tags_array_size; i++)
+      printf("* %s\n", mod.tags_array[i].name);
     printf("Description: %s\n", mod.description);
     printf("Metadata blob: %s\n", mod.metadata_blob);
     printf("Visible: %i\n", mod.visible);
@@ -29,7 +29,7 @@ int main(void)
 
   bool wait = true;
 
-  // Let's start by requesting a single mod
+  // We request a single mod by providing it's id
   printf("Please enter the mod id: \n");
   u32 mod_id;
   scanf("%i", &mod_id);

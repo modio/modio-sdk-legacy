@@ -41,7 +41,7 @@ int main(void)
   // To start the modfile upload, we provide the mod id and the modfile creator object
   modioAddModfile(mod_id, modfile_creator);
   modioFreeModfileCreator(&modfile_creator);
-  
+
   while (wait)
   {
     modioProcess();

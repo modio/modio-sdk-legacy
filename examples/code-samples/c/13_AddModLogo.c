@@ -24,7 +24,7 @@ int main(void)
 
   printf("Getting mod...\n");
   modioAddModLogo(&wait, mod_id, (char *)"../ModExample/logo.png", &onAddModLogo);
-  
+
   while (wait)
   {
     modioProcess();

@@ -13,7 +13,7 @@ void onGetAllEvents(void *object, ModioResponse response, ModioEvent *events_arr
     printf("Id: %i\n", (int)events_array[i].id);
     printf("Mod id: %i\n", (int)events_array[i].mod_id);
     printf("User id: %i\n", (int)events_array[i].user_id);
-    printf("Date added: %s\n", (char *)ctime((const time_t*)&events_array[i].date_added));
+    printf("Date added: %s\n", (char *)ctime((const time_t *)&events_array[i].date_added));
     printf("Event type: ");
     switch (events_array[i].event_type)
     {

@@ -32,7 +32,7 @@ int main(void)
       std::cout << "Homepage url: " << mod.homepage_url << std::endl;
       std::cout << "Summary: " << mod.summary << std::endl;
       std::cout << "Tags: " << std::endl;
-      for(auto &tag : mod.tags)
+      for (auto &tag : mod.tags)
         std::cout << "* " << tag.name << std::endl;
       std::cout << "Description: " << mod.description << std::endl;
       std::cout << "Metadata blob: " << mod.metadata_blob << std::endl;

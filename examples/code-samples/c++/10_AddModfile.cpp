@@ -16,7 +16,7 @@ int main(void)
 
       if (modfile_upload_queue.size() > 0)
       {
-        // We can track the upload progress by looking into the mod upload queue      
+        // We can track the upload progress by looking into the mod upload queue
         modio::QueuedModfileUpload *current_upload = *(modfile_upload_queue.begin());
         double current_progress = current_upload->current_progress;
         double total_size = current_upload->total_size;
@@ -43,7 +43,7 @@ int main(void)
   std::cout << "Uploading modfile..." << std::endl;
 
   modio_instance.addModfile(mod_id, modfile_creator);
-  
+
   modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
     std::cout << "Add Modfile response: " << response_code << std::endl;
 

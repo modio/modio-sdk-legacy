@@ -21,14 +21,14 @@ int main(void)
   printf("Please enter the mod id: \n");
   u32 mod_id;
   scanf("%i", &mod_id);
-  
+
   char **images_array = (char **)malloc(1);
   images_array[0] = (char *)malloc(100);
   strcpy(images_array[0], "../ModExample/logo.png\0");
 
   printf("Getting mod...\n");
   modioAddModImages(&wait, mod_id, images_array, 1, &onAddModImages);
-  
+
   while (wait)
   {
     modioProcess();
