@@ -32,6 +32,27 @@ std::string toString(double number)
   return std::to_string(number);
 }
 
+#ifdef WINDOWS
+void writeLastErrorLog(std::string error_function)
+{
+  //Get the error message, if any.
+  DWORD errorMessageID = ::GetLastError();
+  if (errorMessageID == 0)
+    return; //No error message has been recorded
+
+  LPSTR messageBuffer = nullptr;
+  size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                               NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+
+  std::string message(messageBuffer, size);
+
+  modio::writeLogLine("Error while using " + error_function + ": " + message, MODIO_DEBUGLEVEL_ERROR);
+
+  //Free the buffer.
+  LocalFree(messageBuffer);
+}
+#endif
+
 void createDirectory(std::string directory)
 {
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
@@ -44,7 +65,8 @@ void createDirectory(std::string directory)
 #endif
 
 #ifdef WINDOWS
-  CreateDirectory(directory.c_str(), NULL);
+  if (!CreateDirectory((char *)directory.c_str(), NULL))
+    writeLastErrorLog("CreateDirectory");
 #endif
 }
 
@@ -135,7 +157,6 @@ void removeFile(std::string filename)
 
 void removeEmptyDirectory(std::string path)
 {
-
 #ifdef LINUX
   if (remove(path.c_str()))
     writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
@@ -151,15 +172,82 @@ void removeEmptyDirectory(std::string path)
 #endif
 
 #ifdef WINDOWS
-  if (RemoveDirectory(path.c_str()))
-    writeLogLine("File removed " + path, MODIO_DEBUGLEVEL_LOG);
-  else
-    writeLogLine("Could not remove file " + path, MODIO_DEBUGLEVEL_ERROR);
+  if (!RemoveDirectory(path.c_str()))
+    writeLastErrorLog("RemoveDirectory");
 #endif
 }
 
+#ifdef WINDOWS
+int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
+{
+  HANDLE hFile;                    // Handle to directory
+  std::string strFilePath;         // Filepath
+  std::string strPattern;          // Pattern
+  WIN32_FIND_DATA FileInformation; // File information
+
+  strPattern = refcstrRootDirectory + "\\*.*";
+  hFile = ::FindFirstFile(strPattern.c_str(), &FileInformation);
+  if (hFile != INVALID_HANDLE_VALUE)
+  {
+    do
+    {
+      if (FileInformation.cFileName[0] != '.')
+      {
+        strFilePath.erase();
+        strFilePath = refcstrRootDirectory + "\\" + FileInformation.cFileName;
+
+        if (FileInformation.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
+          // Delete subdirectory
+          int iRC = deleteDirectoryWindows(strFilePath);
+          if (iRC)
+            return iRC;
+        }
+        else
+        {
+          // Set file attributes
+          if (::SetFileAttributes(strFilePath.c_str(),
+                                  FILE_ATTRIBUTE_NORMAL) == FALSE)
+            return ::GetLastError();
+
+          // Delete file
+          if (::DeleteFile(strFilePath.c_str()) == FALSE)
+            return ::GetLastError();
+        }
+      }
+    } while (::FindNextFile(hFile, &FileInformation) == TRUE);
+
+    // Close handle
+    ::FindClose(hFile);
+
+    DWORD dwError = ::GetLastError();
+    if (dwError != ERROR_NO_MORE_FILES)
+      return dwError;
+    else
+    {
+      // Set directory attributes
+      if (::SetFileAttributes(refcstrRootDirectory.c_str(),
+                              FILE_ATTRIBUTE_NORMAL) == FALSE)
+        return ::GetLastError();
+
+      // Delete directory
+      if (::RemoveDirectory(refcstrRootDirectory.c_str()) == FALSE)
+        return ::GetLastError();
+    }
+  }
+  return 0;
+}
+#endif
+
 bool removeDirectory(std::string directory_name)
 {
+  #ifdef WINDOWS
+    int error_code = deleteDirectoryWindows(directory_name);
+    if(error_code != 0)
+      modio::writeLogLine("Could not remove directory, error code: " + modio::toString(error_code), MODIO_DEBUGLEVEL_ERROR);
+    return error_code == 0;
+  #endif
+
   DIR *dir;
   struct dirent *entry;
   char path[PATH_MAX];
@@ -284,9 +372,9 @@ void createPath(std::string path)
 
 std::string replaceSubstrings(std::string str, const std::string &from, const std::string &to)
 {
-  if(from == "")
+  if (from == "")
     return str;
-  
+
   size_t start_pos = 0;
   while ((start_pos = str.find(from, start_pos)) != std::string::npos)
   {
@@ -295,4 +383,4 @@ std::string replaceSubstrings(std::string str, const std::string &from, const st
   }
   return str;
 }
-}
+} // namespace modio
