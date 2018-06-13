@@ -121,23 +121,6 @@ void updateInstalledModsJson()
   modio::writeJson(modio::getModIODirectory() + "installed_mods.json", resulting_json);
 }
 
-void checkForInstalledModsUpdates()
-{
-  ModioFilterCreator filter;
-  modioInitFilter(&filter);
-  u32 installed_mods_size = modioGetInstalledModsSize();
-  ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
-  modioGetInstalledMods(modio_installed_mods);
-
-  for (u32 i = 0; i < (u32)installed_mods_size; i++)
-  {
-    modioAddFilterInField(&filter, (char*)"id", (char*)modio::toString(modio_installed_mods[i].mod_id).c_str());
-  }
-  modioGetMods(NULL, filter, &onGetInstalledMods);
-
-  delete[] modio_installed_mods;
-}
-
 std::string getInstalledModPath(u32 mod_id)
 {
   json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");

@@ -503,7 +503,7 @@ void queueModDownload(ModioMod *modio_mod)
   queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(modio_mod->id) + "_modfile.zip";
   mod_download_queue.push_back(queued_mod_download);
 
-  //updateModDownloadQueueFile();
+  updateModDownloadQueueFile();
 
   writeLogLine("Download queued. Mod id: " + toString(modio_mod->id) + " Url: " + url, MODIO_DEBUGLEVEL_LOG);
 
