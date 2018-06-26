@@ -14,7 +14,7 @@ void onGetInstalledMods(void *object, ModioResponse response, ModioMod *mods, u3
 {
   if (response.code == 200)
   {
-    u32 installed_mods_size = modioGetInstalledModsSize();
+    u32 installed_mods_size = modioGetInstalledModsCount();
     ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
     modioGetInstalledMods(modio_installed_mods);
     for (u32 i = 0; i < mods_size; i++)
@@ -165,7 +165,7 @@ void pollEvents()
 {
   u32 current_time = modio::getCurrentTime();
 
-  if (modioGetInstalledModsSize() > 0 && current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+  if (modioGetInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
   {
     modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
 
@@ -173,7 +173,7 @@ void pollEvents()
     modioInitFilter(&filter);
     modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
     modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
-    u32 installed_mods_size = modioGetInstalledModsSize();
+    u32 installed_mods_size = modioGetInstalledModsCount();
     ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
     modioGetInstalledMods(modio_installed_mods);
     for (u32 i = 0; i < (u32)installed_mods_size; i++)

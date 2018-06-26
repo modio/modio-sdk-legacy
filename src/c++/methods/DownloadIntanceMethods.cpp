@@ -41,7 +41,7 @@ namespace modio
   {
 	  std::vector<modio::InstalledMod> installed_mods;
 
-	  u32 installed_mods_size = modioGetInstalledModsSize();
+	  u32 installed_mods_size = modioGetInstalledModsCount();
 	  ModioInstalledMod* modio_installed_mods = new ModioInstalledMod[installed_mods_size];
     modioGetInstalledMods(modio_installed_mods);
     

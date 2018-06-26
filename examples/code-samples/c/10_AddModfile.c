@@ -44,7 +44,31 @@ int main(void)
 
   while (wait)
   {
+    // While a mod is being uploaded, we can track it's progress by using the mod upload queue related functions
+    u32 queue_size = modioGetModUploadQueueCount();
+    if (queue_size != 0)
+    {
+      // The upload queue contains all the information about the current uploads
+      ModioQueuedModfileUpload *upload_queue = malloc(queue_size * sizeof(*upload_queue));
+      modioGetModfileUploadQueue(upload_queue);
+
+      printf("\n");
+      printf("Upload queue:\n");
+      printf("===============\n");
+
+      for (u32 i = 0; i < queue_size; i++)
+      {
+        ModioQueuedModfileUpload *queued_mod_upload = &(upload_queue[i]);
+        printf("Id: %d\n", queued_mod_upload->mod_id);
+        double current_progress = queued_mod_upload->current_progress;
+        double total_size = queued_mod_upload->total_size;
+        printf("Upload progress: %f%%\n", (current_progress / total_size) * 100.0);
+        printf("\n");
+      }
+    }
+
     modioProcess();
+    modioSleep(10);
   }
 
   modioShutdown();

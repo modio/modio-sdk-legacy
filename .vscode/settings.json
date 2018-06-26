@@ -69,6 +69,8 @@
         "cwctype": "cpp",
         "optional": "cpp",
         "string_view": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "cstdarg": "cpp",
+        "deque": "cpp"
     }
 }
