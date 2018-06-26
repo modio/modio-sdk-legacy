@@ -15,9 +15,7 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
   json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
   if(modio::hasKey(installed_mods_json,"last_user_event_poll"))
   {
-
     modio::LAST_USER_EVENT_POLL = installed_mods_json["last_user_event_poll"];
-    modio::writeLogLine("Testii." + modio::toString(modio::LAST_USER_EVENT_POLL), MODIO_DEBUGLEVEL_LOG);
   }
   else
   {

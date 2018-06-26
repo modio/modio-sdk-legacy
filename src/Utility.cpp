@@ -39,7 +39,13 @@ void writeLastErrorLog(std::string error_function)
   DWORD errorMessageID = ::GetLastError();
   if (errorMessageID == 0)
     return; //No error message has been recorded
-
+  
+  if(errorMessageID == 183)
+  {
+    modio::writeLogLine("The directory already exists.", MODIO_DEBUGLEVEL_LOG);
+    return;
+  }
+  
   LPSTR messageBuffer = nullptr;
   size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                                NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
