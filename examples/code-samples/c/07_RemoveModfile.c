@@ -5,7 +5,7 @@ int main(void)
   modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
 
   // First, let's check if there is at least one mod installed
-  u32 installed_mods_count = modioGetInstalledModsSize();
+  u32 installed_mods_count = modioGetInstalledModsCount();
   if (installed_mods_count > 0)
   {
     // If that's the case, we retreive the information of all the mods installed

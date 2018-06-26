@@ -10,7 +10,7 @@ void onModInstalled(u32 response_code, u32 mod_id)
 		printf("Mod %i installed successfully!\n", mod_id);
 	}
 
-	if (modioGetModDownloadQueueSize() == 0)
+	if (modioGetModDownloadQueueCount() == 0)
 		finish = true;
 }
 
@@ -36,7 +36,7 @@ int main(void)
 
 	while (!finish)
 	{
-		u32 queue_size = modioGetModDownloadQueueSize();
+		u32 queue_size = modioGetModDownloadQueueCount();
 		if (queue_size != 0)
 		{
 			// The download queue contains all the information about the current downloads

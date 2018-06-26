@@ -81,11 +81,16 @@ namespace modio
   {
     json modfile_creator_json;
 
-    modfile_creator_json["path"] = this->modfile_creator->path;
-    modfile_creator_json["version"] = this->modfile_creator->version;
-    modfile_creator_json["changelog"] = this->modfile_creator->changelog;
-    modfile_creator_json["active"] = this->modfile_creator->active;
-    modfile_creator_json["filehash"] = this->modfile_creator->filehash;
+    if(this->modfile_creator->path)
+      modfile_creator_json["path"] = this->modfile_creator->path;
+    if(this->modfile_creator->version)
+      modfile_creator_json["version"] = this->modfile_creator->version;
+    if(this->modfile_creator->changelog)
+      modfile_creator_json["changelog"] = this->modfile_creator->changelog;
+    if(this->modfile_creator->active)
+      modfile_creator_json["active"] = this->modfile_creator->active;
+    if(this->modfile_creator->filehash)
+      modfile_creator_json["filehash"] = this->modfile_creator->filehash;
 
     return modfile_creator_json;
   }  

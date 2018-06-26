@@ -31,7 +31,7 @@ int main(void)
   while (wait)
   {
     // While a mod is being downloaded, we can track it's progress by using the mod download queue related functions
-    u32 queue_size = modioGetModDownloadQueueSize();
+    u32 queue_size = modioGetModDownloadQueueCount();
     if (queue_size != 0)
     {
       // The download queue contains all the information about the current downloads

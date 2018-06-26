@@ -594,11 +594,11 @@ void modioResumeDownloads();
 void modioPrioritizeModDownload(u32 mod_id);
 void modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
 void modioSetUploadListener(void (*callback)(u32 response_code, u32 mod_id));  
-u32 modioGetModDownloadQueueSize();
+u32 modioGetModDownloadQueueCount();
 void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
-u32 modioGetModUploadQueueSize();
+u32 modioGetModUploadQueueCount();
 void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
-u32 modioGetInstalledModsSize();
+u32 modioGetInstalledModsCount();
 void modioGetInstalledMods(ModioInstalledMod* installed_mods);
 u32 modioGetModState(u32 mod_id);
 
