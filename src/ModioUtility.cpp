@@ -178,7 +178,7 @@ void pollEvents()
     modioGetInstalledMods(modio_installed_mods);
     for (u32 i = 0; i < (u32)installed_mods_size; i++)
     {
-      modioAddFilterInField(&filter, (char *)"id", (char *)modio::toString(modio_installed_mods[i].mod_id).c_str());
+      modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString(modio_installed_mods[i].mod_id).c_str());
     }
     modioGetAllEvents(NULL, filter, &modio::onGetAllEventsPoll);
 
