@@ -45,7 +45,7 @@ int main(void)
   while (wait)
   {
     // While a mod is being uploaded, we can track it's progress by using the mod upload queue related functions
-    u32 queue_size = modioGetModUploadQueueCount();
+    u32 queue_size = modioGetModfileUploadQueueCount();
     if (queue_size != 0)
     {
       // The upload queue contains all the information about the current uploads

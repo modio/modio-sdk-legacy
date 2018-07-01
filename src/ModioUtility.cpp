@@ -151,9 +151,9 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
       }
       }
     }
-    json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
-    installed_mods_json["last_user_event_poll"] = modio::LAST_USER_EVENT_POLL;
-    modio::writeJson(modio::getModIODirectory() + "installed_mods.json", installed_mods_json);
+    json token_json = modio::openJson(modio::getModIODirectory() + "token.json");
+    token_json["last_user_event_poll"] = modio::LAST_USER_EVENT_POLL;
+    modio::writeJson(modio::getModIODirectory() + "token.json", token_json);
   }
   else
   {

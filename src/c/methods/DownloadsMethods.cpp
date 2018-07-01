@@ -76,7 +76,7 @@ void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue)
   }
 }
 
-u32 modioGetModUploadQueueCount()
+u32 modioGetModfileUploadQueueCount()
 {
   return (u32)modio::curlwrapper::getModfileUploadQueue().size();
 }

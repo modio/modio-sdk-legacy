@@ -13,14 +13,6 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
   modio::LAST_USER_EVENT_POLL = 0;
 
   json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
-  if(modio::hasKey(installed_mods_json,"last_user_event_poll"))
-  {
-    modio::LAST_USER_EVENT_POLL = installed_mods_json["last_user_event_poll"];
-  }
-  else
-  {
-    modio::writeLogLine("No user events data found, downloading from the beginning.", MODIO_DEBUGLEVEL_LOG);
-  }
   
   if(modio::hasKey(installed_mods_json,"last_mod_event_poll"))
     modio::LAST_MOD_EVENT_POLL = installed_mods_json["last_mod_event_poll"];
@@ -49,6 +41,11 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
     std::string access_token = token_file_json["access_token"];
     modio::ACCESS_TOKEN = access_token;
   }
+
+  if(modio::hasKey(token_file_json,"last_user_event_poll"))
+    modio::LAST_USER_EVENT_POLL = token_file_json["last_user_event_poll"];
+  else
+    modio::writeLogLine("No user events data found, downloading from the beginning.", MODIO_DEBUGLEVEL_LOG);
 
   modio::updateInstalledModsJson();
 

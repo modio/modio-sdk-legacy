@@ -113,8 +113,6 @@ void updateInstalledModsJson()
     }
   }
 
-  if (modio::hasKey(installed_mods_json, "last_user_event_poll"))
-    resulting_json["last_user_event_poll"] = installed_mods_json["last_user_event_poll"];
   if (modio::hasKey(installed_mods_json, "last_mod_event_poll"))
     resulting_json["last_mod_event_poll"] = installed_mods_json["last_mod_event_poll"];
 
