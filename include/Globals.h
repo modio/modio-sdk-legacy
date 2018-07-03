@@ -7,13 +7,6 @@
 
 namespace modio
 {
-  struct CurrentDownloadInfo
-  {
-    std::string url;
-    double download_total;
-    double download_progress;
-  };
-
   extern std::string API_KEY;
   extern std::string ACCESS_TOKEN;
   extern int GAME_ID;

@@ -47,7 +47,8 @@ class MODIO_DLL Instance
   int current_call_id;
 
 public:
-  Instance(u32 environment, u32 id, const std::string &guid);
+  Instance(u32 environment, u32 game_id, const std::string &api_key);
+  Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path);
 
   //General Methods
   void sleep(u32 milliseconds);

@@ -1,3 +1,6 @@
+#ifndef MODIO_MODIOUTILITY_H
+#define MODIO_MODIOUTILITY_H
+
 #include "Utility.h"
 #include "Globals.h"
 #include "c/ModioC.h"
@@ -10,3 +13,5 @@ namespace modio
   void onGetAllEventsPoll(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size);
   void pollEvents();
 }
+
+#endif

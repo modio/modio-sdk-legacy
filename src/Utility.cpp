@@ -2,6 +2,7 @@
 
 namespace modio
 {
+//String methods
 std::string toString(i32 number)
 {
   if (number == 0)
@@ -32,55 +33,29 @@ std::string toString(double number)
   return std::to_string(number);
 }
 
-#ifdef WINDOWS
-void writeLastErrorLog(std::string error_function)
+std::string replaceSubstrings(std::string str, const std::string &from, const std::string &to)
 {
-  //Get the error message, if any.
-  DWORD errorMessageID = ::GetLastError();
-  if (errorMessageID == 0)
-    return; //No error message has been recorded
-  
-  if(errorMessageID == 183)
+  if (from == "")
+    return str;
+
+  size_t start_pos = 0;
+  while ((start_pos = str.find(from, start_pos)) != std::string::npos)
   {
-    modio::writeLogLine("The directory already exists.", MODIO_DEBUGLEVEL_LOG);
-    return;
+    str.replace(start_pos, from.length(), to);
+    start_pos += to.length();
   }
-  
-  LPSTR messageBuffer = nullptr;
-  size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                               NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-
-  std::string message(messageBuffer, size);
-
-  modio::writeLogLine("Error while using " + error_function + ": " + message, MODIO_DEBUGLEVEL_ERROR);
-
-  //Free the buffer.
-  LocalFree(messageBuffer);
+  return str;
 }
-#endif
 
-void createDirectory(std::string directory)
+std::string addSlashIfNeeded(std::string directory_path)
 {
-  writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
-#ifdef LINUX
-  mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
+  if (directory_path != "" && directory_path[directory_path.size() - 1] != '/')
+    directory_path += "/";
 
-#ifdef OSX
-  mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
-
-#ifdef WINDOWS
-  if (!CreateDirectory((char *)directory.c_str(), NULL))
-    writeLastErrorLog("CreateDirectory");
-#endif
+  return directory_path;
 }
 
-void clearLog()
-{
-  std::ofstream log_file(getModIODirectory() + "log");
-  log_file.close();
-}
+// Log methods
 
 void writeLogLine(std::string text, unsigned int debug_level)
 {
@@ -106,60 +81,99 @@ void writeLogLine(std::string text, unsigned int debug_level)
   log_file.close();
 }
 
-std::vector<std::string> getFilenames(std::string directory)
+void clearLog()
 {
-  std::vector<std::string> filenames;
-  struct dirent *ent;
-  DIR *dir;
-  if (directory[directory.size() - 1] != '/')
-    directory += '/';
-
-  if ((dir = opendir(directory.c_str())) != NULL)
-  {
-    while ((ent = readdir(dir)) != NULL)
-    {
-      DIR *current_dir;
-      std::string current_file_path = directory + ent->d_name;
-      if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
-      {
-        std::vector<std::string> subdirectories_filenames = getFilenames(directory + ent->d_name);
-        for (int i = 0; i < (int)subdirectories_filenames.size(); i++)
-        {
-          filenames.push_back(std::string(ent->d_name) + "/" + subdirectories_filenames[i]);
-        }
-        closedir(current_dir);
-      }
-      else if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
-      {
-        filenames.push_back(ent->d_name);
-      }
-    }
-    closedir(dir);
-  }
-  return filenames;
+  std::ofstream log_file(getModIODirectory() + "log");
+  log_file.close();
 }
 
-std::string getModIODirectory()
+// Time methods
+
+u32 getCurrentTime()
 {
-  // TODO(@turupawn): Can we handle paths passed as C:\ rather than C:/ ?
-  //  (re: windows programmers like myself)
-  if (ROOT_PATH != "" && ROOT_PATH[ROOT_PATH.size() - 1] != '/')
-    ROOT_PATH += "/";
-  return ROOT_PATH + ".modio/";
+  return (u32)std::time(nullptr);
 }
+
+// Json methods
 
 bool hasKey(json json_object, std::string key)
 {
   return json_object.find(key) != json_object.end() && !json_object[key].is_null();
 }
 
-void removeFile(std::string filename)
+json toJson(std::string json_str)
 {
-  if (remove(filename.c_str()) != 0)
-    writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
-  else
-    writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
+  if (json_str == "")
+    return "{}"_json;
+
+  json response_json;
+  try
+  {
+    response_json = json::parse(json_str);
+  }
+  catch (json::parse_error &e)
+  {
+    writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+    response_json = "{}"_json;
+  }
+  return response_json;
 }
+
+json openJson(std::string file_path)
+{
+  std::ifstream ifs(file_path);
+  json cache_file_json;
+  if (ifs.is_open())
+  {
+    try
+    {
+      ifs >> cache_file_json;
+    }
+    catch (json::parse_error &e)
+    {
+      modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      cache_file_json = {};
+    }
+  }
+  ifs.close();
+  return cache_file_json;
+}
+
+void writeJson(std::string file_path, json json_object)
+{
+  std::ofstream ofs(file_path);
+  ofs << std::setw(4) << json_object << std::endl;
+  ofs.close();
+}
+
+// Filesystem methods
+
+#ifdef WINDOWS
+void writeLastErrorLog(std::string error_function)
+{
+  //Get the error message, if any.
+  DWORD errorMessageID = ::GetLastError();
+  if (errorMessageID == 0)
+    return; //No error message has been recorded
+
+  if (errorMessageID == 183)
+  {
+    modio::writeLogLine("The directory already exists.", MODIO_DEBUGLEVEL_LOG);
+    return;
+  }
+
+  LPSTR messageBuffer = nullptr;
+  size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                               NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+
+  std::string message(messageBuffer, size);
+
+  modio::writeLogLine("Error while using " + error_function + ": " + message, MODIO_DEBUGLEVEL_ERROR);
+
+  //Free the buffer.
+  LocalFree(messageBuffer);
+}
+#endif
 
 void removeEmptyDirectory(std::string path)
 {
@@ -245,14 +259,69 @@ int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 }
 #endif
 
+std::string getModIODirectory()
+{
+  return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
+}
+
+std::vector<std::string> getFilenames(std::string directory)
+{
+  std::vector<std::string> filenames;
+  struct dirent *ent;
+  DIR *dir;
+  if (directory[directory.size() - 1] != '/')
+    directory += '/';
+
+  if ((dir = opendir(directory.c_str())) != NULL)
+  {
+    while ((ent = readdir(dir)) != NULL)
+    {
+      DIR *current_dir;
+      std::string current_file_path = directory + ent->d_name;
+      if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
+      {
+        std::vector<std::string> subdirectories_filenames = getFilenames(directory + ent->d_name);
+        for (int i = 0; i < (int)subdirectories_filenames.size(); i++)
+        {
+          filenames.push_back(std::string(ent->d_name) + "/" + subdirectories_filenames[i]);
+        }
+        closedir(current_dir);
+      }
+      else if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
+      {
+        filenames.push_back(ent->d_name);
+      }
+    }
+    closedir(dir);
+  }
+  return filenames;
+}
+
+void createDirectory(std::string directory)
+{
+  writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
+#ifdef LINUX
+  mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+
+#ifdef OSX
+  mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
+
+#ifdef WINDOWS
+  if (!CreateDirectory((char *)directory.c_str(), NULL))
+    writeLastErrorLog("CreateDirectory");
+#endif
+}
+
 bool removeDirectory(std::string directory_name)
 {
-  #ifdef WINDOWS
-    int error_code = deleteDirectoryWindows(directory_name);
-    if(error_code != 0)
-      modio::writeLogLine("Could not remove directory, error code: " + modio::toString(error_code), MODIO_DEBUGLEVEL_ERROR);
-    return error_code == 0;
-  #endif
+#ifdef WINDOWS
+  int error_code = deleteDirectoryWindows(directory_name);
+  if (error_code != 0)
+    modio::writeLogLine("Could not remove directory, error code: " + modio::toString(error_code), MODIO_DEBUGLEVEL_ERROR);
+  return error_code == 0;
+#endif
 
   DIR *dir;
   struct dirent *entry;
@@ -288,62 +357,12 @@ bool removeDirectory(std::string directory_name)
   return true;
 }
 
-std::string addSlashIfNeeded(std::string directory_path)
+void removeFile(std::string filename)
 {
-  if (directory_path != "" && directory_path[directory_path.size() - 1] != '/')
-    directory_path += "/";
-
-  return directory_path;
-}
-
-json toJson(std::string json_str)
-{
-  if (json_str == "")
-    return "{}"_json;
-
-  json response_json;
-  try
-  {
-    response_json = json::parse(json_str);
-  }
-  catch (json::parse_error &e)
-  {
-    writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
-    response_json = "{}"_json;
-  }
-  return response_json;
-}
-
-json openJson(std::string file_path)
-{
-  std::ifstream ifs(file_path);
-  json cache_file_json;
-  if (ifs.is_open())
-  {
-    try
-    {
-      ifs >> cache_file_json;
-    }
-    catch (json::parse_error &e)
-    {
-      modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
-      cache_file_json = {};
-    }
-  }
-  ifs.close();
-  return cache_file_json;
-}
-
-void writeJson(std::string file_path, json json_object)
-{
-  std::ofstream ofs(file_path);
-  ofs << std::setw(4) << json_object << std::endl;
-  ofs.close();
-}
-
-u32 getCurrentTime()
-{
-  return (u32)std::time(nullptr);
+  if (remove(filename.c_str()) != 0)
+    writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
+  else
+    writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
 }
 
 double getFileSize(std::string file_path)
@@ -374,19 +393,5 @@ void createPath(std::string path)
     path.erase(path.begin(), path.begin() + slash_position + 1);
     createDirectory(current_path);
   }
-}
-
-std::string replaceSubstrings(std::string str, const std::string &from, const std::string &to)
-{
-  if (from == "")
-    return str;
-
-  size_t start_pos = 0;
-  while ((start_pos = str.find(from, start_pos)) != std::string::npos)
-  {
-    str.replace(start_pos, from.length(), to);
-    start_pos += to.length();
-  }
-  return str;
 }
 } // namespace modio

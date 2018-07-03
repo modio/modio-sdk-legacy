@@ -63,25 +63,34 @@ using json = nlohmann::json;
 
 namespace modio
 {
+// String methods
 std::string MODIO_DLL toString(i32 number);
 std::string MODIO_DLL toString(u32 number);
 std::string MODIO_DLL toString(double number);
-void createDirectory(std::string directory);
-void clearLog();
-void writeLogLine(std::string text, unsigned int debug_level);
-std::vector<std::string> getFilenames(std::string directory);
-std::string getModIODirectory();
-bool hasKey(json json_object, std::string key);
-void removeFile(std::string filename);
-bool removeDirectory(std::string directory_name);
+std::string replaceSubstrings(std::string str, const std::string &from, const std::string &to);
 std::string addSlashIfNeeded(std::string directory_path);
+
+// Log methods
+void writeLogLine(std::string text, unsigned int debug_level);
+void clearLog();
+
+// Time methods
+u32 getCurrentTime();
+
+// Json methods
+bool hasKey(json json_object, std::string key);
 json toJson(std::string json_str);
 json openJson(std::string file_path);
 void writeJson(std::string file_path, json json_object);
-u32 getCurrentTime();
+
+// Filesystem methods
+std::string getModIODirectory();
+std::vector<std::string> getFilenames(std::string directory);
+void createDirectory(std::string directory);
+bool removeDirectory(std::string directory_name);
+void removeFile(std::string filename);
 double getFileSize(std::string file_path);
 void createPath(std::string strPathAndFile);
-std::string replaceSubstrings(std::string str, const std::string &from, const std::string &to);
 }
 
 #endif
