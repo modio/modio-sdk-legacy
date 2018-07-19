@@ -15,7 +15,7 @@ mod.io SDK wrappers are available for the following languages and engines:
 * [Haxe wrapper](https://apps.mod.io/haxe-wrapper) for game engines such as OpenFL, Kha or awe5. Available on [Github](https://github.com/Turupawn/modioHaxe).
 * [Unreal Engine](https://apps.mod.io/unreal-engine-plugin) integration tutorial and plugin on the works.
 
-Are you creating a wrapper? [Let us know](http://discrod.mod.io)!
+Are you creating a wrapper? [Let us know](http://discord.mod.io)!
 
 ### Building instructions
 
