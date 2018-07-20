@@ -1,5 +1,5 @@
 # mod.io SDK
-Welcome to [mod.io SDK](https://apps.mod.io/sdk), built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/DBolical/modioSDK/wiki) can be viewed here.
+Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/DBolical/modioSDK/wiki) can be viewed here.
 
 ## Getting started
 
