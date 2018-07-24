@@ -26,7 +26,7 @@ void loadAuthenticationFile()
   modio::ACCESS_TOKEN = "";
   modio::LAST_USER_EVENT_POLL = 0;
 
-  json token_file_json = modio::openJson(modio::getModIODirectory() + "token.json");
+  json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
 
   if(modio::hasKey(token_file_json,"access_token"))
   {
