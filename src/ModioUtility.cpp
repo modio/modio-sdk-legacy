@@ -34,7 +34,6 @@ void onGetInstalledMods(void *object, ModioResponse response, ModioMod *mods, u3
         }
       }
     }
-
     delete[] modio_installed_mods;
   }
 }
@@ -71,9 +70,21 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
         break;
       case MODIO_EVENT_MODFILE_CHANGED:
       {
-        // TODO: Reinstall modfile
-        writeLogLine("Modfile changed. Mod id: " + modio::toString(events_array[i].mod_id) + " Reisntalling...", MODIO_DEBUGLEVEL_LOG);
-        modioInstallMod(events_array[i].mod_id);
+        bool reinstall = true;
+        ModioInstalledMod installed_mod;
+        if(modioGetInstalledModById(events_array[i].mod_id, &installed_mod))
+        {
+          if(installed_mod.mod.modfile.date_added >= events_array[i].date_added)
+          {
+            reinstall = false;
+            writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
+          }
+        }
+        if(reinstall)
+        {
+          writeLogLine("Modfile changed. Mod id: " + modio::toString(events_array[i].mod_id) + " Reisntalling...", MODIO_DEBUGLEVEL_LOG);
+          modioInstallMod(events_array[i].mod_id);
+        }
       }
       break;
       case MODIO_EVENT_MOD_AVAILABLE:
@@ -88,7 +99,6 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
       }
       case MODIO_EVENT_MOD_EDITED:
       {
-        // TODO: Update locally installed mods
         writeLogLine("Mod updated. Mod id: " + modio::toString(events_array[i].mod_id) + " Updating cache...", MODIO_DEBUGLEVEL_LOG);
         updateModCache(events_array[i].mod_id);
         break;
