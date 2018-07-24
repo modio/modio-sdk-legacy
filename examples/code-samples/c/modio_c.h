@@ -448,8 +448,7 @@ struct ModioComment
 };
 
 //General Methods
-void modioInit(u32 environment, u32 game_id, char* api_key);
-//void init(int game_id, char* api_key, char* root_path);
+void modioInit(u32 environment, u32 game_id, char* api_key, char* root_path);
 void modioShutdown();
 void modioSetDebugLevel(u32 debug_level);
 void modioProcess();

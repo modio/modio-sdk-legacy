@@ -448,8 +448,7 @@ extern "C"
   };
 
   //General Methods
-  void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key);
-  //void MODIO_DLL init(int game_id, char* api_key, char* root_path);
+  void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key, char* root_path);
   void MODIO_DLL modioShutdown();
   void MODIO_DLL modioSetDebugLevel(u32 debug_level);
   void MODIO_DLL modioProcess();
