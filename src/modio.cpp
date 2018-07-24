@@ -34,7 +34,7 @@ void modioInit(u32 environment, u32 game_id, char* api_key)
   modio::API_KEY = api_key;
   modio::ACCESS_TOKEN = "";
 
-  json token_file_json = modio::openJson(modio::getModIODirectory() + "token.json");
+  json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
 
   if(modio::hasKey(token_file_json,"access_token"))
   {
