@@ -20,6 +20,7 @@ namespace modio
   extern u32 EVENT_POLL_INTERVAL;
   extern u32 AUTOMATIC_UPDATES;
   extern u32 BACKGROUND_DOWNLOADS;
+  extern u32 RETRY_AFTER;
   extern void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size);
   extern void (*download_callback)(u32 response_code, u32 mod_id);
   extern void (*upload_callback)(u32 response_code, u32 mod_id);

@@ -138,6 +138,8 @@ void setJsonResponseWrite(CURL *curl)
 {
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetJsonData);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+  curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, &headerCallback);
+  curl_easy_setopt(curl, CURLOPT_HEADERDATA, curl);
 }
 
 }

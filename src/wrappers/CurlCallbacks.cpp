@@ -11,6 +11,13 @@ void onJsonRequestFinished(CURL *curl)
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
   json response_json = modio::toJson(ongoing_call->response);
+
+  if(ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
+  {
+    u32 x_ratelimit_retryafter = atoi((const char*)ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
+    modio::RETRY_AFTER = modio::getCurrentTime() + x_ratelimit_retryafter;
+  }
+
   writeLogLine("Json request Finished. Response code: " + toString(response_code), MODIO_DEBUGLEVEL_LOG);
   if (response_code >= 400 && response_code <= 599)
   {

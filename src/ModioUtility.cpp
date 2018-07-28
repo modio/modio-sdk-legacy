@@ -175,39 +175,46 @@ void pollEvents()
 {
   u32 current_time = modio::getCurrentTime();
 
-  if (modioGetInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+  if(current_time < modio::RETRY_AFTER)
   {
-    modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
-
-    ModioFilterCreator filter;
-    modioInitFilter(&filter);
-    modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
-    modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
-    u32 installed_mods_size = modioGetInstalledModsCount();
-    ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
-    modioGetInstalledMods(modio_installed_mods);
-    for (u32 i = 0; i < (u32)installed_mods_size; i++)
-    {
-      modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString(modio_installed_mods[i].mod_id).c_str());
-    }
-    modioGetAllEvents(NULL, filter, &modio::onGetAllEventsPoll);
-
-    modio::LAST_MOD_EVENT_POLL = current_time;
-    delete[] modio_installed_mods;
+    modio::writeLogLine("API request limit hit. Could not poll events. Rerying after " + modio::toString(RETRY_AFTER), MODIO_DEBUGLEVEL_WARNING);
   }
-
-  if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+  else
   {
-    modio::writeLogLine("Polling user events", MODIO_DEBUGLEVEL_LOG);
+    if (modioGetInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+    {
+      modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
 
-    ModioFilterCreator filter;
-    modioInitFilter(&filter);
-    modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
-    modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
+      modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
+      u32 installed_mods_size = modioGetInstalledModsCount();
+      ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
+      modioGetInstalledMods(modio_installed_mods);
+      for (u32 i = 0; i < (u32)installed_mods_size; i++)
+      {
+        modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString(modio_installed_mods[i].mod_id).c_str());
+      }
+      modioGetAllEvents(NULL, filter, &modio::onGetAllEventsPoll);
 
-    modioGetUserEvents(NULL, filter, &modio::onGetUserEventsPoll);
+      modio::LAST_MOD_EVENT_POLL = current_time;
+      delete[] modio_installed_mods;
+    }
 
-    modio::LAST_USER_EVENT_POLL = current_time;
+    if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+    {
+      modio::writeLogLine("Polling user events", MODIO_DEBUGLEVEL_LOG);
+
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
+      modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
+
+      modioGetUserEvents(NULL, filter, &modio::onGetUserEventsPoll);
+
+      modio::LAST_USER_EVENT_POLL = current_time;
+    }
   }
 }
 } // namespace modio
