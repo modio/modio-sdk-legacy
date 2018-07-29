@@ -3,15 +3,7 @@
 extern "C" {
 void modioInstallMod(u32 mod_id)
 {
-  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "?api_key=" + modio::API_KEY;
-
-  u32 call_number = modio::curlwrapper::getCallNumber();
-
-  get_install_mod_callbacks[call_number] = new GetInstallModParams;
-  get_install_mod_callbacks[call_number]->mod_id = mod_id;
-  get_install_mod_callbacks[call_number]->destination_path = modio::getModIODirectory() + "mods/" + modio::toString(mod_id);
-
-  modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
+  modio::curlwrapper::queueModDownload(mod_id);
 }
 
 bool modioUninstallMod(u32 mod_id)

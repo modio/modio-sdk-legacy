@@ -357,55 +357,122 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
   }
 }
 
-void downloadMod(QueuedModDownload *queued_mod_download)
-{
-  writeLogLine("Download started. Mod id: " + toString(queued_mod_download->mod_id) + " Url: " + queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
+std::map<u32, QueuedModDownload *> queued_mod_download_callbacks;
 
-  FILE *file;
-  curl_off_t progress = (curl_off_t)getFileSize(queued_mod_download->path);
-  if (progress != 0)
+void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
+{
+  if (response_code == 200)
   {
-    file = fopen(queued_mod_download->path.c_str(), "ab");
-    writeLogLine("Resuming download from " + toString((u32)progress), MODIO_DEBUGLEVEL_LOG);
+    ModioMod modio_mod;
+    modioInitMod(&modio_mod, response_json);
+    //TODO: Return a download listener error if mod has no modfile
+    if (modio_mod.modfile.download.binary_url == NULL)
+    {
+      modio::writeLogLine("The mod " + modio::toString(modio_mod.id) + " has no modfile to be downloaded", MODIO_DEBUGLEVEL_ERROR);
+      if (modio::download_callback)
+      {
+        modio::download_callback(404, modio_mod.id);
+      }
+      return;
+    }
+    else
+    {
+      QueuedModDownload *queued_mod_download = queued_mod_download_callbacks[call_number];
+      queued_mod_download->url = modio_mod.modfile.download.binary_url;
+
+      writeLogLine("Download started. Mod id: " + toString(queued_mod_download->mod_id) + " Url: " + queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
+
+      FILE *file;
+      curl_off_t progress = (curl_off_t)getFileSize(queued_mod_download->path);
+      if (progress != 0)
+      {
+        file = fopen(queued_mod_download->path.c_str(), "ab");
+        writeLogLine("Resuming download from " + toString((u32)progress), MODIO_DEBUGLEVEL_LOG);
+      }
+      else
+      {
+        file = fopen(queued_mod_download->path.c_str(), "wb");
+      }
+
+      CURL *curl;
+      curl = curl_easy_init();
+
+      queued_mod_download->state = MODIO_MOD_STARTING_DOWNLOAD;
+      current_mod_download_file = file;
+      current_mod_download_curl_handle = curl;
+      current_queued_mod_download = queued_mod_download;
+
+      if (curl)
+      {
+        queued_mod_download->url = modio::replaceSubstrings(queued_mod_download->url, " ", "%20");
+        curl_easy_setopt(curl, CURLOPT_URL, queued_mod_download->url.c_str());
+
+        if (progress != 0)
+        {
+          curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, progress);
+          writeLogLine("Download progress detected. Resuming from " + modio::toString((u32)progress) + " bytes", MODIO_DEBUGLEVEL_LOG);
+        }
+
+        setHeaders(modio::getHeaders(), curl);
+
+        setVerifies(curl);
+
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetFileData);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+
+        curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModDownloadProgress);
+        curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, queued_mod_download);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+
+        curl_multi_add_handle(curl_multi_handle, curl);
+      }
+    }
   }
   else
   {
-    file = fopen(queued_mod_download->path.c_str(), "wb");
+    modio::writeLogLine("Could not download mod. Could not gather mod information.", MODIO_DEBUGLEVEL_ERROR);
+  }
+}
+
+void downloadMod(QueuedModDownload *queued_mod_download)
+{
+  u32 call_number = modio::curlwrapper::getCallNumber();
+  queued_mod_download_callbacks[call_number] = queued_mod_download;
+
+  std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(queued_mod_download->mod_id) + "?api_key=" + modio::API_KEY;
+
+  modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
+}
+
+void queueModDownload(u32 mod_id)
+{
+  for (auto &queued_mod_download : mod_download_queue)
+  {
+    if (queued_mod_download->mod_id == mod_id)
+    {
+      writeLogLine("Could not queue the mod: " + toString(mod_id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
+      return;
+    }
   }
 
-  CURL *curl;
-  curl = curl_easy_init();
+  QueuedModDownload *queued_mod_download = new QueuedModDownload();
+  queued_mod_download->state = MODIO_MOD_QUEUED;
+  queued_mod_download->mod_id = mod_id;
+  queued_mod_download->current_progress = 0;
+  queued_mod_download->total_size = 0;
+  queued_mod_download->url = "";
+  queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(mod_id) + "_modfile.zip";
+  mod_download_queue.push_back(queued_mod_download);
 
-  queued_mod_download->state = MODIO_MOD_STARTING_DOWNLOAD;
-  current_mod_download_file = file;
-  current_mod_download_curl_handle = curl;
-  current_queued_mod_download = queued_mod_download;
+  updateModDownloadQueueFile();
 
-  if (curl)
+  writeLogLine("Download queued. Mod id: " + toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+
+  if (mod_download_queue.size() == 1)
   {
-    queued_mod_download->url = modio::replaceSubstrings(queued_mod_download->url, " ", "%20");
-    curl_easy_setopt(curl, CURLOPT_URL, queued_mod_download->url.c_str());
-
-    if (progress != 0)
-    {
-      curl_easy_setopt(curl, CURLOPT_RESUME_FROM_LARGE, progress);
-      writeLogLine("Download progress detected. Resuming from " + modio::toString((u32)progress) + " bytes", MODIO_DEBUGLEVEL_LOG);
-    }
-
-    setHeaders(modio::getHeaders(), curl);
-
-    setVerifies(curl);
-
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetFileData);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
-
-    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModDownloadProgress);
-    curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, queued_mod_download);
-    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
-
-    curl_multi_add_handle(curl_multi_handle, curl);
+    downloadMod(queued_mod_download);
   }
 }
 
@@ -471,45 +538,6 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
     curl_multi_add_handle(curl_multi_handle, curl);
-  }
-}
-
-void queueModDownload(ModioMod *modio_mod)
-{
-  for (auto &queued_mod_download : mod_download_queue)
-  {
-    if (queued_mod_download->mod_id == modio_mod->id)
-    {
-      writeLogLine("Could not queue the mod: " + toString(modio_mod->id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
-      return;
-    }
-  }
-
-  if(modio_mod->modfile.download.binary_url == NULL)
-  {
-    writeLogLine("Could not queue the mod: " + toString(modio_mod->id) + ". It doesn't has a modfile.", MODIO_DEBUGLEVEL_ERROR);
-    return;
-  }
-
-  std::string url = modio_mod->modfile.download.binary_url;
-
-  QueuedModDownload *queued_mod_download = new QueuedModDownload();
-  queued_mod_download->state = MODIO_MOD_QUEUED;
-  queued_mod_download->mod_id = modio_mod->id;
-  queued_mod_download->current_progress = 0;
-  queued_mod_download->total_size = 0;
-  queued_mod_download->url = url;
-  queued_mod_download->mod.initialize(*modio_mod);
-  queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(modio_mod->id) + "_modfile.zip";
-  mod_download_queue.push_back(queued_mod_download);
-
-  updateModDownloadQueueFile();
-
-  writeLogLine("Download queued. Mod id: " + toString(modio_mod->id) + " Url: " + url, MODIO_DEBUGLEVEL_LOG);
-
-  if (mod_download_queue.size() == 1)
-  {
-    downloadMod(queued_mod_download);
   }
 }
 
