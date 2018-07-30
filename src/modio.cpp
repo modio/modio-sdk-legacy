@@ -87,7 +87,7 @@ void init(int game_id, char* api_key, char* root_path)
 }
 */
 
-void modioSetDebugLevel(unsigned int debug_level)
+void modioSetDebugLevel(u32 debug_level)
 {
   modio::DEBUG_LEVEL = debug_level;
 }

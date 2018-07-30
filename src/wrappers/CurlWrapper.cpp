@@ -379,6 +379,7 @@ void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
     {
       QueuedModDownload *queued_mod_download = queued_mod_download_callbacks[call_number];
       queued_mod_download->url = modio_mod.modfile.download.binary_url;
+      queued_mod_download->mod.initialize(modio_mod);
 
       writeLogLine("Download started. Mod id: " + toString(queued_mod_download->mod_id) + " Url: " + queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
 

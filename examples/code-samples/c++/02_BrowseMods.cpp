@@ -21,7 +21,7 @@ int main(void)
   // Before requesting mods, let's define the query filters
   modio::FilterCreator filter;
   filter.setLimit(7);
-  //filter.setCacheMaxAgeSeconds(100);
+  filter.setCacheMaxAgeSeconds(100);
 
   std::cout << "Getting mods..." << std::endl;
 
@@ -45,51 +45,7 @@ int main(void)
       std::cout << "Result limit: " << response.result_limit << std::endl;
       std::cout << "Result offset: " << response.result_offset << std::endl;
     }
-    //finish();
-  });
-
-  modio_instance.getMods(filter, [&](const modio::Response &response, const std::vector<modio::Mod> &mods) {
-    std::cout << "On mod get response: " << response.code << std::endl;
-    if (false && response.code == 200)
-    {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for (auto &mod : mods)
-      {
-        std::cout << "Id: \t" << mod.id << std::endl;
-        std::cout << "Name:\t" << mod.name << std::endl;
-      }
-
-      // Additionally, we can access pagination data to ease future browsing queries
-      std::cout << std::endl;
-      std::cout << "Cursor data:" << std::endl;
-      std::cout << "Result count: " << response.result_count << std::endl;
-      std::cout << "Result limit: " << response.result_limit << std::endl;
-      std::cout << "Result offset: " << response.result_offset << std::endl;
-    }
-    //finish();
-  });
-
-  modio_instance.getMods(filter, [&](const modio::Response &response, const std::vector<modio::Mod> &mods) {
-    std::cout << "On mod get response: " << response.code << std::endl;
-    if (false && response.code == 200)
-    {
-      std::cout << "Listing mods" << std::endl;
-      std::cout << "============" << std::endl;
-      for (auto &mod : mods)
-      {
-        std::cout << "Id: \t" << mod.id << std::endl;
-        std::cout << "Name:\t" << mod.name << std::endl;
-      }
-
-      // Additionally, we can access pagination data to ease future browsing queries
-      std::cout << std::endl;
-      std::cout << "Cursor data:" << std::endl;
-      std::cout << "Result count: " << response.result_count << std::endl;
-      std::cout << "Result limit: " << response.result_limit << std::endl;
-      std::cout << "Result offset: " << response.result_offset << std::endl;
-    }
-    //finish();
+    finish();
   });
 
   wait();

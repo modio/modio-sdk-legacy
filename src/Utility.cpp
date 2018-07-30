@@ -57,7 +57,7 @@ std::string addSlashIfNeeded(std::string directory_path)
 
 // Log methods
 
-void writeLogLine(std::string text, unsigned int debug_level)
+void writeLogLine(std::string text, u32 debug_level)
 {
   // NOTE(@jackson): Lower value is higher severity (error == 0)
   if (DEBUG_LEVEL < debug_level)

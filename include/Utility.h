@@ -71,7 +71,7 @@ std::string replaceSubstrings(std::string str, const std::string &from, const st
 std::string addSlashIfNeeded(std::string directory_path);
 
 // Log methods
-void writeLogLine(std::string text, unsigned int debug_level);
+void writeLogLine(std::string text, u32 debug_level);
 void clearLog();
 
 // Time methods

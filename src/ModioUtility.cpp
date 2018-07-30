@@ -120,8 +120,8 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
   if (response.code == 200)
   {
     //TODO: Register User Callback
-    //if(modio::callback)
-    //  modio::callback(response, events_array, events_array_size);
+    if(modio::callback)
+      modio::callback(response, events_array, events_array_size);
     writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
 
     for (int i = 0; i < (int)events_array_size; i++)
