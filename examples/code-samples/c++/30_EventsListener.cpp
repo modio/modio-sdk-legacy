@@ -53,6 +53,18 @@ int main(void)
         case MODIO_EVENT_MOD_EDITED:
           std::cout << "Mod edited" << std::endl;
           break;
+        case MODIO_EVENT_USER_TEAM_JOIN:
+          std::cout << "User joined team" << std::endl;
+          break;
+        case MODIO_EVENT_USER_TEAM_LEAVE:
+          std::cout << "User left team" << std::endl;
+          break;
+        case MODIO_EVENT_USER_SUBSCRIBE:
+          std::cout << "User subscribed to mod" << std::endl;
+          break;
+        case MODIO_EVENT_USER_UNSUBSCRIBE:
+          std::cout << "User unsubscribed from mod" << std::endl;
+          break;
         }
         std::cout << std::endl;
       }

@@ -7,7 +7,7 @@ extern "C"
     json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
 
     if(!modio::hasKey(config_json, "automatic_updates"))
-      config_json["automatic_updates"] = 1;
+      config_json["automatic_updates"] = MODIO_UPDATES_ENABLED;
 
     if(!modio::hasKey(config_json, "allow_background_downloads"))
       config_json["allow_background_downloads"] = 1;

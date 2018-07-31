@@ -4,16 +4,17 @@ namespace modio
 {
   std::string API_KEY;
   std::string ACCESS_TOKEN = "";
-  int GAME_ID;
+  u32 GAME_ID;
   std::string ROOT_PATH = "";
-  //unsigned int DEBUG_LEVEL = MODIO_DEBUGLEVEL_ERROR;
-  unsigned int DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
+  //u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_ERROR;
+  u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
   std::string MODIO_URL = "https://api.mod.io/";
   std::string MODIO_VERSION_PATH = "v1/";
   u32 MAX_CALL_CACHE = 10;
   u32 LAST_MOD_EVENT_POLL = 0;
   u32 LAST_USER_EVENT_POLL = 0;
   u32 EVENT_POLL_INTERVAL = 15;
+  u32 RETRY_AFTER = 0;
   void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size) = NULL;
   void (*download_callback)(u32 response_code, u32 mod_id) = NULL;
   void (*upload_callback)(u32 response_code, u32 mod_id) = NULL;

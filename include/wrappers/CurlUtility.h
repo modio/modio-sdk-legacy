@@ -34,6 +34,7 @@ class JsonResponseHandler
 public:
   u32 call_number;
   std::string response;
+  std::map<std::string, std::string> headers;
   std::function<void(u32 call_number, u32 response_code, json response_json)> callback;
   JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, json response_json)> callback);
 };

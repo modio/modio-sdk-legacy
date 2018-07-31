@@ -14,7 +14,7 @@ void onInstallMod(u32 response_code, u32 mod_id)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
 
   // Let's start by requesting a single mod
   printf("Please enter the mod id: \n");
@@ -31,7 +31,7 @@ int main(void)
   while (wait)
   {
     // While a mod is being downloaded, we can track it's progress by using the mod download queue related functions
-    u32 queue_size = modioGetModDownloadQueueSize();
+    u32 queue_size = modioGetModDownloadQueueCount();
     if (queue_size != 0)
     {
       // The download queue contains all the information about the current downloads

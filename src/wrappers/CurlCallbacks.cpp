@@ -11,6 +11,13 @@ void onJsonRequestFinished(CURL *curl)
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
   json response_json = modio::toJson(ongoing_call->response);
+
+  if(ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
+  {
+    u32 x_ratelimit_retryafter = atoi((const char*)ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
+    modio::RETRY_AFTER = modio::getCurrentTime() + x_ratelimit_retryafter;
+  }
+
   writeLogLine("Json request Finished. Response code: " + toString(response_code), MODIO_DEBUGLEVEL_LOG);
   if (response_code >= 400 && response_code <= 599)
   {
@@ -25,9 +32,18 @@ void onJsonRequestFinished(CURL *curl)
 void onDownloadFinished(CURL *curl)
 {
   OngoingDownload *ongoing_download = ongoing_downloads[curl];
-  writeLogLine("Download finished.", MODIO_DEBUGLEVEL_LOG);
+  
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+  
+  if(response_code >= 200 || response_code < 300)
+  {
+    writeLogLine("Download finished successfully.", MODIO_DEBUGLEVEL_LOG);
+  }else
+  {
+    writeLogLine("Response code: " + modio::toString(response_code) + " Could not download form: " + ongoing_download->url, MODIO_DEBUGLEVEL_LOG);
+  }
+
   ongoing_download->callback(ongoing_download->call_number, response_code);
   call_count++;
   ongoing_downloads.erase(curl);
@@ -36,7 +52,6 @@ void onDownloadFinished(CURL *curl)
 
 void onModDownloadFinished(CURL *curl)
 {
-  writeLogLine("Download Finished. Mod id: " + toString(current_queued_mod_download->mod_id) + " Url: " + current_queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
   fclose(current_mod_download_file);
 
   if (current_queued_mod_download->state == MODIO_MOD_DOWNLOADING)
@@ -64,6 +79,14 @@ void onModDownloadFinished(CURL *curl)
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
+    if(response_code >= 200 || response_code < 300)
+    {
+      writeLogLine("Download finished successfully. Mod id: " + toString(current_queued_mod_download->mod_id) + " Url: " + current_queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
+    }else
+    {
+      writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(current_queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
+    }
+
     if (modio::download_callback)
       modio::download_callback(response_code, current_queued_mod_download->mod.id);
 
@@ -77,10 +100,12 @@ void onModDownloadFinished(CURL *curl)
   }
   else if (current_queued_mod_download->state == MODIO_MOD_PAUSING)
   {
+    modio::writeLogLine("Mod " + modio::toString(current_queued_mod_download->mod_id) + " download paused", MODIO_DEBUGLEVEL_LOG);
     current_queued_mod_download->state = MODIO_MOD_PAUSED;
   }
   else if (current_queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
   {
+    modio::writeLogLine("Mod " + modio::toString(current_queued_mod_download->mod_id) + " download paused. Another mod is being prioritized.", MODIO_DEBUGLEVEL_LOG);
     current_queued_mod_download->state = MODIO_MOD_QUEUED;
     updateModDownloadQueue();
     if (mod_download_queue.size() > 0)

@@ -1,54 +1,82 @@
 #include "modio.h"
 
-void modioInit(u32 environment, u32 game_id, char* api_key)
+void loadInstalledModsFile()
 {
-  u32 current_time = modio::getCurrentTime();
-  modio::LAST_MOD_EVENT_POLL = current_time;
-  modio::LAST_USER_EVENT_POLL = current_time;
+  modio::writeLogLine("Loading mod events data...", MODIO_DEBUGLEVEL_LOG);
 
+  modio::LAST_MOD_EVENT_POLL = 0;
+  
   json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
-  if(modio::hasKey(installed_mods_json,"last_user_event_poll"))
-    modio::LAST_USER_EVENT_POLL = installed_mods_json["last_user_event_poll"];
+
   if(modio::hasKey(installed_mods_json,"last_mod_event_poll"))
-    modio::LAST_MOD_EVENT_POLL = installed_mods_json["last_mod_event_poll"];
-
-  if(environment == MODIO_ENVIRONMENT_TEST)
   {
-    modio::MODIO_URL = "https://api.test.mod.io/";
+    modio::LAST_MOD_EVENT_POLL = installed_mods_json["last_mod_event_poll"];
+    modio::writeLogLine("Mod events data loaded. The last mod event poll was at " +  modio::toString(modio::LAST_MOD_EVENT_POLL), MODIO_DEBUGLEVEL_LOG);
   }
-  modio::clearLog();
+  else
+  {
+    modio::writeLogLine("No mod events data found, downloading from the beginning.", MODIO_DEBUGLEVEL_LOG);    
+  }
+}
 
-  modio::curlwrapper::initCurl();
+void loadAuthenticationFile()
+{
+  modio::writeLogLine("Loading authentication data...", MODIO_DEBUGLEVEL_LOG);
 
-  modioInitConfig();
-
-  modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
-  modio::GAME_ID = game_id;
-
-  modio::API_KEY = api_key;
   modio::ACCESS_TOKEN = "";
+  modio::LAST_USER_EVENT_POLL = 0;
 
-  json token_file_json = modio::openJson(modio::getModIODirectory() + "token.json");
+  json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
 
   if(modio::hasKey(token_file_json,"access_token"))
   {
     std::string access_token = token_file_json["access_token"];
     modio::ACCESS_TOKEN = access_token;
-  }
 
-  modio::updateInstalledModsJson();
+    modio::writeLogLine("Authentication token found. You are logged in.", MODIO_DEBUGLEVEL_LOG);
 
-  /*
-  if(modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+    if(modio::hasKey(token_file_json,"last_user_event_poll"))
+    {
+      modio::LAST_USER_EVENT_POLL = token_file_json["last_user_event_poll"];
+      modio::writeLogLine("User events data loaded. The last user event poll was at " +  modio::toString(modio::LAST_USER_EVENT_POLL), MODIO_DEBUGLEVEL_LOG);
+    }
+    else
+    {
+      modio::writeLogLine("No user events data found, downloading from the beginning.", MODIO_DEBUGLEVEL_LOG);
+    }
+  }else
   {
-    modio::checkForInstalledModsUpdates();  
+    modio::writeLogLine("Authentication token not found. You are not logged in.", MODIO_DEBUGLEVEL_LOG);
   }
-  */
+}
+
+void modioInit(u32 environment, u32 game_id, char* api_key, char* root_path)
+{
+  modio::clearLog();
+
+  modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
 
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
+  
+  if(environment == MODIO_ENVIRONMENT_TEST)
+    modio::MODIO_URL = "https://api.test.mod.io/";
+  modio::GAME_ID = game_id;
+  modio::API_KEY = api_key;
+  if(root_path)
+    modio::ROOT_PATH = root_path;
+
+  loadInstalledModsFile();
+  loadAuthenticationFile();
+
+  modio::curlwrapper::initCurl();
+
+  modioInitConfig();
+
+  modio::updateInstalledModsJson();
+
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }
 /*
@@ -59,7 +87,7 @@ void init(int game_id, char* api_key, char* root_path)
 }
 */
 
-void modioSetDebugLevel(unsigned int debug_level)
+void modioSetDebugLevel(u32 debug_level)
 {
   modio::DEBUG_LEVEL = debug_level;
 }

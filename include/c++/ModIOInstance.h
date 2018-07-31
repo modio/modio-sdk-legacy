@@ -47,11 +47,13 @@ class MODIO_DLL Instance
   int current_call_id;
 
 public:
-  Instance(u32 environment, u32 id, const std::string &guid);
+  Instance(u32 environment, u32 game_id, const std::string &api_key);
+  Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path);
 
   //General Methods
   void sleep(u32 milliseconds);
   void process();
+  void setDebugLevel(u32 debug_level);
 
   //Events
   void getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
@@ -61,7 +63,6 @@ public:
   //Authentication Methods
   bool isLoggedIn() const;
   void logout() const;
-  void setDebugLevel(u32 debug_level);
   void emailRequest(const std::string &email, const std::function<void(const modio::Response &)> &callback);
   void emailExchange(const std::string &security_code, const std::function<void(const modio::Response &)> &callback);
 

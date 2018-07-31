@@ -113,29 +113,10 @@ void updateInstalledModsJson()
     }
   }
 
-  if (modio::hasKey(installed_mods_json, "last_user_event_poll"))
-    resulting_json["last_user_event_poll"] = installed_mods_json["last_user_event_poll"];
   if (modio::hasKey(installed_mods_json, "last_mod_event_poll"))
     resulting_json["last_mod_event_poll"] = installed_mods_json["last_mod_event_poll"];
 
   modio::writeJson(modio::getModIODirectory() + "installed_mods.json", resulting_json);
-}
-
-void checkForInstalledModsUpdates()
-{
-  ModioFilterCreator filter;
-  modioInitFilter(&filter);
-  u32 installed_mods_size = modioGetInstalledModsSize();
-  ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
-  modioGetInstalledMods(modio_installed_mods);
-
-  for (u32 i = 0; i < (u32)installed_mods_size; i++)
-  {
-    modioAddFilterInField(&filter, (char*)"id", (char*)modio::toString(modio_installed_mods[i].mod_id).c_str());
-  }
-  modioGetMods(NULL, filter, &onGetInstalledMods);
-
-  delete[] modio_installed_mods;
 }
 
 std::string getInstalledModPath(u32 mod_id)

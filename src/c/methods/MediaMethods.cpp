@@ -33,7 +33,7 @@ void modioAddModImages(void* object, u32 mod_id, char** image_paths_array, u32 i
   std::multimap<std::string, std::string> curlform_copycontents;
   std::map<std::string, std::string> curlform_files;
 
-  for(int i=0; i<image_paths_array_size; i++)
+  for(u32 i=0; i<image_paths_array_size; i++)
   {
       curlform_files["image" + modio::toString(i+1)] = image_paths_array[i];
   }
@@ -52,7 +52,7 @@ void modioAddModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_arra
 
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
 
-  for(int i=0; i<youtube_links_array_size; i++)
+  for(u32 i=0; i<youtube_links_array_size; i++)
   {
       data["youtube[]"] = youtube_links_array[i];
   }
@@ -71,7 +71,7 @@ void modioAddModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_
 
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
 
-  for(int i=0; i<sketchfab_links_array_size; i++)
+  for(u32 i=0; i<sketchfab_links_array_size; i++)
   {
       data["sketchfab[]"] = sketchfab_links_array[i];
   }
@@ -90,7 +90,7 @@ void modioDeleteModImages(void* object, u32 mod_id, char** image_paths_array, u3
 
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
 
-  for(int i=0; i<image_paths_array_size; i++)
+  for(u32 i=0; i<image_paths_array_size; i++)
   {
     data["images[]"] = image_paths_array[i];
   }
@@ -109,7 +109,7 @@ void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_a
 
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
 
-  for(int i=0; i<youtube_links_array_size; i++)
+  for(u32 i=0; i<youtube_links_array_size; i++)
   {
     data["youtube[]"] = youtube_links_array[i];
   }
@@ -128,7 +128,7 @@ void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_lin
 
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/media";
 
-  for(int i=0; i<sketchfab_links_array_size; i++)
+  for(u32 i=0; i<sketchfab_links_array_size; i++)
   {
     data["sketchfab[]"] = sketchfab_links_array[i];
   }

@@ -41,27 +41,5 @@ src/modio.lib
 src/modio.exp
 src/modio.a
 
-examples/*/.modio/
-examples/*/mods_dir/*
-examples/*/modio.dll
-examples/*/modio.lib
-examples/*/modio.a
-examples/*/*.dll
-
-examples/*/01_Authentication
-examples/*/02_BrowseMods
-examples/*/03_ErrorResponse
-examples/*/04_DownloadImages
-examples/*/05_EditImage
-examples/*/06_DownloadModfile
-examples/*/07_AddModfile
-examples/*/08_EditModfile
-examples/*/09_AddMod
-examples/*/10_EditMod
-examples/*/11_DeleteMod
-examples/*/12_GetTags
-examples/*/13_AddTags
-examples/*/14_DeleteTags
-
 !examples/c/mods_dir/readme.txt
 !examples/c++/mods_dir/readme.txt
