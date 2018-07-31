@@ -20,7 +20,7 @@ void onGetAllModComments(void *object, ModioResponse response, ModioComment comm
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 

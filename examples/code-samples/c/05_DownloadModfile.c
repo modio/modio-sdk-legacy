@@ -14,7 +14,7 @@ void onInstallMod(u32 response_code, u32 mod_id)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b");
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
 
   // Let's start by requesting a single mod
   printf("Please enter the mod id: \n");

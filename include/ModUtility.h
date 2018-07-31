@@ -15,7 +15,7 @@ namespace modio
   void updateInstalledModsJson();
   std::string getInstalledModfilePath(u32 modfile_id);
   std::string getInstalledModPath(u32 mod_id);
-  void updateModCache(u32 mod_id);
+  void updateModsCache(std::vector<u32> mod_ids);
 }
 
 #endif
