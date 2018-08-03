@@ -1,6 +1,6 @@
 <a href="https://mod.io"><img src="https://static.mod.io/v1/images/branding/modio-color-dark.svg" alt="mod.io" width="400"/></a>
 
-# SDK
+# mod.io SDK
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/DBolical/modioSDK/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/389039439487434752.svg)](https://discord.mod.io)
 [![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/DBolical/modioSDK/wiki)
