@@ -124,6 +124,7 @@ typedef struct ModioModEditor ModioModEditor;
 typedef struct ModioEvent ModioEvent;
 typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
+typedef struct ModioModStats ModioModStats;
 
 struct ModioListNode
 {
@@ -447,6 +448,22 @@ struct ModioComment
   char* content;
 };
 
+struct ModioModStats
+{
+  u32 mod_id;
+  u32 popularity_rank_position;
+  u32 popularity_rank_total_mods;
+  u32 downloads_total;
+  u32 subscribers_total;
+  u32 ratings_total;
+  u32 ratings_positive;
+  u32 ratings_negative;
+  u32 ratings_percentage_positive;
+  double ratings_weighted_aggregate;
+  char* ratings_display_text;
+  u32 date_expires;
+};
+
 //General Methods
 void modioInit(u32 environment, u32 game_id, char* api_key, char* root_path);
 void modioShutdown();
@@ -599,6 +616,7 @@ u32 modioGetModfileUploadQueueCount();
 void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
 u32 modioGetInstalledModsCount();
 void modioGetInstalledMods(ModioInstalledMod* installed_mods);
+bool modioGetInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod);  
 u32 modioGetModState(u32 mod_id);
 
 //Dependencies Methods
@@ -612,3 +630,6 @@ void modioDeleteModComment(void* object, u32 mod_id, u32 comment_id, void(*callb
 
 //Reports Methods
 void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response));
+
+//Stats Methods
+void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioModStats mod));
