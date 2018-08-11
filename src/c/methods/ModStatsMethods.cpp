@@ -14,4 +14,32 @@ extern "C"
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModStats);
   }
+
+  void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size))
+  {
+    std::string filter_string = modio::getFilterString(&filter);
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/stats?" + filter_string + "&api_key=" + modio::API_KEY;
+
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
+    get_all_mod_stats_callbacks[call_number] = new GetAllModStatsParams;
+    get_all_mod_stats_callbacks[call_number]->callback = callback;
+    get_all_mod_stats_callbacks[call_number]->object = object;
+    get_all_mod_stats_callbacks[call_number]->url = url;
+    get_all_mod_stats_callbacks[call_number]->is_cache = false;
+
+    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    if(cache_filename != "")
+    {
+      json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      json empty_json = {};
+      if(!cache_file_json.empty())
+      {
+        get_all_mod_stats_callbacks[call_number]->is_cache = true;
+        modioOnGetAllModStats(call_number, 200, cache_file_json);
+        return;
+      }
+    }
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllModStats);
+  }
 }

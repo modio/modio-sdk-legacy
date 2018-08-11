@@ -633,3 +633,4 @@ void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* nam
 
 //Stats Methods
 void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioModStats mod));
+void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size));

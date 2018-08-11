@@ -6,7 +6,7 @@ void onGetMods(void *object, ModioResponse response, ModioMod *mods, u32 mods_si
   printf("Get mods response: %i\n", response.code);
   if (response.code == 200)
   {
-    printf("Listing mod\n");
+    printf("Listing mods\n");
     printf("============\n");
     for (u32 i = 0; i < mods_size; i++)
     {
