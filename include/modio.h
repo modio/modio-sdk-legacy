@@ -19,6 +19,7 @@
 #include "c/methods/ModfileMethods.h"
 #include "c/methods/RatingsMethods.h"
 #include "c/methods/TagMethods.h"
+#include "c/methods/ModStatsMethods.h"
 #include "c++/ModIOInstance.h"
 #include "ModUtility.h"
 #include "ModioUtility.h"

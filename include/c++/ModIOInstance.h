@@ -19,6 +19,7 @@
 #include "schemas/Mod.h"
 #include "schemas/Event.h"
 #include "schemas/Modfile.h"
+#include "schemas/ModStats.h"
 #include "schemas/QueuedModDownload.h"
 #include "schemas/RatingSummary.h"
 #include "schemas/Response.h"
@@ -39,6 +40,7 @@
 #include "methods/callbacks/SubscriptionInstanceCallbacks.h"
 #include "methods/callbacks/RatingsInstanceCallbacks.h"
 #include "methods/callbacks/ReportsInstanceCallbacks.h"
+#include "methods/callbacks/ModStatsInstanceCallbacks.h"
 
 namespace modio
 {
@@ -139,7 +141,11 @@ public:
   void deleteModComment(u32 mod_id, u32 comment_id, const std::function<void(const modio::Response &response)> &callback);
 
   //Reports Methods
-  void submitReport(std::string resource, u32 id, u32 type, std::string name, std::string summary, const std::function<void(const modio::Response &response)> &callback);  
+  void submitReport(std::string resource, u32 id, u32 type, std::string name, std::string summary, const std::function<void(const modio::Response &response)> &callback);
+
+  //Stats Methods
+  void getModStats(u32 mod_id, const std::function<void(const modio::Response &response, const modio::ModStats &mod_stats)> &callback);
+  void getAllModStats(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::ModStats> &mod_stats)> &callback);
 };
 }
 
