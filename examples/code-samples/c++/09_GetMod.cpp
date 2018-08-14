@@ -22,7 +22,7 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout << "Getting mods..." << std::endl;
+  std::cout << "Getting mod..." << std::endl;
 
   modio_instance.getMod(mod_id, [&](const modio::Response &response, const modio::Mod &mod) {
     std::cout << "On mod get response: " << response.code << std::endl;

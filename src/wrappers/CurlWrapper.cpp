@@ -361,6 +361,8 @@ std::map<u32, QueuedModDownload *> queued_mod_download_callbacks;
 
 void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
 {
+  QueuedModDownload *queued_mod_download = queued_mod_download_callbacks[call_number];
+
   if (response_code == 200)
   {
     ModioMod modio_mod;
@@ -373,11 +375,21 @@ void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
       {
         modio::download_callback(404, modio_mod.id);
       }
+
+      mod_download_queue.remove(queued_mod_download);
+
+      updateModDownloadQueueFile();
+
+      writeLogLine("Mod download removed from queue. Looking for other mod downloads queued.", MODIO_DEBUGLEVEL_LOG);
+
+      if (mod_download_queue.size() == 1)
+      {
+        downloadMod(queued_mod_download);
+      }
       return;
     }
     else
     {
-      QueuedModDownload *queued_mod_download = queued_mod_download_callbacks[call_number];
       queued_mod_download->url = modio_mod.modfile.download.binary_url;
       queued_mod_download->mod.initialize(modio_mod);
 

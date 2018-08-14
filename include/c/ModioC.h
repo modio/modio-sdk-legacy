@@ -124,6 +124,7 @@ extern "C"
   typedef struct ModioEvent ModioEvent;
   typedef struct ModioQueuedModDownload ModioQueuedModDownload;
   typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
+  typedef struct ModioModStats ModioModStats;
 
   struct ModioListNode
   {
@@ -447,6 +448,22 @@ extern "C"
     char* content;
   };
 
+  struct ModioModStats
+  {
+    u32 mod_id;
+    u32 popularity_rank_position;
+    u32 popularity_rank_total_mods;
+    u32 downloads_total;
+    u32 subscribers_total;
+    u32 ratings_total;
+    u32 ratings_positive;
+    u32 ratings_negative;
+    u32 ratings_percentage_positive;
+    double ratings_weighted_aggregate;
+    char* ratings_display_text;
+    u32 date_expires;
+  };
+
   //General Methods
   void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key, char* root_path);
   void MODIO_DLL modioShutdown();
@@ -613,6 +630,10 @@ extern "C"
 
   //Reports Methods
   void MODIO_DLL modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response));
+
+  //Stats Methods
+  void MODIO_DLL modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioModStats mod));
+  void MODIO_DLL modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size));
 }
 
 #endif

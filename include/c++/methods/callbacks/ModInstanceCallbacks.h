@@ -1,4 +1,3 @@
-
 namespace modio
 {
   struct GetModCall

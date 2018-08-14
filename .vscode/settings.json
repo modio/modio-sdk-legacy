@@ -71,6 +71,7 @@
         "string_view": "cpp",
         "*.rh": "cpp",
         "cstdarg": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "cinttypes": "cpp"
     }
 }
