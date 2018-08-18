@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitFilehash(ModioFilehash* filehash, json filehash_json)
+  void modioInitFilehash(ModioFilehash* filehash, nlohmann::json filehash_json)
   {
     filehash->md5 = NULL;
     if(modio::hasKey(filehash_json, "md5"))

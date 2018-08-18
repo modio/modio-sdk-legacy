@@ -4,7 +4,7 @@ std::map< u32, GetMetadataKVPParams* > get_metadata_kvp_callbacks;
 std::map< u32, AddMetadataKVPParams* > add_metadata_kvp_callbacks;
 std::map< u32, DeleteMetadataKVPParams* > delete_metadata_kvp_callbacks;
 
-void modioOnGetMetadataKVP(u32 call_number, u32 response_code, json response_json)
+void modioOnGetMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -25,7 +25,7 @@ void modioOnGetMetadataKVP(u32 call_number, u32 response_code, json response_jso
           modioInitMetadataKVP(&(metadata_kvp_array[i]), response_json["data"][i]);
         }
       }
-    }catch(json::parse_error &e)
+    }catch(nlohmann::json::parse_error &e)
     {
       modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
     }
@@ -41,7 +41,7 @@ void modioOnGetMetadataKVP(u32 call_number, u32 response_code, json response_jso
   get_metadata_kvp_callbacks.erase(call_number);
 }
 
-void modioOnAddMetadataKVP(u32 call_number, u32 response_code, json response_json)
+void modioOnAddMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -52,7 +52,7 @@ void modioOnAddMetadataKVP(u32 call_number, u32 response_code, json response_jso
   add_metadata_kvp_callbacks.erase(call_number);
 }
 
-void modioOnDeleteMetadataKVP(u32 call_number, u32 response_code, json response_json)
+void modioOnDeleteMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

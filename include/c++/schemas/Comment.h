@@ -22,7 +22,7 @@ namespace modio
         User submitted_by;
 
 		void initialize(ModioComment modio_comment);
-		json toJson();
+		nlohmann::json toJson();
 	};
 }
 

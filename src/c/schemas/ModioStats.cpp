@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitStats(ModioStats* stats, json stats_json)
+  void modioInitStats(ModioStats* stats, nlohmann::json stats_json)
   {
     stats->mod_id = 0;
     if(modio::hasKey(stats_json, "mod_id"))

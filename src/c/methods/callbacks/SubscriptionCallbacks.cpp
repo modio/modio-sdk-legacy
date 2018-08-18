@@ -3,7 +3,7 @@
 std::map< u32, SubscribeToModParams* > subscribe_to_mod_callbacks;
 std::map< u32, UnsubscribeFromModParams* > unsubscribe_from_mod_callbacks;
 
-void modioOnSubscribeToMod(u32 call_number, u32 response_code, json response_json)
+void modioOnSubscribeToMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -21,7 +21,7 @@ void modioOnSubscribeToMod(u32 call_number, u32 response_code, json response_jso
   modioFreeMod(&mod);
 }
 
-void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, json response_json)
+void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

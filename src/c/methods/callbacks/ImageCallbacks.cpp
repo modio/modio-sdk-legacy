@@ -5,7 +5,7 @@ std::map< u32, DownloadImageParams* > download_image_callbacks;
 void modioOnImageDownloaded(u32 call_number, u32 response_code)
 {
   ModioResponse response;
-  json empty_json;
+  nlohmann::json empty_json;
   modioInitResponse(&response, empty_json);
   response.code = response_code;
 

@@ -14,7 +14,7 @@ namespace modio
     std::vector<std::string> errors;
 
     void initialize(ModioError error);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

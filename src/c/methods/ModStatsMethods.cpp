@@ -31,8 +31,8 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
-      json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
-      json empty_json = {};
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      nlohmann::json empty_json = {};
       if(!cache_file_json.empty())
       {
         get_all_mod_stats_callbacks[call_number]->is_cache = true;

@@ -6,11 +6,9 @@
 #include "../ModioC.h"
 #include "ModioError.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitResponse(ModioResponse* response, json response_json);
+  void modioInitResponse(ModioResponse* response, nlohmann::json response_json);
   void modioFreeResponse(ModioResponse* response);
 }
 

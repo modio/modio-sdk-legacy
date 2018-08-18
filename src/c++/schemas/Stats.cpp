@@ -19,9 +19,9 @@ namespace modio
     this->date_expires = modio_stats.date_expires;
   }
 
-  json Stats::toJson()
+  nlohmann::json Stats::toJson()
   {
-    json stats_json;
+    nlohmann::json stats_json;
     stats_json["mod_id"] = this->mod_id;
     stats_json["popularity_rank_position"] = this->popularity_rank_position;
     stats_json["popularity_rank_total_mods"] = this->popularity_rank_total_mods;

@@ -18,15 +18,15 @@ namespace modio
     }
   }
 
-  json GameTagOption::toJson()
+  nlohmann::json GameTagOption::toJson()
   {
-    json game_tag_option_json;
+    nlohmann::json game_tag_option_json;
 
     game_tag_option_json["hidden"] = this->hidden;
     game_tag_option_json["name"] = this->name;
     game_tag_option_json["type"] = this->type;
 
-    json tags_json;
+    nlohmann::json tags_json;
     for(auto& tag : tags)
     {
       tags_json.push_back(tag);

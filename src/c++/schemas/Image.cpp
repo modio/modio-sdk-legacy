@@ -12,9 +12,9 @@ namespace modio
       this->thumb_320x180 = modio_image.thumb_320x180;
   }
 
-  json Image::toJson()
+  nlohmann::json Image::toJson()
   {
-    json image_json;
+    nlohmann::json image_json;
 
     image_json["filename"] = this->filename;
     image_json["original"] = this->original;

@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitGame(ModioGame* game, json game_json)
+  void modioInitGame(ModioGame* game, nlohmann::json game_json)
   {
     game->id = 0;
     if(modio::hasKey(game_json, "id"))
@@ -107,22 +107,22 @@ extern "C"
       strcpy(game->profile_url, profile_url_str.c_str());
     }
 
-    json submitted_by_json;
+    nlohmann::json submitted_by_json;
     if(modio::hasKey(game_json, "submitted_by"))
       submitted_by_json = game_json["submitted_by"];
     modioInitUser(&(game->submitted_by), submitted_by_json);
 
-    json icon_json;
+    nlohmann::json icon_json;
     if(modio::hasKey(game_json, "icon"))
       icon_json = game_json["icon"];
     modioInitIcon(&(game->icon), icon_json);
 
-    json logo_json;
+    nlohmann::json logo_json;
     if(modio::hasKey(game_json, "logo"))
       logo_json = game_json["logo"];
     modioInitLogo(&(game->logo), logo_json);
 
-    json header_json;
+    nlohmann::json header_json;
     if(modio::hasKey(game_json, "header"))
       header_json = game_json["header"];
     modioInitHeader(&(game->header), header_json);

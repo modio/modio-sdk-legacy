@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitHeader(ModioHeader* header, json header_json);
+  void modioInitHeader(ModioHeader* header, nlohmann::json header_json);
   void modioFreeHeader(ModioHeader* header);
 }
 

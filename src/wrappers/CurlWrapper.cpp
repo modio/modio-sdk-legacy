@@ -89,7 +89,7 @@ void process()
   } while (curl_message);
 }
 
-void get(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void get(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine("GET: " + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
@@ -113,7 +113,7 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
   }
 }
 
-void post(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void post(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine(std::string("POST: ") + url, MODIO_DEBUGLEVEL_LOG);
 
@@ -148,7 +148,7 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
   }
 }
 
-void put(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void put(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine(std::string("PUT: ") + url, MODIO_DEBUGLEVEL_LOG);
 
@@ -186,7 +186,7 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
   }
 }
 
-void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, json response)> callback)
+void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, nlohmann::json response)> callback)
 {
   writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
@@ -256,7 +256,7 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
   }
 }
 
-void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine(std::string("DELETE: ") + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
@@ -359,7 +359,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
 std::map<u32, QueuedModDownload *> queued_mod_download_callbacks;
 
-void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
+void onGetInstallMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   QueuedModDownload *queued_mod_download = queued_mod_download_callbacks[call_number];
 

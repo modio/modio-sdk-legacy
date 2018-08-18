@@ -14,9 +14,9 @@ namespace modio
       this->thumb_100x100 = modio_avatar.thumb_100x100;
   }
 
-  json Avatar::toJson()
+  nlohmann::json Avatar::toJson()
   {
-    json avatar_json;
+    nlohmann::json avatar_json;
 
     avatar_json["filename"] = this->filename;
     avatar_json["original"] = this->original;

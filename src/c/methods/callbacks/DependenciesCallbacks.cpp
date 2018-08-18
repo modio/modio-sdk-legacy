@@ -4,7 +4,7 @@ std::map< u32, GetAllModDependenciesParams* > get_all_mod_dependencies_callbacks
 std::map< u32, AddModDependienciesParams* > add_mod_dependencies_callbacks;
 std::map< u32, DeleteModDependenciesParams* > delete_mod_dependencies_callbacks;
 
-void modioOnGetAllModDependencies(u32 call_number, u32 response_code, json response_json)
+void modioOnGetAllModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
 	ModioResponse response;
 	modioInitResponse(&response, response_json);
@@ -26,7 +26,7 @@ void modioOnGetAllModDependencies(u32 call_number, u32 response_code, json respo
 				}
 			}
 		}
-		catch (json::parse_error &e)
+		catch (nlohmann::json::parse_error &e)
 		{
 			modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
 		}
@@ -42,7 +42,7 @@ void modioOnGetAllModDependencies(u32 call_number, u32 response_code, json respo
 	get_all_mod_dependencies_callbacks.erase(call_number);
 }
 
-void modioOnAddModDependencies(u32 call_number, u32 response_code, json response_json)
+void modioOnAddModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
 	ModioResponse response;
 	modioInitResponse(&response, response_json);
@@ -53,7 +53,7 @@ void modioOnAddModDependencies(u32 call_number, u32 response_code, json response
 	add_mod_dependencies_callbacks.erase(call_number);
 }
 
-void modioOnDeleteModDependencies(u32 call_number, u32 response_code, json response_json)
+void modioOnDeleteModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
 	ModioResponse response;
 	modioInitResponse(&response, response_json);

@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitAvatar(ModioAvatar* avatar, json avatar_json)
+  void modioInitAvatar(ModioAvatar* avatar, nlohmann::json avatar_json)
   {
     avatar->filename = NULL;
     if(modio::hasKey(avatar_json, "filename"))

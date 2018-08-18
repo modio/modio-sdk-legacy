@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitQueuedModDownload(ModioQueuedModDownload* queued_mod_download, json queued_mod_download_json)
+  void modioInitQueuedModDownload(ModioQueuedModDownload* queued_mod_download, nlohmann::json queued_mod_download_json)
   {
     queued_mod_download->mod_id = 0;
     if(modio::hasKey(queued_mod_download_json, "mod_id"))
@@ -36,7 +36,7 @@ extern "C"
       strcpy(queued_mod_download->path, path_str.c_str());
     }
 
-    json mod_json;
+    nlohmann::json mod_json;
     if(modio::hasKey(queued_mod_download_json, "mod"))
       mod_json = queued_mod_download_json["mod"];
     modioInitMod(&(queued_mod_download->mod), mod_json);

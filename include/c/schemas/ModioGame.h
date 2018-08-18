@@ -10,11 +10,9 @@
 #include "ModioHeader.h"
 #include "ModioGameTagOption.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitGame(ModioGame* game, json game_json);
+  void modioInitGame(ModioGame* game, nlohmann::json game_json);
   void modioFreeGame(ModioGame* game);
 }
 

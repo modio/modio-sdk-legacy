@@ -77,9 +77,9 @@ namespace modio
     modioFreeModfileCreator(this->modfile_creator);
   }
 
-  json ModfileCreator::toJson()
+  nlohmann::json ModfileCreator::toJson()
   {
-    json modfile_creator_json;
+    nlohmann::json modfile_creator_json;
 
     if(this->modfile_creator->path)
       modfile_creator_json["path"] = this->modfile_creator->path;

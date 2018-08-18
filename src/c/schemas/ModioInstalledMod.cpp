@@ -2,7 +2,7 @@
 
 extern "C"
 {
-	void modioInitInstalledMod(ModioInstalledMod* installed_mod, json installed_mod_json)
+	void modioInitInstalledMod(ModioInstalledMod* installed_mod, nlohmann::json installed_mod_json)
 	{
 		installed_mod->mod_id = 0;
 		if (modio::hasKey(installed_mod_json, "mod_id"))
@@ -24,7 +24,7 @@ extern "C"
 			strcpy(installed_mod->path, path_str.c_str());
 		}
 
-		json mod_cache_json = modio::openJson(modio::addSlashIfNeeded(installed_mod->path) + "modio.json");
+		nlohmann::json mod_cache_json = modio::openJson(modio::addSlashIfNeeded(installed_mod->path) + "modio.json");
 		modioInitMod(&(installed_mod->mod), mod_cache_json);
 	}
 

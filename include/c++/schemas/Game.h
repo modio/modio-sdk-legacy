@@ -40,7 +40,7 @@ namespace modio
     std::vector<GameTagOption> game_tag_options;
 
     void initialize(ModioGame game);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

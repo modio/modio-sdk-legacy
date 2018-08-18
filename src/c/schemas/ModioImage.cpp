@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitImage(ModioImage* image, json image_json)
+  void modioInitImage(ModioImage* image, nlohmann::json image_json)
   {
     image->filename = NULL;
     if(modio::hasKey(image_json, "filename"))

@@ -22,8 +22,6 @@
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
 
-using json = nlohmann::json;
-
 namespace modio
 {
 namespace curlwrapper
@@ -35,8 +33,8 @@ public:
   u32 call_number;
   std::string response;
   std::map<std::string, std::string> headers;
-  std::function<void(u32 call_number, u32 response_code, json response_json)> callback;
-  JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, json response_json)> callback);
+  std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback;
+  JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
 };
 
 class OngoingDownload

@@ -17,9 +17,9 @@ namespace modio
 		this->submitted_by.initialize(modio_comment.submitted_by);
 	}
 
-	json Comment::toJson()
+	nlohmann::json Comment::toJson()
 	{
-		json comment_json;
+		nlohmann::json comment_json;
 
 		comment_json["id"] = this->id;
 		comment_json["mod_id"] = this->mod_id;

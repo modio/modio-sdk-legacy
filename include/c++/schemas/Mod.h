@@ -42,7 +42,7 @@ namespace modio
     std::vector<MetadataKVP> metadata_kvps;
 
     void initialize(ModioMod mod);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

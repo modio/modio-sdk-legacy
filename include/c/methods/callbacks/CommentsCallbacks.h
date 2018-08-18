@@ -22,7 +22,7 @@ struct DeleteModCommentParams
 extern std::map< u32, GetAllModCommentsParams* > get_all_mod_comments_callbacks;
 extern std::map< u32, DeleteModCommentParams* > delete_mod_comment_callbacks;
 
-void modioOnGetAllModComments(u32 call_number, u32 response_code, json response_json);
-void modioOnDeleteModComment(u32 call_number, u32 response_code, json response_json);
+void modioOnGetAllModComments(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnDeleteModComment(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

@@ -20,7 +20,7 @@ struct GetAllEventsParams
 extern std::map< u32, GetEventsParams* > get_events_callbacks;
 extern std::map< u32, GetAllEventsParams* > get_all_events_callbacks;
 
-void modioOnGetEvents(u32 call_number, u32 response_code, json response_json);
-void modioOnGetAllEvents(u32 call_number, u32 response_code, json response_json);
+void modioOnGetEvents(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetAllEvents(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

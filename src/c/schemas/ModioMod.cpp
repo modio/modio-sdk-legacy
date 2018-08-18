@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitMod(ModioMod* mod, json mod_json)
+  void modioInitMod(ModioMod* mod, nlohmann::json mod_json)
   {
     mod->id = 0;
     if(modio::hasKey(mod_json, "id"))
@@ -92,27 +92,27 @@ extern "C"
       strcpy(mod->profile_url, profile_url_str.c_str());
     }
 
-    json logo_json;
+    nlohmann::json logo_json;
     if(modio::hasKey(mod_json, "logo"))
       logo_json = mod_json["logo"];
     modioInitLogo(&(mod->logo), logo_json);
 
-    json submitted_by_json;
+    nlohmann::json submitted_by_json;
     if(modio::hasKey(mod_json, "submitted_by"))
       submitted_by_json = mod_json["submitted_by"];
     modioInitUser(&(mod->submitted_by), submitted_by_json);
 
-    json modfile_json;
+    nlohmann::json modfile_json;
     if(modio::hasKey(mod_json, "modfile"))
       modfile_json = mod_json["modfile"];
     modioInitModfile(&(mod->modfile), modfile_json);
 
-    json media_json;
+    nlohmann::json media_json;
     if(modio::hasKey(mod_json, "media"))
       media_json = mod_json["media"];
     modioInitMedia(&(mod->media), media_json);
 
-    json stats_json;
+    nlohmann::json stats_json;
     if(modio::hasKey(mod_json, "stats"))
       stats_json = mod_json["stats"];
     modioInitStats(&(mod->stats), stats_json);

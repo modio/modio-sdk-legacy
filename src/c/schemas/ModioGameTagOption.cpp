@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitGameTagOption(ModioGameTagOption* game_tag_option, json game_tag_option_json)
+  void modioInitGameTagOption(ModioGameTagOption* game_tag_option, nlohmann::json game_tag_option_json)
   {
     game_tag_option->hidden = 0;
     if(modio::hasKey(game_tag_option_json, "hidden"))
@@ -28,7 +28,7 @@ extern "C"
     game_tag_option->tags_array_size = 0;
     if(modio::hasKey(game_tag_option_json, "tags"))
     {
-      json sketchfab_json = game_tag_option_json["tags"];
+      nlohmann::json sketchfab_json = game_tag_option_json["tags"];
       game_tag_option->tags_array_size = (u32)sketchfab_json.size();
       game_tag_option->tags_array = new char*[game_tag_option->tags_array_size];
       for(int i=0; i<(int)game_tag_option->tags_array_size; i++)

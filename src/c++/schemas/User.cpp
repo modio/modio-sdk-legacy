@@ -19,9 +19,9 @@ namespace modio
     this->avatar.initialize(modio_user.avatar);
   }
 
-  json User::toJson()
+  nlohmann::json User::toJson()
   {
-    json user_json;
+    nlohmann::json user_json;
 
     user_json["id"] = this->id;
     user_json["date_online"] = this->date_online;

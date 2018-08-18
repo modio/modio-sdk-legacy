@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitTag(ModioTag* tag, json tag_json)
+  void modioInitTag(ModioTag* tag, nlohmann::json tag_json)
   {
     tag->date_added = 0;
     if(modio::hasKey(tag_json, "date_added"))

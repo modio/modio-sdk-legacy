@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitDependency(ModioDependency* dependency, json dependency_json);
+  void modioInitDependency(ModioDependency* dependency, nlohmann::json dependency_json);
   void modioFreeDependency(ModioDependency* dependency);
 }
 

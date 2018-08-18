@@ -12,9 +12,9 @@ namespace modio
     this->error.initialize(modio_response.error);
   }
 
-  json Response::toJson()
+  nlohmann::json Response::toJson()
   {
-    json response_json;
+    nlohmann::json response_json;
 
     response_json["code"] = this->code;
     response_json["result_count"] = this->result_count;

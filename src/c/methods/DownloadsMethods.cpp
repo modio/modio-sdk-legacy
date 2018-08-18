@@ -75,7 +75,7 @@ u32 modioGetModfileUploadQueueCount()
 
 bool modioGetInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod)
 {
-  json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
   if (!installed_mod_json.empty())
   {
     for (u32 i = 0; i < installed_mod_json["mods"].size(); i++)
@@ -92,7 +92,7 @@ bool modioGetInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod)
 
 void modioGetInstalledMods(ModioInstalledMod *installed_mods)
 {
-  json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
   if (!installed_mod_json.empty())
   {
     for (u32 i = 0; i < installed_mod_json["mods"].size(); i++)
@@ -104,7 +104,7 @@ void modioGetInstalledMods(ModioInstalledMod *installed_mods)
 
 u32 modioGetInstalledModsCount()
 {
-  json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
   if (modio::hasKey(installed_mod_json, "mods"))
   {
     return (u32)installed_mod_json["mods"].size();

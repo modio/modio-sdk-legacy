@@ -18,7 +18,7 @@ namespace modio
     ModfileCreator modfile_creator;
 
     void initialize(ModioQueuedModfileUpload queued_modfile_upload);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

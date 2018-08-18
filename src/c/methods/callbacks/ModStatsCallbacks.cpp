@@ -3,7 +3,7 @@
 std::map< u32,GetModStatsParams* > get_mod_stats_callbacks;
 std::map< u32,GetAllModStatsParams* > get_all_mod_stats_callbacks;
 
-void modioOnGetModStats(u32 call_number, u32 response_code, json response_json)
+void modioOnGetModStats(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -22,7 +22,7 @@ void modioOnGetModStats(u32 call_number, u32 response_code, json response_json)
   modioFreeStats(&stats);
 }
 
-void modioOnGetAllModStats(u32 call_number, u32 response_code, json response_json)
+void modioOnGetAllModStats(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

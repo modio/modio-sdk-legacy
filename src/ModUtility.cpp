@@ -2,16 +2,16 @@
 
 namespace modio
 {
-void addCallToCache(std::string url, json response_json)
+void addCallToCache(std::string url, nlohmann::json response_json)
 {
   std::time_t datetime = std::time(nullptr);
   std::string filename = modio::toString((u32)datetime) + ".json";
 
   modio::writeJson(modio::getModIODirectory() + "cache/" + filename, response_json);
 
-  json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
+  nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
 
-  for (json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
+  for (nlohmann::json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
   {
     if ((*it)["url"] == url)
     {
@@ -22,7 +22,7 @@ void addCallToCache(std::string url, json response_json)
     }
   }
 
-  json cache_object;
+  nlohmann::json cache_object;
   cache_object["datetime"] = datetime;
   cache_object["file"] = filename;
   cache_object["url"] = url;
@@ -40,8 +40,8 @@ void addCallToCache(std::string url, json response_json)
 
 std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
 {
-  json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
-  for (json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
+  nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
+  for (nlohmann::json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
   {
     if ((*it)["url"] == url)
     {
@@ -58,9 +58,9 @@ std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
   return "";
 }
 
-void addToInstalledModsJson(json mod_json, std::string path)
+void addToInstalledModsJson(nlohmann::json mod_json, std::string path)
 {
-  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
   for (auto &installed_mod : installed_mods_json["mods"])
   {
@@ -70,7 +70,7 @@ void addToInstalledModsJson(json mod_json, std::string path)
     }
   }
 
-  json installed_mod_json;
+  nlohmann::json installed_mod_json;
   installed_mod_json["path"] = path;
   installed_mod_json["mod_id"] = mod_json["id"];
   installed_mod_json["modfile_id"] = mod_json["modfile"]["id"];
@@ -83,7 +83,7 @@ void addToInstalledModsJson(json mod_json, std::string path)
 
 bool checkIfModIsStillInstalled(std::string path, u32 mod_id)
 {
-  json installed_mod_json = modio::openJson(path + "modio.json");
+  nlohmann::json installed_mod_json = modio::openJson(path + "modio.json");
   if (modio::hasKey(installed_mod_json, "id"))
     return mod_id == installed_mod_json["id"];
   return false;
@@ -91,7 +91,7 @@ bool checkIfModIsStillInstalled(std::string path, u32 mod_id)
 
 bool checkIfModfileIsStillInstalled(std::string path, u32 modfile_id)
 {
-  json installed_mod_json = modio::openJson(path + "modio.json");
+  nlohmann::json installed_mod_json = modio::openJson(path + "modio.json");
   if (modio::hasKey(installed_mod_json, "modfile") && modio::hasKey(installed_mod_json["modfile"], "id"))
     return modfile_id == installed_mod_json["modfile"]["id"];
   return false;
@@ -99,8 +99,8 @@ bool checkIfModfileIsStillInstalled(std::string path, u32 modfile_id)
 
 void updateInstalledModsJson()
 {
-  json resulting_json;
-  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json resulting_json;
+  nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
   if (modio::hasKey(installed_mods_json, "mods"))
   {
@@ -121,7 +121,7 @@ void updateInstalledModsJson()
 
 std::string getInstalledModPath(u32 mod_id)
 {
-  json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
   if (modio::hasKey(installed_mod_json, "mods"))
   {
@@ -139,7 +139,7 @@ std::string getInstalledModPath(u32 mod_id)
 
 std::string getInstalledModfilePath(u32 modfile_id)
 {
-  json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
   if (modio::hasKey(installed_mod_json, "mods"))
   {

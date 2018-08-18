@@ -12,11 +12,9 @@
 #include "ModioTag.h"
 #include "ModioMetadataKVP.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitMod(ModioMod* mod, json mod_json);
+  void modioInitMod(ModioMod* mod, nlohmann::json mod_json);
   void modioFreeMod(ModioMod* mod);
 }
 

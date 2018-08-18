@@ -19,7 +19,7 @@ namespace modio
     Mod mod;
 
     void initialize(ModioQueuedModDownload queued_mod_download);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

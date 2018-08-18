@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitResponse(ModioResponse* response, json response_json)
+  void modioInitResponse(ModioResponse* response, nlohmann::json response_json)
   {
     response->code = 0;
     response->result_cached = false;
@@ -25,7 +25,7 @@ extern "C"
       response->result_offset = response_json["result_offset"];
     }
 
-    json error_json;
+    nlohmann::json error_json;
     if(modio::hasKey(response_json, "error"))
     {
       error_json = response_json["error"];

@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitGameTagOption(ModioGameTagOption* game_tag_option, json game_tag_option_json);
+  void modioInitGameTagOption(ModioGameTagOption* game_tag_option, nlohmann::json game_tag_option_json);
   void modioFreeGameTagOption(ModioGameTagOption* game_tag_option);
 }
 

@@ -13,7 +13,7 @@ namespace modio
     std::string name;
 
     void initialize(ModioTag tag);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

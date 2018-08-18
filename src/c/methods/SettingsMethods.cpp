@@ -4,7 +4,7 @@ extern "C"
 {
   void modioInitConfig()
   {
-    json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
+    nlohmann::json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
 
     if(!modio::hasKey(config_json, "automatic_updates"))
       config_json["automatic_updates"] = MODIO_UPDATES_ENABLED;
@@ -19,7 +19,7 @@ extern "C"
 
   u32 modioGetAutomaticUpdatesConfig()
   {
-    json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
+    nlohmann::json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
     u32 automatic_updates = 0;
     if(modio::hasKey(config_json, "automatic_updates"))
       automatic_updates = config_json["automatic_updates"];
@@ -28,7 +28,7 @@ extern "C"
 
   u32 modioGetAllowBackgroundDownloadsConfig()
   {
-    json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
+    nlohmann::json config_json = modio::openJson(modio::getModIODirectory() + "config.json");
     u32 allow_background_downloads = 0;
     if(modio::hasKey(config_json, "allow_background_downloads"))
       allow_background_downloads = config_json["allow_background_downloads"];
@@ -37,7 +37,7 @@ extern "C"
 
   void modioSetAutomaticUpdatesConfig(u32 option)
   {
-    json cache_file_json = modio::openJson(modio::getModIODirectory() + "config.json");
+    nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "config.json");
     cache_file_json["automatic_updates"] = option;
 
     modio::AUTOMATIC_UPDATES = option;
@@ -47,7 +47,7 @@ extern "C"
 
   void modioSetAllowBackgroundDownloadsConfig(u32 option)
   {
-    json cache_file_json = modio::openJson(modio::getModIODirectory() + "config.json");
+    nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "config.json");
     cache_file_json["allow_background_downloads"] = option;
     modio::writeJson(modio::getModIODirectory() + "config.json", cache_file_json);
 

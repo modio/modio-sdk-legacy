@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitModfile(ModioModfile* modfile, json modfile_json)
+  void modioInitModfile(ModioModfile* modfile, nlohmann::json modfile_json)
   {
     modfile->id = 0;
     if(modio::hasKey(modfile_json, "id"))
@@ -64,12 +64,12 @@ extern "C"
       strcpy(modfile->changelog, changelog_str.c_str());
     }
 
-    json filehash_json;
+    nlohmann::json filehash_json;
     if(modio::hasKey(modfile_json, "filehash"))
       filehash_json = modfile_json["filehash"];
     modioInitFilehash(&(modfile->filehash), filehash_json);
 
-    json download_json;
+    nlohmann::json download_json;
     if(modio::hasKey(modfile_json, "download"))
       download_json = modfile_json["download"];
     modioInitDownload(&(modfile->download), download_json);

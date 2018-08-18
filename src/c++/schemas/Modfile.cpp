@@ -23,9 +23,9 @@ namespace modio
     this->download.initialize(modio_modfile.download);
   }
 
-  json Modfile::toJson()
+  nlohmann::json Modfile::toJson()
   {
-    json modfile_json;
+    nlohmann::json modfile_json;
 
     modfile_json["id"] = this->id;
     modfile_json["mod_id"] = this->mod_id;

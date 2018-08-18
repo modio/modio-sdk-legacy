@@ -27,8 +27,8 @@ extern std::map< u32, GetAllModDependenciesParams* > get_all_mod_dependencies_ca
 extern std::map< u32, AddModDependienciesParams* > add_mod_dependencies_callbacks;
 extern std::map< u32, DeleteModDependenciesParams* > delete_mod_dependencies_callbacks;
 
-void modioOnGetAllModDependencies(u32 call_number, u32 response_code, json response_json);
-void modioOnAddModDependencies(u32 call_number, u32 response_code, json response_json);
-void modioOnDeleteModDependencies(u32 call_number, u32 response_code, json response_json);
+void modioOnGetAllModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnAddModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnDeleteModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

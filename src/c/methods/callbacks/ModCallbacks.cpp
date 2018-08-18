@@ -6,7 +6,7 @@ std::map< u32,DeleteModParams* > delete_mod_callbacks;
 std::map< u32,GetModsParams* > get_mods_callbacks;
 std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
 
-void modioOnGetMod(u32 call_number, u32 response_code, json response_json)
+void modioOnGetMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -25,7 +25,7 @@ void modioOnGetMod(u32 call_number, u32 response_code, json response_json)
   modioFreeMod(&mod);
 }
 
-void modioOnGetMods(u32 call_number, u32 response_code, json response_json)
+void modioOnGetMods(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -60,7 +60,7 @@ void modioOnGetMods(u32 call_number, u32 response_code, json response_json)
   modioFreeResponse(&response);
 }
 
-void modioOnModAdded(u32 call_number, u32 response_code, json response_json)
+void modioOnModAdded(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -74,7 +74,7 @@ void modioOnModAdded(u32 call_number, u32 response_code, json response_json)
   add_mod_callback.erase(call_number);
 }
 
-void modioOnModDeleted(u32 call_number, u32 response_code, json response_json)
+void modioOnModDeleted(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -85,7 +85,7 @@ void modioOnModDeleted(u32 call_number, u32 response_code, json response_json)
   delete_mod_callbacks.erase(call_number);
 }
 
-void modioOnReturnIdCallback(u32 call_number, u32 response_code, json response_json)
+void modioOnReturnIdCallback(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

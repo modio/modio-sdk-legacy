@@ -17,7 +17,7 @@ namespace modio
     std::string thumb_1280x720;
 
     void initialize(ModioLogo Logo);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

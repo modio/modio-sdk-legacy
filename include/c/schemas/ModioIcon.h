@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitIcon(ModioIcon* icon, json icon_json);
+  void modioInitIcon(ModioIcon* icon, nlohmann::json icon_json);
   void modioFreeIcon(ModioIcon* icon);
 }
 

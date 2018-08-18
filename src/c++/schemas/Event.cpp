@@ -11,9 +11,9 @@ namespace modio
     this->date_added = modio_event.date_added;
   }
 
-  json Event::toJson()
+  nlohmann::json Event::toJson()
   {
-    json event_json;
+    nlohmann::json event_json;
 
     event_json["id"] = this->id;
     event_json["mod_id"] = this->mod_id;

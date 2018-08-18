@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitHeader(ModioHeader* header, json header_json)
+  void modioInitHeader(ModioHeader* header, nlohmann::json header_json)
   {
     header->filename = NULL;
     if(modio::hasKey(header_json, "filename"))

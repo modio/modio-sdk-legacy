@@ -18,7 +18,7 @@ namespace modio
     void setFilehash(const std::string& filehash);
     ModioModfileCreator* getModioModfileCreator();
     ~ModfileCreator();
-    json toJson();    
+    nlohmann::json toJson();    
   };
 }
 

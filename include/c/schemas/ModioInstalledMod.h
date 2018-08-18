@@ -6,11 +6,9 @@
 #include "../ModioC.h"
 #include "ModioMod.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-	void modioInitInstalledMod(ModioInstalledMod* installed_mod, json image_json);
+	void modioInitInstalledMod(ModioInstalledMod* installed_mod, nlohmann::json image_json);
 	void modioFreeInstalledMod(ModioInstalledMod* installed_mod);
 }
 

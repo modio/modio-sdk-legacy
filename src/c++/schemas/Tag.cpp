@@ -9,9 +9,9 @@ namespace modio
       this->name = modio_tag.name;
   }
 
-  json Tag::toJson()
+  nlohmann::json Tag::toJson()
   {
-    json tag_json;
+    nlohmann::json tag_json;
 
     tag_json["date_added"] = this->date_added;
     tag_json["name"] = this->name;

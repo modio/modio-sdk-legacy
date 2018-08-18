@@ -7,9 +7,9 @@
 
 namespace modio
 {
-  void addCallToCache(std::string url, json response_json);
+  void addCallToCache(std::string url, nlohmann::json response_json);
   std::string getCallFileFromCache(std::string url, u32 max_age_seconds);
-  void addToInstalledModsJson(json mod_id, std::string path);
+  void addToInstalledModsJson(nlohmann::json mod_id, std::string path);
   bool checkIfModIsStillInstalled(std::string path, u32 mod_id);
   bool checkIfModfileIsStillInstalled(std::string path, u32 modfile_id);
   void updateInstalledModsJson();

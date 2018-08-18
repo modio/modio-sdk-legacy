@@ -55,8 +55,6 @@
 #include <dirent.h>
 #endif
 
-using json = nlohmann::json;
-
 #ifndef PATH_MAX
 #define PATH_MAX 260
 #endif
@@ -78,10 +76,10 @@ void clearLog();
 u32 getCurrentTime();
 
 // Json methods
-bool hasKey(json json_object, std::string key);
-json toJson(std::string json_str);
-json openJson(std::string file_path);
-void writeJson(std::string file_path, json json_object);
+bool hasKey(nlohmann::json json_object, std::string key);
+nlohmann::json toJson(std::string json_str);
+nlohmann::json openJson(std::string file_path);
+void writeJson(std::string file_path, nlohmann::json json_object);
 
 // Filesystem methods
 std::string getModIODirectory();

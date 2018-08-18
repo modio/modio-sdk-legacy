@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitError(ModioError* error, json error_json)
+  void modioInitError(ModioError* error, nlohmann::json error_json)
   {
     error->code = -1;
     if(modio::hasKey(error_json, "code"))
@@ -20,7 +20,7 @@ extern "C"
     error->errors_array_size = 0;
     if(modio::hasKey(error_json, "errors"))
     {
-      json errors_json = error_json["errors"];
+      nlohmann::json errors_json = error_json["errors"];
       error->errors_array_size = (u32)errors_json.size();
       error->errors_array = new char*[error->errors_array_size];
 

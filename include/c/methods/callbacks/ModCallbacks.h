@@ -47,10 +47,10 @@ extern std::map< u32,DeleteModParams* > delete_mod_callbacks;
 extern std::map< u32,GetModsParams* > get_mods_callbacks;
 extern std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
 
-void modioOnGetMod(u32 call_number, u32 response_code, json response_json);
-void modioOnGetMods(u32 call_number, u32 response_code, json response_json);
-void modioOnModAdded(u32 call_number, u32 response_code, json response_json);
-void modioOnModDeleted(u32 call_number, u32 response_code, json response_json);
-void modioOnReturnIdCallback(u32 call_number, u32 response_code, json response_json);
+void modioOnGetMod(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetMods(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnModAdded(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnModDeleted(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnReturnIdCallback(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

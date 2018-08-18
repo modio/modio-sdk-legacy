@@ -43,9 +43,9 @@ namespace modio
     }
   }
 
-  json Mod::toJson()
+  nlohmann::json Mod::toJson()
   {
-    json mod_json;
+    nlohmann::json mod_json;
 
     mod_json["id"] = this->id;
     mod_json["game_id"] = this->game_id;
@@ -68,14 +68,14 @@ namespace modio
     mod_json["media"] = this->media.toJson();
     mod_json["stats"] = this->stats.toJson();
 
-    json tags_json;
+    nlohmann::json tags_json;
     for(auto& tag : tags)
     {
       tags_json.push_back(tag.toJson());
     }
     mod_json["tags"] = tags_json;
 
-    json metadata_kvps_json;
+    nlohmann::json metadata_kvps_json;
     for(auto& metadata_kvp : metadata_kvps)
     {
       metadata_kvps_json.push_back(metadata_kvp.toJson());

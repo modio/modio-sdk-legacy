@@ -103,7 +103,7 @@ namespace modio
     return result;
   }
 
-  void modioInitModfileCreatorFromJson(ModioModfileCreator* modfile_creator, json modfile_creator_json)
+  void modioInitModfileCreatorFromJson(ModioModfileCreator* modfile_creator, nlohmann::json modfile_creator_json)
   {
     modfile_creator->path = NULL;
     if(modio::hasKey(modfile_creator_json, "path"))

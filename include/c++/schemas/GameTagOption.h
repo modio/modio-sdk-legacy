@@ -16,7 +16,7 @@ namespace modio
 
     void initialize(ModioGameTagOption game_tag_option);
 
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

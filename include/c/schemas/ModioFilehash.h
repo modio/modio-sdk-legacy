@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitFilehash(ModioFilehash* filehash, json filehash_json);
+  void modioInitFilehash(ModioFilehash* filehash, nlohmann::json filehash_json);
   void modioFreeFilehash(ModioFilehash* filehash);
 }
 

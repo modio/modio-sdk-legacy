@@ -3,7 +3,7 @@
 std::map< u32, GetAllModCommentsParams* > get_all_mod_comments_callbacks;
 std::map< u32, DeleteModCommentParams* > delete_mod_comment_callbacks;
 
-void modioOnGetAllModComments(u32 call_number, u32 response_code, json response_json)
+void modioOnGetAllModComments(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
 	ModioResponse response;
 	modioInitResponse(&response, response_json);
@@ -25,7 +25,7 @@ void modioOnGetAllModComments(u32 call_number, u32 response_code, json response_
 				}
 			}
 		}
-		catch (json::parse_error &e)
+		catch (nlohmann::json::parse_error &e)
 		{
 			modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
 		}
@@ -41,7 +41,7 @@ void modioOnGetAllModComments(u32 call_number, u32 response_code, json response_
 	get_all_mod_comments_callbacks.erase(call_number);
 }
 
-void modioOnDeleteModComment(u32 call_number, u32 response_code, json response_json)
+void modioOnDeleteModComment(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
 	ModioResponse response;
 	modioInitResponse(&response, response_json);

@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitUser(ModioUser* user, json user_json)
+  void modioInitUser(ModioUser* user, nlohmann::json user_json)
   {
     user->id = 0;
     if(modio::hasKey(user_json, "id"))
@@ -56,7 +56,7 @@ extern "C"
       strcpy(user->profile_url, profile_url_str.c_str());
     }
 
-    json avatar_json;
+    nlohmann::json avatar_json;
     if(modio::hasKey(user_json, "avatar"))
       avatar_json = user_json["avatar"];
     modioInitAvatar(&(user->avatar), avatar_json);

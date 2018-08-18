@@ -23,25 +23,25 @@ namespace modio
     }
   }
 
-  json Media::toJson()
+  nlohmann::json Media::toJson()
   {
-    json media_json;
+    nlohmann::json media_json;
 
-    json youtube_json;
+    nlohmann::json youtube_json;
     for(auto& youtube_str : youtube)
     {
       youtube_json.push_back(youtube_str);
     }
     media_json["youtube"] = youtube_json;
 
-    json sketchfab_json;
+    nlohmann::json sketchfab_json;
     for(auto& sketchfab_str : sketchfab)
     {
       sketchfab_json.push_back(sketchfab_str);
     }
     media_json["sketchfab"] = sketchfab_json;
 
-    json images_json;
+    nlohmann::json images_json;
     for(auto& images_img : images)
     {
       images_json.push_back(images_img.toJson());

@@ -4,7 +4,7 @@ std::map< u32, GetTagsParams* > get_tags_callbacks;
 std::map< u32, EditTagsParams* > add_tags_callbacks;
 std::map< u32, DeleteTagsParams* > delete_tags_callbacks;
 
-void modioOnGetTags(u32 call_number, u32 response_code, json response_json)
+void modioOnGetTags(u32 call_number, u32 response_code, nlohmann::json  response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -25,7 +25,7 @@ void modioOnGetTags(u32 call_number, u32 response_code, json response_json)
           modioInitTag(&(tags_array[i]), response_json["data"][i]);
         }
       }
-    }catch(json::parse_error &e)
+    }catch(nlohmann::json::parse_error &e)
     {
       modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
     }
@@ -41,7 +41,7 @@ void modioOnGetTags(u32 call_number, u32 response_code, json response_json)
   get_tags_callbacks.erase(call_number);
 }
 
-void modioOnTagsAdded(u32 call_number, u32 response_code, json response_json)
+void modioOnTagsAdded(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -52,7 +52,7 @@ void modioOnTagsAdded(u32 call_number, u32 response_code, json response_json)
   add_tags_callbacks.erase(call_number);
 }
 
-void modioOnTagsDeleted(u32 call_number, u32 response_code, json response_json)
+void modioOnTagsDeleted(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

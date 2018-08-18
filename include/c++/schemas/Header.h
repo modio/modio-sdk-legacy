@@ -14,7 +14,7 @@ namespace modio
     std::string original;
 
     void initialize(ModioHeader Header);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

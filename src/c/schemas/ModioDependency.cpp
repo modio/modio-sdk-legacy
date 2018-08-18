@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitDependency(ModioDependency* dependency, json dependency_json)
+  void modioInitDependency(ModioDependency* dependency, nlohmann::json dependency_json)
   {
     dependency->mod_id = 0;
     if(modio::hasKey(dependency_json, "mod_id"))

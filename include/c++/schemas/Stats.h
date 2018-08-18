@@ -23,7 +23,7 @@ namespace modio
     u32 date_expires;
 
     void initialize(ModioStats mod);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

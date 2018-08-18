@@ -7,7 +7,7 @@ std::map< u32, GetUserGamesParams* > get_user_games_callbacks;
 std::map< u32, GetUserModsParams* > get_user_mods_callbacks;
 std::map< u32, GetUserModfilesParams* > get_user_modfiles_callbacks;
 
-void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, json response_json)
+void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -23,7 +23,7 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, json respon
   modioFreeResponse(&response);
 }
 
-void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -55,7 +55,7 @@ void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, json respon
   modioFreeResponse(&response);
 }
 
-void modioOnGetUserEvents(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserEvents(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -77,7 +77,7 @@ void modioOnGetUserEvents(u32 call_number, u32 response_code, json response_json
           modioInitEvent(&(events_array[i]), response_json["data"][i]);
         }
       }
-    }catch(json::parse_error &e)
+    }catch(nlohmann::json::parse_error &e)
     {
       modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
     }
@@ -95,7 +95,7 @@ void modioOnGetUserEvents(u32 call_number, u32 response_code, json response_json
   get_user_events_callbacks.erase(call_number);
 }
 
-void modioOnGetUserGames(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -127,7 +127,7 @@ void modioOnGetUserGames(u32 call_number, u32 response_code, json response_json)
   modioFreeResponse(&response);
 }
 
-void modioOnGetUserMods(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserMods(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -159,7 +159,7 @@ void modioOnGetUserMods(u32 call_number, u32 response_code, json response_json)
   modioFreeResponse(&response);
 }
 
-void modioOnGetUserModfiles(u32 call_number, u32 response_code, json response_json)
+void modioOnGetUserModfiles(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

@@ -14,9 +14,9 @@ namespace modio
     //this->modfile_creator.initialize(queued_modfile_upload.modio_modfile_creator);    
   }
 
-  json QueuedModfileUpload::toJson()
+  nlohmann::json QueuedModfileUpload::toJson()
   {
-    json queued_modfile_upload_json;
+    nlohmann::json queued_modfile_upload_json;
 
     queued_modfile_upload_json["state"] = this->state;
     queued_modfile_upload_json["current_progress"] = this->current_progress;

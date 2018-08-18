@@ -6,11 +6,9 @@
 #include "../ModioC.h"
 #include "../creators/ModioModfileCreator.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload, json queued_modfile_upload_json);
+  void modioInitQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload, nlohmann::json queued_modfile_upload_json);
   void modioFreeQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload);
 }
 

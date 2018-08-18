@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitMetadataKVP(ModioMetadataKVP* metadata_kvp, json metadata_kvp_json)
+  void modioInitMetadataKVP(ModioMetadataKVP* metadata_kvp, nlohmann::json metadata_kvp_json)
   {
     metadata_kvp->metakey = NULL;
     if(modio::hasKey(metadata_kvp_json, "metakey"))

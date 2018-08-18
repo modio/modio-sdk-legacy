@@ -8,9 +8,9 @@ namespace modio
       this->md5 = modio_filehash.md5;
   }
 
-  json Filehash::toJson()
+  nlohmann::json Filehash::toJson()
   {
-    json filehash_json;
+    nlohmann::json filehash_json;
 
     filehash_json["md5"] = this->md5;
 

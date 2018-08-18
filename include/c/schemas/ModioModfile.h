@@ -7,11 +7,9 @@
 #include "ModioFilehash.h"
 #include "ModioDownload.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitModfile(ModioModfile* modfile, json modfile_json);
+  void modioInitModfile(ModioModfile* modfile, nlohmann::json modfile_json);
   void modioFreeModfile(ModioModfile* modfile);
 }
 

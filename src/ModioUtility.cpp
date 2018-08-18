@@ -82,7 +82,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
       }
     }
     updateModsCache(mod_edited_ids);
-    json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+    nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
     installed_mods_json["last_mod_event_poll"] = modio::LAST_MOD_EVENT_POLL;
     modio::writeJson(modio::getModIODirectory() + "installed_mods.json", installed_mods_json);
   }
@@ -137,7 +137,7 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
       }
       }
     }
-    json token_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
+    nlohmann::json token_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
     token_json["last_user_event_poll"] = modio::LAST_USER_EVENT_POLL;
     modio::writeJson(modio::getModIODirectory() + "authentication.json", token_json);
   }

@@ -10,7 +10,7 @@ void onJsonRequestFinished(CURL *curl)
   JsonResponseHandler *ongoing_call = ongoing_calls[curl];
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-  json response_json = modio::toJson(ongoing_call->response);
+  nlohmann::json response_json = modio::toJson(ongoing_call->response);
 
   if(ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
   {

@@ -6,11 +6,9 @@
 #include "../ModioC.h"
 #include "ModioImage.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitMedia(ModioMedia* media, json media_json);
+  void modioInitMedia(ModioMedia* media, nlohmann::json media_json);
   void modioFreeMedia(ModioMedia* media);
 }
 
