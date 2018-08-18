@@ -8,7 +8,7 @@
 #include "ModioUser.h"
 #include "ModioMedia.h"
 #include "ModioModfile.h"
-#include "ModioRatingSummary.h"
+#include "ModioStats.h"
 #include "ModioTag.h"
 #include "ModioMetadataKVP.h"
 

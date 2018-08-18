@@ -112,10 +112,10 @@ extern "C"
       media_json = mod_json["media"];
     modioInitMedia(&(mod->media), media_json);
 
-    json rating_summary_json;
-    if(modio::hasKey(mod_json, "rating_summary"))
-      rating_summary_json = mod_json["rating_summary"];
-    modioInitRatingSummary(&(mod->rating_summary), rating_summary_json);
+    json stats_json;
+    if(modio::hasKey(mod_json, "stats"))
+      stats_json = mod_json["stats"];
+    modioInitStats(&(mod->stats), stats_json);
 
     mod->tags_array = NULL;
     mod->tags_array_size = 0;
@@ -165,7 +165,7 @@ extern "C"
       modioFreeUser(&(mod->submitted_by));
       modioFreeModfile(&(mod->modfile));
       modioFreeMedia(&(mod->media));
-      modioFreeRatingSummary(&(mod->rating_summary));
+      modioFreeStats(&(mod->stats));
 
       for(u32 i=0; i<mod->tags_array_size; i++)
       {

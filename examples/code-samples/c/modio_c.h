@@ -112,7 +112,6 @@ typedef struct ModioMetadataKVP ModioMetadataKVP;
 typedef struct ModioUser ModioUser;
 typedef struct ModioDownload ModioDownload;
 typedef struct ModioModfile ModioModfile;
-typedef struct ModioRatingSummary ModioRatingSummary;
 typedef struct ModioTag ModioTag;
 typedef struct ModioMod ModioMod;
 typedef struct ModioResponse ModioResponse;
@@ -124,7 +123,7 @@ typedef struct ModioModEditor ModioModEditor;
 typedef struct ModioEvent ModioEvent;
 typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
-typedef struct ModioModStats ModioModStats;
+typedef struct ModioStats ModioStats;
 
 struct ModioListNode
 {
@@ -241,16 +240,6 @@ struct ModioModfile
   ModioDownload download;
 };
 
-struct ModioRatingSummary
-{
-  u32 total_ratings;
-  u32 positive_ratings;
-  u32 negative_ratings;
-  u32 percentage_positive;
-  double weighted_aggregate;
-  char* display_text;
-};
-
 struct ModioTag
 {
   u32 date_added;
@@ -278,7 +267,7 @@ struct ModioMod
   ModioUser submitted_by;
   ModioModfile modfile;
   ModioMedia media;
-  ModioRatingSummary rating_summary;
+  ModioStats stats;
   ModioTag* tags_array;
   u32 tags_array_size;
   ModioMetadataKVP* metadata_kvp_array;
@@ -448,7 +437,7 @@ struct ModioComment
   char* content;
 };
 
-struct ModioModStats
+struct ModioStats
 {
   u32 mod_id;
   u32 popularity_rank_position;
@@ -632,5 +621,5 @@ void modioDeleteModComment(void* object, u32 mod_id, u32 comment_id, void(*callb
 void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response));
 
 //Stats Methods
-void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioModStats mod));
-void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size));
+void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioStats mod));
+void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size));

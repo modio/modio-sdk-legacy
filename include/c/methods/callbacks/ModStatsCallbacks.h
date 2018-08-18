@@ -5,13 +5,13 @@
 #include "../../../wrappers/MinizipWrapper.h"
 #include "../../../wrappers/CurlWrapper.h"
 #include "../../schemas/ModioResponse.h"
-#include "../../schemas/ModioModStats.h"
+#include "../../schemas/ModioStats.h"
 #include "../../../ModUtility.h"
 
 struct GetModStatsParams
 {
   void* object;
-  void (*callback)(void* object, ModioResponse response, ModioModStats mod_stats);
+  void (*callback)(void* object, ModioResponse response, ModioStats stats);
 };
 
 struct GetAllModStatsParams
@@ -19,7 +19,7 @@ struct GetAllModStatsParams
   void* object;
   std::string url;
   bool is_cache;
-  void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size);
+  void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size);
 };
 
 extern std::map< u32,GetModStatsParams* > get_mod_stats_callbacks;

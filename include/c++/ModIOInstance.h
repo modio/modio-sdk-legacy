@@ -19,9 +19,9 @@
 #include "schemas/Mod.h"
 #include "schemas/Event.h"
 #include "schemas/Modfile.h"
-#include "schemas/ModStats.h"
+#include "schemas/Stats.h"
 #include "schemas/QueuedModDownload.h"
-#include "schemas/RatingSummary.h"
+#include "schemas/Stats.h"
 #include "schemas/Response.h"
 #include "schemas/Tag.h"
 #include "schemas/User.h"
@@ -144,8 +144,8 @@ public:
   void submitReport(std::string resource, u32 id, u32 type, std::string name, std::string summary, const std::function<void(const modio::Response &response)> &callback);
 
   //Stats Methods
-  void getModStats(u32 mod_id, const std::function<void(const modio::Response &response, const modio::ModStats &mod_stats)> &callback);
-  void getAllModStats(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::ModStats> &mod_stats)> &callback);
+  void getModStats(u32 mod_id, const std::function<void(const modio::Response &response, const modio::Stats &stats)> &callback);
+  void getAllModStats(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Stats> &mods_stats)> &callback);
 };
 }
 

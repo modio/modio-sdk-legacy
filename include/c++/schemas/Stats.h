@@ -1,14 +1,12 @@
 #ifndef MODIO_MODSTATS_H
 #define MODIO_MODSTATS_H
 
-#include "../../Utility.h"
 #include "../../Globals.h"
-#include "../../ModUtility.h"
-#include "../../c/schemas/ModioModStats.h"
+#include "../../c/schemas/ModioStats.h"
 
 namespace modio
 {
-  class ModStats
+  class Stats
   {
   public:
     u32 mod_id;
@@ -24,7 +22,7 @@ namespace modio
     std::string ratings_display_text;
     u32 date_expires;
 
-    void initialize(ModioModStats mod);
+    void initialize(ModioStats mod);
     json toJson();
   };
 }

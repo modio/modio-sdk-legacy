@@ -8,7 +8,7 @@
 #include "User.h"
 #include "Media.h"
 #include "Modfile.h"
-#include "RatingSummary.h"
+#include "Stats.h"
 #include "Tag.h"
 #include "MetadataKVP.h"
 #include "../../c/schemas/ModioMod.h"
@@ -37,7 +37,7 @@ namespace modio
     User submitted_by;
     Modfile modfile;
     Media media;
-    RatingSummary rating_summary;
+    Stats stats;
     std::vector<Tag> tags;
     std::vector<MetadataKVP> metadata_kvps;
 

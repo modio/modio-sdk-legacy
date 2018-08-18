@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioModStats mod))
+  void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioStats mod))
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/stats?api_key=" + modio::API_KEY;
 
@@ -15,7 +15,7 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModStats);
   }
 
-  void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size))
+  void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/stats?" + filter_string + "&api_key=" + modio::API_KEY;

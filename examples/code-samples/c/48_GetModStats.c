@@ -1,23 +1,23 @@
 #include "modio_c.h"
 
-void onGetModStats(void *object, ModioResponse response, ModioModStats mod_stats)
+void onGetModStats(void *object, ModioResponse response, ModioStats stats)
 {
   bool *wait = object;
   printf("On mod get response: %i\n", response.code);
   if (response.code == 200)
   {
-    printf("Mod id: %i\n", mod_stats.mod_id);
-    printf("Popularity rank position: %i\n", mod_stats.popularity_rank_position);
-    printf("Popularity rank total mods: %i\n", mod_stats.popularity_rank_total_mods);
-    printf("Downloads total: %i\n", mod_stats.downloads_total);
-    printf("Subscribers total: %i\n", mod_stats.subscribers_total);
-    printf("Ratings total: %i\n", mod_stats.ratings_total);
-    printf("Ratings positive: %i\n", mod_stats.ratings_positive);
-    printf("Ratings negative: %i\n", mod_stats.ratings_negative);
-    printf("Ratings percentage positive: %i\n", mod_stats.ratings_percentage_positive);
-    printf("Ratings weighted aggregate: %f\n", mod_stats.ratings_weighted_aggregate);
-    printf("Ratings display text: %s\n", mod_stats.ratings_display_text);
-    printf("Date expires: %i\n", mod_stats.date_expires);
+    printf("Mod id: %i\n", stats.mod_id);
+    printf("Popularity rank position: %i\n", stats.popularity_rank_position);
+    printf("Popularity rank total mods: %i\n", stats.popularity_rank_total_mods);
+    printf("Downloads total: %i\n", stats.downloads_total);
+    printf("Subscribers total: %i\n", stats.subscribers_total);
+    printf("Ratings total: %i\n", stats.ratings_total);
+    printf("Ratings positive: %i\n", stats.ratings_positive);
+    printf("Ratings negative: %i\n", stats.ratings_negative);
+    printf("Ratings percentage positive: %i\n", stats.ratings_percentage_positive);
+    printf("Ratings weighted aggregate: %f\n", stats.ratings_weighted_aggregate);
+    printf("Ratings display text: %s\n", stats.ratings_display_text);
+    printf("Date expires: %i\n", stats.date_expires);
   }
   *wait = false;
 }

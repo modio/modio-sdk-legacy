@@ -112,8 +112,8 @@ extern "C"
   typedef struct ModioUser ModioUser;
   typedef struct ModioDownload ModioDownload;
   typedef struct ModioModfile ModioModfile;
-  typedef struct ModioRatingSummary ModioRatingSummary;
   typedef struct ModioTag ModioTag;
+  typedef struct ModioStats ModioStats;
   typedef struct ModioMod ModioMod;
   typedef struct ModioResponse ModioResponse;
   typedef struct ModioFilterCreator ModioFilterCreator;
@@ -124,7 +124,6 @@ extern "C"
   typedef struct ModioEvent ModioEvent;
   typedef struct ModioQueuedModDownload ModioQueuedModDownload;
   typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
-  typedef struct ModioModStats ModioModStats;
 
   struct ModioListNode
   {
@@ -241,22 +240,28 @@ extern "C"
     ModioDownload download;
   };
 
-  struct ModioRatingSummary
-  {
-    u32 total_ratings;
-    u32 positive_ratings;
-    u32 negative_ratings;
-    u32 percentage_positive;
-    double weighted_aggregate;
-    char* display_text;
-  };
-
   struct ModioTag
   {
     u32 date_added;
     char* name;
   };
 
+  struct ModioStats
+  {
+    u32 mod_id;
+    u32 popularity_rank_position;
+    u32 popularity_rank_total_mods;
+    u32 downloads_total;
+    u32 subscribers_total;
+    u32 ratings_total;
+    u32 ratings_positive;
+    u32 ratings_negative;
+    u32 ratings_percentage_positive;
+    double ratings_weighted_aggregate;
+    char* ratings_display_text;
+    u32 date_expires;
+  };
+  
   struct ModioMod
   {
     u32 id;
@@ -278,7 +283,7 @@ extern "C"
     ModioUser submitted_by;
     ModioModfile modfile;
     ModioMedia media;
-    ModioRatingSummary rating_summary;
+    ModioStats stats;
     ModioTag* tags_array;
     u32 tags_array_size;
     ModioMetadataKVP* metadata_kvp_array;
@@ -446,22 +451,6 @@ extern "C"
     u32 karma_guest;
     char* thread_position;
     char* content;
-  };
-
-  struct ModioModStats
-  {
-    u32 mod_id;
-    u32 popularity_rank_position;
-    u32 popularity_rank_total_mods;
-    u32 downloads_total;
-    u32 subscribers_total;
-    u32 ratings_total;
-    u32 ratings_positive;
-    u32 ratings_negative;
-    u32 ratings_percentage_positive;
-    double ratings_weighted_aggregate;
-    char* ratings_display_text;
-    u32 date_expires;
   };
 
   //General Methods
@@ -632,8 +621,8 @@ extern "C"
   void MODIO_DLL modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response));
 
   //Stats Methods
-  void MODIO_DLL modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioModStats mod));
-  void MODIO_DLL modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size));
+  void MODIO_DLL modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioStats mod));
+  void MODIO_DLL modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size));
 }
 
 #endif

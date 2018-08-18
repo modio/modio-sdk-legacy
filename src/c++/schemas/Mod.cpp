@@ -30,7 +30,7 @@ namespace modio
     this->submitted_by.initialize(modio_mod.submitted_by);
     this->modfile.initialize(modio_mod.modfile);
     this->media.initialize(modio_mod.media);
-    this->rating_summary.initialize(modio_mod.rating_summary);
+    this->stats.initialize(modio_mod.stats);
     this->tags.resize(modio_mod.tags_array_size);
     for(u32 i = 0; i < modio_mod.tags_array_size; i++)
     {
@@ -66,7 +66,7 @@ namespace modio
     mod_json["submitted_by"] = this->submitted_by.toJson();
     mod_json["modfile"] = this->modfile.toJson();
     mod_json["media"] = this->media.toJson();
-    mod_json["rating_summary"] = this->rating_summary.toJson();
+    mod_json["stats"] = this->stats.toJson();
 
     json tags_json;
     for(auto& tag : tags)
