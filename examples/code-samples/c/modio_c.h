@@ -113,6 +113,7 @@ typedef struct ModioUser ModioUser;
 typedef struct ModioDownload ModioDownload;
 typedef struct ModioModfile ModioModfile;
 typedef struct ModioTag ModioTag;
+typedef struct ModioStats ModioStats;
 typedef struct ModioMod ModioMod;
 typedef struct ModioResponse ModioResponse;
 typedef struct ModioFilterCreator ModioFilterCreator;
@@ -123,7 +124,6 @@ typedef struct ModioModEditor ModioModEditor;
 typedef struct ModioEvent ModioEvent;
 typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
-typedef struct ModioStats ModioStats;
 
 struct ModioListNode
 {
@@ -236,6 +236,7 @@ struct ModioModfile
   char* version;
   char* virustotal_hash;
   char* changelog;
+  char* metadata_blob;
   ModioFilehash filehash;
   ModioDownload download;
 };
@@ -244,6 +245,22 @@ struct ModioTag
 {
   u32 date_added;
   char* name;
+};
+
+struct ModioStats
+{
+  u32 mod_id;
+  u32 popularity_rank_position;
+  u32 popularity_rank_total_mods;
+  u32 downloads_total;
+  u32 subscribers_total;
+  u32 ratings_total;
+  u32 ratings_positive;
+  u32 ratings_negative;
+  u32 ratings_percentage_positive;
+  double ratings_weighted_aggregate;
+  char* ratings_display_text;
+  u32 date_expires;
 };
 
 struct ModioMod
@@ -308,6 +325,7 @@ struct ModioModfileCreator
   char* path;
   char* version;
   char* changelog;
+  char* metadata_blob;
   char* active;
   char* filehash;
 };
@@ -316,6 +334,7 @@ struct ModioModfileEditor
 {
   char* version;
   char* changelog;
+  char* metadata_blob;
   char* active;
 };
 
@@ -437,22 +456,6 @@ struct ModioComment
   char* content;
 };
 
-struct ModioStats
-{
-  u32 mod_id;
-  u32 popularity_rank_position;
-  u32 popularity_rank_total_mods;
-  u32 downloads_total;
-  u32 subscribers_total;
-  u32 ratings_total;
-  u32 ratings_positive;
-  u32 ratings_negative;
-  u32 ratings_percentage_positive;
-  double ratings_weighted_aggregate;
-  char* ratings_display_text;
-  u32 date_expires;
-};
-
 //General Methods
 void modioInit(u32 environment, u32 game_id, char* api_key, char* root_path);
 void modioShutdown();
@@ -537,6 +540,7 @@ void modioInitModfileCreator(ModioModfileCreator* modfile_creator);
 void modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path);
 void modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char* version);
 void modioSetModfileCreatorChangelog(ModioModfileCreator* modfile_creator, char* changelog);
+void modioSetModfileCreatorMetadataBlob(ModioModfileCreator* modfile_creator, char* metadata_blob);
 void modioSetModfileCreatorActive(ModioModfileCreator* modfile_creator, bool active);
 void modioSetModfileCreatorFilehash(ModioModfileCreator* modfile_creator, char* filehash);
 void modioFreeModfileCreator(ModioModfileCreator* modfile_creator);
@@ -545,6 +549,7 @@ void modioFreeModfileCreator(ModioModfileCreator* modfile_creator);
 void modioInitModfileEditor(ModioModfileEditor* modfile_creator);
 void modioSetModfileEditorVersion(ModioModfileEditor* modfile_creator, char* version);
 void modioSetModfileEditorChangelog(ModioModfileEditor* modfile_creator, char* changelog);
+void modioSetModfileEditorMetadataBlob(ModioModfileEditor* modfile_creator, char* metadata_blob);
 void modioSetModfileEditorActive(ModioModfileEditor* modfile_creator, bool active);
 void modioFreeModfileEditor(ModioModfileEditor* modfile_creator);
 

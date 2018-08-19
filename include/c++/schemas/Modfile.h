@@ -22,6 +22,7 @@ namespace modio
     std::string version;
     std::string virustotal_hash;
     std::string changelog;
+    std::string metadata_blob;
     modio::Filehash filehash;
     modio::Download download;
 

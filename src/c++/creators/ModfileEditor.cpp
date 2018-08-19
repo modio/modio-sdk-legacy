@@ -18,6 +18,11 @@ namespace modio
     modioSetModfileEditorChangelog(this->modfile_editor, (char*)changelog.c_str());
   }
 
+  void ModfileEditor::setMetadataBlob(const std::string& metadata_blob)
+  {
+    modioSetModfileEditorMetadataBlob(this->modfile_editor, (char*)metadata_blob.c_str());
+  }
+
   void ModfileEditor::setActive(bool active)
   {
     modioSetModfileEditorActive(this->modfile_editor, active);

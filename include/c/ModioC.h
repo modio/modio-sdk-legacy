@@ -236,6 +236,7 @@ extern "C"
     char* version;
     char* virustotal_hash;
     char* changelog;
+    char* metadata_blob;
     ModioFilehash filehash;
     ModioDownload download;
   };
@@ -324,6 +325,7 @@ extern "C"
     char* path;
     char* version;
     char* changelog;
+    char* metadata_blob;
     char* active;
     char* filehash;
   };
@@ -332,6 +334,7 @@ extern "C"
   {
     char* version;
     char* changelog;
+    char* metadata_blob;
     char* active;
   };
 
@@ -537,6 +540,7 @@ extern "C"
   void MODIO_DLL modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path);
   void MODIO_DLL modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char* version);
   void MODIO_DLL modioSetModfileCreatorChangelog(ModioModfileCreator* modfile_creator, char* changelog);
+  void MODIO_DLL modioSetModfileCreatorMetadataBlob(ModioModfileCreator* modfile_creator, char* metadata_blob);
   void MODIO_DLL modioSetModfileCreatorActive(ModioModfileCreator* modfile_creator, bool active);
   void MODIO_DLL modioSetModfileCreatorFilehash(ModioModfileCreator* modfile_creator, char* filehash);
   void MODIO_DLL modioFreeModfileCreator(ModioModfileCreator* modfile_creator);
@@ -545,6 +549,7 @@ extern "C"
   void MODIO_DLL modioInitModfileEditor(ModioModfileEditor* modfile_creator);
   void MODIO_DLL modioSetModfileEditorVersion(ModioModfileEditor* modfile_creator, char* version);
   void MODIO_DLL modioSetModfileEditorChangelog(ModioModfileEditor* modfile_creator, char* changelog);
+  void MODIO_DLL modioSetModfileEditorMetadataBlob(ModioModfileEditor* modfile_creator, char* metadata_blob);
   void MODIO_DLL modioSetModfileEditorActive(ModioModfileEditor* modfile_creator, bool active);
   void MODIO_DLL modioFreeModfileEditor(ModioModfileEditor* modfile_creator);
 
