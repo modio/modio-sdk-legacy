@@ -137,7 +137,8 @@ void clearOldCache()
       if(time_difference > MAX_CALL_CACHE)
       {
         std::string cache_file_to_delete_path = modio::getModIODirectory() + "cache/";
-        cache_file_to_delete_path += cache_file_json["file"];
+        std::string cache_filename = cache_file_json["file"];
+        cache_file_to_delete_path += cache_filename;
         modio::removeFile(cache_file_to_delete_path);
       }else
       {
