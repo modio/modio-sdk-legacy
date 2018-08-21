@@ -45,9 +45,9 @@ std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
   {
     if ((*it)["url"] == url)
     {
-      u32 current_datetime = (u32)std::time(nullptr);
+      u32 current_time = modio::getCurrentTime();
       u32 file_datetime = (*it)["datetime"];
-      u32 difference = current_datetime - file_datetime;
+      u32 difference = current_time - file_datetime;
 
       if (difference <= max_age_seconds)
       {
@@ -99,6 +99,7 @@ bool checkIfModfileIsStillInstalled(std::string path, u32 modfile_id)
 
 void updateInstalledModsJson()
 {
+  modio::writeLogLine("Checking installed mod cache data...", MODIO_DEBUGLEVEL_LOG);
   nlohmann::json resulting_json;
   nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
@@ -117,6 +118,35 @@ void updateInstalledModsJson()
     resulting_json["last_mod_event_poll"] = installed_mods_json["last_mod_event_poll"];
 
   modio::writeJson(modio::getModIODirectory() + "installed_mods.json", resulting_json);
+  modio::writeLogLine("Finished checking installed mod cache data...", MODIO_DEBUGLEVEL_LOG);
+}
+
+void clearOldCache()
+{
+  modio::writeLogLine("Clearing old cache files...", MODIO_DEBUGLEVEL_LOG);
+  u32 current_time = modio::getCurrentTime();
+  nlohmann::json cache_json = modio::openJson(modio::getModIODirectory() + "cache.json");
+  nlohmann::json resulting_cache_json;
+  for(auto cache_file_json : cache_json)
+  {
+    if(modio::hasKey(cache_file_json,"datetime"))
+    {
+      u32 cache_time = cache_file_json["datetime"];
+      u32 time_difference = current_time - cache_time;
+
+      if(time_difference > MAX_CALL_CACHE)
+      {
+        std::string cache_file_to_delete_path = modio::getModIODirectory() + "cache/";
+        cache_file_to_delete_path += cache_file_json["file"];
+        modio::removeFile(cache_file_to_delete_path);
+      }else
+      {
+        resulting_cache_json.push_back(cache_file_json);
+      }
+    }
+  }
+  modio::writeJson(modio::getModIODirectory() + "cache.json", resulting_cache_json);
+  modio::writeLogLine("Finished clearing old cache files.", MODIO_DEBUGLEVEL_LOG);
 }
 
 std::string getInstalledModPath(u32 mod_id)

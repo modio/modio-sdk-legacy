@@ -15,6 +15,7 @@ namespace modio
   extern std::string MODIO_URL;
   extern std::string MODIO_VERSION_PATH;
   extern u32 MAX_CALL_CACHE;
+  extern u32 MAX_CACHE_TIME;
   extern u32 LAST_MOD_EVENT_POLL;
   extern u32 LAST_USER_EVENT_POLL;
   extern u32 EVENT_POLL_INTERVAL;

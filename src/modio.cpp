@@ -77,6 +77,8 @@ void modioInit(u32 environment, u32 game_id, char* api_key, char* root_path)
 
   modio::updateInstalledModsJson();
 
+  modio::clearOldCache();
+
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }
 /*
