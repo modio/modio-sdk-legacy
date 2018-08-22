@@ -81,7 +81,8 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
       }
       }
     }
-    updateModsCache(mod_edited_ids);
+    if(mod_edited_ids.size() > 0)
+      updateModsCache(mod_edited_ids);
     nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
     installed_mods_json["last_mod_event_poll"] = modio::LAST_MOD_EVENT_POLL;
     modio::writeJson(modio::getModIODirectory() + "installed_mods.json", installed_mods_json);
