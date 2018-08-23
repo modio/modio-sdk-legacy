@@ -15,15 +15,15 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModTags);
   }
 
-  void modioAddTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
+  void modioAddModTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    add_tags_callbacks[call_number] = new EditTagsParams;
-    add_tags_callbacks[call_number]->callback = callback;
-    add_tags_callbacks[call_number]->object = object;
+    add_mod_tags_callbacks[call_number] = new EditTagsParams;
+    add_mod_tags_callbacks[call_number]->callback = callback;
+    add_mod_tags_callbacks[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags";
 
@@ -39,15 +39,15 @@ extern "C"
     modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnTagsAdded);
   }
 
-  void modioDeleteTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
+  void modioDeleteModTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    delete_tags_callbacks[call_number] = new DeleteTagsParams;
-    delete_tags_callbacks[call_number]->callback = callback;
-    delete_tags_callbacks[call_number]->object = object;
+    delete_mod_tags_callbacks[call_number] = new DeleteModTagsParams;
+    delete_mod_tags_callbacks[call_number]->callback = callback;
+    delete_mod_tags_callbacks[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags";
 

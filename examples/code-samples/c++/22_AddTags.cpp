@@ -26,7 +26,7 @@ int main(void)
   tags.push_back("Hard");
 
   // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-  modio_instance.addTags(mod_id, tags, [&](const modio::Response &response) {
+  modio_instance.addModTags(mod_id, tags, [&](const modio::Response &response) {
     std::cout << "Add tags response: " << response.code << std::endl;
     if (response.code == 204)
     {

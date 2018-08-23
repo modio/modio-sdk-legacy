@@ -26,7 +26,7 @@ int main(void)
   tags.push_back("Hard");
 
   // We delete tags by providing the selected Mod id and the tag names
-  modio_instance.deleteTags(mod_id, tags, [&](const modio::Response &response) {
+  modio_instance.deleteModTags(mod_id, tags, [&](const modio::Response &response) {
     std::cout << "Add tags response: " << response.code << std::endl;
     if (response.code == 204)
     {
