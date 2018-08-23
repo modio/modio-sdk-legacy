@@ -376,16 +376,11 @@ void onGetInstallMod(u32 call_number, u32 response_code, nlohmann::json response
         modio::download_callback(404, modio_mod.id);
       }
 
-      mod_download_queue.remove(queued_mod_download);
-
-      updateModDownloadQueueFile();
-
       writeLogLine("Mod download removed from queue. Looking for other mod downloads queued.", MODIO_DEBUGLEVEL_LOG);
 
-      if (mod_download_queue.size() == 1)
-      {
-        downloadMod(queued_mod_download);
-      }
+      mod_download_queue.remove(queued_mod_download);
+      updateModDownloadQueueFile();
+      downloadNextQueuedMod();
       return;
     }
     else

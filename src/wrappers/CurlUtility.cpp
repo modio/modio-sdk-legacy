@@ -119,6 +119,14 @@ void prioritizeModDownload(u32 mod_id)
     current_queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
 }
 
+void downloadNextQueuedMod()
+{
+  if (mod_download_queue.size() > 0)
+  {
+    downloadMod(mod_download_queue.front());
+  }
+}
+
 void setHeaders(std::vector<std::string> headers, CURL *curl)
 {
   struct curl_slist *chunk = NULL;

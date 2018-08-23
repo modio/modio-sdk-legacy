@@ -18,6 +18,7 @@
 #include "../c/schemas/ModioQueuedModDownload.h"
 #include "../c/schemas/ModioQueuedModfileUpload.h"
 #include "../ModUtility.h"
+#include "CurlWrapper.h"
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION
@@ -78,6 +79,7 @@ void updateModDownloadQueue();
 void updateModDownloadQueueFile();
 void updateModUploadQueueFile();
 void prioritizeModDownload(u32 mod_id);
+void downloadNextQueuedMod();
 
 void setHeaders(std::vector<std::string> headers, CURL *curl);
 void setVerifies(CURL *curl);

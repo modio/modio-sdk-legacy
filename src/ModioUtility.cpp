@@ -33,7 +33,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
   if (response.code == 200)
   {
     writeLogLine("Mod events polled", MODIO_DEBUGLEVEL_LOG);
-    if (modio::callback)
+    if (modio::callback && events_array_size > 0)
       modio::callback(response, events_array, events_array_size);
 
     std::vector<u32> mod_edited_ids;
@@ -97,8 +97,9 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
 {
   if (response.code == 200)
   {
-    if (modio::callback)
+    if (modio::callback && events_array_size > 0)
       modio::callback(response, events_array, events_array_size);
+    
     writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
 
     for (int i = 0; i < (int)events_array_size; i++)
