@@ -2,12 +2,12 @@
 
 namespace modio
 {
-  void Instance::getTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback)
+  void Instance::getModTags(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::Tag> tags)>& callback)
   {
-    const struct GetTagsCall* get_tags_call = new GetTagsCall{callback};
-    get_tags_calls[this->current_call_id] = (GetTagsCall*)get_tags_call;
+    const struct GetModTagsCall* get_mod_tags_call = new GetModTagsCall{callback};
+    get_mod_tags_calls[this->current_call_id] = (GetModTagsCall*)get_mod_tags_call;
 
-    modioGetTags((void*)new u32(this->current_call_id), mod_id, &onGetTags);
+    modioGetModTags((void*)new u32(this->current_call_id), mod_id, &onGetModTags);
 
     this->current_call_id++;
   }

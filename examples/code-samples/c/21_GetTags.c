@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onGetTags(void *object, ModioResponse response, ModioTag *tags_array, u32 tags_array_size)
+void onGetModTags(void *object, ModioResponse response, ModioTag *tags_array, u32 tags_array_size)
 {
   bool *wait = object;
   printf("Get Tags response: %i\n", response.code);
@@ -28,7 +28,7 @@ int main(void)
 
   printf("Getting tags...\n");
   // We request the list of tags by providing the Mod's id
-  modioGetTags(&wait, mod_id, &onGetTags);
+  modioGetModTags(&wait, mod_id, &onGetModTags);
 
   while (wait)
   {

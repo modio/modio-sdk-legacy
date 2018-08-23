@@ -2,17 +2,17 @@
 
 extern "C"
 {
-  void modioGetTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioTag* tags_array, u32 tags_array_size))
+  void modioGetModTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioTag* tags_array, u32 tags_array_size))
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/tags/";
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    get_tags_callbacks[call_number] = new GetTagsParams;
-    get_tags_callbacks[call_number]->callback = callback;
-    get_tags_callbacks[call_number]->object = object;
+    get_mod_tags_callbacks[call_number] = new GetModTagsParams;
+    get_mod_tags_callbacks[call_number]->callback = callback;
+    get_mod_tags_callbacks[call_number]->object = object;
 
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetTags);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModTags);
   }
 
   void modioAddTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))

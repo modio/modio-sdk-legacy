@@ -23,7 +23,7 @@ int main(void)
   std::cin >> mod_id;
 
   // We request the list of tags by providing the Mod's id
-  modio_instance.getTags(mod_id, [&](const modio::Response &response, std::vector<modio::Tag> tags) {
+  modio_instance.getModTags(mod_id, [&](const modio::Response &response, std::vector<modio::Tag> tags) {
     std::cout << "Get tags response: " << response.code << std::endl;
     if (response.code == 200)
     {
