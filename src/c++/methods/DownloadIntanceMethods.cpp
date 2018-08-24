@@ -37,13 +37,13 @@ namespace modio
     return curlwrapper::getModfileUploadQueue();
   }
 
-  std::vector<modio::InstalledMod> Instance::getInstalledMods()
+  std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
   {
 	  std::vector<modio::InstalledMod> installed_mods;
 
-	  u32 installed_mods_size = modioGetInstalledModsCount();
+	  u32 installed_mods_size = modioGetAllInstalledModsCount();
 	  ModioInstalledMod* modio_installed_mods = new ModioInstalledMod[installed_mods_size];
-    modioGetInstalledMods(modio_installed_mods);
+    modioGetAllInstalledMods(modio_installed_mods);
     
 	  installed_mods.resize(installed_mods_size);
 	  for (u32 i = 0; i<(u32)installed_mods_size; i++)

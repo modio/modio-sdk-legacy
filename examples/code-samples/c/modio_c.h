@@ -608,9 +608,9 @@ u32 modioGetModDownloadQueueCount();
 void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
 u32 modioGetModfileUploadQueueCount();
 void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
-u32 modioGetInstalledModsCount();
-void modioGetInstalledMods(ModioInstalledMod* installed_mods);
-bool modioGetInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod);  
+u32 modioGetAllInstalledModsCount();
+void modioGetAllInstalledMods(ModioInstalledMod* installed_mods);
+bool modioGetAllInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod);  
 u32 modioGetModState(u32 mod_id);
 
 //Dependencies Methods

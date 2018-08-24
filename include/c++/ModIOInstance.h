@@ -128,7 +128,7 @@ public:
   void setUploadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback);
   std::list<QueuedModDownload *> getModDownloadQueue();
   std::list<QueuedModfileUpload *> getModfileUploadQueue();
-  std::vector<modio::InstalledMod> getInstalledMods();
+  std::vector<modio::InstalledMod> getAllInstalledMods();
   u32 getModState(u32 mod_id);
 
   //Dependencies Methods

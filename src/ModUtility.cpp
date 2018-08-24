@@ -150,7 +150,7 @@ void clearOldCache()
   modio::writeLogLine("Finished clearing old cache files.", MODIO_DEBUGLEVEL_LOG);
 }
 
-std::string getInstalledModPath(u32 mod_id)
+std::string getAllInstalledModPath(u32 mod_id)
 {
   nlohmann::json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
@@ -168,7 +168,7 @@ std::string getInstalledModPath(u32 mod_id)
   return "";
 }
 
-std::string getInstalledModfilePath(u32 modfile_id)
+std::string getAllInstalledModfilePath(u32 modfile_id)
 {
   nlohmann::json installed_mod_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
