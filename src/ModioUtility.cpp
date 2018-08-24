@@ -10,7 +10,7 @@ void updateModsCache(std::vector<u32> mod_ids)
   {
     modioAddFilterInField(&filter, (char *)"id", (char *)modio::toString(mod_id).c_str());
   }
-  modioGetMods(NULL, filter, &modio::onModsUpdateEvent);
+  modioGetAllMods(NULL, filter, &modio::onModsUpdateEvent);
 }
 
 void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)

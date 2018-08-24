@@ -25,7 +25,7 @@ int main(void)
 
   std::cout << "Getting mods..." << std::endl;
 
-  modio_instance.getMods(filter, [&](const modio::Response &response, const std::vector<modio::Mod> &mods) {
+  modio_instance.getAllMods(filter, [&](const modio::Response &response, const std::vector<modio::Mod> &mods) {
     std::cout << "On mod get response: " << response.code << std::endl;
 
     if (response.code == 200)

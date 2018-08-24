@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onGetMods(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
+void onGetAllMods(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   bool *wait = object;
   printf("Get mods response: %i\n", response.code);
@@ -39,7 +39,7 @@ int main(void)
   // This function will return mods even if they are still not acceped or visible
   printf("Getting mods...\n");
 
-  modioGetUserMods(&wait, filter, &onGetMods);
+  modioGetUserMods(&wait, filter, &onGetAllMods);
 
   while (wait)
   {

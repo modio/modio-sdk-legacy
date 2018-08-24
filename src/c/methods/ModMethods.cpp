@@ -15,18 +15,18 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetMod);
   }
 
-  void modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
+  void modioGetAllMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + filter_string + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    get_mods_callbacks[call_number] = new GetModsParams;
-    get_mods_callbacks[call_number]->callback = callback;
-    get_mods_callbacks[call_number]->object = object;
-    get_mods_callbacks[call_number]->url = url;
-    get_mods_callbacks[call_number]->is_cache = false;
+    get_all_mods_callbacks[call_number] = new GetAllModsParams;
+    get_all_mods_callbacks[call_number]->callback = callback;
+    get_all_mods_callbacks[call_number]->object = object;
+    get_all_mods_callbacks[call_number]->url = url;
+    get_all_mods_callbacks[call_number]->is_cache = false;
 
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
@@ -35,13 +35,13 @@ extern "C"
       nlohmann::json empty_json = {};
       if(!cache_file_json.empty())
       {
-        get_mods_callbacks[call_number]->is_cache = true;
-        modioOnGetMods(call_number, 200, cache_file_json);
+        get_all_mods_callbacks[call_number]->is_cache = true;
+        modioOnGetAllMods(call_number, 200, cache_file_json);
         return;
       }
     }
 
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetMods);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllMods);
   }
 
   void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_editor, void (*callback)(void* object, ModioResponse response, ModioMod mod))

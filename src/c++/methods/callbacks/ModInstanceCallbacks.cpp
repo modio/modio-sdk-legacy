@@ -3,7 +3,7 @@
 namespace modio
 {
   std::map<u32, GetModCall*> get_mod_calls;
-  std::map<u32, GetModsCall*> get_mods_calls;
+  std::map<u32, GetAllModsCall*> get_all_mods_calls;
   std::map<u32, AddModCall*> add_mod_calls;
   std::map<u32, EditModCall*> edit_mod_calls;
   std::map<u32, DeleteModCall*> delete_mod_calls;
@@ -29,7 +29,7 @@ namespace modio
     get_mod_calls.erase(call_id);
   }
 
-  void onGetMods(void* object, ModioResponse modio_response, ModioMod mods[], u32 mods_size)
+  void onGetAllMods(void* object, ModioResponse modio_response, ModioMod mods[], u32 mods_size)
   {
     u32 call_id = *((u32*)object);
 
@@ -43,11 +43,11 @@ namespace modio
       mods_vector[i].initialize(mods[i]);
     }
 
-    get_mods_calls[call_id]->callback((const Response&)response, mods_vector);
+    get_all_mods_calls[call_id]->callback((const Response&)response, mods_vector);
 
     delete (u32*)object;
-    delete get_mods_calls[call_id];
-    get_mods_calls.erase(call_id);
+    delete get_all_mods_calls[call_id];
+    get_all_mods_calls.erase(call_id);
   }
 
   void onAddMod(void* object, ModioResponse modio_response, ModioMod mod)

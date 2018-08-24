@@ -3,7 +3,7 @@
 std::map< u32,GetModParams* > get_mod_callbacks;
 std::map< u32,AddModParams* > add_mod_callback;
 std::map< u32,DeleteModParams* > delete_mod_callbacks;
-std::map< u32,GetModsParams* > get_mods_callbacks;
+std::map< u32,GetAllModsParams* > get_all_mods_callbacks;
 std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
 
 void modioOnGetMod(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -25,7 +25,7 @@ void modioOnGetMod(u32 call_number, u32 response_code, nlohmann::json response_j
   modioFreeMod(&mod);
 }
 
-void modioOnGetMods(u32 call_number, u32 response_code, nlohmann::json response_json)
+void modioOnGetAllMods(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -33,8 +33,8 @@ void modioOnGetMods(u32 call_number, u32 response_code, nlohmann::json response_
 
   if(response.code == 200)
   {
-    if(!get_mods_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_mods_callbacks[call_number]->url, response_json);
+    if(!get_all_mods_callbacks[call_number]->is_cache)
+      modio::addCallToCache(get_all_mods_callbacks[call_number]->url, response_json);
 
     u32 mods_size = (u32)response_json["data"].size();
     ModioMod* mods = new ModioMod[mods_size];
@@ -43,7 +43,7 @@ void modioOnGetMods(u32 call_number, u32 response_code, nlohmann::json response_
       modioInitMod(&mods[i], response_json["data"][i]);
     }
 
-    get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, mods, mods_size);
+    get_all_mods_callbacks[call_number]->callback(get_all_mods_callbacks[call_number]->object, response, mods, mods_size);
     
     for(u32 i=0; i<mods_size; i++)
     {
@@ -53,10 +53,10 @@ void modioOnGetMods(u32 call_number, u32 response_code, nlohmann::json response_
     delete[] mods;
   }else
   {
-    get_mods_callbacks[call_number]->callback(get_mods_callbacks[call_number]->object, response, NULL, 0);
+    get_all_mods_callbacks[call_number]->callback(get_all_mods_callbacks[call_number]->object, response, NULL, 0);
   }
-  delete get_mods_callbacks[call_number];
-  get_mods_callbacks.erase(call_number);
+  delete get_all_mods_callbacks[call_number];
+  get_all_mods_callbacks.erase(call_number);
   modioFreeResponse(&response);
 }
 
