@@ -2,12 +2,12 @@
 
 namespace modio
 {
-  void Instance::getMetadataKVP(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::MetadataKVP> metadata_kvp)>& callback)
+  void Instance::getAllMetadataKVP(u32 mod_id, const std::function<void(const modio::Response& response, std::vector<modio::MetadataKVP> metadata_kvp)>& callback)
   {
-    const struct GetMetadataKVPCall* get_metadata_kvp_call = new GetMetadataKVPCall{callback};
-    get_metadata_kvp_calls[this->current_call_id] = (GetMetadataKVPCall*)get_metadata_kvp_call;
+    const struct GetAllMetadataKVPCall* get_all_metadata_kvp_call = new GetAllMetadataKVPCall{callback};
+    get_all_metadata_kvp_calls[this->current_call_id] = (GetAllMetadataKVPCall*)get_all_metadata_kvp_call;
 
-    modioGetMetadataKVP((void*)new u32(this->current_call_id), mod_id, &onGetMetadataKVP);
+    modioGetAllMetadataKVP((void*)new u32(this->current_call_id), mod_id, &onGetAllMetadataKVP);
 
     this->current_call_id++;
   }

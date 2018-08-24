@@ -23,7 +23,7 @@ int main(void)
   std::cin >> mod_id;
 
   // We request the list of metadata key value pairs by providing the Mod's id
-  modio_instance.getMetadataKVP(mod_id, [&](const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp) {
+  modio_instance.getAllMetadataKVP(mod_id, [&](const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp) {
     std::cout << "Get metadata response: " << response.code << std::endl;
     if (response.code == 200)
     {
