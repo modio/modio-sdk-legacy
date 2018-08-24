@@ -3,7 +3,7 @@
 namespace modio
 {
   std::map<u32, GetModfileCall*> get_modfile_calls;
-  std::map<u32, GetModfilesCall*> get_modfiles_calls;
+  std::map<u32, GetAllModfilesCall*> get_all_modfiles_calls;
   std::map<u32, AddModfileCall*> add_modfile_calls;
   std::map<u32, EditModfileCall*> edit_modfile_calls;
 
@@ -28,7 +28,7 @@ namespace modio
     get_modfile_calls.erase(call_id);
   }
 
-  void onGetModfiles(void* object, ModioResponse modio_response, ModioModfile modfiles[], u32 modfiles_size)
+  void onGetAllModfiles(void* object, ModioResponse modio_response, ModioModfile modfiles[], u32 modfiles_size)
   {
     u32 call_id = *((u32*)object);
 
@@ -42,11 +42,11 @@ namespace modio
       modfiles_vector[i].initialize(modfiles[i]);
     }
 
-    get_modfiles_calls[call_id]->callback((const Response&)response, modfiles_vector);
+    get_all_modfiles_calls[call_id]->callback((const Response&)response, modfiles_vector);
 
     delete (u32*)object;
-    delete get_modfiles_calls[call_id];
-    get_modfiles_calls.erase(call_id);
+    delete get_all_modfiles_calls[call_id];
+    get_all_modfiles_calls.erase(call_id);
   }
 
   void onAddModfile(void* object, ModioResponse modio_response, ModioModfile modio_modfile)

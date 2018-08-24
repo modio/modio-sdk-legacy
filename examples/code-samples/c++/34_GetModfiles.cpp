@@ -30,7 +30,7 @@ int main(void)
   std::cout << "Getting modfiles..." << std::endl;
 
   // Now we finished setting up the filters we are ready to request the modfiles
-  modio_instance.getModfiles(mod_id, filter, [&](const modio::Response &response, const std::vector<modio::Modfile> &modfiles) {
+  modio_instance.getAllModfiles(mod_id, filter, [&](const modio::Response &response, const std::vector<modio::Modfile> &modfiles) {
     std::cout << "On get modfiles response: " << response.code << std::endl;
     if (response.code == 200)
     {
