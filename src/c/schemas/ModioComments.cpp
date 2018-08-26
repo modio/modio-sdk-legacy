@@ -43,10 +43,10 @@ void modioInitComment(ModioComment *comment, nlohmann::json comment_json)
         strcpy(comment->content, content_str.c_str());
     }
 
-    nlohmann::json submitted_by_json;
-    if(modio::hasKey(comment_json, "submitted_by"))
-      submitted_by_json = comment_json["submitted_by"];
-    modioInitUser(&(comment->submitted_by), submitted_by_json);
+    nlohmann::json user_json;
+    if(modio::hasKey(comment_json, "user"))
+      user_json = comment_json["user"];
+    modioInitUser(&(comment->user), user_json);
 }
 
 void modioFreeComment(ModioComment *comment)

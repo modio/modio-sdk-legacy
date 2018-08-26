@@ -447,13 +447,13 @@ struct ModioComment
 {
   u32 id;
   u32 mod_id;
-  ModioUser submitted_by;
   u32 date_added;
   u32 reply_id;
   u32 karma;
   u32 karma_guest;
   char* thread_position;
   char* content;
+  ModioUser user;
 };
 
 //General Methods
@@ -620,6 +620,7 @@ void modioDeleteModDependencies(void* object, u32 mod_id, u32* dependencies_arra
 
 //Comment Methods
 void modioGetAllModComments(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioComment comments[], u32 comments_size));
+void modioGetModComment(void* object, u32 mod_id, u32 comment_id, void (*callback)(void* object, ModioResponse response, ModioComment comment));  
 void modioDeleteModComment(void* object, u32 mod_id, u32 comment_id, void(*callback)(void* object, ModioResponse response));
 
 //Reports Methods

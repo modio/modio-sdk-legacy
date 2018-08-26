@@ -31,7 +31,7 @@ extern "C"
 
     void modioGetModComment(void *object, u32 mod_id, u32 comment_id, void (*callback)(void *object, ModioResponse response, ModioComment comment))
     {
-        std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/comments?api_key=" + modio::API_KEY;
+        std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/comments/" + modio::toString(comment_id) + "?api_key=" + modio::API_KEY;
 
         u32 call_number = modio::curlwrapper::getCallNumber();
 

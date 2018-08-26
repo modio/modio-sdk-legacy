@@ -447,13 +447,13 @@ extern "C"
   {
     u32 id;
     u32 mod_id;
-    ModioUser submitted_by;
     u32 date_added;
     u32 reply_id;
     u32 karma;
     u32 karma_guest;
     char* thread_position;
     char* content;
+    ModioUser user;
   };
 
   //General Methods
