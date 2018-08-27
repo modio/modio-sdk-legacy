@@ -3,7 +3,6 @@
 
 #include "Utility.h"
 #include "Globals.h"
-#include "ModioUtility.h"
 
 namespace modio
 {

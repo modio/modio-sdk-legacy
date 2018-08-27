@@ -454,29 +454,30 @@ void downloadMod(QueuedModDownload *queued_mod_download)
   modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
 }
 
-void queueModDownload(u32 mod_id)
+void queueModDownload(ModioMod& modio_mod)
 {
   for (auto &queued_mod_download : mod_download_queue)
   {
-    if (queued_mod_download->mod_id == mod_id)
+    if (queued_mod_download->mod_id == modio_mod.id)
     {
-      writeLogLine("Could not queue the mod: " + toString(mod_id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
+      writeLogLine("Could not queue the mod: " + toString(modio_mod.id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
       return;
     }
   }
 
   QueuedModDownload *queued_mod_download = new QueuedModDownload();
   queued_mod_download->state = MODIO_MOD_QUEUED;
-  queued_mod_download->mod_id = mod_id;
+  queued_mod_download->mod_id = modio_mod.id;
   queued_mod_download->current_progress = 0;
   queued_mod_download->total_size = 0;
   queued_mod_download->url = "";
-  queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(mod_id) + "_modfile.zip";
+  queued_mod_download->mod.initialize(modio_mod);
+  queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(modio_mod.id) + "_modfile.zip";
   mod_download_queue.push_back(queued_mod_download);
 
   updateModDownloadQueueFile();
 
-  writeLogLine("Download queued. Mod id: " + toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+  writeLogLine("Download queued. Mod id: " + toString(modio_mod.id), MODIO_DEBUGLEVEL_LOG);
 
   if (mod_download_queue.size() == 1)
   {

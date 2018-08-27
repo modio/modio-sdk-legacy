@@ -1,9 +1,9 @@
 #ifndef MODIO_QUEUEDMODDOWNLOAD_H
 #define MODIO_QUEUEDMODDOWNLOAD_H
 
+#include "Mod.h"
 #include "../../Globals.h"
 #include "../../c/schemas/ModioQueuedModDownload.h"
-#include "Mod.h"
 
 namespace modio
 {

@@ -3,7 +3,9 @@
 extern "C" {
 void modioInstallMod(u32 mod_id)
 {
-  modio::curlwrapper::queueModDownload(mod_id);
+  std::vector<u32> mod_ids;
+  mod_ids.push_back(mod_id);
+  modio::addModsToDownloadQueue(mod_ids);
 }
 
 bool modioUninstallMod(u32 mod_id)
