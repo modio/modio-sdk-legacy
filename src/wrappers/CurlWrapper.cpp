@@ -546,6 +546,9 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
     curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, queued_modfile_upload);    
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetUploadData);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
+
     curl_multi_add_handle(curl_multi_handle, curl);
   }
 }
