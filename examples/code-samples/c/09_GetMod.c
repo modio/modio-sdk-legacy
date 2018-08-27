@@ -14,6 +14,7 @@ void onGetMod(void *object, ModioResponse response, ModioMod mod)
     for (int i = 0; i < mod.tags_array_size; i++)
       printf("* %s\n", mod.tags_array[i].name);
     printf("Description: %s\n", mod.description);
+    printf("Description (plain text): %s\n", mod.description_plaintext);
     printf("Metadata blob: %s\n", mod.metadata_blob);
     printf("Visible: %i\n", mod.visible);
     printf("Maturity option: %i\n", mod.maturity_option);

@@ -22,6 +22,8 @@ namespace modio
       this->summary = modio_mod.summary;
     if(modio_mod.description)
       this->description = modio_mod.description;
+    if(modio_mod.description_plaintext)
+      this->description_plaintext = modio_mod.description_plaintext;
     if(modio_mod.metadata_blob)
       this->metadata_blob = modio_mod.metadata_blob;
     if(modio_mod.profile_url)
@@ -60,6 +62,7 @@ namespace modio
     mod_json["name_id"] = this->name_id;
     mod_json["summary"] = this->summary;
     mod_json["description"] = this->description;
+    mod_json["description_plaintext"] = this->description_plaintext;
     mod_json["metadata_blob"] = this->metadata_blob;
     mod_json["profile_url"] = this->profile_url;
     mod_json["logo"] = this->logo.toJson();

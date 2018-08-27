@@ -31,6 +31,7 @@ namespace modio
     std::string name_id;
     std::string summary;
     std::string description;
+    std::string description_plaintext;
     std::string metadata_blob;
     std::string profile_url;
     Logo logo;

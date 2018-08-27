@@ -76,6 +76,14 @@ extern "C"
       strcpy(mod->description, description_str.c_str());
     }
 
+    mod->description_plaintext = NULL;
+    if(modio::hasKey(mod_json, "description_plaintext"))
+    {
+      std::string description_plaintext_str = mod_json["description_plaintext"];
+      mod->description_plaintext = new char[description_plaintext_str.size() + 1];
+      strcpy(mod->description_plaintext, description_plaintext_str.c_str());
+    }
+
     mod->metadata_blob = NULL;
     if(modio::hasKey(mod_json, "metadata_blob"))
     {
@@ -156,6 +164,8 @@ extern "C"
         delete[] mod->summary;
       if(mod->description)
         delete[] mod->description;
+      if(mod->description_plaintext)
+        delete[] mod->description_plaintext;
       if(mod->metadata_blob)
         delete[] mod->metadata_blob;
       if(mod->profile_url)

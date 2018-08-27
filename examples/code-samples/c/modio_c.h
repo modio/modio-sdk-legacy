@@ -278,6 +278,7 @@ struct ModioMod
   char* name_id;
   char* summary;
   char* description;
+  char* description_plaintext;
   char* metadata_blob;
   char* profile_url;
   ModioLogo logo;
