@@ -34,14 +34,14 @@ int main(void)
 
   bool wait = true;
 
-  // Before requesting mods, let's define the query filters
+  // Before requesting mod stats, let's define the query filters
   ModioFilterCreator filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter, 3);
 
   printf("Getting mods stats...\n");
 
-  // Now we finished setting up the filters we are ready to request the mods
+  // Now we finished setting up the filters we are ready to request the stats
   modioGetAllModStats(&wait, filter, &onGetAllModStats);
 
   while (wait)

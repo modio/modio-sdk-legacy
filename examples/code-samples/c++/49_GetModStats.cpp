@@ -18,6 +18,7 @@ int main(void)
     finished = true;
   };
 
+  // We request a single mod stats by providing the mod id
   u32 mod_id;
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;

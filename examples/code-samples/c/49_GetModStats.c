@@ -28,7 +28,7 @@ int main(void)
 
   bool wait = true;
 
-  // We request a single mod stats by providing it's id
+  // We request a single mod stats by providing the mod id
   printf("Please enter the mod id: \n");
   u32 mod_id;
   scanf("%i", &mod_id);

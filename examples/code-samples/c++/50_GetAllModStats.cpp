@@ -18,14 +18,14 @@ int main(void)
     finished = true;
   };
 
-  // Before requesting mods, let's define the query filters
+  // Before requesting mod stats, let's define the query filters
   modio::FilterCreator filter;
   filter.setLimit(3);
   filter.setCacheMaxAgeSeconds(100);
 
   std::cout << "Getting mods..." << std::endl;
 
-  // Now we finished setting up the filters we are ready to request the mods
+  // Now we finished setting up the filters we are ready to request the stats
   modio_instance.getAllModStats(filter, [&](const modio::Response &response, const std::vector<modio::Stats> &mods_stats) {
     std::cout << "On mod get response: " << response.code << std::endl;
     if (response.code == 200)
