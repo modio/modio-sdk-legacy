@@ -38,6 +38,7 @@ int main(void)
   modfile_creator.setPath("../ModExample/modfile/");
   modfile_creator.setVersion("v1.1.0");
   modfile_creator.setChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+  modfile_creator.setMetadataBlob("This metadata was added via the SDK examples.");
   modfile_creator.setActive(true);
 
   std::cout << "Uploading modfile..." << std::endl;

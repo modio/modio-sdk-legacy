@@ -7,13 +7,14 @@ void onGetUserModfiles(void *object, ModioResponse response, ModioModfile *modfi
   if (response.code == 200)
   {
     printf("Listing modfiles\n");
-    printf("============\n");
+    printf("================\n");
     for (u32 i = 0; i < modfiles_size; i++)
     {
       printf("Modfile[%i]\n", i);
       printf("Id:\t%i\n", modfiles[i].id);
       printf("Version:\t%s\n", modfiles[i].version);
       printf("Changelog:\t%s\n", modfiles[i].changelog);
+      printf("Metadata blob:\t%s\n", modfiles[i].metadata_blob);
     }
   }
   *wait = false;
@@ -30,7 +31,7 @@ int main(void)
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter, 3);
 
-  printf("Getting mods...\n");
+  printf("Getting modfiles...\n");
 
   // Now we finished setting up the filters we are ready to request the mods
   modioGetUserModfiles(&wait, filter, &onGetUserModfiles);

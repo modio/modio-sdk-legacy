@@ -15,9 +15,9 @@ namespace modio
     this->mod.initialize(queued_mod_download.mod);    
   }
 
-  json QueuedModDownload::toJson()
+  nlohmann::json QueuedModDownload::toJson()
   {
-    json queued_mod_download_json;
+    nlohmann::json queued_mod_download_json;
 
     queued_mod_download_json["state"] = this->state;
     queued_mod_download_json["mod_id"] = this->mod_id;

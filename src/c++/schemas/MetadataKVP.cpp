@@ -11,9 +11,9 @@ namespace modio
       this->metavalue = modio_metadata_kvp.metavalue;
   }
 
-  json MetadataKVP::toJson()
+  nlohmann::json MetadataKVP::toJson()
   {
-    json metadata_kvp_json;
+    nlohmann::json metadata_kvp_json;
 
     metadata_kvp_json["metakey"] = this->metakey;
     metadata_kvp_json["metavalue"] = this->metavalue;

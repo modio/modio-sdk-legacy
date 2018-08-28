@@ -7,6 +7,7 @@ extern "C"
     modfile_creator->path = NULL;
     modfile_creator->version = NULL;
     modfile_creator->changelog = NULL;
+    modfile_creator->metadata_blob = NULL;
     modfile_creator->active = NULL;
     modfile_creator->filehash = NULL;
   }
@@ -36,6 +37,15 @@ extern "C"
 
     modfile_creator->changelog = new char[strlen(changelog) + 1];
     strcpy(modfile_creator->changelog, changelog);
+  }
+
+  void modioSetModfileCreatorMetadataBlob(ModioModfileCreator* modfile_creator, char* metadata_blob)
+  {
+    if(modfile_creator->metadata_blob)
+      delete[] modfile_creator->metadata_blob;
+
+    modfile_creator->metadata_blob = new char[strlen(metadata_blob) + 1];
+    strcpy(modfile_creator->metadata_blob, metadata_blob);
   }
 
   void modioSetModfileCreatorActive(ModioModfileCreator* modfile_creator, bool active)
@@ -71,6 +81,9 @@ extern "C"
     if(modfile_creator->changelog)
       delete[] modfile_creator->changelog;
 
+    if(modfile_creator->metadata_blob)
+      delete[] modfile_creator->metadata_blob;
+
     if(modfile_creator->active)
       delete[] modfile_creator->active;
 
@@ -94,6 +107,9 @@ namespace modio
     if(modfile_creator->changelog)
       result.insert(std::pair<std::string,std::string>("changelog",modfile_creator->changelog));
 
+    if(modfile_creator->metadata_blob)
+      result.insert(std::pair<std::string,std::string>("metadata_blob",modfile_creator->metadata_blob));
+
     if(modfile_creator->active)
       result.insert(std::pair<std::string,std::string>("active",modfile_creator->active));
 
@@ -103,7 +119,7 @@ namespace modio
     return result;
   }
 
-  void modioInitModfileCreatorFromJson(ModioModfileCreator* modfile_creator, json modfile_creator_json)
+  void modioInitModfileCreatorFromJson(ModioModfileCreator* modfile_creator, nlohmann::json modfile_creator_json)
   {
     modfile_creator->path = NULL;
     if(modio::hasKey(modfile_creator_json, "path"))
@@ -127,6 +143,14 @@ namespace modio
       std::string changelog_str = modfile_creator_json["changelog"];
       modfile_creator->changelog = new char[changelog_str.size() + 1];
       strcpy(modfile_creator->changelog, changelog_str.c_str());
+    }
+
+    modfile_creator->metadata_blob = NULL;
+    if(modio::hasKey(modfile_creator_json, "metadata_blob"))
+    {
+      std::string metadata_blob_str = modfile_creator_json["metadata_blob"];
+      modfile_creator->metadata_blob = new char[metadata_blob_str.size() + 1];
+      strcpy(modfile_creator->metadata_blob, metadata_blob_str.c_str());
     }
 
     modfile_creator->active = NULL;

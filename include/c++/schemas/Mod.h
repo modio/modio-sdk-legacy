@@ -8,7 +8,7 @@
 #include "User.h"
 #include "Media.h"
 #include "Modfile.h"
-#include "RatingSummary.h"
+#include "Stats.h"
 #include "Tag.h"
 #include "MetadataKVP.h"
 #include "../../c/schemas/ModioMod.h"
@@ -31,18 +31,19 @@ namespace modio
     std::string name_id;
     std::string summary;
     std::string description;
+    std::string description_plaintext;
     std::string metadata_blob;
     std::string profile_url;
     Logo logo;
     User submitted_by;
     Modfile modfile;
     Media media;
-    RatingSummary rating_summary;
+    Stats stats;
     std::vector<Tag> tags;
     std::vector<MetadataKVP> metadata_kvps;
 
     void initialize(ModioMod mod);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

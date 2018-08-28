@@ -6,11 +6,9 @@
 #include "../ModioC.h"
 #include "ModioAvatar.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitUser(ModioUser* user, json user_json);
+  void modioInitUser(ModioUser* user, nlohmann::json user_json);
   void modioFreeUser(ModioUser* user);
 }
 

@@ -3,7 +3,7 @@
 std::map< u32, GetEventsParams* > get_events_callbacks;
 std::map< u32, GetAllEventsParams* > get_all_events_callbacks;
 
-void modioOnGetAllEvents(u32 call_number, u32 response_code, json response_json)
+void modioOnGetAllEvents(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -25,7 +25,7 @@ void modioOnGetAllEvents(u32 call_number, u32 response_code, json response_json)
           modioInitEvent(&(events_array[i]), response_json["data"][i]);
         }
       }
-    }catch(json::parse_error &e)
+    }catch(nlohmann::json::parse_error &e)
     {
       modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
     }
@@ -43,7 +43,7 @@ void modioOnGetAllEvents(u32 call_number, u32 response_code, json response_json)
   get_all_events_callbacks.erase(call_number);
 }
 
-void modioOnGetEvents(u32 call_number, u32 response_code, json response_json)
+void modioOnGetEvents(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -65,7 +65,7 @@ void modioOnGetEvents(u32 call_number, u32 response_code, json response_json)
           modioInitEvent(&(events_array[i]), response_json["data"][i]);
         }
       }
-    }catch(json::parse_error &e)
+    }catch(nlohmann::json::parse_error &e)
     {
       modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
     }

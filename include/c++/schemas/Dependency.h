@@ -14,7 +14,7 @@ namespace modio
 		u32 date_added;
 
 		void initialize(ModioDependency modio_dependency);
-		json toJson();
+		nlohmann::json toJson();
 	};
 }
 

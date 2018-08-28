@@ -89,7 +89,7 @@ void process()
   } while (curl_message);
 }
 
-void get(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void get(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine("GET: " + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
@@ -113,7 +113,7 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
   }
 }
 
-void post(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void post(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine(std::string("POST: ") + url, MODIO_DEBUGLEVEL_LOG);
 
@@ -148,7 +148,7 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
   }
 }
 
-void put(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void put(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine(std::string("PUT: ") + url, MODIO_DEBUGLEVEL_LOG);
 
@@ -186,7 +186,7 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
   }
 }
 
-void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, json response)> callback)
+void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, nlohmann::json response)> callback)
 {
   writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
@@ -256,7 +256,7 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
   }
 }
 
-void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine(std::string("DELETE: ") + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
@@ -359,7 +359,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
 std::map<u32, QueuedModDownload *> queued_mod_download_callbacks;
 
-void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
+void onGetInstallMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   QueuedModDownload *queued_mod_download = queued_mod_download_callbacks[call_number];
 
@@ -376,16 +376,11 @@ void onGetInstallMod(u32 call_number, u32 response_code, json response_json)
         modio::download_callback(404, modio_mod.id);
       }
 
-      mod_download_queue.remove(queued_mod_download);
-
-      updateModDownloadQueueFile();
-
       writeLogLine("Mod download removed from queue. Looking for other mod downloads queued.", MODIO_DEBUGLEVEL_LOG);
 
-      if (mod_download_queue.size() == 1)
-      {
-        downloadMod(queued_mod_download);
-      }
+      mod_download_queue.remove(queued_mod_download);
+      updateModDownloadQueueFile();
+      downloadNextQueuedMod();
       return;
     }
     else
@@ -459,29 +454,30 @@ void downloadMod(QueuedModDownload *queued_mod_download)
   modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
 }
 
-void queueModDownload(u32 mod_id)
+void queueModDownload(ModioMod& modio_mod)
 {
   for (auto &queued_mod_download : mod_download_queue)
   {
-    if (queued_mod_download->mod_id == mod_id)
+    if (queued_mod_download->mod_id == modio_mod.id)
     {
-      writeLogLine("Could not queue the mod: " + toString(mod_id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
+      writeLogLine("Could not queue the mod: " + toString(modio_mod.id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);
       return;
     }
   }
 
   QueuedModDownload *queued_mod_download = new QueuedModDownload();
   queued_mod_download->state = MODIO_MOD_QUEUED;
-  queued_mod_download->mod_id = mod_id;
+  queued_mod_download->mod_id = modio_mod.id;
   queued_mod_download->current_progress = 0;
   queued_mod_download->total_size = 0;
   queued_mod_download->url = "";
-  queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(mod_id) + "_modfile.zip";
+  queued_mod_download->mod.initialize(modio_mod);
+  queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(modio_mod.id) + "_modfile.zip";
   mod_download_queue.push_back(queued_mod_download);
 
   updateModDownloadQueueFile();
 
-  writeLogLine("Download queued. Mod id: " + toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+  writeLogLine("Download queued. Mod id: " + toString(modio_mod.id), MODIO_DEBUGLEVEL_LOG);
 
   if (mod_download_queue.size() == 1)
   {
@@ -549,6 +545,9 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
     curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
     curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, queued_modfile_upload);    
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetUploadData);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, curl);
 
     curl_multi_add_handle(curl_multi_handle, curl);
   }

@@ -5,8 +5,6 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
   void modioInitNode(ModioListNode* node);

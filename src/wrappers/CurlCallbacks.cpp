@@ -10,12 +10,20 @@ void onJsonRequestFinished(CURL *curl)
   JsonResponseHandler *ongoing_call = ongoing_calls[curl];
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-  json response_json = modio::toJson(ongoing_call->response);
+  nlohmann::json response_json = modio::toJson(ongoing_call->response);
 
-  if(ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
+  if (ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
   {
-    u32 x_ratelimit_retryafter = atoi((const char*)ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
+    u32 x_ratelimit_retryafter = atoi((const char *)ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
     modio::RETRY_AFTER = modio::getCurrentTime() + x_ratelimit_retryafter;
+  }
+
+  if (ongoing_call->headers.find("X-RateLimit-Remaining") != ongoing_call->headers.end())
+  {
+    std::string x_rate_limit_remaining = ongoing_call->headers["X-RateLimit-Remaining"];
+    if (x_rate_limit_remaining[x_rate_limit_remaining.size() - 1] == '\n')
+      x_rate_limit_remaining.pop_back();
+    writeLogLine("X-RateLimit-Remaining: " + x_rate_limit_remaining, MODIO_DEBUGLEVEL_LOG);
   }
 
   writeLogLine("Json request Finished. Response code: " + toString(response_code), MODIO_DEBUGLEVEL_LOG);
@@ -32,14 +40,15 @@ void onJsonRequestFinished(CURL *curl)
 void onDownloadFinished(CURL *curl)
 {
   OngoingDownload *ongoing_download = ongoing_downloads[curl];
-  
+
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-  
-  if(response_code >= 200 || response_code < 300)
+
+  if (response_code >= 200 || response_code < 300)
   {
     writeLogLine("Download finished successfully.", MODIO_DEBUGLEVEL_LOG);
-  }else
+  }
+  else
   {
     writeLogLine("Response code: " + modio::toString(response_code) + " Could not download form: " + ongoing_download->url, MODIO_DEBUGLEVEL_LOG);
   }
@@ -63,26 +72,22 @@ void onModDownloadFinished(CURL *curl)
     writeLogLine("Removing temporary file...", MODIO_DEBUGLEVEL_LOG);
     modio::removeFile(current_queued_mod_download->path);
 
-    if (destination_path_str[destination_path_str.size() - 1] != '/')
-      destination_path_str += "/";
+    destination_path_str = addSlashIfNeeded(destination_path_str);
 
     modio::writeJson(destination_path_str + std::string("modio.json"), current_queued_mod_download->mod.toJson());
 
     modio::addToInstalledModsJson(current_queued_mod_download->mod.toJson(), destination_path_str);
-
-    mod_download_queue.remove(current_queued_mod_download);
-
-    updateModDownloadQueueFile();
 
     writeLogLine("Finished installing mod", MODIO_DEBUGLEVEL_LOG);
 
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
-    if(response_code >= 200 || response_code < 300)
+    if (response_code >= 200 || response_code < 300)
     {
       writeLogLine("Download finished successfully. Mod id: " + toString(current_queued_mod_download->mod_id) + " Url: " + current_queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
-    }else
+    }
+    else
     {
       writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(current_queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
     }
@@ -93,10 +98,9 @@ void onModDownloadFinished(CURL *curl)
     delete current_queued_mod_download;
     current_mod_download_curl_handle = NULL;
 
-    if (mod_download_queue.size() > 0)
-    {
-      downloadMod(mod_download_queue.front());
-    }
+    mod_download_queue.remove(current_queued_mod_download);
+    updateModDownloadQueueFile();
+    downloadNextQueuedMod();
   }
   else if (current_queued_mod_download->state == MODIO_MOD_PAUSING)
   {
@@ -108,10 +112,7 @@ void onModDownloadFinished(CURL *curl)
     modio::writeLogLine("Mod " + modio::toString(current_queued_mod_download->mod_id) + " download paused. Another mod is being prioritized.", MODIO_DEBUGLEVEL_LOG);
     current_queued_mod_download->state = MODIO_MOD_QUEUED;
     updateModDownloadQueue();
-    if (mod_download_queue.size() > 0)
-    {
-      downloadMod(mod_download_queue.front());
-    }
+    downloadNextQueuedMod();
   }
   updateModDownloadQueueFile();
 }
@@ -144,5 +145,5 @@ void onModfileUploadFinished(CURL *curl)
   }
   updateModUploadQueueFile();
 }
-}
-}
+} // namespace curlwrapper
+} // namespace modio

@@ -6,5 +6,6 @@
 #include "../../Globals.h"
 #include "../ModioC.h"
 #include "../schemas/ModioInstalledMod.h"
+#include "../../ModioUtility.h"
 
 #endif

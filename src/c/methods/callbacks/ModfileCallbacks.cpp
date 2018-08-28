@@ -1,11 +1,11 @@
 #include "c/methods/callbacks/ModfileCallbacks.h"
 
 std::map< u32, GetModfileParams* > get_modfile_callbacks;
-std::map< u32, GetModfilesParams* > get_modfiles_callbacks;
+std::map< u32, GetAllModfilesParams* > get_all_modfiles_callbacks;
 std::map< u32, AddModfileParams* > add_modfile_callbacks;
 std::map< u32, EditModfileParams* > edit_modfile_callbacks;
 
-void modioOnGetModfile(u32 call_number, u32 response_code, json response_json)
+void modioOnGetModfile(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -22,7 +22,7 @@ void modioOnGetModfile(u32 call_number, u32 response_code, json response_json)
   modioFreeModfile(&modfile);
 }
 
-void modioOnGetModfiles(u32 call_number, u32 response_code, json response_json)
+void modioOnGetAllModfiles(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -30,8 +30,8 @@ void modioOnGetModfiles(u32 call_number, u32 response_code, json response_json)
 
   if(response.code == 200)
   {
-    if(!get_modfiles_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_modfiles_callbacks[call_number]->url, response_json);
+    if(!get_all_modfiles_callbacks[call_number]->is_cache)
+      modio::addCallToCache(get_all_modfiles_callbacks[call_number]->url, response_json);
 
     u32 modfiles_size = (u32)response_json["data"].size();
     ModioModfile* modfiles = new ModioModfile[modfiles_size];
@@ -39,7 +39,7 @@ void modioOnGetModfiles(u32 call_number, u32 response_code, json response_json)
     {
       modioInitModfile(&modfiles[i], response_json["data"][i]);
     }
-    get_modfiles_callbacks[call_number]->callback(get_modfiles_callbacks[call_number]->object, response, modfiles, modfiles_size);
+    get_all_modfiles_callbacks[call_number]->callback(get_all_modfiles_callbacks[call_number]->object, response, modfiles, modfiles_size);
     for(u32 i=0; i<modfiles_size; i++)
     {
       modioFreeModfile(&modfiles[i]);
@@ -47,14 +47,14 @@ void modioOnGetModfiles(u32 call_number, u32 response_code, json response_json)
     delete[] modfiles;
   }else
   {
-    get_modfiles_callbacks[call_number]->callback(get_modfiles_callbacks[call_number]->object, response, NULL, 0);
+    get_all_modfiles_callbacks[call_number]->callback(get_all_modfiles_callbacks[call_number]->object, response, NULL, 0);
   }
-  delete get_modfiles_callbacks[call_number];
-  get_modfiles_callbacks.erase(call_number);
+  delete get_all_modfiles_callbacks[call_number];
+  get_all_modfiles_callbacks.erase(call_number);
   modioFreeResponse(&response);
 }
 
-void modioOnModfileAdded(u32 call_number, u32 response_code, json response_json)
+void modioOnModfileAdded(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -70,7 +70,7 @@ void modioOnModfileAdded(u32 call_number, u32 response_code, json response_json)
   modioFreeModfile(&modfile);
 }
 
-void modioOnModfileEdited(u32 call_number, u32 response_code, json response_json)
+void modioOnModfileEdited(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);

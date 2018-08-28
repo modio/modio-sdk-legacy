@@ -12,7 +12,7 @@ namespace modio
     std::string md5;
 
     void initialize(ModioFilehash filehash);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

@@ -20,7 +20,7 @@ namespace modio
     Avatar avatar;
 
     void initialize(ModioUser modio_user);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

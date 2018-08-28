@@ -1,7 +1,7 @@
 #include "c/schemas/ModioComment.h"
 
 extern "C" {
-void modioInitComment(ModioComment *comment, json comment_json)
+void modioInitComment(ModioComment *comment, nlohmann::json comment_json)
 {
     comment->id = 0;
     if (modio::hasKey(comment_json, "id"))
@@ -43,10 +43,10 @@ void modioInitComment(ModioComment *comment, json comment_json)
         strcpy(comment->content, content_str.c_str());
     }
 
-    json submitted_by_json;
-    if(modio::hasKey(comment_json, "submitted_by"))
-      submitted_by_json = comment_json["submitted_by"];
-    modioInitUser(&(comment->submitted_by), submitted_by_json);
+    nlohmann::json user_json;
+    if(modio::hasKey(comment_json, "user"))
+      user_json = comment_json["user"];
+    modioInitUser(&(comment->user), user_json);
 }
 
 void modioFreeComment(ModioComment *comment)

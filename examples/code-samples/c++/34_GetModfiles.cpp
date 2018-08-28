@@ -27,20 +27,21 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout << "Getting mods..." << std::endl;
+  std::cout << "Getting modfiles..." << std::endl;
 
   // Now we finished setting up the filters we are ready to request the modfiles
-  modio_instance.getModfiles(mod_id, filter, [&](const modio::Response &response, const std::vector<modio::Modfile> &modfiles) {
-    std::cout << "On mod get response: " << response.code << std::endl;
+  modio_instance.getAllModfiles(mod_id, filter, [&](const modio::Response &response, const std::vector<modio::Modfile> &modfiles) {
+    std::cout << "On get modfiles response: " << response.code << std::endl;
     if (response.code == 200)
     {
-      std::cout << "Listing mods events" << std::endl;
-      std::cout << "============" << std::endl;
+      std::cout << "Listing modfiles" << std::endl;
+      std::cout << "================" << std::endl;
       for (auto &modfile : modfiles)
       {
         std::cout << "Id: \t" << modfile.id << std::endl;
         std::cout << "Version:\t" << modfile.version << std::endl;
         std::cout << "Changelog:\t" << modfile.changelog << std::endl;
+        std::cout << "Metadata blob:\t" << modfile.metadata_blob << std::endl;
       }
     }
     finish();

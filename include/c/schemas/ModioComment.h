@@ -6,11 +6,9 @@
 #include "../ModioC.h"
 #include "ModioUser.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitComment(ModioComment* comment, json comment_json);
+  void modioInitComment(ModioComment* comment, nlohmann::json comment_json);
   void modioFreeComment(ModioComment* comment);
 }
 

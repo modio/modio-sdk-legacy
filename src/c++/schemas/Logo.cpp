@@ -16,9 +16,9 @@ namespace modio
       this->thumb_1280x720 = modio_iogo.thumb_1280x720;
   }
 
-  json Logo::toJson()
+  nlohmann::json Logo::toJson()
   {
-    json logo_json;
+    nlohmann::json logo_json;
 
     logo_json["filename"] = this->filename;
     logo_json["original"] = this->original;

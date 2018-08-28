@@ -22,11 +22,12 @@ namespace modio
     std::string version;
     std::string virustotal_hash;
     std::string changelog;
+    std::string metadata_blob;
     modio::Filehash filehash;
     modio::Download download;
 
     void initialize(ModioModfile modfile);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

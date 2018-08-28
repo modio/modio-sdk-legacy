@@ -2,7 +2,7 @@
 
 namespace modio
 {
-  void Instance::getModStats(u32 mod_id, const std::function<void(const modio::Response& response, const modio::ModStats& mod_stats)>& callback)
+  void Instance::getModStats(u32 mod_id, const std::function<void(const modio::Response& response, const modio::Stats& stats)>& callback)
   {
     const struct GetModStatsCall* get_mod_stats_call = new GetModStatsCall{callback};
     get_mod_stats_calls[this->current_call_id] = (GetModStatsCall*)get_mod_stats_call;
@@ -12,7 +12,7 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::getAllModStats(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::ModStats> & mods_stats)>& callback)
+  void Instance::getAllModStats(modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Stats> & mods_stats)>& callback)
   {
     const struct GetAllModStatsCall* get_all_mod_stats_call = new GetAllModStatsCall{callback};
     get_all_mod_stats_calls[this->current_call_id] = (GetAllModStatsCall*)get_all_mod_stats_call;

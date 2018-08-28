@@ -12,6 +12,7 @@ namespace modio
     ModfileEditor();
     void setVersion(const std::string& version);
     void setChangelog(const std::string& changelog);
+    void setMetadataBlob(const std::string& metadata_blob);
     void setActive(bool active);
     ModioModfileEditor* getModioModfileEditor();
     ~ModfileEditor();

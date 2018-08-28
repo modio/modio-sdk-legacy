@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitMetadataKVP(ModioMetadataKVP* metadata_kvp, json metadata_kvp_json);
+  void modioInitMetadataKVP(ModioMetadataKVP* metadata_kvp, nlohmann::json metadata_kvp_json);
   void modioFreeMetadataKVP(ModioMetadataKVP* metadata_kvp);
 }
 

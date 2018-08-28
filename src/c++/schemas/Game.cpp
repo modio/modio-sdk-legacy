@@ -44,9 +44,9 @@ namespace modio
     }
   }
 
-  json Game::toJson()
+  nlohmann::json Game::toJson()
   {
-    json game_json;
+    nlohmann::json game_json;
 
     game_json["id"] = this->id;
     game_json["status"] = this->status;
@@ -73,7 +73,7 @@ namespace modio
     game_json["logo"] = this->logo.toJson();
     game_json["header"] = this->header.toJson();
 
-    json tag_options_json;
+    nlohmann::json tag_options_json;
     for(auto& game_tag_option : game_tag_options)
     {
       tag_options_json.push_back(game_tag_option.toJson());

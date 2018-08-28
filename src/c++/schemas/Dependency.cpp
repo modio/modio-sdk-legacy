@@ -8,9 +8,9 @@ namespace modio
 		this->date_added = modio_dependency.date_added;
 	}
 
-	json Dependency::toJson()
+	nlohmann::json Dependency::toJson()
 	{
-		json dependency_json;
+		nlohmann::json dependency_json;
 
 		dependency_json["mod_id"] = this->mod_id;
 		dependency_json["date_added"] = this->date_added;

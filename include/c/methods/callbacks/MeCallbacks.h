@@ -60,11 +60,11 @@ extern std::map< u32, GetUserGamesParams* > get_user_games_callbacks;
 extern std::map< u32, GetUserModsParams* > get_user_mods_callbacks;
 extern std::map< u32, GetUserModfilesParams* > get_user_modfiles_callbacks;
 
-void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, json response_json);
-void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, json response_json);
-void modioOnGetUserEvents(u32 call_number, u32 response_code, json response_json);
-void modioOnGetUserMods(u32 call_number, u32 response_code, json response_json);
-void modioOnGetUserGames(u32 call_number, u32 response_code, json response_json);
-void modioOnGetUserModfiles(u32 call_number, u32 response_code, json response_json);
+void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetUserEvents(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetUserMods(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetUserModfiles(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitLogo(ModioLogo* logo, json logo_json)
+  void modioInitLogo(ModioLogo* logo, nlohmann::json logo_json)
   {
     logo->filename = NULL;
     if(modio::hasKey(logo_json, "filename"))

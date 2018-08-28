@@ -16,9 +16,9 @@ namespace modio
       this->thumb_256x256 = modio_icon.thumb_256x256;
   }
 
-  json Icon::toJson()
+  nlohmann::json Icon::toJson()
   {
-    json icon_json;
+    nlohmann::json icon_json;
 
     icon_json["filename"] = this->filename;
     icon_json["original"] = this->original;

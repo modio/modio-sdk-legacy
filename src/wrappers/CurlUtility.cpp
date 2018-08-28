@@ -34,7 +34,7 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
   return modfile_upload_queue;
 }
 
-JsonResponseHandler::JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, json response_json)> callback)
+JsonResponseHandler::JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   this->response = "";
   this->call_number = call_number;
@@ -50,7 +50,7 @@ OngoingDownload::OngoingDownload(u32 call_number, std::string url, std::function
 
 void updateModDownloadQueue()
 {
-  json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
+  nlohmann::json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
 
   for(auto &queued_mod_download : mod_download_queue)
   {
@@ -70,7 +70,7 @@ void updateModDownloadQueue()
 
 void updateModDownloadQueueFile()
 {
-  json mod_download_queue_json;
+  nlohmann::json mod_download_queue_json;
   for(auto &queued_mod_download : mod_download_queue)
   {
     mod_download_queue_json.push_back(queued_mod_download->toJson());
@@ -80,7 +80,7 @@ void updateModDownloadQueueFile()
 
 void updateModUploadQueueFile()
 {
-  json mod_upload_queue_json;
+  nlohmann::json mod_upload_queue_json;
   for(auto &queued_mod_upload : modfile_upload_queue)
   {
     mod_upload_queue_json.push_back(queued_mod_upload->toJson());
@@ -90,8 +90,8 @@ void updateModUploadQueueFile()
 
 void prioritizeModDownload(u32 mod_id)
 {
-  json result_json;
-  json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
+  nlohmann::json result_json;
+  nlohmann::json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
 
   for(auto &queued_mod_download_json : mod_download_queue_json)
   {
@@ -117,6 +117,14 @@ void prioritizeModDownload(u32 mod_id)
 
   if(current_queued_mod_download)
     current_queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
+}
+
+void downloadNextQueuedMod()
+{
+  if (mod_download_queue.size() > 0)
+  {
+    downloadMod(mod_download_queue.front());
+  }
 }
 
 void setHeaders(std::vector<std::string> headers, CURL *curl)

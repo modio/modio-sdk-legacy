@@ -6,7 +6,7 @@ void loadInstalledModsFile()
 
   modio::LAST_MOD_EVENT_POLL = 0;
   
-  json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
 
   if(modio::hasKey(installed_mods_json,"last_mod_event_poll"))
   {
@@ -26,7 +26,7 @@ void loadAuthenticationFile()
   modio::ACCESS_TOKEN = "";
   modio::LAST_USER_EVENT_POLL = 0;
 
-  json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
+  nlohmann::json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
 
   if(modio::hasKey(token_file_json,"access_token"))
   {
@@ -76,6 +76,8 @@ void modioInit(u32 environment, u32 game_id, char* api_key, char* root_path)
   modioInitConfig();
 
   modio::updateInstalledModsJson();
+
+  modio::clearOldCache();
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }

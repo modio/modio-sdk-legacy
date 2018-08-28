@@ -38,8 +38,16 @@ int main(void)
       std::cout << "================" << std::endl;
       for (auto &comment : comments)
       {
-        std::cout << "Id: \t" << comment.id << std::endl;
+        std::cout << "Id:\t\t" << comment.id << std::endl;
+        std::cout << "Mod id:\t\t" << comment.mod_id << std::endl;
+        std::cout << "Date added:\t" << comment.date_added << std::endl;
+        std::cout << "Reply id:\t" << comment.reply_id << std::endl;
+        std::cout << "Thread position:" << comment.thread_position << std::endl;
+        std::cout << "Karma:\t\t" << comment.karma << std::endl;
+        std::cout << "Karma guest:\t" << comment.karma_guest << std::endl;
         std::cout << "Content:\t" << comment.content << std::endl;
+        std::cout << "User:\t\t" << comment.user.username << std::endl;
+        std::cout << std::endl;
       }
     }
     finish();

@@ -14,14 +14,14 @@ namespace modio
     }
   }
 
-  json Error::toJson()
+  nlohmann::json Error::toJson()
   {
-    json error_json;
+    nlohmann::json error_json;
 
     error_json["code"] = this->code;
     error_json["message"] = this->message;
 
-    json errors_json;
+    nlohmann::json errors_json;
     for(auto& error : errors)
     {
       errors_json.push_back(error);

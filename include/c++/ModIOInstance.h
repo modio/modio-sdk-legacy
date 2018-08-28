@@ -19,9 +19,9 @@
 #include "schemas/Mod.h"
 #include "schemas/Event.h"
 #include "schemas/Modfile.h"
-#include "schemas/ModStats.h"
+#include "schemas/Stats.h"
 #include "schemas/QueuedModDownload.h"
-#include "schemas/RatingSummary.h"
+#include "schemas/Stats.h"
 #include "schemas/Response.h"
 #include "schemas/Tag.h"
 #include "schemas/User.h"
@@ -74,7 +74,7 @@ public:
   //Mod Methods
   void addMod(modio::ModCreator &mod_handler, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
   void getMod(u32 mod_id, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
-  void getMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
+  void getAllMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
   void editMod(u32 mod_id, modio::ModEditor &mod_handler, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
   void deleteMod(u32 mod_id, const std::function<void(const modio::Response &response)> &callback);
 
@@ -89,17 +89,17 @@ public:
 
   //Modfile Methods
   void getModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response &response, const modio::Modfile &modfile)> &callback);
-  void getModfiles(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
+  void getAllModfiles(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
   void addModfile(u32 mod_id, modio::ModfileCreator &modfile_handler);
   void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor &modfile_handler, const std::function<void(const modio::Response &response, const modio::Modfile &modfile)> &callback);
 
   //Tag Methods
-  void getTags(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::Tag> tags)> &callback);
-  void addTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback);
-  void deleteTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback);
+  void getModTags(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::Tag> tags)> &callback);
+  void addModTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback);
+  void deleteModTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback);
 
   //Metadata KVP methods
-  void getMetadataKVP(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp)> &callback);
+  void getAllMetadataKVP(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp)> &callback);
   void addMetadataKVP(u32 mod_id, std::map<std::string, std::string> metadata_kvp, const std::function<void(const modio::Response &response)> &callback);
   void deleteMetadataKVP(u32 mod_id, std::map<std::string, std::string> metadata_kvp, const std::function<void(const modio::Response &response)> &callback);
 
@@ -128,7 +128,7 @@ public:
   void setUploadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback);
   std::list<QueuedModDownload *> getModDownloadQueue();
   std::list<QueuedModfileUpload *> getModfileUploadQueue();
-  std::vector<modio::InstalledMod> getInstalledMods();
+  std::vector<modio::InstalledMod> getAllInstalledMods();
   u32 getModState(u32 mod_id);
 
   //Dependencies Methods
@@ -138,14 +138,15 @@ public:
 
   //Comments Methods
   void getAllModComments(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Comment> &comments)> &callback);
+  void getModComment(u32 mod_id, u32 comment_id, const std::function<void(const modio::Response &response, const modio::Comment &comment)> &callback);
   void deleteModComment(u32 mod_id, u32 comment_id, const std::function<void(const modio::Response &response)> &callback);
 
   //Reports Methods
   void submitReport(std::string resource, u32 id, u32 type, std::string name, std::string summary, const std::function<void(const modio::Response &response)> &callback);
 
   //Stats Methods
-  void getModStats(u32 mod_id, const std::function<void(const modio::Response &response, const modio::ModStats &mod_stats)> &callback);
-  void getAllModStats(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::ModStats> &mod_stats)> &callback);
+  void getModStats(u32 mod_id, const std::function<void(const modio::Response &response, const modio::Stats &stats)> &callback);
+  void getAllModStats(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Stats> &mods_stats)> &callback);
 };
 }
 

@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitTag(ModioTag* tag, json tag_json);
+  void modioInitTag(ModioTag* tag, nlohmann::json tag_json);
   void modioFreeTag(ModioTag* tag);
 }
 

@@ -2,11 +2,11 @@
 
 namespace modio
 {
-  std::map<u32, GetMetadataKVPCall*> get_metadata_kvp_calls;
+  std::map<u32, GetAllMetadataKVPCall*> get_all_metadata_kvp_calls;
   std::map<u32, AddMetadataKVPCall*> add_metadata_kvp_calls;
   std::map<u32, DeleteMetadataKVPCall*> delete_metadata_kvp_calls;
 
-  void onGetMetadataKVP(void* object, ModioResponse modio_response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size)
+  void onGetAllMetadataKVP(void* object, ModioResponse modio_response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size)
   {
     u32 call_id = *((u32*)object);
 
@@ -19,11 +19,11 @@ namespace modio
     {
       metadata_kvp_vector[i].initialize(metadata_kvp_array[i]);
     }
-    get_metadata_kvp_calls[call_id]->callback((const Response&)response, metadata_kvp_vector);
+    get_all_metadata_kvp_calls[call_id]->callback((const Response&)response, metadata_kvp_vector);
 
-    delete get_metadata_kvp_calls[call_id];
+    delete get_all_metadata_kvp_calls[call_id];
     delete (u32*)object;
-    get_metadata_kvp_calls.erase(call_id);
+    get_all_metadata_kvp_calls.erase(call_id);
   }
 
   void onAddMetadataKVP(void* object, ModioResponse modio_response)

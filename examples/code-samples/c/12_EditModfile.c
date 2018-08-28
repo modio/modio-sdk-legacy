@@ -6,37 +6,9 @@ void onEditModfile(void *object, ModioResponse response, ModioModfile modfile)
   printf("Edit modfile response: %i\n", response.code);
   if (response.code == 200)
   {
-    printf("Mod edited successfully!\n");
+    printf("Modfile edited successfully!\n");
   }
   *wait = false;
-}
-
-void onGetMod(void *object, ModioResponse response, ModioMod mod)
-{
-  bool *wait = object;
-  printf("On mod get response: %i\n", response.code);
-  if (response.code == 200)
-  {
-    printf("Id:\t%i\n", mod.id);
-    printf("Name:\t%s\n", mod.name);
-
-    printf("Editing modfile...\n");
-
-    // The Modfile Editor helps setting up the fields that will be edited
-    // Notice that the version field and modfile zip can't be edited, you should be uploading another modfile instead
-    ModioModfileEditor modfile_editor;
-    modioInitModfileEditor(&modfile_editor);
-    modioSetModfileEditorActive(&modfile_editor, false);
-    modioSetModfileEditorChangelog(&modfile_editor, (char *)"Stuff was changed on this mod via the examples.");
-
-    modioEditModfile(wait, mod.id, mod.modfile.id, modfile_editor, &onEditModfile);
-
-    modioFreeModfileEditor(&modfile_editor);
-  }
-  else
-  {
-    *wait = false;
-  }
 }
 
 int main(void)
@@ -45,13 +17,29 @@ int main(void)
 
   bool wait = true;
 
-  // Let's start by requesting a single mod
+  // In order to edit a modfile you will need the mod and modfile id
   printf("Please enter the mod id: \n");
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  printf("Getting mod...\n");
-  modioGetMod(&wait, mod_id, &onGetMod);
+  printf("Please enter the modfile id: \n");
+  u32 modfile_id;
+  scanf("%i", &modfile_id);
+
+  printf("Editing modfile...\n");
+
+  // The Modfile Editor helps setting up the fields that will be edited
+  // Notice that the version field and modfile zip can't be edited, if you want to change them you should upload a new modfile instead
+  ModioModfileEditor modfile_editor;
+  modioInitModfileEditor(&modfile_editor);
+  modioSetModfileEditorActive(&modfile_editor, false);
+  modioSetModfileEditorChangelog(&modfile_editor, (char *)"Stuff was changed on this mod via the examples.");
+  modioSetModfileEditorMetadataBlob(&modfile_editor, (char *)"The metadata was edited via the SDK examples.");
+
+  // Once the modfile editor is set we are ready to edit the modfile
+  modioEditModfile(&wait, mod_id, modfile_id, modfile_editor, &onEditModfile);
+
+  modioFreeModfileEditor(&modfile_editor);
 
   while (wait)
   {

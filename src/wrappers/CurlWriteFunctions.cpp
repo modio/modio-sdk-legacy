@@ -13,6 +13,12 @@ size_t onGetJsonData(char *ptr, size_t size, size_t nmemb, void *userdata)
   return data_size;
 }
 
+size_t onGetUploadData(char *ptr, size_t size, size_t nmemb, void *userdata)
+{
+  u32 data_size = (u32)(size * nmemb);
+  return data_size;
+}
+
 size_t onGetFileData(void *ptr, size_t size, size_t nmemb, void *stream)
 {
   size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);

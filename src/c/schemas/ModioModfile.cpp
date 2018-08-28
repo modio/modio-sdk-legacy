@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitModfile(ModioModfile* modfile, json modfile_json)
+  void modioInitModfile(ModioModfile* modfile, nlohmann::json modfile_json)
   {
     modfile->id = 0;
     if(modio::hasKey(modfile_json, "id"))
@@ -64,12 +64,20 @@ extern "C"
       strcpy(modfile->changelog, changelog_str.c_str());
     }
 
-    json filehash_json;
+    modfile->metadata_blob = NULL;
+    if(modio::hasKey(modfile_json, "metadata_blob"))
+    {
+      std::string metadata_blob_str = modfile_json["metadata_blob"];
+      modfile->metadata_blob = new char[metadata_blob_str.size() + 1];
+      strcpy(modfile->metadata_blob, metadata_blob_str.c_str());
+    }
+
+    nlohmann::json filehash_json;
     if(modio::hasKey(modfile_json, "filehash"))
       filehash_json = modfile_json["filehash"];
     modioInitFilehash(&(modfile->filehash), filehash_json);
 
-    json download_json;
+    nlohmann::json download_json;
     if(modio::hasKey(modfile_json, "download"))
       download_json = modfile_json["download"];
     modioInitDownload(&(modfile->download), download_json);
@@ -87,6 +95,8 @@ extern "C"
         delete[] modfile->virustotal_hash;
       if(modfile->changelog)
         delete[] modfile->changelog;
+      if(modfile->metadata_blob)
+        delete[] modfile->metadata_blob;
 
       modioFreeFilehash(&(modfile->filehash));
       modioFreeDownload(&(modfile->download));

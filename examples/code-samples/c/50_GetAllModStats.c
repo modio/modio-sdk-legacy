@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onGetAllModStats(void *object, ModioResponse response, ModioModStats *mods_stats, u32 mods_stats_size)
+void onGetAllModStats(void *object, ModioResponse response, ModioStats *mods_stats, u32 mods_stats_size)
 {
   bool *wait = object;
   printf("Get mods response: %i\n", response.code);

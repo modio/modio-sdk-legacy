@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitMod(ModioMod* mod, json mod_json)
+  void modioInitMod(ModioMod* mod, nlohmann::json mod_json)
   {
     mod->id = 0;
     if(modio::hasKey(mod_json, "id"))
@@ -76,6 +76,14 @@ extern "C"
       strcpy(mod->description, description_str.c_str());
     }
 
+    mod->description_plaintext = NULL;
+    if(modio::hasKey(mod_json, "description_plaintext"))
+    {
+      std::string description_plaintext_str = mod_json["description_plaintext"];
+      mod->description_plaintext = new char[description_plaintext_str.size() + 1];
+      strcpy(mod->description_plaintext, description_plaintext_str.c_str());
+    }
+
     mod->metadata_blob = NULL;
     if(modio::hasKey(mod_json, "metadata_blob"))
     {
@@ -92,30 +100,30 @@ extern "C"
       strcpy(mod->profile_url, profile_url_str.c_str());
     }
 
-    json logo_json;
+    nlohmann::json logo_json;
     if(modio::hasKey(mod_json, "logo"))
       logo_json = mod_json["logo"];
     modioInitLogo(&(mod->logo), logo_json);
 
-    json submitted_by_json;
+    nlohmann::json submitted_by_json;
     if(modio::hasKey(mod_json, "submitted_by"))
       submitted_by_json = mod_json["submitted_by"];
     modioInitUser(&(mod->submitted_by), submitted_by_json);
 
-    json modfile_json;
+    nlohmann::json modfile_json;
     if(modio::hasKey(mod_json, "modfile"))
       modfile_json = mod_json["modfile"];
     modioInitModfile(&(mod->modfile), modfile_json);
 
-    json media_json;
+    nlohmann::json media_json;
     if(modio::hasKey(mod_json, "media"))
       media_json = mod_json["media"];
     modioInitMedia(&(mod->media), media_json);
 
-    json rating_summary_json;
-    if(modio::hasKey(mod_json, "rating_summary"))
-      rating_summary_json = mod_json["rating_summary"];
-    modioInitRatingSummary(&(mod->rating_summary), rating_summary_json);
+    nlohmann::json stats_json;
+    if(modio::hasKey(mod_json, "stats"))
+      stats_json = mod_json["stats"];
+    modioInitStats(&(mod->stats), stats_json);
 
     mod->tags_array = NULL;
     mod->tags_array_size = 0;
@@ -156,6 +164,8 @@ extern "C"
         delete[] mod->summary;
       if(mod->description)
         delete[] mod->description;
+      if(mod->description_plaintext)
+        delete[] mod->description_plaintext;
       if(mod->metadata_blob)
         delete[] mod->metadata_blob;
       if(mod->profile_url)
@@ -165,7 +175,7 @@ extern "C"
       modioFreeUser(&(mod->submitted_by));
       modioFreeModfile(&(mod->modfile));
       modioFreeMedia(&(mod->media));
-      modioFreeRatingSummary(&(mod->rating_summary));
+      modioFreeStats(&(mod->stats));
 
       for(u32 i=0; i<mod->tags_array_size; i++)
       {

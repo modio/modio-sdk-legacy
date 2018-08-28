@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload, json queued_modfile_upload_json)
+  void modioInitQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload, nlohmann::json queued_modfile_upload_json)
   {
     queued_modfile_upload->state = 0;
     if(modio::hasKey(queued_modfile_upload_json, "state"))
@@ -28,7 +28,7 @@ extern "C"
       strcpy(queued_modfile_upload->path, path_str.c_str());
     }
 
-    json modfile_creator_json;
+    nlohmann::json modfile_creator_json;
     if(modio::hasKey(queued_modfile_upload_json, "modfile_creator"))
       modfile_creator_json = queued_modfile_upload_json["modfile_creator"];
     modio::modioInitModfileCreatorFromJson(&(queued_modfile_upload->modio_modfile_creator), modfile_creator_json);

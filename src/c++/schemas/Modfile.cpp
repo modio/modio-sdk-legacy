@@ -19,13 +19,15 @@ namespace modio
       this->virustotal_hash = modio_modfile.virustotal_hash;
     if(modio_modfile.changelog)
       this->changelog = modio_modfile.changelog;
+    if(modio_modfile.metadata_blob)
+      this->metadata_blob = modio_modfile.metadata_blob;
     this->filehash.initialize(modio_modfile.filehash);
     this->download.initialize(modio_modfile.download);
   }
 
-  json Modfile::toJson()
+  nlohmann::json Modfile::toJson()
   {
-    json modfile_json;
+    nlohmann::json modfile_json;
 
     modfile_json["id"] = this->id;
     modfile_json["mod_id"] = this->mod_id;
@@ -38,6 +40,7 @@ namespace modio
     modfile_json["version"] = this->version;
     modfile_json["virustotal_hash"] = this->virustotal_hash;
     modfile_json["changelog"] = this->changelog;
+    modfile_json["metadata_blob"] = this->metadata_blob;
     modfile_json["filehash"] = this->filehash.toJson();
     modfile_json["download"] = this->download.toJson();
 

@@ -2,17 +2,17 @@
 
 extern "C"
 {
-  void modioGetMetadataKVP(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size))
+  void modioGetAllMetadataKVP(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size))
   {
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/metadatakvp/";
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    get_metadata_kvp_callbacks[call_number] = new GetMetadataKVPParams;
-    get_metadata_kvp_callbacks[call_number]->callback = callback;
-    get_metadata_kvp_callbacks[call_number]->object = object;
+    get_all_metadata_kvp_callbacks[call_number] = new GetAllMetadataKVPParams;
+    get_all_metadata_kvp_callbacks[call_number]->callback = callback;
+    get_all_metadata_kvp_callbacks[call_number]->object = object;
 
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetMetadataKVP);
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllMetadataKVP);
   }
 
   void modioAddMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))

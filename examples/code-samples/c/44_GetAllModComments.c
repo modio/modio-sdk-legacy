@@ -10,9 +10,16 @@ void onGetAllModComments(void *object, ModioResponse response, ModioComment comm
     printf("================\n");
     for (u32 i = 0; i < comments_size; i++)
     {
-      printf("Comment[%i]\n", i);
-      printf("Id:\t%i\n", comments[i].id);
-      printf("Content:\t%s\n", comments[i].content);
+    printf("Id:\t\t%i\n", comments[i].id);
+    printf("Mod id:\t\t%i\n", comments[i].mod_id);
+    printf("Date added:\t%i\n", comments[i].date_added);
+    printf("Reply id:\t%i\n", comments[i].reply_id);
+    printf("Thread position:%s\n", comments[i].thread_position);
+    printf("Karma:\t\t%i\n", comments[i].karma);
+    printf("Karma guest:\t%i\n", comments[i].karma_guest);
+    printf("Content:\t%s\n", comments[i].content);
+    printf("User:\t\t%s\n", comments[i].user.username);
+    printf("\n");
     }
   }
   *wait = false;

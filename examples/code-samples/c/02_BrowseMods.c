@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onGetMods(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
+void onGetAllMods(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   bool *wait = object;
   printf("Get mods response: %i\n", response.code);
@@ -38,7 +38,7 @@ int main(void)
   printf("Getting mods...\n");
 
   // Now we finished setting up the filters we are ready to request the mods
-  modioGetMods(&wait, filter, &onGetMods);
+  modioGetAllMods(&wait, filter, &onGetAllMods);
 
   while (wait)
   {

@@ -12,12 +12,12 @@ namespace modio
     this->current_call_id++;
   }
 
-  void Instance::getModfiles(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Modfile> & modfiles)>& callback)
+  void Instance::getAllModfiles(u32 mod_id, modio::FilterCreator& filter, const std::function<void(const modio::Response&, const std::vector<modio::Modfile> & modfiles)>& callback)
   {
-    const struct GetModfilesCall* get_modfiles_call = new GetModfilesCall{callback};
-    get_modfiles_calls[this->current_call_id] = (GetModfilesCall*)get_modfiles_call;
+    const struct GetAllModfilesCall* get_all_modfiles_call = new GetAllModfilesCall{callback};
+    get_all_modfiles_calls[this->current_call_id] = (GetAllModfilesCall*)get_all_modfiles_call;
 
-    modioGetModfiles((void*)new u32(this->current_call_id), mod_id, *filter.getFilter(), &onGetModfiles);
+    modioGetAllModfiles((void*)new u32(this->current_call_id), mod_id, *filter.getFilter(), &onGetAllModfiles);
 
     this->current_call_id++;
   }

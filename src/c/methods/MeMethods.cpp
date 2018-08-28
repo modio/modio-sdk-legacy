@@ -31,7 +31,7 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
-      json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
       if(!cache_file_json.empty())
       {
         get_user_subscriptions_callbacks[call_number]->is_cache = true;
@@ -74,7 +74,7 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
-      json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
       if(!cache_file_json.empty())
       {
         get_user_games_callbacks[call_number]->is_cache = true;
@@ -102,7 +102,7 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
-      json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
       if(!cache_file_json.empty())
       {
         get_user_mods_callbacks[call_number]->is_cache = true;
@@ -130,7 +130,7 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
     if(cache_filename != "")
     {
-      json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
       if(!cache_file_json.empty())
       {
         get_user_modfiles_callbacks[call_number]->is_cache = true;

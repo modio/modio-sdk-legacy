@@ -9,6 +9,7 @@ void onGetModfile(void *object, ModioResponse response, ModioModfile modfile)
     printf("Id:\t%i\n", modfile.id);
     printf("Version:\t%s\n", modfile.version);
     printf("Changelog:\t%s\n", modfile.changelog);
+    printf("Metadata:\t%s\n", modfile.metadata_blob);
   }
   *wait = false;
 }
@@ -28,7 +29,7 @@ int main(void)
   u32 modfile_id;
   scanf("%i", &modfile_id);
 
-  printf("Getting mod...\n");
+  printf("Getting modfile...\n");
   modioGetModfile(&wait, mod_id, modfile_id, &onGetModfile);
 
   while (wait)

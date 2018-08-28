@@ -18,7 +18,7 @@ namespace modio
 		Mod mod;
 
 		void initialize(ModioInstalledMod installed_mod);
-		json toJson();
+		nlohmann::json toJson();
 	};
 }
 

@@ -112,8 +112,8 @@ typedef struct ModioMetadataKVP ModioMetadataKVP;
 typedef struct ModioUser ModioUser;
 typedef struct ModioDownload ModioDownload;
 typedef struct ModioModfile ModioModfile;
-typedef struct ModioRatingSummary ModioRatingSummary;
 typedef struct ModioTag ModioTag;
+typedef struct ModioStats ModioStats;
 typedef struct ModioMod ModioMod;
 typedef struct ModioResponse ModioResponse;
 typedef struct ModioFilterCreator ModioFilterCreator;
@@ -124,7 +124,6 @@ typedef struct ModioModEditor ModioModEditor;
 typedef struct ModioEvent ModioEvent;
 typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
-typedef struct ModioModStats ModioModStats;
 
 struct ModioListNode
 {
@@ -237,24 +236,31 @@ struct ModioModfile
   char* version;
   char* virustotal_hash;
   char* changelog;
+  char* metadata_blob;
   ModioFilehash filehash;
   ModioDownload download;
-};
-
-struct ModioRatingSummary
-{
-  u32 total_ratings;
-  u32 positive_ratings;
-  u32 negative_ratings;
-  u32 percentage_positive;
-  double weighted_aggregate;
-  char* display_text;
 };
 
 struct ModioTag
 {
   u32 date_added;
   char* name;
+};
+
+struct ModioStats
+{
+  u32 mod_id;
+  u32 popularity_rank_position;
+  u32 popularity_rank_total_mods;
+  u32 downloads_total;
+  u32 subscribers_total;
+  u32 ratings_total;
+  u32 ratings_positive;
+  u32 ratings_negative;
+  u32 ratings_percentage_positive;
+  double ratings_weighted_aggregate;
+  char* ratings_display_text;
+  u32 date_expires;
 };
 
 struct ModioMod
@@ -272,13 +278,14 @@ struct ModioMod
   char* name_id;
   char* summary;
   char* description;
+  char* description_plaintext;
   char* metadata_blob;
   char* profile_url;
   ModioLogo logo;
   ModioUser submitted_by;
   ModioModfile modfile;
   ModioMedia media;
-  ModioRatingSummary rating_summary;
+  ModioStats stats;
   ModioTag* tags_array;
   u32 tags_array_size;
   ModioMetadataKVP* metadata_kvp_array;
@@ -319,6 +326,7 @@ struct ModioModfileCreator
   char* path;
   char* version;
   char* changelog;
+  char* metadata_blob;
   char* active;
   char* filehash;
 };
@@ -327,6 +335,7 @@ struct ModioModfileEditor
 {
   char* version;
   char* changelog;
+  char* metadata_blob;
   char* active;
 };
 
@@ -439,29 +448,13 @@ struct ModioComment
 {
   u32 id;
   u32 mod_id;
-  ModioUser submitted_by;
   u32 date_added;
   u32 reply_id;
   u32 karma;
   u32 karma_guest;
   char* thread_position;
   char* content;
-};
-
-struct ModioModStats
-{
-  u32 mod_id;
-  u32 popularity_rank_position;
-  u32 popularity_rank_total_mods;
-  u32 downloads_total;
-  u32 subscribers_total;
-  u32 ratings_total;
-  u32 ratings_positive;
-  u32 ratings_negative;
-  u32 ratings_percentage_positive;
-  double ratings_weighted_aggregate;
-  char* ratings_display_text;
-  u32 date_expires;
+  ModioUser user;
 };
 
 //General Methods
@@ -487,13 +480,13 @@ void modioDownloadImage(void* object, char* image_url, char* path, void (*callba
 
 //Modfile Methods
 void modioGetModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
-void modioGetModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
+void modioGetAllModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
 void modioAddModfile(u32 mod_id, ModioModfileCreator modfile_creator);
 void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_handler, void (*callback)(void* object, ModioResponse response, ModioModfile modfile));
 
 //Mods Methods
 void modioGetMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
-void modioGetMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
+void modioGetAllMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
 void modioAddMod(void* object, ModioModCreator mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioEditMod(void* object, u32 mod_id, ModioModEditor mod_handler, void (*callback)(void* object, ModioResponse response, ModioMod mod));
 void modioDeleteMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
@@ -515,12 +508,12 @@ void modioSubscribeToMod(void* object, u32 mod_id, void (*callback)(void* object
 void modioUnsubscribeFromMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
 
 //Tags Methods
-void modioGetTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioTag* tags_array, u32 tags_array_size));
-void modioAddTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response));
-void modioDeleteTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response));
+void modioGetModTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioTag* tags_array, u32 tags_array_size));
+void modioAddModTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response));
+void modioDeleteModTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response));
 
 //Metadata KVP Methods
-void modioGetMetadataKVP(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size));
+void modioGetAllMetadataKVP(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMetadataKVP* metadata_kvp_array, u32 metadata_kvp_array_size));
 void modioAddMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response));
 void modioDeleteMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response));
 
@@ -548,6 +541,7 @@ void modioInitModfileCreator(ModioModfileCreator* modfile_creator);
 void modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path);
 void modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char* version);
 void modioSetModfileCreatorChangelog(ModioModfileCreator* modfile_creator, char* changelog);
+void modioSetModfileCreatorMetadataBlob(ModioModfileCreator* modfile_creator, char* metadata_blob);
 void modioSetModfileCreatorActive(ModioModfileCreator* modfile_creator, bool active);
 void modioSetModfileCreatorFilehash(ModioModfileCreator* modfile_creator, char* filehash);
 void modioFreeModfileCreator(ModioModfileCreator* modfile_creator);
@@ -556,6 +550,7 @@ void modioFreeModfileCreator(ModioModfileCreator* modfile_creator);
 void modioInitModfileEditor(ModioModfileEditor* modfile_creator);
 void modioSetModfileEditorVersion(ModioModfileEditor* modfile_creator, char* version);
 void modioSetModfileEditorChangelog(ModioModfileEditor* modfile_creator, char* changelog);
+void modioSetModfileEditorMetadataBlob(ModioModfileEditor* modfile_creator, char* metadata_blob);
 void modioSetModfileEditorActive(ModioModfileEditor* modfile_creator, bool active);
 void modioFreeModfileEditor(ModioModfileEditor* modfile_creator);
 
@@ -614,9 +609,9 @@ u32 modioGetModDownloadQueueCount();
 void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
 u32 modioGetModfileUploadQueueCount();
 void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
-u32 modioGetInstalledModsCount();
-void modioGetInstalledMods(ModioInstalledMod* installed_mods);
-bool modioGetInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod);  
+u32 modioGetAllInstalledModsCount();
+void modioGetAllInstalledMods(ModioInstalledMod* installed_mods);
+bool modioGetAllInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod);  
 u32 modioGetModState(u32 mod_id);
 
 //Dependencies Methods
@@ -626,11 +621,12 @@ void modioDeleteModDependencies(void* object, u32 mod_id, u32* dependencies_arra
 
 //Comment Methods
 void modioGetAllModComments(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioComment comments[], u32 comments_size));
+void modioGetModComment(void* object, u32 mod_id, u32 comment_id, void (*callback)(void* object, ModioResponse response, ModioComment comment));  
 void modioDeleteModComment(void* object, u32 mod_id, u32 comment_id, void(*callback)(void* object, ModioResponse response));
 
 //Reports Methods
 void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response));
 
 //Stats Methods
-void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioModStats mod));
-void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModStats mods_stats[], u32 mods_stats_size));
+void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioStats mod));
+void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size));

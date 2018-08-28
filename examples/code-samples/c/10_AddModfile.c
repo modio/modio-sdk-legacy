@@ -33,6 +33,7 @@ int main(void)
   modioSetModfileCreatorPath(&modfile_creator, "../ModExample/modfile/");
   modioSetModfileCreatorVersion(&modfile_creator, "v1.1.0");
   modioSetModfileCreatorChangelog(&modfile_creator, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+  modioSetModfileCreatorMetadataBlob(&modfile_creator, "This metadata field was added via the SDK examples.");
   modioSetModfileCreatorActive(&modfile_creator, true);
 
   // Just like the download listener, we can register a function to be called every time a mod us uploaded

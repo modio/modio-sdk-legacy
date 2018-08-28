@@ -13,7 +13,7 @@ namespace modio
     std::string metavalue;
 
     void initialize(ModioMetadataKVP metadata_kvp);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

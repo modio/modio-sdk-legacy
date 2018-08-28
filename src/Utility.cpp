@@ -96,22 +96,22 @@ u32 getCurrentTime()
 
 // Json methods
 
-bool hasKey(json json_object, std::string key)
+bool hasKey(nlohmann::json json_object, std::string key)
 {
   return json_object.find(key) != json_object.end() && !json_object[key].is_null();
 }
 
-json toJson(std::string json_str)
+nlohmann::json toJson(std::string json_str)
 {
   if (json_str == "")
     return "{}"_json;
 
-  json response_json;
+  nlohmann::json response_json;
   try
   {
-    response_json = json::parse(json_str);
+    response_json = nlohmann::json::parse(json_str);
   }
-  catch (json::parse_error &e)
+  catch (nlohmann::json::parse_error &e)
   {
     writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
     response_json = "{}"_json;
@@ -119,17 +119,17 @@ json toJson(std::string json_str)
   return response_json;
 }
 
-json openJson(std::string file_path)
+nlohmann::json openJson(std::string file_path)
 {
   std::ifstream ifs(file_path);
-  json cache_file_json;
+  nlohmann::json cache_file_json;
   if (ifs.is_open())
   {
     try
     {
       ifs >> cache_file_json;
     }
-    catch (json::parse_error &e)
+    catch (nlohmann::json::parse_error &e)
     {
       modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
       cache_file_json = {};
@@ -139,7 +139,7 @@ json openJson(std::string file_path)
   return cache_file_json;
 }
 
-void writeJson(std::string file_path, json json_object)
+void writeJson(std::string file_path, nlohmann::json json_object)
 {
   std::ofstream ofs(file_path);
   ofs << std::setw(4) << json_object << std::endl;

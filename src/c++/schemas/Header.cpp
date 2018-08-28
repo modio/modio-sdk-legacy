@@ -10,9 +10,9 @@ namespace modio
       this->original = modio_header.original;
   }
 
-  json Header::toJson()
+  nlohmann::json Header::toJson()
   {
-    json header_json;
+    nlohmann::json header_json;
 
     header_json["filename"] = this->filename;
     header_json["original"] = this->original;

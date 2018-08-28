@@ -18,7 +18,7 @@ namespace modio
     modio::Error error;
 
     void initialize(ModioResponse response);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitDownload(ModioDownload* download, json download_json);
+  void modioInitDownload(ModioDownload* download, nlohmann::json download_json);
   void modioFreeDownload(ModioDownload* download);
 }
 

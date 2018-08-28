@@ -18,7 +18,7 @@ namespace modio
     int x;
 
     void initialize(ModioIcon Icon);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

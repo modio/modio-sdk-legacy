@@ -13,6 +13,12 @@ struct GetAllModCommentsParams
     void (*callback)(void* object, ModioResponse response, ModioComment comments[], u32 comments_size);
 };
 
+struct GetModCommentParams
+{
+	void* object;
+	void(*callback)(void* object, ModioResponse response, ModioComment comment);
+};
+
 struct DeleteModCommentParams
 {
 	void* object;
@@ -20,9 +26,11 @@ struct DeleteModCommentParams
 };
 
 extern std::map< u32, GetAllModCommentsParams* > get_all_mod_comments_callbacks;
+extern std::map< u32, GetModCommentParams* > get_mod_comment_callbacks;
 extern std::map< u32, DeleteModCommentParams* > delete_mod_comment_callbacks;
 
-void modioOnGetAllModComments(u32 call_number, u32 response_code, json response_json);
-void modioOnDeleteModComment(u32 call_number, u32 response_code, json response_json);
+void modioOnGetAllModComments(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetModComment(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnDeleteModComment(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

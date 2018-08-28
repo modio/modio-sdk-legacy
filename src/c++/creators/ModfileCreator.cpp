@@ -33,6 +33,12 @@ namespace modio
         strcpy(this->modfile_creator->changelog, modfile_creator->changelog);
       }
 
+      if(modfile_creator->metadata_blob)
+      {
+        this->modfile_creator->metadata_blob = new char[strlen(modfile_creator->metadata_blob) + 1];
+        strcpy(this->modfile_creator->metadata_blob, modfile_creator->metadata_blob);
+      }
+
       if(modfile_creator->active)
       {
         this->modfile_creator->active = new char[strlen(modfile_creator->active) + 1];
@@ -62,6 +68,11 @@ namespace modio
     modioSetModfileCreatorChangelog(this->modfile_creator, (char*)changelog.c_str());
   }
 
+  void ModfileCreator::setMetadataBlob(const std::string& metadata_blob)
+  {
+    modioSetModfileCreatorMetadataBlob(this->modfile_creator, (char*)metadata_blob.c_str());
+  }
+
   void ModfileCreator::setActive(bool active)
   {
     modioSetModfileCreatorActive(this->modfile_creator, active);
@@ -77,9 +88,9 @@ namespace modio
     modioFreeModfileCreator(this->modfile_creator);
   }
 
-  json ModfileCreator::toJson()
+  nlohmann::json ModfileCreator::toJson()
   {
-    json modfile_creator_json;
+    nlohmann::json modfile_creator_json;
 
     if(this->modfile_creator->path)
       modfile_creator_json["path"] = this->modfile_creator->path;
@@ -87,6 +98,8 @@ namespace modio
       modfile_creator_json["version"] = this->modfile_creator->version;
     if(this->modfile_creator->changelog)
       modfile_creator_json["changelog"] = this->modfile_creator->changelog;
+    if(this->modfile_creator->metadata_blob)
+      modfile_creator_json["metadata_blob"] = this->modfile_creator->metadata_blob;
     if(this->modfile_creator->active)
       modfile_creator_json["active"] = this->modfile_creator->active;
     if(this->modfile_creator->filehash)

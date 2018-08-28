@@ -7,7 +7,7 @@
 namespace modio
 {
   std::multimap<std::string, std::string> convertModfileCreatorToMultimap(ModioModfileCreator* modfile_creator);
-  void modioInitModfileCreatorFromJson(ModioModfileCreator* modfile_creator, json modfile_creator_json);
+  void modioInitModfileCreatorFromJson(ModioModfileCreator* modfile_creator, nlohmann::json modfile_creator_json);
 }
 
 #endif

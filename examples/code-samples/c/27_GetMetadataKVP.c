@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onGetMetadataKVP(void *object, ModioResponse response, ModioMetadataKVP *metadata_kvp_array, u32 metadata_kvp_array_size)
+void onGetAllMetadataKVP(void *object, ModioResponse response, ModioMetadataKVP *metadata_kvp_array, u32 metadata_kvp_array_size)
 {
   bool *wait = object;
   printf("Get MetadataKVP response: %i\n", response.code);
@@ -29,7 +29,7 @@ int main(void)
   printf("Getting metadata kvp...\n");
 
   // We request the list of metadata key value pairs by providing the Mod's id
-  modioGetMetadataKVP(&wait, mod_id, &onGetMetadataKVP);
+  modioGetAllMetadataKVP(&wait, mod_id, &onGetAllMetadataKVP);
 
   while (wait)
   {

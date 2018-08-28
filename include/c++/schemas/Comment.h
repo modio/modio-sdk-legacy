@@ -19,10 +19,10 @@ namespace modio
         i32 karma_guest;
         std::string thread_position;
         std::string content;
-        User submitted_by;
+        User user;
 
 		void initialize(ModioComment modio_comment);
-		json toJson();
+		nlohmann::json toJson();
 	};
 }
 

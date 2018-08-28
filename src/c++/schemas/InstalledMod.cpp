@@ -12,9 +12,9 @@ namespace modio
 		this->mod.initialize(modio_installed_mod.mod);
 	}
 
-	json InstalledMod::toJson()
+	nlohmann::json InstalledMod::toJson()
 	{
-		json installed_mod_json;
+		nlohmann::json installed_mod_json;
 
 		installed_mod_json["mod_id"] = this->mod_id;
 		installed_mod_json["modfile_id"] = this->modfile_id;

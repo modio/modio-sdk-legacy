@@ -16,7 +16,7 @@ namespace modio
     std::string thumb_100x100;
 
     void initialize(ModioAvatar Avatar);
-    json toJson();
+    nlohmann::json toJson();
   };
 }
 

@@ -22,6 +22,8 @@ namespace modio
       this->summary = modio_mod.summary;
     if(modio_mod.description)
       this->description = modio_mod.description;
+    if(modio_mod.description_plaintext)
+      this->description_plaintext = modio_mod.description_plaintext;
     if(modio_mod.metadata_blob)
       this->metadata_blob = modio_mod.metadata_blob;
     if(modio_mod.profile_url)
@@ -30,7 +32,7 @@ namespace modio
     this->submitted_by.initialize(modio_mod.submitted_by);
     this->modfile.initialize(modio_mod.modfile);
     this->media.initialize(modio_mod.media);
-    this->rating_summary.initialize(modio_mod.rating_summary);
+    this->stats.initialize(modio_mod.stats);
     this->tags.resize(modio_mod.tags_array_size);
     for(u32 i = 0; i < modio_mod.tags_array_size; i++)
     {
@@ -43,9 +45,9 @@ namespace modio
     }
   }
 
-  json Mod::toJson()
+  nlohmann::json Mod::toJson()
   {
-    json mod_json;
+    nlohmann::json mod_json;
 
     mod_json["id"] = this->id;
     mod_json["game_id"] = this->game_id;
@@ -60,22 +62,23 @@ namespace modio
     mod_json["name_id"] = this->name_id;
     mod_json["summary"] = this->summary;
     mod_json["description"] = this->description;
+    mod_json["description_plaintext"] = this->description_plaintext;
     mod_json["metadata_blob"] = this->metadata_blob;
     mod_json["profile_url"] = this->profile_url;
     mod_json["logo"] = this->logo.toJson();
     mod_json["submitted_by"] = this->submitted_by.toJson();
     mod_json["modfile"] = this->modfile.toJson();
     mod_json["media"] = this->media.toJson();
-    mod_json["rating_summary"] = this->rating_summary.toJson();
+    mod_json["stats"] = this->stats.toJson();
 
-    json tags_json;
+    nlohmann::json tags_json;
     for(auto& tag : tags)
     {
       tags_json.push_back(tag.toJson());
     }
     mod_json["tags"] = tags_json;
 
-    json metadata_kvps_json;
+    nlohmann::json metadata_kvps_json;
     for(auto& metadata_kvp : metadata_kvps)
     {
       metadata_kvps_json.push_back(metadata_kvp.toJson());

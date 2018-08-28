@@ -5,11 +5,9 @@
 #include "../../Utility.h"
 #include "../ModioC.h"
 
-using json = nlohmann::json;
-
 extern "C"
 {
-  void modioInitError(ModioError* error, json image_json);
+  void modioInitError(ModioError* error, nlohmann::json image_json);
   void modioFreeError(ModioError* error);
 }
 

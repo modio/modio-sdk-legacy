@@ -3,7 +3,7 @@
 std::map< u32,EmailRequestParams* > email_request_params;
 std::map< u32,EmailExchangeParams* > email_exchange_params;
 
-void modioOnEmailRequested(u32 call_number, u32 response_code, json response_json)
+void modioOnEmailRequested(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -15,7 +15,7 @@ void modioOnEmailRequested(u32 call_number, u32 response_code, json response_jso
   modioFreeResponse(&response);
 }
 
-void modioOnEmailExchanged(u32 call_number, u32 response_code, json response_json)
+void modioOnEmailExchanged(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -23,7 +23,7 @@ void modioOnEmailExchanged(u32 call_number, u32 response_code, json response_jso
   if(response.code == 200)
   {
     modio::ACCESS_TOKEN = response_json["access_token"];
-    json token_json;
+    nlohmann::json token_json;
     token_json["access_token"] = response_json["access_token"];
     modio::writeJson(modio::getModIODirectory() + "authentication.json", token_json);
   }

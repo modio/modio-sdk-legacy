@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitEvent(ModioEvent* event, json event_json)
+  void modioInitEvent(ModioEvent* event, nlohmann::json event_json)
   {
     event->id = 0;
     if(modio::hasKey(event_json, "id"))

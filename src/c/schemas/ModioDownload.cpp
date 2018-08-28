@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioInitDownload(ModioDownload* download, json download_json)
+  void modioInitDownload(ModioDownload* download, nlohmann::json download_json)
   {
     download->date_expires = 0;
     if(modio::hasKey(download_json, "date_expires"))

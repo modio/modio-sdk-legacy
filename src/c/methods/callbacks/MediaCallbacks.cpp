@@ -8,7 +8,7 @@ std::map< u32, DeleteModImagesParams* > delete_mod_images_callbacks;
 std::map< u32, DeleteModYoutubeLinksParams* > delete_mod_youtube_links_callbacks;
 std::map< u32, DeleteModSketchfabLinksParams* > delete_mod_sketchfab_links_callbacks;
 
-void modioOnAddModLogo(u32 call_number, u32 response_code, json response_json)
+void modioOnAddModLogo(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -21,7 +21,7 @@ void modioOnAddModLogo(u32 call_number, u32 response_code, json response_json)
   modioFreeResponse(&response);
 }
 
-void modioOnAddModImages(u32 call_number, u32 response_code, json response_json)
+void modioOnAddModImages(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -34,7 +34,7 @@ void modioOnAddModImages(u32 call_number, u32 response_code, json response_json)
   modioFreeResponse(&response);
 }
 
-void modioOnAddModYoutubeLinks(u32 call_number, u32 response_code, json response_json)
+void modioOnAddModYoutubeLinks(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -47,7 +47,7 @@ void modioOnAddModYoutubeLinks(u32 call_number, u32 response_code, json response
   modioFreeResponse(&response);
 }
 
-void modioOnAddModSketchfabLinks(u32 call_number, u32 response_code, json response_json)
+void modioOnAddModSketchfabLinks(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -60,7 +60,7 @@ void modioOnAddModSketchfabLinks(u32 call_number, u32 response_code, json respon
   modioFreeResponse(&response);
 }
 
-void modioOnDeleteModImages(u32 call_number, u32 response_code, json response_json)
+void modioOnDeleteModImages(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -73,7 +73,7 @@ void modioOnDeleteModImages(u32 call_number, u32 response_code, json response_js
   modioFreeResponse(&response);
 }
 
-void modioOnDeleteModYoutubeLinks(u32 call_number, u32 response_code, json response_json)
+void modioOnDeleteModYoutubeLinks(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
@@ -86,7 +86,7 @@ void modioOnDeleteModYoutubeLinks(u32 call_number, u32 response_code, json respo
   modioFreeResponse(&response);
 }
 
-void modioOnDeleteModSketchfabLinks(u32 call_number, u32 response_code, json response_json)
+void modioOnDeleteModSketchfabLinks(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   ModioResponse response;
   modioInitResponse(&response, response_json);
