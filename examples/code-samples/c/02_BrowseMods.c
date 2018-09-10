@@ -19,7 +19,8 @@ void onGetAllMods(void *object, ModioResponse response, ModioMod *mods, u32 mods
     printf("\nPagination:\n");
     printf("Result count: %i\n", response.result_count);
     printf("Result limit: %i\n", response.result_limit);
-    printf("Result Offset: %i\n", response.result_offset);
+    printf("Result offset: %i\n", response.result_offset);
+    printf("Result total: %i\n", response.result_total);
   }
   *wait = false;
 }
