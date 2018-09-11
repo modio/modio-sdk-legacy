@@ -6,6 +6,7 @@ std::map< u32, GetUserEventsParams* > get_user_events_callbacks;
 std::map< u32, GetUserGamesParams* > get_user_games_callbacks;
 std::map< u32, GetUserModsParams* > get_user_mods_callbacks;
 std::map< u32, GetUserModfilesParams* > get_user_modfiles_callbacks;
+std::map< u32, GetUserRatingsParams* > get_user_ratings_callbacks;
 
 void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
@@ -188,5 +189,37 @@ void modioOnGetUserModfiles(u32 call_number, u32 response_code, nlohmann::json r
   }
   delete get_user_modfiles_callbacks[call_number];
   get_user_modfiles_callbacks.erase(call_number);
+  modioFreeResponse(&response);
+}
+
+void modioOnGetUserRatings(u32 call_number, u32 response_code, nlohmann::json response_json)
+{
+  ModioResponse response;
+  modioInitResponse(&response, response_json);
+  response.code = response_code;
+
+  if(response.code == 200)
+  {
+    if(!get_user_ratings_callbacks[call_number]->is_cache)
+      modio::addCallToCache(get_user_ratings_callbacks[call_number]->url, response_json);
+
+    u32 ratings_size = (u32)response_json["data"].size();
+    ModioRating* ratings = new ModioRating[ratings_size];
+    for(u32 i=0; i<ratings_size; i++)
+    {
+      modioInitRating(&ratings[i], response_json["data"][i]);
+    }
+    get_user_ratings_callbacks[call_number]->callback(get_user_ratings_callbacks[call_number]->object, response, ratings, ratings_size);
+    for(u32 i=0; i<ratings_size; i++)
+    {
+      modioFreeRating(&ratings[i]);
+    }
+    delete[] ratings;
+  }else
+  {
+    get_user_ratings_callbacks[call_number]->callback(get_user_ratings_callbacks[call_number]->object, response, NULL, 0);
+  }
+  delete get_user_ratings_callbacks[call_number];
+  get_user_ratings_callbacks.erase(call_number);
   modioFreeResponse(&response);
 }

@@ -8,6 +8,7 @@ namespace modio
   std::map<u32, GetUserGamesCall*> get_user_games_calls;
   std::map<u32, GetUserModsCall*> get_user_mods_calls;
   std::map<u32, GetUserModfilesCall*> get_user_modfiles_calls;
+  std::map<u32, GetUserRatingsCall*> get_user_ratings_calls;
 
   void onGetAuthenticatedUser(void* object, ModioResponse modio_response, ModioUser modio_user)
   {
@@ -132,5 +133,26 @@ namespace modio
     delete (u32*)object;
     delete get_user_modfiles_calls[call_id];
     get_user_modfiles_calls.erase(call_id);
+  }
+
+  void onGetUserRatings(void* object, ModioResponse modio_response, ModioRating ratings[], u32 ratings_size)
+  {
+    u32 call_id = *((u32*)object);
+
+    modio::Response response;
+    response.initialize(modio_response);
+
+    std::vector<modio::Rating> ratings_vector;
+    ratings_vector.resize(ratings_size);
+    for(u32 i=0; i < ratings_size; i++)
+    {
+      ratings_vector[i].initialize(ratings[i]);
+    }
+
+    get_user_ratings_calls[call_id]->callback((const Response&)response, ratings_vector);
+
+    delete (u32*)object;
+    delete get_user_ratings_calls[call_id];
+    get_user_ratings_calls.erase(call_id);
   }
 }

@@ -19,6 +19,7 @@
 #include "schemas/Mod.h"
 #include "schemas/Event.h"
 #include "schemas/Modfile.h"
+#include "schemas/Rating.h"
 #include "schemas/Stats.h"
 #include "schemas/QueuedModDownload.h"
 #include "schemas/Stats.h"
@@ -117,6 +118,7 @@ public:
   void getUserGames(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Game> &games)> &callback);
   void getUserMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
   void getUserModfiles(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
+  void getUserRatings(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Rating> &ratings)> &callback);
 
   //Downloads Methods
   void installMod(u32 mod_id);

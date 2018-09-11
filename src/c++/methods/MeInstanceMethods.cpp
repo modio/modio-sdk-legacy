@@ -61,4 +61,14 @@ namespace modio
 
     this->current_call_id++;
   }
+
+  void Instance::getUserRatings(modio::FilterCreator& filter, const std::function<void(const modio::Response& response, const std::vector<modio::Rating> & ratings)>& callback)
+  {
+    const struct GetUserRatingsCall* get_user_ratings_call = new GetUserRatingsCall{callback};
+    get_user_ratings_calls[this->current_call_id] = (GetUserRatingsCall*)get_user_ratings_call;
+
+    modioGetUserRatings((void*)new u32(this->current_call_id), *filter.getFilter(), &onGetUserRatings);
+
+    this->current_call_id++;
+  }
 }

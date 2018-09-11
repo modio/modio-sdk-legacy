@@ -141,4 +141,32 @@ extern "C"
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserModfiles);
   }
+
+  void modioGetUserRatings(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
+  {
+    std::string filter_string = modio::getFilterString(&filter);
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/ratings/?" + filter_string + "&api_key=" + modio::API_KEY;
+
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
+    get_user_ratings_callbacks[call_number] = new GetUserRatingsParams;
+    get_user_ratings_callbacks[call_number]->callback = callback;
+    get_user_ratings_callbacks[call_number]->object = object;
+    get_user_ratings_callbacks[call_number]->url = url;
+    get_user_ratings_callbacks[call_number]->is_cache = false;
+
+    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    if(cache_filename != "")
+    {
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      if(!cache_file_json.empty())
+      {
+        get_user_ratings_callbacks[call_number]->is_cache = true;
+        modioOnGetUserRatings(call_number, 200, cache_file_json);
+        return;
+      }
+    }
+
+    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserRatings);
+  }
 }
