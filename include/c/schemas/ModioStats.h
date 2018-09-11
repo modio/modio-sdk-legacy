@@ -1,5 +1,5 @@
-#ifndef MODIO_ModioStats_H
-#define MODIO_ModioStats_H
+#ifndef MODIO_MODIOSTATS_H
+#define MODIO_MODIOSTATS_H
 
 #include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
