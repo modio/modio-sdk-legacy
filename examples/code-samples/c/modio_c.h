@@ -94,11 +94,13 @@ typedef int i32;
 #define MODIO_MATURITY_VIOLENCE 4
 #define MODIO_MATURITY_EXPLICIT 8
 
-typedef struct ModioListNode ModioListNode;
+// Schemas
 typedef struct ModioAvatar ModioAvatar;
 typedef struct ModioComment ModioComment;
 typedef struct ModioDependency ModioDependency;
+typedef struct ModioDownload ModioDownload;
 typedef struct ModioError ModioError;
+typedef struct ModioEvent ModioEvent;
 typedef struct ModioFilehash ModioFilehash;
 typedef struct ModioGame ModioGame;
 typedef struct ModioGameTagOption ModioGameTagOption;
@@ -106,29 +108,96 @@ typedef struct ModioHeader ModioHeader;
 typedef struct ModioIcon ModioIcon;
 typedef struct ModioImage ModioImage;
 typedef struct ModioInstalledMod ModioInstalledMod;
+typedef struct ModioListNode ModioListNode;
 typedef struct ModioLogo ModioLogo;
 typedef struct ModioMedia ModioMedia;
 typedef struct ModioMetadataKVP ModioMetadataKVP;
-typedef struct ModioUser ModioUser;
-typedef struct ModioDownload ModioDownload;
-typedef struct ModioModfile ModioModfile;
-typedef struct ModioTag ModioTag;
-typedef struct ModioStats ModioStats;
 typedef struct ModioMod ModioMod;
-typedef struct ModioResponse ModioResponse;
-typedef struct ModioFilterCreator ModioFilterCreator;
-typedef struct ModioModfileCreator ModioModfileCreator;
-typedef struct ModioModfileEditor ModioModfileEditor;
-typedef struct ModioModCreator ModioModCreator;
-typedef struct ModioModEditor ModioModEditor;
-typedef struct ModioEvent ModioEvent;
+typedef struct ModioModfile ModioModfile;
 typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
+typedef struct ModioRating ModioRating;
+typedef struct ModioResponse ModioResponse;
+typedef struct ModioStats ModioStats;
+typedef struct ModioTag ModioTag;
+typedef struct ModioUser ModioUser;
+// Creators
+typedef struct ModioFilterCreator ModioFilterCreator;
+typedef struct ModioModCreator ModioModCreator;
+typedef struct ModioModfileCreator ModioModfileCreator;
+// Editors
+typedef struct ModioModEditor ModioModEditor;
+typedef struct ModioModfileEditor ModioModfileEditor;
 
 struct ModioListNode
 {
   char* value;
   ModioListNode* next;
+};
+
+struct ModioFilterCreator
+{
+  char* sort;
+  char* limit;
+  char* offset;
+  char* full_text_search;
+  u32 cache_max_age_seconds;
+  ModioListNode* field_value_list;
+  ModioListNode* like_list;
+  ModioListNode* not_like_list;
+  ModioListNode* in_list;
+  ModioListNode* not_in_list;
+  ModioListNode* min_list;
+  ModioListNode* max_list;
+  ModioListNode* smaller_than_list;
+  ModioListNode* greater_than_list;
+  ModioListNode* not_equal_list;
+};
+
+struct ModioModCreator
+{
+  char* visible;
+  char* maturity_option;
+  char* logo;
+  char* name;
+  char* name_id;
+  char* summary;
+  char* description;
+  char* homepage_url;
+  char* metadata_blob;
+  ModioListNode* tags;
+};
+
+struct ModioModfileCreator
+{
+  char* path;
+  char* version;
+  char* changelog;
+  char* metadata_blob;
+  char* active;
+  char* filehash;
+};
+
+struct ModioModEditor
+{
+  char* visible;
+  char* status;
+  char* maturity_option;
+  char* name;
+  char* name_id;
+  char* summary;
+  char* description;
+  char* homepage_url;
+  char* modfile;
+  char* metadata_blob;
+};
+
+struct ModioModfileEditor
+{
+  char* version;
+  char* changelog;
+  char* metadata_blob;
+  char* active;
 };
 
 struct ModioAvatar
@@ -139,29 +208,31 @@ struct ModioAvatar
   char* thumb_100x100;
 };
 
-struct ModioDependency
+struct ModioUser
 {
-  u32 mod_id;
-  u32 date_added;
-};
-
-struct ModioError
-{
-  u32 code;
-  char* message;
-  char** errors_array;
-  u32 errors_array_size;
-};
-
-struct ModioFilehash
-{
-  char* md5;
+  u32 id;
+  u32 date_online;
+  char* username;
+  char* name_id;
+  char* timezone;
+  char* language;
+  char* profile_url;
+  ModioAvatar avatar;
 };
 
 struct ModioHeader
 {
   char* filename;
   char* original;
+};
+
+struct ModioLogo
+{
+  char* filename;
+  char* original;
+  char* thumb_320x180;
+  char* thumb_640x360;
+  char* thumb_1280x720;
 };
 
 struct ModioIcon
@@ -173,20 +244,96 @@ struct ModioIcon
   char* thumb_256x256;
 };
 
+struct ModioComment
+{
+  u32 id;
+  u32 mod_id;
+  u32 date_added;
+  u32 reply_id;
+  u32 karma;
+  u32 karma_guest;
+  char* thread_position;
+  char* content;
+  ModioUser user;
+};
+
+struct ModioDependency
+{
+  u32 mod_id;
+  u32 date_added;
+};
+
+struct ModioDownload
+{
+  char* binary_url;
+  u32 date_expires;
+};
+
+struct ModioError
+{
+  u32 code;
+  char* message;
+  char** errors_array;
+  u32 errors_array_size;
+};
+
+struct ModioEvent
+{
+  u32 id;
+  u32 mod_id;
+  u32 user_id;
+  u32 event_type;
+  u32 date_added;
+};
+
+struct ModioFilehash
+{
+  char* md5;
+};
+
+struct ModioGameTagOption
+{
+  u32 hidden;
+  char* name;
+  char* type;
+  char** tags_array;
+  u32 tags_array_size;
+};
+
+struct ModioGame
+{
+  u32 id;
+  u32 status;
+  u32 date_added;
+  u32 date_updated;
+  u32 presentation_option;
+  u32 date_live;
+  u32 community_options;
+  u32 submission_option;
+  u32 curation_option;
+  u32 revenue_options;
+  u32 api_access_options;
+  u32 maturity_options;
+  char* ugc_name;
+  char* instructions_url;
+  char* name;
+  char* name_id;
+  char* summary;
+  char* instructions;
+  char* profile_url;
+  ModioUser submitted_by;
+  ModioIcon icon;
+  ModioLogo logo;
+  ModioHeader header;
+  ModioGameTagOption* game_tag_option_array;
+  u32 game_tag_option_array_size;
+};
+
 struct ModioImage
 {
   char* filename;
   char* original;
   char* thumb_320x180;
-};
-
-struct ModioLogo
-{
-  char* filename;
-  char* original;
-  char* thumb_320x180;
-  char* thumb_640x360;
-  char* thumb_1280x720;
 };
 
 struct ModioMedia
@@ -205,24 +352,6 @@ struct ModioMetadataKVP
   char* metavalue;
 };
 
-struct ModioUser
-{
-  u32 id;
-  u32 date_online;
-  char* username;
-  char* name_id;
-  char* timezone;
-  char* language;
-  char* profile_url;
-  ModioAvatar avatar;
-};
-
-struct ModioDownload
-{
-  char* binary_url;
-  u32 date_expires;
-};
-
 struct ModioModfile
 {
   u32 id;
@@ -239,6 +368,14 @@ struct ModioModfile
   char* metadata_blob;
   ModioFilehash filehash;
   ModioDownload download;
+};
+
+struct ModioRating
+{
+  u32 game_id;
+  u32 mod_id;
+  u32 rating;
+  u32 date_added;
 };
 
 struct ModioTag
@@ -292,129 +429,6 @@ struct ModioMod
   u32 metadata_kvp_array_size;
 };
 
-struct ModioResponse
-{
-  u32 code;
-  u32 result_count;
-  u32 result_limit;
-  i32 result_offset;
-  u32 result_total;
-  bool result_cached;
-  ModioError error;
-};
-
-struct ModioFilterCreator
-{
-  char* sort;
-  char* limit;
-  char* offset;
-  char* full_text_search;
-  u32 cache_max_age_seconds;
-  ModioListNode* field_value_list;
-  ModioListNode* like_list;
-  ModioListNode* not_like_list;
-  ModioListNode* in_list;
-  ModioListNode* not_in_list;
-  ModioListNode* min_list;
-  ModioListNode* max_list;
-  ModioListNode* smaller_than_list;
-  ModioListNode* greater_than_list;
-  ModioListNode* not_equal_list;
-};
-
-struct ModioModfileCreator
-{
-  char* path;
-  char* version;
-  char* changelog;
-  char* metadata_blob;
-  char* active;
-  char* filehash;
-};
-
-struct ModioModfileEditor
-{
-  char* version;
-  char* changelog;
-  char* metadata_blob;
-  char* active;
-};
-
-struct ModioModCreator
-{
-  char* visible;
-  char* maturity_option;
-  char* logo;
-  char* name;
-  char* name_id;
-  char* summary;
-  char* description;
-  char* homepage_url;
-  char* metadata_blob;
-  ModioListNode* tags;
-};
-
-struct ModioModEditor
-{
-  char* visible;
-  char* status;
-  char* maturity_option;
-  char* name;
-  char* name_id;
-  char* summary;
-  char* description;
-  char* homepage_url;
-  char* modfile;
-  char* metadata_blob;
-};
-
-struct ModioEvent
-{
-  u32 id;
-  u32 mod_id;
-  u32 user_id;
-  u32 event_type;
-  u32 date_added;
-};
-
-struct ModioGameTagOption
-{
-  u32 hidden;
-  char* name;
-  char* type;
-  char** tags_array;
-  u32 tags_array_size;
-};
-
-struct ModioGame
-{
-  u32 id;
-  u32 status;
-  u32 date_added;
-  u32 date_updated;
-  u32 presentation_option;
-  u32 date_live;
-  u32 community_options;
-  u32 submission_option;
-  u32 curation_option;
-  u32 revenue_options;
-  u32 api_access_options;
-  u32 maturity_options;
-  char* ugc_name;
-  char* instructions_url;
-  char* name;
-  char* name_id;
-  char* summary;
-  char* instructions;
-  char* profile_url;
-  ModioUser submitted_by;
-  ModioIcon icon;
-  ModioLogo logo;
-  ModioHeader header;
-  ModioGameTagOption* game_tag_option_array;
-  u32 game_tag_option_array_size;
-};
-
 struct ModioInstalledMod
 {
   u32 mod_id;
@@ -445,17 +459,15 @@ struct ModioQueuedModfileUpload
   ModioModfileCreator modio_modfile_creator;
 };
 
-struct ModioComment
+struct ModioResponse
 {
-  u32 id;
-  u32 mod_id;
-  u32 date_added;
-  u32 reply_id;
-  u32 karma;
-  u32 karma_guest;
-  char* thread_position;
-  char* content;
-  ModioUser user;
+  u32 code;
+  u32 result_count;
+  u32 result_limit;
+  i32 result_offset;
+  u32 result_total;
+  bool result_cached;
+  ModioError error;
 };
 
 //General Methods
@@ -590,6 +602,7 @@ void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback
 void modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size));
 void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
 void modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
+void modioGetUserRatings(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size));
 
 //Settings Methods
 void modioInitConfig();

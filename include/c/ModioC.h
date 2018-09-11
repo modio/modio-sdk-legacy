@@ -116,6 +116,7 @@ extern "C"
   typedef struct ModioModfile ModioModfile;
   typedef struct ModioQueuedModDownload ModioQueuedModDownload;
   typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
+  typedef struct ModioRating ModioRating;
   typedef struct ModioResponse ModioResponse;
   typedef struct ModioStats ModioStats;
   typedef struct ModioTag ModioTag;
