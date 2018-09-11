@@ -37,7 +37,7 @@ int main(void)
   {
     modio_instance.sleep(10);
 
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
     system("cls");
 #endif
 

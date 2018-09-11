@@ -148,7 +148,7 @@ void writeJson(std::string file_path, nlohmann::json json_object)
 
 // Filesystem methods
 
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
 void writeLastErrorLog(std::string error_function)
 {
   //Get the error message, if any.
@@ -177,27 +177,20 @@ void writeLastErrorLog(std::string error_function)
 
 void removeEmptyDirectory(std::string path)
 {
-#ifdef LINUX
+#if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
   if (remove(path.c_str()))
     writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
   else
     writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
 #endif
 
-#ifdef OSX
-  if (remove(path.c_str()))
-    writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
-  else
-    writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
-#endif
-
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
   if (!RemoveDirectory(path.c_str()))
     writeLastErrorLog("RemoveDirectory");
 #endif
 }
 
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
 int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 {
   HANDLE hFile;                    // Handle to directory
@@ -300,15 +293,11 @@ std::vector<std::string> getFilenames(std::string directory)
 void createDirectory(std::string directory)
 {
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
-#ifdef LINUX
+#if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
   mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 #endif
 
-#ifdef OSX
-  mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
-
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
   if (!CreateDirectory((char *)directory.c_str(), NULL))
     writeLastErrorLog("CreateDirectory");
 #endif
@@ -316,7 +305,7 @@ void createDirectory(std::string directory)
 
 bool removeDirectory(std::string directory_name)
 {
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
   int error_code = deleteDirectoryWindows(directory_name);
   if (error_code != 0)
     modio::writeLogLine("Could not remove directory, error code: " + modio::toString(error_code), MODIO_DEBUGLEVEL_ERROR);

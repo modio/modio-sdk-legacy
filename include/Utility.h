@@ -2,24 +2,24 @@
 #define MODIO_UTILITY_H
 
 #ifdef __linux__
-#define LINUX
+#define MODIO_LINUX_DETECTED
 #endif
 
 #ifdef __APPLE__
-#define OSX
+#define MODIO_OSX_DETECTED
 #endif
 #ifdef __MACH__
-#define OSX
+#define MODIO_OSX_DETECTED
 #endif
 
 #ifdef _WIN32
-#define WINDOWS
+#define MODIO_WINDOWS_DETECTED
 #endif
 #ifdef _WIN64
-#define WINDOWS
+#define MODIO_WINDOWS_DETECTED
 #endif
 
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
 #ifdef BUILDING_MODIO_DLL
 #define MODIO_DLL __declspec(dllexport)
 #else
@@ -38,19 +38,19 @@
 #include "dependencies/json/json.hpp"
 #include "Globals.h"
 
-#ifdef LINUX
+#ifdef MODIO_LINUX_DETECTED
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
 #endif
 
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
 #include <windows.h>
 #include <strsafe.h>
 #include "dependencies/dirent/dirent.h"
 #endif
 
-#ifdef OSX
+#ifdef MODIO_OSX_DETECTED
 #include <sys/stat.h>
 #include <dirent.h>
 #endif

@@ -108,13 +108,11 @@ void modioProcess()
 
 void modioSleep(u32 milliseconds)
 {
-  #ifdef LINUX
+  #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
     usleep(milliseconds * 1000);
   #endif
-  #ifdef WINDOWS
+
+  #ifdef MODIO_WINDOWS_DETECTED
     Sleep(milliseconds);
-  #endif
-  #ifdef OSX
-    usleep(milliseconds * 1000);
   #endif
 }

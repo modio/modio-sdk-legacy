@@ -8,7 +8,7 @@
 #include "../ModioC.h"
 #include "../schemas/ModioListNode.h"
 
-#ifdef WINDOWS
+#ifdef MODIO_WINDOWS_DETECTED
 #  ifdef BUILDING_MODIO_DLL
 #    define MODIO_DLL __declspec(dllexport)
 #  else
