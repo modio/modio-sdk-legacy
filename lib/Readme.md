@@ -1,6 +1,6 @@
 This directory contains the mod.io dependencies needed to build mod.io for Windows. If you want to integrate mod.io into your game please refer to the [mod.io SDK overview](https://github.com/DBolical/modioSDK/wiki), you don't need to build mod.io in order to use it on your game you can use our [binary release](https://github.com/DBolical/modioSDK/releases) instead.
 
-mod.io uses Curl and Zlib as external libraries. Both are present on Mac OS by default and can be downloaded from the most common repositories on [Linux](https://github.com/DBolical/modioSDK/wiki/Building#linux). We ship Windows version of both libraries under this directory so you can build mod.io right away using our [Building guide](https://github.com/DBolical/modioSDK/wiki/Building#linux). The following is a guide to build Curl and Zlib from source using both VisualC++ and MinGW compilers.
+mod.io uses Curl and Zlib as external libraries. Both are present on Mac OS by default and can be downloaded from the most common repositories on [Linux](https://github.com/DBolical/modioSDK/wiki/Building#linux). We ship Windows version of both libraries under this directory so you can build mod.io right away using our [Building guide](https://github.com/DBolical/modioSDK/wiki/Building). The following is a guide to build Curl and Zlib from source using both VisualC++ and MinGW compilers.
 
 # Zlib
 

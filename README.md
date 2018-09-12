@@ -1,12 +1,28 @@
+<a href="https://mod.io"><img src="https://static.mod.io/v1/images/branding/modio-color-dark.svg" alt="mod.io" width="400"/></a>
+
 # mod.io SDK
-Welcome to [mod.io](https://mod.io) SDK, built using C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its endpoints](https://github.com/DBolical/modioSDK/wiki) can be viewed here.
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/DBolical/modioSDK/blob/master/LICENSE)
+[![Discord](https://img.shields.io/discord/389039439487434752.svg)](https://discord.mod.io)
+[![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/DBolical/modioSDK/wiki)
+
+
+Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/DBolical/modioSDK/wiki) can be viewed here.
 
 ## Getting started
 
-If you are a game developer and want to add mod.io SDK functionality to your project visit our [getting started guide](https://github.com/DBolical/modioSDK/wiki).
+If you are a game developer and want to add mod.io SDK functionality to your project visit our [documentation overview](https://github.com/DBolical/modioSDK/wiki). Our [getting started guide](https://apps.mod.io/guides/getting-started) is a good place to start if you are completely new to [mod.io](https://mod.io).
 
 ## Contributions Welcome
 Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://apps.mod.io) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.
+
+## Wrappers
+
+mod.io SDK wrappers are available for the following languages and engines:
+
+* [Haxe wrapper](https://apps.mod.io/haxe-wrapper) for game engines such as OpenFL, Kha or awe5. Available on [Github](https://github.com/Turupawn/modioHaxe).
+* [Unreal Engine](https://apps.mod.io/unreal-engine-plugin) integration tutorial and plugin on the works.
+
+Are you creating a wrapper? [Let us know](http://discord.mod.io)!
 
 ### Building instructions
 
