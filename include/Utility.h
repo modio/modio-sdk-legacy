@@ -84,6 +84,7 @@ void writeJson(std::string file_path, nlohmann::json json_object);
 // Filesystem methods
 std::string getModIODirectory();
 std::vector<std::string> getFilenames(std::string directory);
+bool isDirectory(std::string directory);
 void createDirectory(std::string directory);
 bool removeDirectory(std::string directory_name);
 void removeFile(std::string filename);

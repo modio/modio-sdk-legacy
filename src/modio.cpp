@@ -116,3 +116,13 @@ void modioSleep(u32 milliseconds)
     Sleep(milliseconds);
   #endif
 }
+
+void compressFiles(char* root_directory, char* filenames[], u32 filenames_size, char* zip_path)
+{
+  std::vector<std::string> filenames_vector;
+  for(int i = 0; i<filenames_size; i++)
+  {
+    filenames_vector.push_back(filenames[i]);
+  }
+  modio::minizipwrapper::compressFiles(root_directory, filenames_vector, zip_path);
+}

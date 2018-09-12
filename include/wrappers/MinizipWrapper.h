@@ -19,7 +19,8 @@ namespace modio
   namespace minizipwrapper
   {
     void extract(std::string zip_path, std::string directory_path);
-    void compress(std::string directory, std::string zip_path);
+    void compressDirectory(std::string directory, std::string zip_path);
+    void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path);
   }
 }
 

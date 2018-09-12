@@ -257,14 +257,20 @@ std::string getModIODirectory()
   return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
 }
 
+bool isDirectory(std::string directory)
+{
+  directory = modio::addSlashIfNeeded(directory);
+  return opendir(directory.c_str());
+}
+
 std::vector<std::string> getFilenames(std::string directory)
 {
+  directory = modio::addSlashIfNeeded(directory);
+
   std::vector<std::string> filenames;
+
   struct dirent *ent;
   DIR *dir;
-  if (directory[directory.size() - 1] != '/')
-    directory += '/';
-
   if ((dir = opendir(directory.c_str())) != NULL)
   {
     while ((ent = readdir(dir)) != NULL)

@@ -41,6 +41,13 @@ int main(void)
   modfile_creator.setMetadataBlob("This metadata was added via the SDK examples.");
   modfile_creator.setActive(true);
 
+  //std::vector<std::string> filenames;
+  //filenames.push_back("example_image1.png");
+  //filenames.push_back("example_file.txt");
+  //modio_instance.compressFiles("../ModExample/modfile/", filenames, "my_modfile.zip");
+  //modfile_creator.setPath("my_modfile.zip");
+  //modio_instance.addModfile(mod_id, modfile_creator);
+
   std::cout << "Uploading modfile..." << std::endl;
 
   modio_instance.addModfile(mod_id, modfile_creator);

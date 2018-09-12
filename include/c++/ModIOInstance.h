@@ -54,9 +54,10 @@ public:
   Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path);
 
   //General Methods
-  void sleep(u32 milliseconds);
   void process();
   void setDebugLevel(u32 debug_level);
+  void sleep(u32 milliseconds);
+  void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path);
 
   //Events
   void getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);

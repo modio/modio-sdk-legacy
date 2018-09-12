@@ -488,8 +488,18 @@ void queueModDownload(ModioMod& modio_mod)
 void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 {
   std::string modfile_path = queued_modfile_upload->modfile_creator.getModioModfileCreator()->path;
-  std::string modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
-  modio::minizipwrapper::compress(modfile_path, modfile_zip_path);
+  
+  std::string modfile_zip_path = "";
+
+  if(modio::isDirectory(modfile_path))
+  {
+    std::string modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
+    modio::minizipwrapper::compressDirectory(modfile_path, modfile_zip_path);
+  }else
+  {
+    modfile_zip_path = modfile_path;
+  }
+  
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(queued_modfile_upload->mod_id) + "/files";
 
   writeLogLine("Upload started. Mod id: " + toString(queued_modfile_upload->mod_id) + " Path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
