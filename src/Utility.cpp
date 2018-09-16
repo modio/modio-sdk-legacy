@@ -33,31 +33,35 @@ std::string toString(double number)
   return std::to_string(number);
 }
 
-std::string replaceSubstrings(std::string str, const std::string &from, const std::string &to)
+std::string replaceSubstrings(const std::string& str, const std::string& from, const std::string& to)
 {
+  std::string return_value = str;
+
   if (from == "")
-    return str;
+    return return_value;
 
   size_t start_pos = 0;
-  while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+  while ((start_pos = return_value.find(from, start_pos)) != std::string::npos)
   {
-    str.replace(start_pos, from.length(), to);
+    return_value.replace(start_pos, from.length(), to);
     start_pos += to.length();
   }
-  return str;
+  return return_value;
 }
 
-std::string addSlashIfNeeded(std::string directory_path)
+std::string addSlashIfNeeded(const std::string& directory_path)
 {
-  if (directory_path != "" && directory_path[directory_path.size() - 1] != '/')
-    directory_path += "/";
+  std::string return_value = directory_path;
 
-  return directory_path;
+  if (return_value != "" && return_value[return_value.size() - 1] != '/')
+    return_value += "/";
+
+  return return_value;
 }
 
 // Log methods
 
-void writeLogLine(std::string text, u32 debug_level)
+void writeLogLine(const std::string& text, u32 debug_level)
 {
   // NOTE(@jackson): Lower value is higher severity (error == 0)
   if (DEBUG_LEVEL < debug_level)
@@ -96,12 +100,12 @@ u32 getCurrentTime()
 
 // Json methods
 
-bool hasKey(nlohmann::json json_object, std::string key)
+bool hasKey(nlohmann::json json_object, const std::string& key)
 {
   return json_object.find(key) != json_object.end() && !json_object[key].is_null();
 }
 
-nlohmann::json toJson(std::string json_str)
+nlohmann::json toJson(const std::string& json_str)
 {
   if (json_str == "")
     return "{}"_json;
@@ -119,7 +123,7 @@ nlohmann::json toJson(std::string json_str)
   return response_json;
 }
 
-nlohmann::json openJson(std::string file_path)
+nlohmann::json openJson(const std::string& file_path)
 {
   std::ifstream ifs(file_path);
   nlohmann::json cache_file_json;
@@ -139,7 +143,7 @@ nlohmann::json openJson(std::string file_path)
   return cache_file_json;
 }
 
-void writeJson(std::string file_path, nlohmann::json json_object)
+void writeJson(const std::string& file_path, nlohmann::json json_object)
 {
   std::ofstream ofs(file_path);
   ofs << std::setw(4) << json_object << std::endl;
@@ -149,7 +153,7 @@ void writeJson(std::string file_path, nlohmann::json json_object)
 // Filesystem methods
 
 #ifdef MODIO_WINDOWS_DETECTED
-void writeLastErrorLog(std::string error_function)
+void writeLastErrorLog(const std::string& error_function)
 {
   //Get the error message, if any.
   DWORD errorMessageID = ::GetLastError();
@@ -175,7 +179,7 @@ void writeLastErrorLog(std::string error_function)
 }
 #endif
 
-void removeEmptyDirectory(std::string path)
+void removeEmptyDirectory(const std::string& path)
 {
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
   if (remove(path.c_str()))
@@ -257,29 +261,33 @@ std::string getModIODirectory()
   return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
 }
 
-bool isDirectory(std::string directory)
+bool isDirectory(const std::string& directory)
 {
-  directory = modio::addSlashIfNeeded(directory);
-  return opendir(directory.c_str());
+  return opendir(modio::addSlashIfNeeded(directory).c_str());
 }
 
-std::vector<std::string> getFilenames(std::string directory)
+bool fileExists(const std::string& directory)
 {
-  directory = modio::addSlashIfNeeded(directory);
+  return check_file_exists(directory.c_str());
+}
+
+std::vector<std::string> getFilenames(const std::string& directory)
+{
+  std::string directory_with_slash = modio::addSlashIfNeeded(directory);
 
   std::vector<std::string> filenames;
 
   struct dirent *ent;
   DIR *dir;
-  if ((dir = opendir(directory.c_str())) != NULL)
+  if ((dir = opendir(directory_with_slash.c_str())) != NULL)
   {
     while ((ent = readdir(dir)) != NULL)
     {
       DIR *current_dir;
-      std::string current_file_path = directory + ent->d_name;
+      std::string current_file_path = directory_with_slash + ent->d_name;
       if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
       {
-        std::vector<std::string> subdirectories_filenames = getFilenames(directory + ent->d_name);
+        std::vector<std::string> subdirectories_filenames = getFilenames(directory_with_slash + ent->d_name);
         for (int i = 0; i < (int)subdirectories_filenames.size(); i++)
         {
           filenames.push_back(std::string(ent->d_name) + "/" + subdirectories_filenames[i]);
@@ -296,7 +304,7 @@ std::vector<std::string> getFilenames(std::string directory)
   return filenames;
 }
 
-void createDirectory(std::string directory)
+void createDirectory(const std::string& directory)
 {
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
@@ -309,10 +317,10 @@ void createDirectory(std::string directory)
 #endif
 }
 
-bool removeDirectory(std::string directory_name)
+bool removeDirectory(const std::string& directory)
 {
 #ifdef MODIO_WINDOWS_DETECTED
-  int error_code = deleteDirectoryWindows(directory_name);
+  int error_code = deleteDirectoryWindows(directory);
   if (error_code != 0)
     modio::writeLogLine("Could not remove directory, error code: " + modio::toString(error_code), MODIO_DEBUGLEVEL_ERROR);
   return error_code == 0;
@@ -322,10 +330,9 @@ bool removeDirectory(std::string directory_name)
   struct dirent *entry;
   char path[PATH_MAX];
 
-  if (directory_name[directory_name.size() - 1] != '/')
-    directory_name += '/';
+  std::string directory_with_slash = modio::addSlashIfNeeded(directory);
 
-  dir = opendir(directory_name.c_str());
+  dir = opendir(directory_with_slash.c_str());
   if (dir == NULL)
   {
     writeLogLine("Error opendir()", MODIO_DEBUGLEVEL_LOG);
@@ -336,7 +343,7 @@ bool removeDirectory(std::string directory_name)
   {
     if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
     {
-      snprintf(path, (size_t)PATH_MAX, "%s%s", directory_name.c_str(), entry->d_name);
+      snprintf(path, (size_t)PATH_MAX, "%s%s", directory_with_slash.c_str(), entry->d_name);
       if (opendir(path) != NULL)
       {
         removeDirectory(path);
@@ -346,13 +353,13 @@ bool removeDirectory(std::string directory_name)
     }
   }
   closedir(dir);
-  writeLogLine("Deleting: " + directory_name, MODIO_DEBUGLEVEL_LOG);
-  removeEmptyDirectory(directory_name);
+  writeLogLine("Deleting: " + directory_with_slash, MODIO_DEBUGLEVEL_LOG);
+  removeEmptyDirectory(directory_with_slash);
 
   return true;
 }
 
-void removeFile(std::string filename)
+void removeFile(const std::string& filename)
 {
   if (remove(filename.c_str()) != 0)
     writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
@@ -360,7 +367,7 @@ void removeFile(std::string filename)
     writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
 }
 
-double getFileSize(std::string file_path)
+double getFileSize(const std::string& file_path)
 {
   double file_size = 0;
   FILE *fp = fopen(file_path.c_str(), "rb");
@@ -374,18 +381,19 @@ double getFileSize(std::string file_path)
   return file_size;
 }
 
-void createPath(std::string path)
+void createPath(const std::string& path)
 {
   std::string current_path;
+  std::string tokenized_path = path;
   u32 slash_position;
 
-  while (path.length())
+  while (tokenized_path.length())
   {
-    slash_position = (int)path.find('/');
+    slash_position = (int)tokenized_path.find('/');
     if (slash_position == (u32)std::string::npos)
       break;
-    current_path += path.substr(0, slash_position) + "/";
-    path.erase(path.begin(), path.begin() + slash_position + 1);
+    current_path += tokenized_path.substr(0, slash_position) + "/";
+    tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
     createDirectory(current_path);
   }
 }

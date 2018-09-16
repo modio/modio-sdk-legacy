@@ -491,18 +491,40 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   
   std::string modfile_zip_path = "";
 
+  writeLogLine("Uploading mod: " + toString(queued_modfile_upload->mod_id) + " located at path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
+
   if(modio::isDirectory(modfile_path))
   {
     std::string modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
     modio::minizipwrapper::compressDirectory(modfile_path, modfile_zip_path);
-  }else
+  }else if(modio::fileExists(modfile_path))
   {
     modfile_zip_path = modfile_path;
+  }else
+  {
+    writeLogLine("Could not find the modfile to upload: " + modfile_path, MODIO_DEBUGLEVEL_ERROR);
+
+    modfile_upload_queue.remove(queued_modfile_upload);
+    updateModUploadQueueFile();
+
+    if (modio::upload_callback)
+    {
+      modio::upload_callback(0, queued_modfile_upload->mod_id);
+    }
+
+    delete queued_modfile_upload;
+
+    if (modfile_upload_queue.size() > 0)
+    {
+      uploadModfile(modfile_upload_queue.front());
+    }
+    
+    return;
   }
   
+  writeLogLine("Upload started", MODIO_DEBUGLEVEL_LOG);
+  
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(queued_modfile_upload->mod_id) + "/files";
-
-  writeLogLine("Upload started. Mod id: " + toString(queued_modfile_upload->mod_id) + " Path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
 
   writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
