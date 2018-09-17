@@ -35,18 +35,13 @@ int main(void)
 
   // The Modfile Creator helps us setting up the modfile fields and the mod directory that will be zipped and uploaded
   modio::ModfileCreator modfile_creator;
-  modfile_creator.setPath("../ModExample/x/");
+  modfile_creator.setPath("../ModExample/modfile");
+  // The path for the modfile can be either a zip file or a folder that will zipped and uploaded on the background
+  //modfile_creator.setPath("../ModExample/modfile.zip");
   modfile_creator.setVersion("v1.1.0");
   modfile_creator.setChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
   modfile_creator.setMetadataBlob("This metadata was added via the SDK examples.");
   modfile_creator.setActive(true);
-
-  //std::vector<std::string> filenames;
-  //filenames.push_back("example_image1.png");
-  //filenames.push_back("example_file.txt");
-  //modio_instance.compressFiles("../ModExample/modfile/", filenames, "my_modfile.zip");
-  //modfile_creator.setPath("my_modfile.zip");
-  //modio_instance.addModfile(mod_id, modfile_creator);
 
   std::cout << "Uploading modfile..." << std::endl;
 

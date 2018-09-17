@@ -495,7 +495,7 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 
   if(modio::isDirectory(modfile_path))
   {
-    std::string modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
+    modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
     modio::minizipwrapper::compressDirectory(modfile_path, modfile_zip_path);
   }else if(modio::fileExists(modfile_path))
   {

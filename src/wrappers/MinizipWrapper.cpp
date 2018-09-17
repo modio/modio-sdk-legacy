@@ -116,7 +116,7 @@ void extract(std::string zip_path, std::string directory_path)
 
 void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path)
 {
-  writeLogLine("Compressing " + modio::toString((u32)filenames.size()), MODIO_DEBUGLEVEL_LOG);
+  writeLogLine("Compressing " + modio::toString((u32)filenames.size()) + " files", MODIO_DEBUGLEVEL_LOG);
 
   writeLogLine(std::string("Compressing ") + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
 

@@ -33,14 +33,22 @@ struct EditModfileParams
   void (*callback)(void* object, ModioResponse response, ModioModfile modfile);
 };
 
+struct DeleteModfileParams
+{
+  void* object;
+  void (*callback)(void* object, ModioResponse response);
+};
+
 extern std::map< u32, GetModfileParams* > get_modfile_callbacks;
 extern std::map< u32, GetAllModfilesParams* > get_all_modfiles_callbacks;
 extern std::map< u32, AddModfileParams* > add_modfile_callbacks;
 extern std::map< u32, EditModfileParams* > edit_modfile_callbacks;
+extern std::map< u32, DeleteModfileParams* > delete_modfile_callbacks;
 
 void modioOnGetModfile(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetAllModfiles(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnModfileAdded(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnModfileEdited(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnModfileDeleted(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

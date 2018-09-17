@@ -27,8 +27,6 @@ int main(void)
   std::cout << "Enter the modfile id: " << std::endl;
   std::cin >> modfile_id;
 
-  std::cout << "Getting mods..." << std::endl;
-
   // The Modfile Editor helps setting up the fields that will be edited
   // Notice that the version field and modfile zip can't be edited, if you want to change them you should upload a new modfile instead
   modio::ModfileEditor modfile_editor;
