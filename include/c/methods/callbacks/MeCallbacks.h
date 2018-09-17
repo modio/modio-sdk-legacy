@@ -6,6 +6,7 @@
 #include "../../schemas/ModioMod.h"
 #include "../../schemas/ModioGame.h"
 #include "../../schemas/ModioEvent.h"
+#include "../../schemas/ModioRating.h"
 #include "../../../Globals.h"
 #include "../../../ModUtility.h"
 
@@ -53,12 +54,21 @@ struct GetUserModfilesParams
   void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size);
 };
 
+struct GetUserRatingsParams
+{
+  void* object;
+  std::string url;
+  bool is_cache;
+  void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size);
+};
+
 extern std::map< u32, GetAuthenticatedUserParams* > get_authenticated_user_callbacks;
 extern std::map< u32, GetUserSubscriptionsParams* > get_user_subscriptions_callbacks;
 extern std::map< u32, GetUserEventsParams* > get_user_events_callbacks;
 extern std::map< u32, GetUserGamesParams* > get_user_games_callbacks;
 extern std::map< u32, GetUserModsParams* > get_user_mods_callbacks;
 extern std::map< u32, GetUserModfilesParams* > get_user_modfiles_callbacks;
+extern std::map< u32, GetUserRatingsParams* > get_user_ratings_callbacks;
 
 void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::json response_json);
@@ -66,5 +76,6 @@ void modioOnGetUserEvents(u32 call_number, u32 response_code, nlohmann::json res
 void modioOnGetUserMods(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetUserModfiles(u32 call_number, u32 response_code, nlohmann::json response_json);
+void modioOnGetUserRatings(u32 call_number, u32 response_code, nlohmann::json response_json);
 
 #endif

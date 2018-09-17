@@ -22,7 +22,7 @@ int main(void)
     return 0;
   }
 
-  // Let's start by requesting a single mod
+  // You need to know the mod_id beforehand so you can attach a modfile to it
   printf("Please enter the mod id: \n");
   u32 mod_id;
   scanf("%i", &mod_id);
@@ -30,7 +30,9 @@ int main(void)
   // The Modfile Creator helps us setting up the modfile fields and the mod directory that will be zipped and uploaded
   ModioModfileCreator modfile_creator;
   modioInitModfileCreator(&modfile_creator);
+  // The path for the modfile can be either a zip file or a folder that will zipped and uploaded on the background
   modioSetModfileCreatorPath(&modfile_creator, "../ModExample/modfile/");
+  //modioSetModfileCreatorPath(&modfile_creator, "../ModExample/modfile.zip");
   modioSetModfileCreatorVersion(&modfile_creator, "v1.1.0");
   modioSetModfileCreatorChangelog(&modfile_creator, "This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
   modioSetModfileCreatorMetadataBlob(&modfile_creator, "This metadata field was added via the SDK examples.");

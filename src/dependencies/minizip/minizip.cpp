@@ -79,7 +79,7 @@ int is_large_file(const char* filename)
     pos = FTELLO_FUNC(pFile);
     fclose(pFile);
 
-    printf("File : %s is %lld bytes\n", filename, pos);
+    modio::writeLogLine("File: " + std::string(filename) + " is " + modio::toString((u32)pos), MODIO_DEBUGLEVEL_LOG);
 
     return (pos >= 0xffffffff);
 }
@@ -103,7 +103,7 @@ int get_file_crc(const char* filenameinzip, void *buf, unsigned long size_buf, u
 
             if ((size_read < size_buf) && (feof(fin) == 0))
             {
-                printf("error in reading %s\n",filenameinzip);
+                modio::writeLogLine("Could not read " + std::string(filenameinzip), MODIO_DEBUGLEVEL_ERROR);
                 err = ZIP_ERRNO;
             }
 
@@ -116,7 +116,7 @@ int get_file_crc(const char* filenameinzip, void *buf, unsigned long size_buf, u
     if (fin)
         fclose(fin);
 
-    printf("file %s crc %lx\n", filenameinzip, calculate_crc);
+    modio::writeLogLine("File " + std::string(filenameinzip) + " crc " + modio::toString((u32)calculate_crc), MODIO_DEBUGLEVEL_LOG);
     *result_crc = calculate_crc;
     return err;
 }

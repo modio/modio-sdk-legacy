@@ -35,7 +35,9 @@ int main(void)
 
   // The Modfile Creator helps us setting up the modfile fields and the mod directory that will be zipped and uploaded
   modio::ModfileCreator modfile_creator;
-  modfile_creator.setPath("../ModExample/modfile/");
+  modfile_creator.setPath("../ModExample/modfile");
+  // The path for the modfile can be either a zip file or a folder that will zipped and uploaded on the background
+  //modfile_creator.setPath("../ModExample/modfile.zip");
   modfile_creator.setVersion("v1.1.0");
   modfile_creator.setChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
   modfile_creator.setMetadataBlob("This metadata was added via the SDK examples.");
@@ -43,8 +45,7 @@ int main(void)
 
   std::cout << "Uploading modfile..." << std::endl;
 
-  modio_instance.addModfile(mod_id, modfile_creator);
-
+  // Just like the download listener, we can register a function to be called every time a mod us uploaded
   modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
     std::cout << "Add Modfile response: " << response_code << std::endl;
 
@@ -55,6 +56,9 @@ int main(void)
 
     finish();
   });
+
+  // To start the modfile upload, we provide the mod id and the modfile creator object
+  modio_instance.addModfile(mod_id, modfile_creator);
 
   wait();
 

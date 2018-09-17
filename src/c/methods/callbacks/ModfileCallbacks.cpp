@@ -4,6 +4,7 @@ std::map< u32, GetModfileParams* > get_modfile_callbacks;
 std::map< u32, GetAllModfilesParams* > get_all_modfiles_callbacks;
 std::map< u32, AddModfileParams* > add_modfile_callbacks;
 std::map< u32, EditModfileParams* > edit_modfile_callbacks;
+std::map< u32, DeleteModfileParams* > delete_modfile_callbacks;
 
 void modioOnGetModfile(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
@@ -84,4 +85,17 @@ void modioOnModfileEdited(u32 call_number, u32 response_code, nlohmann::json res
   edit_modfile_callbacks.erase(call_number);
   modioFreeResponse(&response);
   modioFreeModfile(&modfile);
+}
+
+void modioOnModfileDeleted(u32 call_number, u32 response_code, nlohmann::json response_json)
+{
+  ModioResponse response;
+  modioInitResponse(&response, response_json);
+  response.code = response_code;
+
+  delete_modfile_callbacks[call_number]->callback(delete_modfile_callbacks[call_number]->object, response);
+  
+  delete delete_modfile_callbacks[call_number];
+  delete_modfile_callbacks.erase(call_number);
+  modioFreeResponse(&response);
 }

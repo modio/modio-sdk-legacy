@@ -42,6 +42,7 @@ int main(void)
       std::cout << "Result count: " << response.result_count << std::endl;
       std::cout << "Result limit: " << response.result_limit << std::endl;
       std::cout << "Result offset: " << response.result_offset << std::endl;
+      std::cout << "Result total: " << response.result_total << std::endl;
     }
     finish();
   });

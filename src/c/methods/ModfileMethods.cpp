@@ -48,24 +48,6 @@ extern "C"
   {
     modio::curlwrapper::queueModfileUpload(mod_id, &modfile_creator);
   }
-/*
-  void modioAddModfile(void* object, u32 mod_id, ModioModfileCreator modfile_creator, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
-  {
-    modio::minizipwrapper::compress(modfile_creator.path, modio::getModIODirectory() + "tmp/modfile.zip");
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files";
-
-    u32 call_number = modio::curlwrapper::getCallNumber();
-
-    add_modfile_callbacks[call_number] = new AddModfileParams;
-    add_modfile_callbacks[call_number]->callback = callback;
-    add_modfile_callbacks[call_number]->object = object;
-
-    std::map<std::string, std::string> curlform_files;
-    curlform_files["filedata"] = modio::getModIODirectory() + "tmp/modfile.zip";
-
-    modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), modio::convertModfileCreatorToMultimap(&modfile_creator), curlform_files, &modioOnModfileAdded);
-  }
-  */
 
   void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_editor, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
@@ -89,5 +71,20 @@ extern "C"
     }
 
     modio::curlwrapper::put(call_number, url, modio::getHeaders(), modio::convertModfileEditorToMultimap(&modfile_editor), &modioOnModfileEdited);
+  }
+
+  void MODIO_DLL modioDeleteModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response))
+  {
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
+    delete_modfile_callbacks[call_number] = new DeleteModfileParams;
+    delete_modfile_callbacks[call_number]->callback = callback;
+    delete_modfile_callbacks[call_number]->object = object;
+
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files/" + modio::toString(modfile_id);
+    
+    std::map<std::string, std::string> data;
+
+    modio::curlwrapper::deleteCall(call_number, url, modio::getHeaders(), data, &modioOnModfileDeleted);
   }
 }

@@ -124,7 +124,6 @@ void onModfileUploadFinished(CURL *curl)
   if (current_queued_modfile_upload->state == MODIO_MOD_UPLOADING)
   {
     modfile_upload_queue.remove(current_queued_modfile_upload);
-
     updateModUploadQueueFile();
 
     u32 response_code;

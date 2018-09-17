@@ -19,6 +19,7 @@
 #include "schemas/Mod.h"
 #include "schemas/Event.h"
 #include "schemas/Modfile.h"
+#include "schemas/Rating.h"
 #include "schemas/Stats.h"
 #include "schemas/QueuedModDownload.h"
 #include "schemas/Stats.h"
@@ -53,9 +54,10 @@ public:
   Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path);
 
   //General Methods
-  void sleep(u32 milliseconds);
   void process();
   void setDebugLevel(u32 debug_level);
+  void sleep(u32 milliseconds);
+  void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path);
 
   //Events
   void getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
@@ -92,6 +94,7 @@ public:
   void getAllModfiles(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
   void addModfile(u32 mod_id, modio::ModfileCreator &modfile_handler);
   void editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor &modfile_handler, const std::function<void(const modio::Response &response, const modio::Modfile &modfile)> &callback);
+  void deleteModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response &response)> &callback);
 
   //Tag Methods
   void getModTags(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::Tag> tags)> &callback);
@@ -117,6 +120,7 @@ public:
   void getUserGames(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Game> &games)> &callback);
   void getUserMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
   void getUserModfiles(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);
+  void getUserRatings(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Rating> &ratings)> &callback);
 
   //Downloads Methods
   void installMod(u32 mod_id);

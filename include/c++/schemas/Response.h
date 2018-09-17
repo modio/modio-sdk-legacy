@@ -14,6 +14,7 @@ namespace modio
     u32 result_count;
     u32 result_limit;
     i32 result_offset;
+    u32 result_total;
     bool result_cached;
     modio::Error error;
 

@@ -6,6 +6,7 @@ namespace modio
   std::map<u32, GetAllModfilesCall*> get_all_modfiles_calls;
   std::map<u32, AddModfileCall*> add_modfile_calls;
   std::map<u32, EditModfileCall*> edit_modfile_calls;
+  std::map<u32, DeleteModfileCall*> delete_modfile_calls;
 
   void onGetModfile(void* object, ModioResponse modio_response, ModioModfile modfile)
   {
@@ -15,7 +16,6 @@ namespace modio
     response.initialize(modio_response);
 
     modio::Modfile modio_modfile;
-
     if(modio_response.code == 200)
     {
       modio_modfile.initialize(modfile);
@@ -72,12 +72,26 @@ namespace modio
 
     modio::Response response;
     response.initialize(modio_response);
+    
     modio::Modfile modfile;
-
     modfile.initialize(modio_modfile);
+
     edit_modfile_calls[call_id]->callback(response, modfile);
     delete (u32*)object;
     delete edit_modfile_calls[call_id];
     edit_modfile_calls.erase(call_id);
+  }
+
+  void onDeleteModfile(void* object, ModioResponse modio_response)
+  {
+    u32 call_id = *((u32*)object);
+
+    modio::Response response;
+    response.initialize(modio_response);
+
+    delete_modfile_calls[call_id]->callback(response);
+    delete (u32*)object;
+    delete delete_modfile_calls[call_id];
+    delete_modfile_calls.erase(call_id);
   }
 }

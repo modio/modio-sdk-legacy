@@ -24,6 +24,11 @@ namespace modio
     modioSleep(milliseconds);
   }
 
+  void Instance::compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path)
+  {
+    modio::minizipwrapper::compressFiles(root_directory, filenames, zip_path);
+  }
+
   void Instance::process()
   {
     modioProcess();

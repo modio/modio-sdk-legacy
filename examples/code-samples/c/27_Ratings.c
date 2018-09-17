@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onModVoted(void *object, ModioResponse response)
+void onAddModRating(void *object, ModioResponse response)
 {
   bool *wait = object;
   printf("Set user mod vote code: %i\n", response.code);
@@ -29,7 +29,7 @@ int main(void)
   scanf("%i", &rating);
 
   printf("Rating mod...\n");
-  modioAddModRating(&wait, mod_id, rating, &onModVoted);
+  modioAddModRating(&wait, mod_id, rating, &onAddModRating);
 
   while (wait)
   {

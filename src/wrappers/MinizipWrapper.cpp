@@ -114,11 +114,11 @@ void extract(std::string zip_path, std::string directory_path)
   writeLogLine(zip_path + " extracted", MODIO_DEBUGLEVEL_LOG);
 }
 
-void compress(std::string directory, std::string zip_path)
+void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path)
 {
-  writeLogLine(std::string("Compressing ") + directory + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
-  if (directory[directory.size() - 1] != '/')
-    directory += '/';
+  writeLogLine("Compressing " + modio::toString((u32)filenames.size()) + " files", MODIO_DEBUGLEVEL_LOG);
+
+  writeLogLine(std::string("Compressing ") + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
 
   zipFile zf = NULL;
   //#ifdef USEWIN32IOAPI
@@ -156,13 +156,12 @@ void compress(std::string directory, std::string zip_path)
     writeLogLine(std::string("Creating ") + zipfilename, MODIO_DEBUGLEVEL_LOG);
   }
 
-  std::vector<std::string> filenames = getFilenames(directory);
   for (int i = 0; i < (int)filenames.size(); i++)
   {
     if (filenames[i] == "modio.json")
       continue;
     std::string filename = filenames[i];
-    std::string complete_file_path = directory + filename;
+    std::string complete_file_path = root_directory + filename;
     FILE *fin = NULL;
     int size_read = 0;
     const char *filenameinzip = filename.c_str();
@@ -256,6 +255,18 @@ void compress(std::string directory, std::string zip_path)
     writeLogLine(std::string("Error in closing ") + zipfilename + ", zlib error: " + toString(errclose), MODIO_DEBUGLEVEL_ERROR);
 
   free(buf);
+}
+
+void compressDirectory(std::string directory, std::string zip_path)
+{
+  directory = modio::addSlashIfNeeded(directory);
+  writeLogLine("Compressing directory " + directory, MODIO_DEBUGLEVEL_LOG);
+  std::vector<std::string> filenames = getFilenames(directory);
+  for(int i=0; i<filenames.size(); i++)
+  {
+    filenames[i] = filenames[i];
+  }
+  compressFiles(directory, filenames, zip_path);
 }
 }
 }
