@@ -21,21 +21,4 @@ namespace modio
   void (*upload_callback)(u32 response_code, u32 mod_id) = NULL;
   u32 AUTOMATIC_UPDATES = 0;
   u32 BACKGROUND_DOWNLOADS = 0;
-
-  std::vector<std::string> getHeaders()
-  {
-    std::vector<std::string> headers;
-    if(modio::ACCESS_TOKEN != "")
-      headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    return headers;
-  }
-
-  std::vector<std::string> getUrlEncodedHeaders()
-  {
-    std::vector<std::string> headers;
-    if(modio::ACCESS_TOKEN != "")
-      headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
-    headers.push_back("Content-Type: application/x-www-form-urlencoded");
-    return headers;
-  }
 }

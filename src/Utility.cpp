@@ -397,4 +397,21 @@ void createPath(const std::string& path)
     createDirectory(current_path);
   }
 }
+
+std::vector<std::string> getHeaders()
+{
+  std::vector<std::string> headers;
+  if(modio::ACCESS_TOKEN != "")
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+  return headers;
+}
+
+std::vector<std::string> getUrlEncodedHeaders()
+{
+  std::vector<std::string> headers;
+  if(modio::ACCESS_TOKEN != "")
+    headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+  headers.push_back("Content-Type: application/x-www-form-urlencoded");
+  return headers;
+}
 } // namespace modio

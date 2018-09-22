@@ -92,6 +92,8 @@ bool removeDirectory(const std::string& directory);
 void removeFile(const std::string& filename);
 double getFileSize(const std::string& file_path);
 void createPath(const std::string& strPathAndFile);
+std::vector<std::string> getHeaders();
+std::vector<std::string> getUrlEncodedHeaders();
 }
 
 #endif
