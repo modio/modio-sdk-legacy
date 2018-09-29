@@ -3,6 +3,7 @@
 
 #include "../../schemas/ModioResponse.h"
 #include "../../../Globals.h"
+#include "../../../ModioUtility.h"
 
 struct EmailRequestParams
 {

@@ -45,5 +45,7 @@ extern "C"
   {
     modio::ACCESS_TOKEN = "";
     modio::writeJson(modio::getModIODirectory() + "authentication.json", nlohmann::json({}));
+
+    modio::updateCurrentUserSubscriptions();
   }
 }

@@ -4,6 +4,9 @@ namespace modio
 {
 void addCallToCache(std::string url, nlohmann::json response_json)
 {
+  // Restore cache
+  return;
+
   std::time_t datetime = std::time(nullptr);
   std::string filename = modio::toString((u32)datetime) + ".json";
 
@@ -11,6 +14,8 @@ void addCallToCache(std::string url, nlohmann::json response_json)
 
   nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
 
+  // TODO: Restore automatic cache removal?
+  /*
   for (nlohmann::json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
   {
     if ((*it)["url"] == url)
@@ -21,6 +26,7 @@ void addCallToCache(std::string url, nlohmann::json response_json)
       break;
     }
   }
+  */
 
   nlohmann::json cache_object;
   cache_object["datetime"] = datetime;
@@ -28,12 +34,15 @@ void addCallToCache(std::string url, nlohmann::json response_json)
   cache_object["url"] = url;
   cache_file_json.push_back(cache_object);
 
+  // TODO: Restore automatic cache removal?
+  /*
   while (cache_file_json.size() > modio::MAX_CALL_CACHE)
   {
     std::string filename = (*(cache_file_json.begin()))["file"];
     cache_file_json.erase(cache_file_json.begin());
     modio::removeFile(modio::getModIODirectory() + "cache/" + filename);
   }
+  */
 
   modio::writeJson(modio::getModIODirectory() + "cache.json", cache_file_json);
 }

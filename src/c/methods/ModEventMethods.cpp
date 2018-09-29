@@ -34,6 +34,6 @@ extern "C"
 
   void modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size))
   {
-    modio::callback = callback;
+    modio::event_listener_callback = callback;
   }
 }

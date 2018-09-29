@@ -29,6 +29,16 @@ namespace modio
     modio::minizipwrapper::compressFiles(root_directory, filenames, zip_path);
   }
 
+  std::vector<u32> Instance::getUserSubscriptionsIds()
+  {
+    std::vector<u32> return_value;
+    for(auto mod_id : modio::current_user_subscriptions)
+    {
+      return_value.push_back(mod_id);
+    }
+    return return_value;
+  }
+
   void Instance::process()
   {
     modioProcess();

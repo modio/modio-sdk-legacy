@@ -477,6 +477,8 @@ void modioSetDebugLevel(u32 debug_level);
 void modioProcess();
 void modioSleep(u32 milliseconds);
 void compressFiles(char* root_directory, char* filenames[], u32 filenames_size, char* zip_path);
+void modioGetUserSubscriptionsIds(u32* mod_id_array);
+u32 modioGetUserSubscriptionsIdsCount();
 
 //Events
 void modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size));
