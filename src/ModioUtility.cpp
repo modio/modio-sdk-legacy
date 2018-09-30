@@ -186,18 +186,21 @@ void pollEvents()
 
   if (current_time >= modio::RETRY_AFTER)
   {
-    if (modio::provisional_installed_mods_ids.size() > 0 && current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+    if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
     {
-      modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
+      modio::writeLogLine("Polling mod eventss", MODIO_DEBUGLEVEL_LOG);
 
       ModioFilterCreator filter;
       modioInitFilter(&filter);
       modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
       modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
 
-      for(auto mod_id : modio::provisional_installed_mods_ids)
+      u32 installed_mods_size = modioGetAllInstalledModsCount();
+      ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
+      modioGetAllInstalledMods(modio_installed_mods);
+      for (u32 i = 0; i < (u32)installed_mods_size; i++)
       {
-        modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString(mod_id).c_str());
+        modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString(modio_installed_mods[i].mod_id).c_str());
       }
 
       modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);

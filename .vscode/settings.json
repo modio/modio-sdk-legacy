@@ -73,6 +73,7 @@
         "cstdarg": "cpp",
         "deque": "cpp",
         "cinttypes": "cpp",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "set": "cpp"
     }
 }
