@@ -29,14 +29,6 @@ void addCallToCache(std::string url, nlohmann::json response_json)
   cache_object["url"] = url;
   cache_file_json.push_back(cache_object);
 
-  // TODO: Restore automatic cache removal?
-  while (cache_file_json.size() > modio::MAX_CALL_CACHE)
-  {
-    std::string filename = (*(cache_file_json.begin()))["file"];
-    cache_file_json.erase(cache_file_json.begin());
-    modio::removeFile(modio::getModIODirectory() + "cache/" + filename);
-  }
-
   modio::writeJson(modio::getModIODirectory() + "cache.json", cache_file_json);
 }
 
@@ -136,7 +128,7 @@ void clearOldCache()
       u32 cache_time = cache_file_json["datetime"];
       u32 time_difference = current_time - cache_time;
 
-      if(time_difference > MAX_CALL_CACHE)
+      if(time_difference > MAX_CACHE_TIME)
       {
         std::string cache_file_to_delete_path = modio::getModIODirectory() + "cache/";
         std::string cache_filename = cache_file_json["file"];
