@@ -149,7 +149,6 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
       case MODIO_EVENT_USER_SUBSCRIBE:
       {
         modio::writeLogLine("Current User subscribed to a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Installing...", MODIO_DEBUGLEVEL_LOG);
-        current_user_subscriptions.insert(events_array[i].mod_id);
         std::string modfile_path_str = modio::getAllInstalledModPath(events_array[i].mod_id);
         if (modfile_path_str == "")
         {
@@ -162,7 +161,6 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
       case MODIO_EVENT_USER_UNSUBSCRIBE:
       {
         modio::writeLogLine("Current User unsubscribed from a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Uninstalling...", MODIO_DEBUGLEVEL_LOG);
-        current_user_subscriptions.erase(events_array[i].mod_id);
         modioUninstallMod(events_array[i].mod_id);
         break;
       }
@@ -224,31 +222,4 @@ void pollEvents()
   }
 }
 
-void onGetUserSubscriptionsInit(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
-{
-  if (response.code == 200)
-  {
-    modio::writeLogLine("Current user subscriptions updated.", MODIO_DEBUGLEVEL_LOG);
-    for (int i = 0; i < mods_size; i++)
-    {
-      modio::current_user_subscriptions.insert(mods[i].id);
-    }
-  }else
-  {
-    modio::writeLogLine("Could not retreive user subscriptions. Error code: " + modio::toString(response.code), MODIO_DEBUGLEVEL_ERROR);
-    modio::writeLogLine(response.error.message, MODIO_DEBUGLEVEL_ERROR);
-  }
-}
-
-void updateCurrentUserSubscriptions()
-{
-  if (modioIsLoggedIn())
-  {
-    ModioFilterCreator filter;
-    modioInitFilter(&filter);
-    modioGetUserSubscriptions(NULL, filter, &onGetUserSubscriptionsInit);
-  }
-  else
-    modio::current_user_subscriptions.clear();
-}
 } // namespace modio

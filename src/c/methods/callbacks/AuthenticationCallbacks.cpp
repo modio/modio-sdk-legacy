@@ -31,6 +31,4 @@ void modioOnEmailExchanged(u32 call_number, u32 response_code, nlohmann::json re
   delete email_exchange_params[call_number];
   email_exchange_params.erase(call_number);
   modioFreeResponse(&response);
-
-  modio::updateCurrentUserSubscriptions();
 }

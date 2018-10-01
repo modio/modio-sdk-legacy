@@ -20,6 +20,5 @@ namespace modio
   void (*upload_callback)(u32 response_code, u32 mod_id) = NULL;
   u32 AUTOMATIC_UPDATES = 0;
   u32 BACKGROUND_DOWNLOADS = 0;
-  std::set<int> current_user_subscriptions;
   std::set<u32> provisional_installed_mods_ids;
 }

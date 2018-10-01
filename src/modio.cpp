@@ -81,8 +81,6 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
 
   modio::clearOldCache();
 
-  modio::updateCurrentUserSubscriptions();
-
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 
   u32 installed_mods_size = modioGetAllInstalledModsCount();
@@ -138,19 +136,4 @@ void compressFiles(char *root_directory, char *filenames[], u32 filenames_size, 
     filenames_vector.push_back(filenames[i]);
   }
   modio::minizipwrapper::compressFiles(root_directory, filenames_vector, zip_path);
-}
-
-void modioGetUserSubscriptionsIds(u32 *mod_id_array)
-{
-  int i = 0;
-  for (auto mod_id : modio::current_user_subscriptions)
-  {
-    mod_id_array[i] = mod_id;
-    i++;
-  }
-}
-
-u32 modioGetUserSubscriptionsIdsCount()
-{
-  return modio::current_user_subscriptions.size();
 }

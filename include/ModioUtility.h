@@ -11,7 +11,6 @@ namespace modio
 {
   void addModsToDownloadQueue(std::vector<u32> mod_ids);
   void pollEvents();
-  void updateCurrentUserSubscriptions();
 }
 
 #endif
