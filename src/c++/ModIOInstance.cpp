@@ -14,6 +14,11 @@ namespace modio
     modioInit(environment, game_id, (char*)api_key.c_str(), (char*)root_path.c_str());
   }
 
+  Instance::~Instance()
+  {
+    modioShutdown();
+  }
+
   void Instance::setDebugLevel(u32 debug_level)
   {
     modioSetDebugLevel(debug_level);
