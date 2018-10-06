@@ -49,6 +49,7 @@
 #include <windows.h>
 #include <strsafe.h>
 #include "dependencies/dirent/dirent.h"
+#include "vld.h"
 #endif
 
 #ifdef MODIO_OSX_DETECTED

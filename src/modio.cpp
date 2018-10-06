@@ -122,7 +122,7 @@ void modioSleep(u32 milliseconds)
 void compressFiles(char *root_directory, char *filenames[], u32 filenames_size, char *zip_path)
 {
   std::vector<std::string> filenames_vector;
-  for (int i = 0; i < filenames_size; i++)
+  for (u32 i = 0; i < filenames_size; i++)
   {
     filenames_vector.push_back(filenames[i]);
   }
