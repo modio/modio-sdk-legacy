@@ -21,7 +21,7 @@ void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32
     {
       modio::Mod mod;
       mod.initialize(mods[i]);
-      std::string mod_path_str = modio::getAllInstalledModPath(mod.id) + "modio.json";
+      std::string mod_path_str = modio::getInstalledModPath(mod.id) + "modio.json";
       modio::writeJson(mod_path_str, mod.toJson());
       modio::writeLogLine("Mod updated", MODIO_DEBUGLEVEL_LOG);
     }
@@ -70,15 +70,15 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
       case MODIO_EVENT_MODFILE_CHANGED:
       {
         bool reinstall = true;
-        ModioInstalledMod installed_mod;
-        if (modioGetAllInstalledModById(events_array[i].mod_id, &installed_mod))
+        for(auto installed_mod : modio::installed_mods)
         {
-          if (installed_mod.mod.modfile.date_added >= events_array[i].date_added)
+          if(installed_mod["mod_id"] == events_array[i].mod_id &&
+              installed_mod["date_added"] >= events_array[i].date_added)
           {
-            reinstall = false;
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
           }
         }
+
         if (reinstall)
         {
           modio::writeLogLine("Modfile changed. Mod id: " + modio::toString(events_array[i].mod_id) + " Reisntalling...", MODIO_DEBUGLEVEL_LOG);
@@ -109,9 +109,11 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
       updateModsCache(mod_edited_ids);
     if (mod_to_download_queue_ids.size() > 0)
       addModsToDownloadQueue(mod_to_download_queue_ids);
-    nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+    
+    std::string installed_mods_json_path = modio::getModIODirectory() + "installed_mods.json";
+    nlohmann::json installed_mods_json = modio::openJson(installed_mods_json_path);
     installed_mods_json["last_mod_event_poll"] = modio::LAST_MOD_EVENT_POLL;
-    modio::writeJson(modio::getModIODirectory() + "installed_mods.json", installed_mods_json);
+    modio::writeJson(installed_mods_json_path, installed_mods_json);
   }
   else
   {
@@ -149,7 +151,7 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
       case MODIO_EVENT_USER_SUBSCRIBE:
       {
         modio::writeLogLine("Current User subscribed to a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Installing...", MODIO_DEBUGLEVEL_LOG);
-        std::string modfile_path_str = modio::getAllInstalledModPath(events_array[i].mod_id);
+        std::string modfile_path_str = modio::getInstalledModPath(events_array[i].mod_id);
         if (modfile_path_str == "")
         {
           modio::writeLogLine("Installing mod. Id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
@@ -186,7 +188,7 @@ void pollEvents()
   {
     if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
     {
-      modio::writeLogLine("Polling mod eventss", MODIO_DEBUGLEVEL_LOG);
+      modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
 
       ModioFilterCreator filter;
       modioInitFilter(&filter);

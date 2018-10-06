@@ -6,7 +6,6 @@ namespace modio
   std::string ACCESS_TOKEN = "";
   u32 GAME_ID;
   std::string ROOT_PATH = "";
-  //u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_ERROR;
   u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
   std::string MODIO_URL = "https://api.mod.io/";
   std::string MODIO_VERSION_PATH = "v1/";
@@ -20,5 +19,5 @@ namespace modio
   void (*upload_callback)(u32 response_code, u32 mod_id) = NULL;
   u32 AUTOMATIC_UPDATES = 0;
   u32 BACKGROUND_DOWNLOADS = 0;
-  std::set<u32> provisional_installed_mods_ids;
+  std::set<nlohmann::json> installed_mods;
 }

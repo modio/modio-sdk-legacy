@@ -82,15 +82,6 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
   modio::clearOldCache();
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
-
-  u32 installed_mods_size = modioGetAllInstalledModsCount();
-  ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
-  modioGetAllInstalledMods(modio_installed_mods);
-  for (u32 i = 0; i < (u32)installed_mods_size; i++)
-  {
-    modio::provisional_installed_mods_ids.insert(modio_installed_mods[i].mod_id);
-  }
-  delete[] modio_installed_mods;
 }
 /*
 void init(int game_id, char* api_key, char* root_path)

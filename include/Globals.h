@@ -25,7 +25,7 @@ namespace modio
   extern void (*event_listener_callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size);
   extern void (*download_callback)(u32 response_code, u32 mod_id);
   extern void (*upload_callback)(u32 response_code, u32 mod_id);
-  extern std::set<u32> provisional_installed_mods_ids;
+  extern std::set<nlohmann::json> installed_mods;
 }
 
 #endif
