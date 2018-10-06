@@ -34,6 +34,8 @@ extern "C"
 		{
 			if (installed_mod->path)
 				delete[] installed_mod->path;
+
+			modioFreeMod(&installed_mod->mod);
 		}
 	}
 }

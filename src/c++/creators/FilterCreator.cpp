@@ -91,5 +91,6 @@ namespace modio
   FilterCreator::~FilterCreator()
   {
     modioFreeFilter(this->filter);
+	delete this->filter;
   }
 }
