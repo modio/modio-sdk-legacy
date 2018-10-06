@@ -48,8 +48,8 @@ namespace modio
 	  installed_mods.resize(installed_mods_size);
 	  for (u32 i = 0; i<(u32)installed_mods_size; i++)
 	  {
-		modio::InstalledMod installed_mod;
 		installed_mods[i].initialize(modio_installed_mods[i]);
+		modioFreeInstalledMod(&modio_installed_mods[i]);
 	  }
 
 	  delete[] modio_installed_mods;

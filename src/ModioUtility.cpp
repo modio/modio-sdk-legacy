@@ -1,4 +1,5 @@
 #include "ModioUtility.h"
+#include "c\schemas\ModioInstalledMod.h"
 
 namespace modio
 {
@@ -77,6 +78,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
           {
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
           }
+          modioFreeInstalledMod(&installed_mod);
         }
 
         if (reinstall)
@@ -201,6 +203,7 @@ void pollEvents()
       for (u32 i = 0; i < (u32)installed_mods_size; i++)
       {
         modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString(modio_installed_mods[i].mod_id).c_str());
+        modioFreeInstalledMod(&modio_installed_mods[i]);
       }
 
       modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);

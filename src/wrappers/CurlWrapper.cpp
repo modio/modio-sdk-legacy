@@ -33,6 +33,7 @@ void shutdownCurl()
   ongoing_downloads.clear();
 
   delete current_download_handle;
+  curl_multi_cleanup(curl_multi_handle);
 }
 
 u32 getCallNumber()
