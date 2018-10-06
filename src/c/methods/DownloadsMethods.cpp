@@ -117,23 +117,34 @@ u32 modioGetAllInstalledModsCount()
 u32 modioGetModState(u32 mod_id)
 {
   u32 queue_size = modioGetModDownloadQueueCount();
+  u32 returnState = MODIO_MOD_NOT_INSTALLED;
+
   ModioQueuedModDownload* download_queue = new ModioQueuedModDownload[queue_size];
   modioGetModDownloadQueue(download_queue);
   
-  for(u32 i = 0; i<queue_size; i++)
+  for (u32 i = 0; i < queue_size; i++)
+  {
     if(download_queue[i].mod_id == mod_id)
-      return download_queue[i].state;
-  
+      returnState = download_queue[i].state;
+    modioFreeQueuedModDownload(&download_queue[i]);
+  }
   delete[] download_queue;
+
+  if (returnState != MODIO_MOD_NOT_INSTALLED)
+    return returnState;
 
   u32 installed_mods_size = modioGetAllInstalledModsCount();
   ModioInstalledMod* installed_mods = new ModioInstalledMod[installed_mods_size];
   modioGetAllInstalledMods(installed_mods);
-  
-  for(u32 i = 0; i<installed_mods_size; i++)
-    if(installed_mods[i].mod_id == mod_id)
-      return MODIO_MOD_INSTALLED;
 
-  return MODIO_MOD_NOT_INSTALLED;
+  for (u32 i = 0; i < installed_mods_size; i++)
+  {
+    if(installed_mods[i].mod_id == mod_id)
+      returnState = MODIO_MOD_INSTALLED;
+    modioFreeInstalledMod(&installed_mods[i]);
+  }
+  delete[] installed_mods;
+
+  return returnState;
 }
 }
