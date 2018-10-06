@@ -1,5 +1,4 @@
 #include "ModioUtility.h"
-#include "c\schemas\ModioInstalledMod.h"
 
 namespace modio
 {
@@ -78,7 +77,6 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
           {
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
           }
-          modioFreeInstalledMod(&installed_mod);
         }
 
         if (reinstall)
@@ -197,13 +195,10 @@ void pollEvents()
       modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
       modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
 
-      u32 installed_mods_size = modioGetAllInstalledModsCount();
-      ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
-      modioGetAllInstalledMods(modio_installed_mods);
-      for (u32 i = 0; i < (u32)installed_mods_size; i++)
+      for(auto installed_mod : modio::installed_mods)
       {
-        modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString(modio_installed_mods[i].mod_id).c_str());
-        modioFreeInstalledMod(&modio_installed_mods[i]);
+        if(modio::hasKey(installed_mod, "mod_id"))
+          modioAddFilterInField(&filter, (char *)"mod_id", (char*)modio::toString((u32)installed_mod["mod_id"]).c_str());
       }
 
       modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);
