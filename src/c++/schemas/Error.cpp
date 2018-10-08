@@ -22,7 +22,13 @@ nlohmann::json toJson(Error &error)
   error_json["message"] = error.message;
 
   nlohmann::json errors_json;
-  for (auto &error : error.errors)
+  
+  for (u32 i = 0; i<error.errors.size(); i++)
+  {
+    errors_json.push_back(error.errors[i]);
+  }
+
+  for (auto error : (error.errors))
   {
     errors_json.push_back(error);
   }
