@@ -22,7 +22,7 @@ void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32
       modio::Mod mod;
       mod.initialize(mods[i]);
       std::string mod_path_str = modio::getInstalledModPath(mod.id) + "modio.json";
-      modio::writeJson(mod_path_str, mod.toJson());
+      modio::writeJson(mod_path_str, modio::toJson(mod));
       modio::writeLogLine("Mod updated", MODIO_DEBUGLEVEL_LOG);
     }
   }

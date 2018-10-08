@@ -7,16 +7,17 @@
 
 namespace modio
 {
-  class Media
-  {
-  public:
-    std::vector<std::string> youtube;
-    std::vector<std::string> sketchfab;
-    std::vector<Image> images;
+class Media
+{
+public:
+  std::vector<std::string> youtube;
+  std::vector<std::string> sketchfab;
+  std::vector<Image> images;
 
-    void initialize(ModioMedia media);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioMedia media);
+};
+
+extern nlohmann::json toJson(Media &media);
+} // namespace modio
 
 #endif

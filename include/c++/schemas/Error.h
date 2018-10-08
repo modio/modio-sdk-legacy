@@ -6,16 +6,17 @@
 
 namespace modio
 {
-  class Error
-  {
-  public:
-    u32 code;
-    std::string message;
-    std::vector<std::string> errors;
+class Error
+{
+public:
+  u32 code;
+  std::string message;
+  std::vector<std::string> errors;
 
-    void initialize(ModioError error);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioError error);
+};
+
+extern nlohmann::json toJson(Error &error);
+} // namespace modio
 
 #endif

@@ -7,15 +7,16 @@
 
 namespace modio
 {
-	class Dependency
-	{
-	public:
-		u32 mod_id;
-		u32 date_added;
+class Dependency
+{
+public:
+	u32 mod_id;
+	u32 date_added;
 
-		void initialize(ModioDependency modio_dependency);
-		nlohmann::json toJson();
-	};
-}
+	void initialize(ModioDependency modio_dependency);
+};
+
+extern nlohmann::json toJson(Dependency &dependency);
+} // namespace modio
 
 #endif

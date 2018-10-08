@@ -7,20 +7,21 @@
 
 namespace modio
 {
-  class QueuedModDownload
-  {
-  public:
-    u32 state;
-    u32 mod_id;
-    double current_progress;
-    double total_size;
-    std::string url;
-    std::string path;
-    Mod mod;
+class QueuedModDownload
+{
+public:
+  u32 state;
+  u32 mod_id;
+  double current_progress;
+  double total_size;
+  std::string url;
+  std::string path;
+  Mod mod;
 
-    void initialize(ModioQueuedModDownload queued_mod_download);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioQueuedModDownload queued_mod_download);
+};
+
+extern nlohmann::json toJson(QueuedModDownload &queued_mod_download);
+} // namespace modio
 
 #endif

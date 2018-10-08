@@ -7,18 +7,19 @@
 
 namespace modio
 {
-  class Logo
-  {
-  public:
-    std::string filename;
-    std::string original;
-    std::string thumb_320x180;
-    std::string thumb_640x360;
-    std::string thumb_1280x720;
+class Logo
+{
+public:
+  std::string filename;
+  std::string original;
+  std::string thumb_320x180;
+  std::string thumb_640x360;
+  std::string thumb_1280x720;
 
-    void initialize(ModioLogo Logo);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioLogo Logo);
+};
+
+extern nlohmann::json toJson(Logo &logo);
+} // namespace modio
 
 #endif

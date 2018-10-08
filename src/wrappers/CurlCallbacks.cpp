@@ -76,9 +76,9 @@ void onModDownloadFinished(CURL *curl)
 
     destination_path_str = addSlashIfNeeded(destination_path_str);
 
-    modio::writeJson(destination_path_str + std::string("modio.json"), current_queued_mod_download->mod.toJson());
+    modio::writeJson(destination_path_str + std::string("modio.json"), modio::toJson(current_queued_mod_download->mod));
 
-    modio::addToInstalledModsJson(current_queued_mod_download->mod.toJson(), destination_path_str);
+    modio::addToInstalledModsJson(modio::toJson(*current_queued_mod_download), destination_path_str);
 
     writeLogLine("Finished installing mod", MODIO_DEBUGLEVEL_LOG);
 

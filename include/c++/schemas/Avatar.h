@@ -7,17 +7,18 @@
 
 namespace modio
 {
-  class Avatar
-  {
-  public:
-    std::string filename;
-    std::string original;
-    std::string thumb_50x50;
-    std::string thumb_100x100;
+class Avatar
+{
+public:
+  std::string filename;
+  std::string original;
+  std::string thumb_50x50;
+  std::string thumb_100x100;
 
-    void initialize(ModioAvatar Avatar);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioAvatar Avatar);
+};
+
+extern nlohmann::json toJson(Avatar &avatar);
+} // namespace modio
 
 #endif

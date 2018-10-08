@@ -47,7 +47,7 @@ void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue)
   u32 i = 0;
   for (auto &queued_mod_download : mod_download_queue)
   {
-    modioInitQueuedModDownload(&(download_queue[i]), queued_mod_download->toJson());
+    modioInitQueuedModDownload(&(download_queue[i]), modio::toJson(*queued_mod_download));
     i++;
   }
 }
@@ -63,7 +63,7 @@ void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue)
   u32 i = 0;
   for (auto &queued_modfile_upload : modfile_upload_queue)
   {
-    modioInitQueuedModfileUpload(&(upload_queue[i]), queued_modfile_upload->toJson());
+    modioInitQueuedModfileUpload(&(upload_queue[i]), modio::toJson(*queued_modfile_upload));
     i++;
   }
 }

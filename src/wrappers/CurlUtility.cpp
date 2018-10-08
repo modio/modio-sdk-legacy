@@ -88,7 +88,7 @@ void updateModDownloadQueueFile()
   nlohmann::json mod_download_queue_json;
   for(auto &queued_mod_download : mod_download_queue)
   {
-    mod_download_queue_json.push_back(queued_mod_download->toJson());
+    mod_download_queue_json.push_back(modio::toJson(*queued_mod_download));
   }
   writeJson(modio::getModIODirectory() + "mod_download_queue.json",mod_download_queue_json);
 }
@@ -98,7 +98,7 @@ void updateModUploadQueueFile()
   nlohmann::json mod_upload_queue_json;
   for(auto &queued_mod_upload : modfile_upload_queue)
   {
-    mod_upload_queue_json.push_back(queued_mod_upload->toJson());
+    mod_upload_queue_json.push_back(modio::toJson(*queued_mod_upload));
   }
   writeJson(modio::getModIODirectory() + "mod_upload_queue.json",mod_upload_queue_json);
 }

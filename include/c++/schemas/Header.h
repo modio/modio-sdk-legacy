@@ -7,15 +7,16 @@
 
 namespace modio
 {
-  class Header
-  {
-  public:
-    std::string filename;
-    std::string original;
+class Header
+{
+public:
+  std::string filename;
+  std::string original;
 
-    void initialize(ModioHeader Header);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioHeader Header);
+};
+
+extern nlohmann::json toJson(Header &header);
+} // namespace modio
 
 #endif
