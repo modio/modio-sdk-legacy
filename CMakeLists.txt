@@ -5,7 +5,7 @@ set (CMAKE_CXX_STANDARD 11)
 
 add_definitions(-DBUILDING_MODIO_DLL -DCURL_STATICLIB)
 
-include_directories(include)
+include_directories(include additional_dependencies)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 

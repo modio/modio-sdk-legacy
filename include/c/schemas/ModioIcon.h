@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIOICON_H
 #define MODIO_MODIOICON_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 

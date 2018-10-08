@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIOLISTNODE_H
 #define MODIO_MODIOLISTNODE_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 

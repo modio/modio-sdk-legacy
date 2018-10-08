@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIOHEADER_H
 #define MODIO_MODIOHEADER_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 

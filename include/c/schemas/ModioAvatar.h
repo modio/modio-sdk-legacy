@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIOAVATAR_H
 #define MODIO_MODIOAVATAR_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 

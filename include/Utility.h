@@ -35,7 +35,7 @@
 #include <fstream>
 
 #include "c/ModioC.h"
-#include "dependencies/json/json.hpp"
+#include "dependencies/nlohmann/json.hpp"
 #include "dependencies/minizip/minizip.h"
 #include "Globals.h"
 

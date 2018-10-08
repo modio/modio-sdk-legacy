@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIOQUEUEDMODFILEUPLOAD_H
 #define MODIO_MODIOQUEUEDMODFILEUPLOAD_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 #include "../creators/ModioModfileCreator.h"

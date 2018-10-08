@@ -6,8 +6,7 @@
 #include <map>
 #include <list>
 
-#include "../dependencies/json/json.hpp"
-#include "../dependencies/curl/curl.h"
+#include <curl/curl.h>
 #include "../Utility.h"
 #include "../Globals.h"
 #include "MinizipWrapper.h"
