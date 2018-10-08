@@ -27,11 +27,7 @@ nlohmann::json toJson(Error &error)
   {
     errors_json.push_back(error.errors[i]);
   }
-
-  for (auto error : (error.errors))
-  {
-    errors_json.push_back(error);
-  }
+  
   error_json["errors"] = errors_json;
 
   return error_json;
