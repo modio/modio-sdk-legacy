@@ -33,4 +33,6 @@ void modioOnGetAllModComments(u32 call_number, u32 response_code, nlohmann::json
 void modioOnGetModComment(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnDeleteModComment(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearCommentsCallbackParams();
+
 #endif

@@ -202,6 +202,7 @@ void pollEvents()
       }
 
       modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);
+      modioFreeFilter(&filter);
 
       modio::LAST_MOD_EVENT_POLL = current_time;
     }
@@ -216,6 +217,7 @@ void pollEvents()
       modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
 
       modioGetUserEvents(NULL, filter, &onGetUserEventsPoll);
+      modioFreeFilter(&filter);
 
       modio::LAST_USER_EVENT_POLL = current_time;
     }

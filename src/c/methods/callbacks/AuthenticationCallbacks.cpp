@@ -32,3 +32,14 @@ void modioOnEmailExchanged(u32 call_number, u32 response_code, nlohmann::json re
   email_exchange_params.erase(call_number);
   modioFreeResponse(&response);
 }
+
+void clearAuthenticationCallbackParams()
+{
+  for(auto email_request_param : email_request_params)
+    delete email_request_param.second;
+  email_request_params.clear();
+
+  for(auto email_exchange_param : email_exchange_params)
+    delete email_exchange_param.second;
+  email_exchange_params.clear();
+}

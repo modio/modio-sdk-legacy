@@ -39,6 +39,7 @@ void modioOnGetModTags(u32 call_number, u32 response_code, nlohmann::json  respo
     delete[] tags_array;
   delete get_mod_tags_callbacks[call_number];
   get_mod_tags_callbacks.erase(call_number);
+  modioFreeResponse(&response);
 }
 
 void modioOnTagsAdded(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -50,6 +51,7 @@ void modioOnTagsAdded(u32 call_number, u32 response_code, nlohmann::json respons
   add_mod_tags_callbacks[call_number]->callback(add_mod_tags_callbacks[call_number]->object, response);
   delete add_mod_tags_callbacks[call_number];
   add_mod_tags_callbacks.erase(call_number);
+  modioFreeResponse(&response);
 }
 
 void modioOnTagsDeleted(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -61,4 +63,20 @@ void modioOnTagsDeleted(u32 call_number, u32 response_code, nlohmann::json respo
   delete_mod_tags_callbacks[call_number]->callback(delete_mod_tags_callbacks[call_number]->object, response);
   delete delete_mod_tags_callbacks[call_number];
   delete_mod_tags_callbacks.erase(call_number);
+  modioFreeResponse(&response);
+}
+
+void clearTagCallbackParams()
+{
+  for (auto get_mod_tags_callback : get_mod_tags_callbacks)
+    delete get_mod_tags_callback.second;
+  get_mod_tags_callbacks.clear();
+
+  for (auto add_mod_tags_callback : add_mod_tags_callbacks)
+    delete add_mod_tags_callback.second;
+  add_mod_tags_callbacks.clear();
+
+  for (auto delete_mod_tags_callback : delete_mod_tags_callbacks)
+    delete delete_mod_tags_callback.second;
+  delete_mod_tags_callbacks.clear();
 }

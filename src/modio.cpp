@@ -99,6 +99,22 @@ void modioSetDebugLevel(u32 debug_level)
 void modioShutdown()
 {
   modio::curlwrapper::shutdownCurl();
+
+  clearAuthenticationCallbackParams();
+  clearCommentsCallbackParams();
+  clearDependenciesCallbackParams();
+  clearImageCallbackParams();
+  clearMediaCallbackParams();
+  clearMeCallbackParams();
+  clearMetadataKVPCallbackParams();
+  clearModEventCallbackParams();
+  clearModfileCallbackParams();
+  clearModCallbackParams();
+  clearModStatsCallbackParams();
+  clearRatingsCallbackParams();
+  clearReportsCallbackParams();
+  clearSubscriptionCallbackParams();
+  clearTagCallbackParams();
 }
 
 void modioProcess()

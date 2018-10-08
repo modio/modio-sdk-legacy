@@ -31,4 +31,6 @@ void modioOnGetModTags(u32 call_number, u32 response_code, nlohmann::json respon
 void modioOnTagsAdded(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnTagsDeleted(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearTagCallbackParams();
+
 #endif

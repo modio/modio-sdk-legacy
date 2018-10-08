@@ -99,3 +99,26 @@ void modioOnModfileDeleted(u32 call_number, u32 response_code, nlohmann::json re
   delete_modfile_callbacks.erase(call_number);
   modioFreeResponse(&response);
 }
+
+void clearModfileCallbackParams()
+{
+  for(auto get_modfile_callback : get_modfile_callbacks)
+    delete get_modfile_callback.second;
+  get_modfile_callbacks.clear();
+
+  for(auto get_all_modfiles_callback : get_all_modfiles_callbacks)
+    delete get_all_modfiles_callback.second;
+  get_all_modfiles_callbacks.clear();
+
+  for(auto add_modfile_callback : add_modfile_callbacks)
+    delete add_modfile_callback.second;
+  add_modfile_callbacks.clear();
+
+  for(auto edit_modfile_callback : edit_modfile_callbacks)
+    delete edit_modfile_callback.second;
+  edit_modfile_callbacks.clear();
+
+  for(auto delete_modfile_callback : delete_modfile_callbacks)
+    delete delete_modfile_callback.second;
+  delete_modfile_callbacks.clear();
+}

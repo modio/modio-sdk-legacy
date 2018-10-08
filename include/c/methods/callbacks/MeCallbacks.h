@@ -78,4 +78,6 @@ void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json resp
 void modioOnGetUserModfiles(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetUserRatings(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearMeCallbackParams();
+
 #endif

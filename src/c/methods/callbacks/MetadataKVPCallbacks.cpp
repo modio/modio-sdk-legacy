@@ -39,6 +39,7 @@ void modioOnGetAllMetadataKVP(u32 call_number, u32 response_code, nlohmann::json
     delete[] metadata_kvp_array;
   delete get_all_metadata_kvp_callbacks[call_number];
   get_all_metadata_kvp_callbacks.erase(call_number);
+  modioFreeResponse(&response);
 }
 
 void modioOnAddMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -50,6 +51,7 @@ void modioOnAddMetadataKVP(u32 call_number, u32 response_code, nlohmann::json re
   add_metadata_kvp_callbacks[call_number]->callback(add_metadata_kvp_callbacks[call_number]->object, response);
   delete add_metadata_kvp_callbacks[call_number];
   add_metadata_kvp_callbacks.erase(call_number);
+  modioFreeResponse(&response);
 }
 
 void modioOnDeleteMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -61,4 +63,20 @@ void modioOnDeleteMetadataKVP(u32 call_number, u32 response_code, nlohmann::json
   delete_metadata_kvp_callbacks[call_number]->callback(delete_metadata_kvp_callbacks[call_number]->object, response);
   delete delete_metadata_kvp_callbacks[call_number];
   delete_metadata_kvp_callbacks.erase(call_number);
+  modioFreeResponse(&response);
+}
+
+void clearMetadataKVPCallbackParams()
+{
+  for (auto get_all_metadata_kvp_callback : get_all_metadata_kvp_callbacks)
+    delete get_all_metadata_kvp_callback.second;
+  get_all_metadata_kvp_callbacks.clear();
+
+  for (auto add_metadata_kvp_callback : add_metadata_kvp_callbacks)
+    delete add_metadata_kvp_callback.second;
+  add_metadata_kvp_callbacks.clear();
+
+  for (auto delete_metadata_kvp_callback : delete_metadata_kvp_callbacks)
+    delete delete_metadata_kvp_callback.second;
+  delete_metadata_kvp_callbacks.clear();
 }

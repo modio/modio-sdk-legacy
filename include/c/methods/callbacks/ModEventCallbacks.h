@@ -23,4 +23,6 @@ extern std::map< u32, GetAllEventsParams* > get_all_events_callbacks;
 void modioOnGetEvents(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetAllEvents(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearModEventCallbackParams();
+
 #endif

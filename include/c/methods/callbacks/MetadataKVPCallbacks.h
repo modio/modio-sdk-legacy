@@ -31,4 +31,6 @@ void modioOnGetAllMetadataKVP(u32 call_number, u32 response_code, nlohmann::json
 void modioOnAddMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnDeleteMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearMetadataKVPCallbackParams();
+
 #endif

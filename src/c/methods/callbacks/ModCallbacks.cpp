@@ -1,7 +1,7 @@
 #include "c/methods/callbacks/ModCallbacks.h"
 
 std::map< u32,GetModParams* > get_mod_callbacks;
-std::map< u32,AddModParams* > add_mod_callback;
+std::map< u32,AddModParams* > add_mod_callbacks;
 std::map< u32,DeleteModParams* > delete_mod_callbacks;
 std::map< u32,GetAllModsParams* > get_all_mods_callbacks;
 std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
@@ -69,9 +69,10 @@ void modioOnModAdded(u32 call_number, u32 response_code, nlohmann::json response
   ModioMod mod;
   modioInitMod(&mod, response_json);
 
-  add_mod_callback[call_number]->callback(add_mod_callback[call_number]->object, response, mod);
-  delete add_mod_callback[call_number];
-  add_mod_callback.erase(call_number);
+  add_mod_callbacks[call_number]->callback(add_mod_callbacks[call_number]->object, response, mod);
+  delete add_mod_callbacks[call_number];
+  add_mod_callbacks.erase(call_number);
+  modioFreeResponse(&response);
 }
 
 void modioOnModDeleted(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -94,4 +95,28 @@ void modioOnReturnIdCallback(u32 call_number, u32 response_code, nlohmann::json 
   return_id_callbacks[call_number]->callback(return_id_callbacks[call_number]->object, response, return_id_callbacks[call_number]->mod_id);
   delete return_id_callbacks[call_number];
   return_id_callbacks.erase(call_number);
+  modioFreeResponse(&response);
+}
+
+void clearModCallbackParams()
+{
+  for (auto get_mod_callback : get_mod_callbacks)
+    delete get_mod_callback.second;
+  get_mod_callbacks.clear();
+
+  for (auto add_mod_callback : add_mod_callbacks)
+    delete add_mod_callback.second;
+  add_mod_callbacks.clear();
+
+  for (auto delete_mod_callback : delete_mod_callbacks)
+    delete delete_mod_callback.second;
+  delete_mod_callbacks.clear();
+
+  for (auto get_all_mods_callback : get_all_mods_callbacks)
+    delete get_all_mods_callback.second;
+  get_all_mods_callbacks.clear();
+
+  for (auto return_id_callback : return_id_callbacks)
+    delete return_id_callback.second;
+  return_id_callbacks.clear();
 }

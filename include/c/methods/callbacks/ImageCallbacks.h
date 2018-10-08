@@ -16,4 +16,6 @@ extern std::map< u32, DownloadImageParams* > download_image_callbacks;
 
 void modioOnImageDownloaded(u32 call_number, u32 response_code);
 
+void clearImageCallbackParams();
+
 #endif

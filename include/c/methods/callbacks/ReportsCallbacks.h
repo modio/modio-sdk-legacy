@@ -14,4 +14,6 @@ extern std::map< u32, SubmitReportParams* > submit_report_callbacks;
 
 void modioOnSubmitReport(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearReportsCallbackParams();
+
 #endif

@@ -98,3 +98,34 @@ void modioOnDeleteModSketchfabLinks(u32 call_number, u32 response_code, nlohmann
 
   modioFreeResponse(&response);
 }
+
+void clearMediaCallbackParams()
+{
+  for (auto add_mod_logo_callback : add_mod_logo_callbacks)
+    delete add_mod_logo_callback.second;
+  add_mod_logo_callbacks.clear();
+
+  for (auto add_mod_images_callback : add_mod_images_callbacks)
+    delete add_mod_images_callback.second;
+  add_mod_images_callbacks.clear();
+
+  for (auto add_mod_youtube_links_callback : add_mod_youtube_links_callbacks)
+    delete add_mod_youtube_links_callback.second;
+  add_mod_youtube_links_callbacks.clear();
+
+  for (auto add_mod_sketchfab_links_callback : add_mod_sketchfab_links_callbacks)
+    delete add_mod_sketchfab_links_callback.second;
+  add_mod_sketchfab_links_callbacks.clear();
+
+  for (auto delete_mod_images_callback : delete_mod_images_callbacks)
+    delete delete_mod_images_callback.second;
+  delete_mod_images_callbacks.clear();
+
+  for (auto delete_mod_youtube_links_callback : delete_mod_youtube_links_callbacks)
+    delete delete_mod_youtube_links_callback.second;
+  delete_mod_youtube_links_callbacks.clear();
+
+  for (auto delete_mod_sketchfab_links_callback : delete_mod_sketchfab_links_callbacks)
+    delete delete_mod_sketchfab_links_callback.second;
+  delete_mod_sketchfab_links_callbacks.clear();
+}

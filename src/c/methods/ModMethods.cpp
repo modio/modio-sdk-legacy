@@ -48,9 +48,9 @@ extern "C"
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    add_mod_callback[call_number] = new AddModParams;
-    add_mod_callback[call_number]->callback = callback;
-    add_mod_callback[call_number]->object = object;
+    add_mod_callbacks[call_number] = new AddModParams;
+    add_mod_callbacks[call_number]->callback = callback;
+    add_mod_callbacks[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id);
 
@@ -71,9 +71,9 @@ extern "C"
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    add_mod_callback[call_number] = new AddModParams;
-    add_mod_callback[call_number]->callback = callback;
-    add_mod_callback[call_number]->object = object;
+    add_mod_callbacks[call_number] = new AddModParams;
+    add_mod_callbacks[call_number]->callback = callback;
+    add_mod_callbacks[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods";
     modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), modio::getModCreatorCurlFormCopyContentsParams(&mod_creator), modio::getModCreatorCurlFormFilesParams(&mod_creator), &modioOnModAdded);

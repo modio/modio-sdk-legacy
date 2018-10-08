@@ -33,9 +33,9 @@ void onJsonRequestFinished(CURL *curl)
     writeLogLine(response_json.dump(), MODIO_DEBUGLEVEL_ERROR);
   }
   ongoing_call->callback(ongoing_call->call_number, response_code, response_json);
-  call_count++;
   ongoing_calls.erase(curl);
   delete ongoing_call;
+  call_count++;
 }
 
 void onDownloadFinished(CURL *curl)
@@ -63,6 +63,7 @@ void onDownloadFinished(CURL *curl)
 void onModDownloadFinished(CURL *curl)
 {
   fclose(current_mod_download_file);
+  current_mod_download_file = NULL;
 
   if (current_queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
@@ -96,10 +97,12 @@ void onModDownloadFinished(CURL *curl)
     if (modio::download_callback)
       modio::download_callback(response_code, current_queued_mod_download->mod.id);
 
-    delete current_queued_mod_download;
     current_mod_download_curl_handle = NULL;
+    current_mod_download_slist = NULL;
 
     mod_download_queue.remove(current_queued_mod_download);
+    delete current_queued_mod_download;
+    
     updateModDownloadQueueFile();
     downloadNextQueuedMod();
   }
@@ -143,6 +146,8 @@ void onModfileUploadFinished(CURL *curl)
       uploadModfile(modfile_upload_queue.front());
     }
   }
+
+  current_queued_modfile_upload = NULL;
   updateModUploadQueueFile();
 }
 } // namespace curlwrapper

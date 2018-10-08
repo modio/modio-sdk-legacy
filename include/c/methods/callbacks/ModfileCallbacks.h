@@ -51,4 +51,6 @@ void modioOnModfileAdded(u32 call_number, u32 response_code, nlohmann::json resp
 void modioOnModfileEdited(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnModfileDeleted(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearModfileCallbackParams();
+
 #endif

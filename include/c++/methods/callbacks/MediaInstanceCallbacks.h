@@ -2,37 +2,37 @@ namespace modio
 {
 struct AddModLogoCall
 {
-    const std::function<void(const modio::Response &)> callback;
+  const std::function<void(const modio::Response &)> callback;
 };
 
 struct AddModImagesCall
 {
-    const std::function<void(const modio::Response &)> callback;
+  const std::function<void(const modio::Response &)> callback;
 };
 
 struct AddModYoutubeLinksCall
 {
-    const std::function<void(const modio::Response &)> callback;
+  const std::function<void(const modio::Response &)> callback;
 };
 
 struct AddModSketchfabLinksCall
 {
-    const std::function<void(const modio::Response &)> callback;
+  const std::function<void(const modio::Response &)> callback;
 };
 
 struct DeleteModImagesCall
 {
-    const std::function<void(const modio::Response &)> callback;
+  const std::function<void(const modio::Response &)> callback;
 };
 
 struct DeleteModYoutubeLinksCall
 {
-    const std::function<void(const modio::Response &)> callback;
+  const std::function<void(const modio::Response &)> callback;
 };
 
 struct DeleteModSketchfabLinksCall
 {
-    const std::function<void(const modio::Response &)> callback;
+  const std::function<void(const modio::Response &)> callback;
 };
 
 extern std::map<u32, AddModLogoCall *> add_mod_logo_calls;
@@ -50,4 +50,6 @@ void onAddModSketchfabLinks(void *object, ModioResponse modio_response);
 void onDeleteModImages(void *object, ModioResponse modio_response);
 void onDeleteModYoutubeLinks(void *object, ModioResponse modio_response);
 void onDeleteModSketchfabLinks(void *object, ModioResponse modio_response);
-}
+
+void clearMediaRequestCalls();
+} // namespace modio

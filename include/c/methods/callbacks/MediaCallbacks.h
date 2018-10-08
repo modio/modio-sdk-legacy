@@ -62,5 +62,7 @@ void modioOnDeleteModImages(u32 call_number, u32 response_code, nlohmann::json r
 void modioOnDeleteModYoutubeLinks(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnDeleteModSketchfabLinks(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearMediaCallbackParams();
+
 #endif
 

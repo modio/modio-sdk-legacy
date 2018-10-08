@@ -4,25 +4,27 @@ namespace modio
 {
 namespace curlwrapper
 {
-std::list<QueuedModDownload *> mod_download_queue;
-std::list<QueuedModfileUpload *> modfile_upload_queue;
-
-FILE *current_mod_download_file;
-CURL *current_mod_download_curl_handle;
-QueuedModDownload *current_queued_mod_download;
-
-CURL *current_modfile_upload_curl_handle;
-QueuedModfileUpload *current_queued_modfile_upload;
-
 CURLM *curl_multi_handle;
 
 std::map<CURL *, JsonResponseHandler *> ongoing_calls;
 std::map<CURL *, OngoingDownload *> ongoing_downloads;
 
+std::list<QueuedModDownload *> mod_download_queue;
+std::list<QueuedModfileUpload *> modfile_upload_queue;
+
+FILE *current_mod_download_file;
+
+CURL *current_mod_download_curl_handle;
+CURL *current_modfile_upload_curl_handle;
+
+struct curl_slist *current_mod_download_slist;
+
+QueuedModDownload *current_queued_mod_download;
+QueuedModfileUpload *current_queued_modfile_upload;
 CurrentDownloadHandle *current_download_handle;
 
-u32 call_count = 0;
-u32 ongoing_call = 0;
+u32 call_count;
+u32 ongoing_call;
 
 std::list<QueuedModDownload *> getModDownloadQueue()
 {
@@ -34,18 +36,30 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
   return modfile_upload_queue;
 }
 
-JsonResponseHandler::JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   this->response = "";
   this->call_number = call_number;
+  this->slist = slist;
   this->callback = callback;
 }
 
-OngoingDownload::OngoingDownload(u32 call_number, std::string url, std::function<void(u32 call_number, u32 response_code)> callback)
+JsonResponseHandler::~JsonResponseHandler()
+{
+  curl_slist_free_all(this->slist);
+}
+
+OngoingDownload::OngoingDownload(u32 call_number, std::string url, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code)> callback)
 {
   this->url = url;
   this->call_number = call_number;
   this->callback = callback;
+  this->slist = slist;
+}
+
+OngoingDownload::~OngoingDownload()
+{
+  curl_slist_free_all(this->slist);
 }
 
 void updateModDownloadQueue()
@@ -65,6 +79,7 @@ void updateModDownloadQueue()
     QueuedModDownload* queued_mod_download = new QueuedModDownload();
     queued_mod_download->initialize(modio_queued_mod_download);
     mod_download_queue.push_back(queued_mod_download);
+    modioFreeQueuedModDownload(&modio_queued_mod_download);
   }
 }
 

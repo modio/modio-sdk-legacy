@@ -34,8 +34,10 @@ public:
   u32 call_number;
   std::string response;
   std::map<std::string, std::string> headers;
+  struct curl_slist *slist = NULL;
   std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback;
-  JsonResponseHandler(u32 call_number, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+  JsonResponseHandler(u32 call_number, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+  ~JsonResponseHandler();
 };
 
 class OngoingDownload
@@ -43,8 +45,10 @@ class OngoingDownload
 public:
   u32 call_number;
   std::string url;
+  struct curl_slist *slist = NULL;
   std::function<void(u32 call_number, u32 response_code)> callback;
-  OngoingDownload(u32 call_number, std::string url, std::function<void(u32 call_number, u32 response_code)> callback);
+  OngoingDownload(u32 call_number, std::string url, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code)> callback);
+  ~OngoingDownload();
 };
 
 struct CurrentDownloadHandle
@@ -54,19 +58,23 @@ struct CurrentDownloadHandle
   bool pause_flag;
 };
 
-extern std::list<QueuedModDownload *> mod_download_queue;
-extern std::list<QueuedModfileUpload *> modfile_upload_queue;
-extern FILE *current_mod_download_file;
-extern CURL *current_mod_download_curl_handle;
-extern QueuedModDownload *current_queued_mod_download;
-extern CURL *current_modfile_upload_curl_handle;
-extern QueuedModfileUpload *current_queued_modfile_upload;
-
 extern CURLM *curl_multi_handle;
 
 extern std::map<CURL *, JsonResponseHandler *> ongoing_calls;
 extern std::map<CURL *, OngoingDownload *> ongoing_downloads;
 
+extern std::list<QueuedModDownload *> mod_download_queue;
+extern std::list<QueuedModfileUpload *> modfile_upload_queue;
+
+extern FILE *current_mod_download_file;
+
+extern CURL *current_mod_download_curl_handle;
+extern CURL *current_modfile_upload_curl_handle;
+
+extern struct curl_slist *current_mod_download_slist;
+
+extern QueuedModDownload *current_queued_mod_download;
+extern QueuedModfileUpload *current_queued_modfile_upload;
 extern CurrentDownloadHandle *current_download_handle;
 
 extern u32 call_count;

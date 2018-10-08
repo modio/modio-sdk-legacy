@@ -15,3 +15,10 @@ void modioOnImageDownloaded(u32 call_number, u32 response_code)
   download_image_callbacks.erase(call_number);
   modioFreeResponse(&response);
 }
+
+void clearImageCallbackParams()
+{
+  for (auto download_image_callback : download_image_callbacks)
+    delete download_image_callback.second;
+  download_image_callbacks.clear();
+}

@@ -56,3 +56,14 @@ void modioOnGetAllModStats(u32 call_number, u32 response_code, nlohmann::json re
   get_all_mod_stats_callbacks.erase(call_number);
   modioFreeResponse(&response);
 }
+
+void clearModStatsCallbackParams()
+{
+  for (auto get_mod_stats_callback : get_mod_stats_callbacks)
+    delete get_mod_stats_callback.second;
+  get_mod_stats_callbacks.clear();
+
+  for (auto get_all_mod_stats_callback : get_all_mod_stats_callbacks)
+    delete get_all_mod_stats_callback.second;
+  get_all_mod_stats_callbacks.clear();
+}

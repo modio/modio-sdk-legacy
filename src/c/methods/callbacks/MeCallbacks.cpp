@@ -94,6 +94,7 @@ void modioOnGetUserEvents(u32 call_number, u32 response_code, nlohmann::json res
     delete[] events_array;
   delete get_user_events_callbacks[call_number];
   get_user_events_callbacks.erase(call_number);
+  modioFreeResponse(&response);
 }
 
 void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -222,4 +223,35 @@ void modioOnGetUserRatings(u32 call_number, u32 response_code, nlohmann::json re
   delete get_user_ratings_callbacks[call_number];
   get_user_ratings_callbacks.erase(call_number);
   modioFreeResponse(&response);
+}
+
+void clearMeCallbackParams()
+{
+  for (auto get_authenticated_user_callback : get_authenticated_user_callbacks)
+    delete get_authenticated_user_callback.second;
+  get_authenticated_user_callbacks.clear();
+
+  for (auto get_user_subscriptions_callback : get_user_subscriptions_callbacks)
+    delete get_user_subscriptions_callback.second;
+  get_user_subscriptions_callbacks.clear();
+
+  for (auto get_user_events_callback : get_user_events_callbacks)
+    delete get_user_events_callback.second;
+  get_user_events_callbacks.clear();
+
+  for (auto get_user_games_callback : get_user_games_callbacks)
+    delete get_user_games_callback.second;
+  get_user_games_callbacks.clear();
+
+  for (auto get_user_mods_callback : get_user_mods_callbacks)
+    delete get_user_mods_callback.second;
+  get_user_mods_callbacks.clear();
+
+  for (auto get_user_modfiles_callback : get_user_modfiles_callbacks)
+    delete get_user_modfiles_callback.second;
+  get_user_modfiles_callbacks.clear();
+
+  for (auto get_user_ratings_callback : get_user_ratings_callbacks)
+    delete get_user_ratings_callback.second;
+  get_user_ratings_callbacks.clear();
 }

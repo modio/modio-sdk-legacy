@@ -26,4 +26,6 @@ extern std::map< u32, UnsubscribeFromModParams* > unsubscribe_from_mod_callbacks
 void modioOnSubscribeToMod(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearSubscriptionCallbackParams();
+
 #endif

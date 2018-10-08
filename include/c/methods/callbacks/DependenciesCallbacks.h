@@ -31,4 +31,6 @@ void modioOnGetAllModDependencies(u32 call_number, u32 response_code, nlohmann::
 void modioOnAddModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnDeleteModDependencies(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearDependenciesCallbackParams();
+
 #endif
