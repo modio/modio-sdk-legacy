@@ -1,6 +1,16 @@
 #ifndef MODIO_MODIO_C_H
 #define MODIO_MODIO_C_H
 
+#ifdef MODIO_WINDOWS_DETECTED
+#  ifdef BUILDING_MODIO_DLL
+#    define MODIO_DLL __declspec(dllexport)
+#  else
+#    define MODIO_DLL __declspec(dllimport)
+#  endif
+#else
+#  define MODIO_DLL
+#endif
+
 typedef unsigned int u32;
 typedef int i32;
 
