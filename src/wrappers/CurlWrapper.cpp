@@ -251,26 +251,29 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
 
 void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, nlohmann::json response)> callback)
 {
-	/*
   writeLogLine("POST FORMM: " + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
 
+  curl = curl_easy_init();
+
   curl_global_init(CURL_GLOBAL_ALL);
 
-  curl_mime *form = NULL;
+  curl_mime *mime_form = NULL;
   curl_mimepart *field = NULL;
   struct curl_slist *headerlist = NULL;
   static const char buf[] = "Expect:";
 
   if(curl)
   {
-    form = curl_mime_init(curl);
+    setVerifies(curl);
+
+    mime_form = curl_mime_init(curl);
 
     for (std::map<std::string, std::string>::iterator i = curlform_files.begin();
         i != curlform_files.end();
         i++)
     {
-      field = curl_mime_addpart(form);
+      field = curl_mime_addpart(mime_form);
       curl_mime_name(field, (*i).first.c_str());
       curl_mime_filedata(field, (*i).second.c_str());
     }
@@ -279,12 +282,12 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
         i != curlform_copycontents.end();
         i++)
     {
-      field = curl_mime_addpart(form);
+      field = curl_mime_addpart(mime_form);
       curl_mime_name(field, (*i).first.c_str());
-      curl_mime_filedata(field, (*i).second.c_str());
+      curl_mime_data(field, (*i).second.c_str(), CURL_ZERO_TERMINATED);
     }
 
-    field = curl_mime_addpart(form);
+    field = curl_mime_addpart(mime_form);
     curl_mime_name(field, "submit");
     curl_mime_data(field, "send", CURL_ZERO_TERMINATED);
 
@@ -295,17 +298,17 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
       slist = curl_slist_append(slist, headers[i].c_str());
     }
 
-    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, headerlist, callback);
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, mime_form, callback);
 
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-    curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
+    curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime_form);
 
     curl_multi_add_handle(curl_multi_handle, curl);
   }
-  */
+  /*
   writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
   CURL *curl;
 
@@ -365,6 +368,7 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
 
     curl_multi_add_handle(curl_multi_handle, curl);
   }
+  */
 }
 
 void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)

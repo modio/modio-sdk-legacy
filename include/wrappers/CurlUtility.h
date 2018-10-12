@@ -34,9 +34,9 @@ public:
   std::string response;
   std::map<std::string, std::string> headers;
   struct curl_slist *slist = NULL;
-  struct curl_httppost *formpost = NULL;
+  curl_mime *mime_form = NULL;
   std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback;
-  JsonResponseHandler(u32 call_number, struct curl_slist * slist, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+  JsonResponseHandler(u32 call_number, struct curl_slist * slist, curl_mime *curl_mime, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
   ~JsonResponseHandler();
 };
 
