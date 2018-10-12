@@ -18,6 +18,8 @@ CURL *current_mod_download_curl_handle;
 CURL *current_modfile_upload_curl_handle;
 
 struct curl_slist *current_mod_download_slist;
+struct curl_slist *current_modfile_upload_slist;
+struct curl_httppost *current_modfile_upload_httppost;
 
 QueuedModDownload *current_queued_mod_download;
 QueuedModfileUpload *current_queued_modfile_upload;
@@ -36,17 +38,19 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
   return modfile_upload_queue;
 }
 
-JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   this->response = "";
   this->call_number = call_number;
   this->slist = slist;
+  this->formpost = formpost;
   this->callback = callback;
 }
 
 JsonResponseHandler::~JsonResponseHandler()
 {
   curl_slist_free_all(this->slist);
+  curl_formfree(this->formpost);
 }
 
 OngoingDownload::OngoingDownload(u32 call_number, std::string url, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code)> callback)

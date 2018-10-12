@@ -8,15 +8,11 @@ struct GetAllMetadataKVPCall
 
 struct AddMetadataKVPCall
 {
-  char **metadata_kvp_array;
-  u32 metadata_kvp_array_size;
   const std::function<void(const modio::Response &response)> callback;
 };
 
 struct DeleteMetadataKVPCall
 {
-  char **metadata_kvp_array;
-  u32 metadata_kvp_array_size;
   const std::function<void(const modio::Response &response)> callback;
 };
 

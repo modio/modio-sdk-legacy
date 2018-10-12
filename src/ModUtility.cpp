@@ -59,16 +59,19 @@ void addToInstalledModsJson(nlohmann::json mod_json, std::string path)
 
   for (auto &installed_mod : installed_mods_json["mods"])
   {
-    if (installed_mod["mod_id"] == mod_json["id"] && installed_mod["path"] == path)
+    if(modio::hasKey(installed_mod, "mod_id") && modio::hasKey(installed_mod, "path") && modio::hasKey(installed_mod, "id"))
     {
-      return;
+      u32 installed_mod_id = installed_mod["mod_id"];
+      std::string installed_mod_path = installed_mod["path"];
+      if(installed_mod_id == mod_json["id"] && installed_mod_path == path)
+        return;
     }
   }
 
   nlohmann::json installed_mod_json;
   installed_mod_json["path"] = path;
-  installed_mod_json["mod_id"] = mod_json["id"];
-  installed_mod_json["modfile_id"] = mod_json["modfile"]["id"];
+  installed_mod_json["mod_id"] = mod_json["mod_id"];
+  installed_mod_json["modfile_id"] = mod_json["mod"]["modfile"]["id"];
   installed_mod_json["updated_at"] = modio::getCurrentTime();
 
   installed_mods_json["mods"].push_back(installed_mod_json);
@@ -102,13 +105,17 @@ void updateInstalledModsJson()
   modio::installed_mods.clear();
   if (modio::hasKey(installed_mods_json, "mods"))
   {
-    for (int i = 0; i < (int)installed_mods_json["mods"].size(); i++)
+    for (u32 i = 0; i < (u32)installed_mods_json["mods"].size(); i++)
     {
-      if (checkIfModIsStillInstalled(installed_mods_json["mods"][i]["path"], installed_mods_json["mods"][i]["mod_id"]))
+      nlohmann::json file_installed_mod_interator = installed_mods_json["mods"][i];
+      if(modio::hasKey(file_installed_mod_interator,"path") && modio::hasKey(file_installed_mod_interator,"mod_id"))
       {
-        nlohmann::json current_mod_json = installed_mods_json["mods"][i];
-        resulting_json["mods"].push_back(current_mod_json);
-        modio::installed_mods.insert(current_mod_json);
+        if (checkIfModIsStillInstalled(file_installed_mod_interator["path"], file_installed_mod_interator["mod_id"]))
+        {
+          nlohmann::json current_mod_json = file_installed_mod_interator;
+          resulting_json["mods"].push_back(current_mod_json);
+          modio::installed_mods.insert(current_mod_json);
+        }
       }
     }
   }

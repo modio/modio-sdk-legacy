@@ -34,8 +34,9 @@ public:
   std::string response;
   std::map<std::string, std::string> headers;
   struct curl_slist *slist = NULL;
+  struct curl_httppost *formpost = NULL;
   std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback;
-  JsonResponseHandler(u32 call_number, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+  JsonResponseHandler(u32 call_number, struct curl_slist * slist, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
   ~JsonResponseHandler();
 };
 
@@ -71,6 +72,8 @@ extern CURL *current_mod_download_curl_handle;
 extern CURL *current_modfile_upload_curl_handle;
 
 extern struct curl_slist *current_mod_download_slist;
+extern struct curl_slist *current_modfile_upload_slist;
+extern struct curl_httppost  *current_modfile_upload_httppost;
 
 extern QueuedModDownload *current_queued_mod_download;
 extern QueuedModfileUpload *current_queued_modfile_upload;

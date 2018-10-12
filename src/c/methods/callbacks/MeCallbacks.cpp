@@ -22,6 +22,7 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::j
   delete get_authenticated_user_callbacks[call_number];
   get_authenticated_user_callbacks.erase(call_number);
   modioFreeResponse(&response);
+  modioFreeUser(&user);
 }
 
 void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -119,6 +120,7 @@ void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json resp
     {
       modioFreeGame(&games[i]);
     }
+
     delete[] games;
   }else
   {

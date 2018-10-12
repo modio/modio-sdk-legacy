@@ -48,6 +48,7 @@ void addModsToDownloadQueue(std::vector<u32> mod_ids)
     modioAddFilterInField(&filter, (char *)"id", (char *)modio::toString(mod_id).c_str());
   }
   modioGetAllMods(NULL, filter, &modio::onAddModsToDownloadQueue);
+  modioFreeFilter(&filter);
 }
 
 void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events_array, u32 events_array_size)

@@ -97,11 +97,11 @@ void onModDownloadFinished(CURL *curl)
     if (modio::download_callback)
       modio::download_callback(response_code, current_queued_mod_download->mod.id);
 
-    current_mod_download_curl_handle = NULL;
-    current_mod_download_slist = NULL;
-
     mod_download_queue.remove(current_queued_mod_download);
     delete current_queued_mod_download;
+
+    current_mod_download_curl_handle = NULL;
+    current_mod_download_slist = NULL;
     
     updateModDownloadQueueFile();
     downloadNextQueuedMod();
@@ -139,7 +139,13 @@ void onModfileUploadFinished(CURL *curl)
     }
 
     delete current_queued_modfile_upload;
+    curl_slist_free_all(current_modfile_upload_slist);
+    curl_formfree(current_modfile_upload_httppost);
+
     current_queued_modfile_upload = NULL;
+    current_modfile_upload_curl_handle = NULL;
+    current_modfile_upload_slist = NULL;
+    current_modfile_upload_httppost = NULL;
 
     if (modfile_upload_queue.size() > 0)
     {

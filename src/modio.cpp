@@ -98,6 +98,8 @@ void modioSetDebugLevel(u32 debug_level)
 
 void modioShutdown()
 {
+  modio::writeLogLine("mod.io C interface is shutting down", MODIO_DEBUGLEVEL_LOG);
+
   modio::curlwrapper::shutdownCurl();
 
   clearAuthenticationCallbackParams();
@@ -115,6 +117,8 @@ void modioShutdown()
   clearReportsCallbackParams();
   clearSubscriptionCallbackParams();
   clearTagCallbackParams();
+
+  modio::writeLogLine("mod.io C interface finished shutting down", MODIO_DEBUGLEVEL_LOG);
 }
 
 void modioProcess()

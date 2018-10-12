@@ -66,5 +66,6 @@ namespace modio
   ModCreator::~ModCreator()
   {
     modioFreeModCreator(this->mod_creator);
+    delete this->mod_creator;
   }
 }

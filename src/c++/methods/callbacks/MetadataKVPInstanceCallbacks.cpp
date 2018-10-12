@@ -34,9 +34,6 @@ void onAddMetadataKVP(void *object, ModioResponse modio_response)
   response.initialize(modio_response);
 
   add_metadata_kvp_calls[call_id]->callback((const Response &)response);
-  for (u32 i = 0; i < add_metadata_kvp_calls[call_id]->metadata_kvp_array_size; i++)
-    delete[] add_metadata_kvp_calls[call_id]->metadata_kvp_array[i];
-  delete[] add_metadata_kvp_calls[call_id]->metadata_kvp_array;
   delete add_metadata_kvp_calls[call_id];
   delete (u32 *)object;
   add_metadata_kvp_calls.erase(call_id);
@@ -50,9 +47,6 @@ void onDeleteMetadataKVP(void *object, ModioResponse modio_response)
   response.initialize(modio_response);
 
   delete_metadata_kvp_calls[call_id]->callback((const Response &)response);
-  for (u32 i = 0; i < delete_metadata_kvp_calls[call_id]->metadata_kvp_array_size; i++)
-    delete[] delete_metadata_kvp_calls[call_id]->metadata_kvp_array[i];
-  delete[] delete_metadata_kvp_calls[call_id]->metadata_kvp_array;
   delete delete_metadata_kvp_calls[call_id];
   delete (u32 *)object;
   delete_metadata_kvp_calls.erase(call_id);

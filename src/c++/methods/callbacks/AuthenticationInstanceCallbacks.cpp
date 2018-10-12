@@ -30,8 +30,8 @@ void onEmailExchange(void *object, ModioResponse modio_response)
   email_exchange_calls[call_id]->callback((const modio::Response &)response);
 
   delete (u32 *)object;
-  delete email_request_calls[call_id];
-  email_request_calls.erase(call_id);
+  delete email_exchange_calls[call_id];
+  email_exchange_calls.erase(call_id);
 }
 
 void clearAuthenticationRequestCalls()

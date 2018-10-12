@@ -263,7 +263,13 @@ std::string getModIODirectory()
 
 bool isDirectory(const std::string& directory)
 {
-  return opendir(modio::addSlashIfNeeded(directory).c_str());
+  DIR *dir;
+  if ((dir = opendir(modio::addSlashIfNeeded(directory).c_str())) != NULL)
+  {
+    closedir(dir);
+    return true;
+  }
+  return false;
 }
 
 bool fileExists(const std::string& directory)
@@ -344,8 +350,10 @@ bool removeDirectory(const std::string& directory)
     if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
     {
       snprintf(path, (size_t)PATH_MAX, "%s%s", directory_with_slash.c_str(), entry->d_name);
-      if (opendir(path) != NULL)
+      DIR* dir = opendir(path);
+      if (dir != NULL)
       {
+        closedir(dir);
         removeDirectory(path);
       }
       writeLogLine("Deleting: " + std::string(path), MODIO_DEBUGLEVEL_LOG);

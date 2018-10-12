@@ -16,7 +16,14 @@ Instance::Instance(u32 environment, u32 game_id, const std::string &api_key, con
 
 Instance::~Instance()
 {
+  modio::writeLogLine("mod.io C++ interface is shutting down", MODIO_DEBUGLEVEL_LOG);
+  
   modioShutdown();
+
+  if(set_download_listener_call)
+    delete set_download_listener_call;
+  if(set_upload_listener_call)
+    delete set_upload_listener_call;
 
   clearAuthenticationRequestCalls();
   clearCommentsRequestCalls();
@@ -33,6 +40,8 @@ Instance::~Instance()
   clearReportsRequestCalls();
   clearSubscriptionRequestCalls();
   clearTagsRequestCalls();
+
+  modio::writeLogLine("mod.io C++ interface finished shutting down", MODIO_DEBUGLEVEL_LOG);
 }
 
 void Instance::setDebugLevel(u32 debug_level)
