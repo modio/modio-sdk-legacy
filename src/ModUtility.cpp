@@ -55,7 +55,7 @@ std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
 void addToInstalledModsJson(u32 mod_id, std::string path, u32 modfile_id, u32 date_updated)
 {
   bool mod_reinstalled = false;
-  for(auto &installed_mod : modio::installed_mods["mods"])
+  for(auto &installed_mod : modio::installed_mods)
   {
     if(installed_mod["mod_id"] == mod_id && installed_mod["path"] == path)
     {
@@ -74,7 +74,7 @@ void addToInstalledModsJson(u32 mod_id, std::string path, u32 modfile_id, u32 da
     installed_mod_json["modfile_id"] = modfile_id;
     installed_mod_json["date_updated"] = date_updated;
 
-    modio::installed_mods["mods"].push_back(installed_mod_json);
+    modio::installed_mods.push_back(installed_mod_json);
   }
 
   modio::writeJson(modio::getModIODirectory() + "installed_mods.json", modio::installed_mods);
@@ -145,7 +145,7 @@ void clearOldCache()
 
 std::string getInstalledModPath(u32 mod_id)
 {
-  for(auto installed_mod_json : modio::installed_mods["mods"])
+  for(auto installed_mod_json : modio::installed_mods)
   {
     if(installed_mod_json["mod_id"] == mod_id)
     {

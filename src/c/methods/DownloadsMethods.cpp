@@ -76,7 +76,7 @@ u32 modioGetModfileUploadQueueCount()
 void modioGetAllInstalledMods(ModioInstalledMod *installed_mods)
 {
   u32 i = 0;
-  for(auto installed_mod_json : modio::installed_mods["mods"])
+  for(auto installed_mod_json : modio::installed_mods)
   {
     modioInitInstalledMod(&(installed_mods[i]), installed_mod_json);
     i++;
@@ -85,7 +85,7 @@ void modioGetAllInstalledMods(ModioInstalledMod *installed_mods)
 
 u32 modioGetAllInstalledModsCount()
 {
-  return modio::installed_mods["mods"].size();
+  return modio::installed_mods.size();
 }
 
 u32 modioGetModState(u32 mod_id)
@@ -96,7 +96,7 @@ u32 modioGetModState(u32 mod_id)
       return queued_mod_download->state;
   }
 
-  for(auto installed_mod : modio::installed_mods["mods"])
+  for(auto installed_mod : modio::installed_mods)
   {
     if(modio::hasKey(installed_mod, "mod_id") && installed_mod["mod_id"] == mod_id)
       return MODIO_MOD_INSTALLED;

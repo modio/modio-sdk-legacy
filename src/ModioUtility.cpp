@@ -71,7 +71,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
       case MODIO_EVENT_MODFILE_CHANGED:
       {
         bool reinstall = true;
-        for(auto installed_mod : modio::installed_mods["mods"])
+        for(auto installed_mod : modio::installed_mods)
         {
           if(installed_mod["mod_id"] == events_array[i].mod_id &&
               installed_mod["date_updated"] >= events_array[i].date_added)
@@ -195,7 +195,7 @@ void pollEvents()
       modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
       modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
 
-      for(auto installed_mod : modio::installed_mods["mods"])
+      for(auto installed_mod : modio::installed_mods)
       {
         if(modio::hasKey(installed_mod, "mod_id"))
           modioAddFilterInField(&filter, (char *)"mod_id", (char*)modio::toString((u32)installed_mod["mod_id"]).c_str());
