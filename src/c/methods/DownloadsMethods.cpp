@@ -43,9 +43,8 @@ void modioSetUploadListener(void (*callback)(u32 response_code, u32 mod_id))
 
 void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue)
 {
-  std::list<modio::QueuedModDownload *> mod_download_queue = modio::curlwrapper::getModDownloadQueue();
   u32 i = 0;
-  for (auto &queued_mod_download : mod_download_queue)
+  for (auto &queued_mod_download : modio::curlwrapper::getModDownloadQueue())
   {
     modioInitQueuedModDownload(&(download_queue[i]), modio::toJson(*queued_mod_download));
     i++;

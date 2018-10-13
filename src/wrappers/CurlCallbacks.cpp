@@ -100,7 +100,7 @@ void onModDownloadFinished(CURL *curl)
     if (modio::download_callback)
       modio::download_callback(response_code, current_queued_mod_download->mod.id);
 
-    mod_download_queue.remove(current_queued_mod_download);
+    modio::curlwrapper::mod_download_queue.remove(current_queued_mod_download);
     delete current_queued_mod_download;
 
     current_mod_download_curl_handle = NULL;

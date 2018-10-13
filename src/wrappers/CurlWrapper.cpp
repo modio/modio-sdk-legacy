@@ -49,11 +49,11 @@ void shutdownCurl()
   }
   ongoing_downloads.clear();
 
-  for (auto mod_download : mod_download_queue)
+  for (auto mod_download : modio::curlwrapper::mod_download_queue)
   {
     delete mod_download;
   }
-  mod_download_queue.clear();
+  modio::curlwrapper::mod_download_queue.clear();
 
   for (auto modfile_upload : modfile_upload_queue)
   {
@@ -431,9 +431,9 @@ void resumeModDownloads()
 {
   updateModDownloadQueue();
 
-  if (mod_download_queue.size() > 0)
+  if (modio::curlwrapper::mod_download_queue.size() > 0)
   {
-    downloadMod(*mod_download_queue.begin());
+    downloadMod(*modio::curlwrapper::mod_download_queue.begin());
   }
 }
 
@@ -481,7 +481,7 @@ void onGetInstallMod(u32 call_number, u32 response_code, nlohmann::json response
 
     QueuedModDownload *queued_mod_download = NULL;
 
-    for (auto queued_mod_iterator : mod_download_queue)
+    for (auto queued_mod_iterator : modio::curlwrapper::mod_download_queue)
     {
       if (queued_mod_iterator->mod_id == modio_mod.id)
       {
@@ -508,7 +508,7 @@ void onGetInstallMod(u32 call_number, u32 response_code, nlohmann::json response
 
       writeLogLine("Mod download removed from queue. Looking for other mod downloads queued.", MODIO_DEBUGLEVEL_LOG);
 
-      mod_download_queue.remove(queued_mod_download);
+      modio::curlwrapper::mod_download_queue.remove(queued_mod_download);
       delete queued_mod_download;
       updateModDownloadQueueFile();
       downloadNextQueuedMod();
@@ -592,7 +592,7 @@ void downloadMod(QueuedModDownload *queued_mod_download)
 
 void queueModDownload(ModioMod &modio_mod)
 {
-  for (auto &queued_mod_download : mod_download_queue)
+  for (auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
   {
     if (queued_mod_download->mod_id == modio_mod.id)
     {
@@ -609,13 +609,13 @@ void queueModDownload(ModioMod &modio_mod)
   queued_mod_download->url = "";
   queued_mod_download->mod.initialize(modio_mod);
   queued_mod_download->path = modio::getModIODirectory() + "tmp/" + modio::toString(modio_mod.id) + "_modfile.zip";
-  mod_download_queue.push_back(queued_mod_download);
+  modio::curlwrapper::mod_download_queue.push_back(queued_mod_download);
 
   updateModDownloadQueueFile();
 
   writeLogLine("Download queued. Mod id: " + toString(modio_mod.id), MODIO_DEBUGLEVEL_LOG);
 
-  if (mod_download_queue.size() == 1)
+  if (modio::curlwrapper::mod_download_queue.size() == 1)
   {
     downloadMod(queued_mod_download);
   }

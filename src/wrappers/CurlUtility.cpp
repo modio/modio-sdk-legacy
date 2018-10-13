@@ -30,7 +30,7 @@ u32 ongoing_call;
 
 std::list<QueuedModDownload *> getModDownloadQueue()
 {
-  return mod_download_queue;
+  return modio::curlwrapper::mod_download_queue;
 }
 
 std::list<QueuedModfileUpload *> getModfileUploadQueue()
@@ -85,11 +85,11 @@ void updateModDownloadQueue()
 {
   nlohmann::json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
 
-  for(auto &queued_mod_download : mod_download_queue)
+  for(auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
   {
     delete queued_mod_download;
   }
-  mod_download_queue.clear();
+  modio::curlwrapper::mod_download_queue.clear();
 
   for(auto &queued_mod_download_json : mod_download_queue_json)
   {
@@ -97,7 +97,7 @@ void updateModDownloadQueue()
     modioInitQueuedModDownload(&modio_queued_mod_download, queued_mod_download_json);
     QueuedModDownload* queued_mod_download = new QueuedModDownload();
     queued_mod_download->initialize(modio_queued_mod_download);
-    mod_download_queue.push_back(queued_mod_download);
+    modio::curlwrapper::mod_download_queue.push_back(queued_mod_download);
     modioFreeQueuedModDownload(&modio_queued_mod_download);
   }
 }
@@ -105,11 +105,11 @@ void updateModDownloadQueue()
 void updateModDownloadQueueFile()
 {
   nlohmann::json mod_download_queue_json;
-  for(auto &queued_mod_download : mod_download_queue)
+  for(auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
   {
     mod_download_queue_json.push_back(modio::toJson(*queued_mod_download));
   }
-  writeJson(modio::getModIODirectory() + "mod_download_queue.json",mod_download_queue_json);
+  writeJson(modio::getModIODirectory() + "mod_download_queue.json", mod_download_queue_json);
 }
 
 void updateModUploadQueueFile()
@@ -155,9 +155,9 @@ void prioritizeModDownload(u32 mod_id)
 
 void downloadNextQueuedMod()
 {
-  if (mod_download_queue.size() > 0)
+  if (modio::curlwrapper::mod_download_queue.size() > 0)
   {
-    downloadMod(mod_download_queue.front());
+    downloadMod(modio::curlwrapper::mod_download_queue.front());
   }
 }
 
