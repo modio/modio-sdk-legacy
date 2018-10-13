@@ -1,16 +1,16 @@
 #include "modio.h"
 
-void loadInstalledModsFile()
+void loadEventPollingFile()
 {
   modio::writeLogLine("Loading mod events data...", MODIO_DEBUGLEVEL_LOG);
 
   modio::LAST_MOD_EVENT_POLL = 0;
 
-  nlohmann::json installed_mods_json = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
+  nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
 
-  if (modio::hasKey(installed_mods_json, "last_mod_event_poll"))
+  if (modio::hasKey(event_polling_json, "last_mod_event_poll"))
   {
-    modio::LAST_MOD_EVENT_POLL = installed_mods_json["last_mod_event_poll"];
+    modio::LAST_MOD_EVENT_POLL = event_polling_json["last_mod_event_poll"];
     modio::writeLogLine("Mod events data loaded. The last mod event poll was at " + modio::toString(modio::LAST_MOD_EVENT_POLL), MODIO_DEBUGLEVEL_LOG);
   }
   else
@@ -70,7 +70,7 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
   if (root_path)
     modio::ROOT_PATH = root_path;
 
-  loadInstalledModsFile();
+  loadEventPollingFile();
   loadAuthenticationFile();
 
   modio::curlwrapper::initCurl();

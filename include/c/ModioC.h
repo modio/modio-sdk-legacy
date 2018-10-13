@@ -443,7 +443,7 @@ extern "C"
   {
 	  u32 mod_id;
 	  u32 modfile_id;
-	  u32 updated_at;
+	  u32 date_updated;
 	  char* path;
 	  ModioMod mod;
   };

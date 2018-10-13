@@ -19,5 +19,5 @@ namespace modio
   void (*upload_callback)(u32 response_code, u32 mod_id) = NULL;
   u32 AUTOMATIC_UPDATES = 0;
   u32 BACKGROUND_DOWNLOADS = 0;
-  std::set<nlohmann::json> installed_mods;
+  nlohmann::json installed_mods;
 }

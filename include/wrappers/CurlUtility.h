@@ -34,9 +34,19 @@ public:
   std::string response;
   std::map<std::string, std::string> headers;
   struct curl_slist *slist = NULL;
-  curl_mime *mime_form = NULL;
+  #ifdef MODIO_WINDOWS_DETECTED
+    curl_mime *mime_form = NULL;
+  #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+    struct curl_httppost *formpost = NULL;
+  #endif
   std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback;
-  JsonResponseHandler(u32 call_number, struct curl_slist * slist, curl_mime *curl_mime, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+
+  #ifdef MODIO_WINDOWS_DETECTED
+    JsonResponseHandler(u32 call_number, struct curl_slist * slist, curl_mime *curl_mime, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+  #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+    JsonResponseHandler(u32 call_number, struct curl_slist * slist, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+  #endif
+  
   ~JsonResponseHandler();
 };
 

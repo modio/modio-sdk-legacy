@@ -38,19 +38,34 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
   return modfile_upload_queue;
 }
 
-JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, curl_mime *mime_form, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
-{
-  this->response = "";
-  this->call_number = call_number;
-  this->slist = slist;
-  this->mime_form = mime_form;
-  this->callback = callback;
-}
+#ifdef MODIO_WINDOWS_DETECTED
+  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, curl_mime *mime_form, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+  {
+    this->response = "";
+    this->call_number = call_number;
+    this->slist = slist;
+    this->mime_form = mime_form;
+    this->callback = callback;
+  }
+#elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+  {
+    this->response = "";
+    this->call_number = call_number;
+    this->slist = slist;
+    this->formpost = formpost;
+    this->callback = callback;
+  }
+#endif
 
 JsonResponseHandler::~JsonResponseHandler()
 {
   curl_slist_free_all(this->slist);
-  curl_mime_free(this->mime_form);
+  #ifdef MODIO_WINDOWS_DETECTED
+    curl_mime_free(this->mime_form);
+  #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+    curl_formfree(this->formpost);
+  #endif
 }
 
 OngoingDownload::OngoingDownload(u32 call_number, std::string url, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code)> callback)

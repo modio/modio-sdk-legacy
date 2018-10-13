@@ -71,10 +71,10 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
       case MODIO_EVENT_MODFILE_CHANGED:
       {
         bool reinstall = true;
-        for(auto installed_mod : modio::installed_mods)
+        for(auto installed_mod : modio::installed_mods["mods"])
         {
           if(installed_mod["mod_id"] == events_array[i].mod_id &&
-              installed_mod["date_added"] >= events_array[i].date_added)
+              installed_mod["date_updated"] >= events_array[i].date_added)
           {
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
           }
@@ -111,10 +111,9 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
     if (mod_to_download_queue_ids.size() > 0)
       addModsToDownloadQueue(mod_to_download_queue_ids);
     
-    std::string installed_mods_json_path = modio::getModIODirectory() + "installed_mods.json";
-    nlohmann::json installed_mods_json = modio::openJson(installed_mods_json_path);
-    installed_mods_json["last_mod_event_poll"] = modio::LAST_MOD_EVENT_POLL;
-    modio::writeJson(installed_mods_json_path, installed_mods_json);
+    nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
+    event_polling_json["last_mod_event_poll"] = modio::LAST_MOD_EVENT_POLL;
+    modio::writeJson(modio::getModIODirectory() + "event_polling.json", event_polling_json);
   }
   else
   {
@@ -196,7 +195,7 @@ void pollEvents()
       modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
       modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
 
-      for(auto installed_mod : modio::installed_mods)
+      for(auto installed_mod : modio::installed_mods["mods"])
       {
         if(modio::hasKey(installed_mod, "mod_id"))
           modioAddFilterInField(&filter, (char *)"mod_id", (char*)modio::toString((u32)installed_mod["mod_id"]).c_str());
