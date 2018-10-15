@@ -102,6 +102,12 @@ void updateInstalledModsJson()
   nlohmann::json stored_installed_mods = modio::openJson(modio::getModIODirectory() + "installed_mods.json");
   modio::installed_mods.clear();
 
+  // Migrating from v0.9.0
+  if(modio::hasKey(stored_installed_mods, "mods"))
+  {
+    stored_installed_mods = stored_installed_mods["mods"];
+  }
+
   for(auto stored_installed_mod : stored_installed_mods)
   {
     if (checkIfModIsStillInstalled(stored_installed_mod["path"], stored_installed_mod["mod_id"]))

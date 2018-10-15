@@ -3,12 +3,14 @@ project(modio)
 set(CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 11)
 
-add_definitions(-DBUILDING_MODIO_DLL -DCURL_STATICLIB)
+# Use -DMODIO_STATICLIB instead of -DMODIO_DYNAMICLIB when building statically
+add_definitions(-DMODIO_DYNAMICLIB -DCURL_STATICLIB)
 
 include_directories(include additional_dependencies)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
+# Use STATIC instead of SHARED to build when building statically
 add_library(modio SHARED ${SOURCES})
 
 IF (APPLE)

@@ -37,6 +37,7 @@ void updateModsCache(std::vector<u32> mod_ids)
     modioAddFilterInField(&filter, (char *)"id", (char *)modio::toString(mod_id).c_str());
   }
   modioGetAllMods(NULL, filter, &onModsUpdateEvent);
+  modioFreeFilter(&filter);
 }
 
 void addModsToDownloadQueue(std::vector<u32> mod_ids)
