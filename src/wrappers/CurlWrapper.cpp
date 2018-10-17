@@ -144,8 +144,8 @@ void process()
 void get(u32 call_number, std::string url, std::vector<std::string> headers, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine("GET: " + url, MODIO_DEBUGLEVEL_LOG);
-  CURL *curl;
 
+  CURL *curl;
   curl = curl_easy_init();
 
   if (curl)
@@ -153,7 +153,7 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
     struct curl_slist *slist = NULL;
     for (u32 i = 0; i < headers.size(); i++)
       slist = curl_slist_append(slist, headers[i].c_str());
-    
+
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
     url = modio::replaceSubstrings(url, " ", "%20");
@@ -173,7 +173,6 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
   writeLogLine(std::string("POST: ") + url, MODIO_DEBUGLEVEL_LOG);
 
   CURL *curl;
-
   curl = curl_easy_init();
 
   if (curl)
@@ -181,21 +180,14 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
     struct curl_slist *slist = NULL;
     for (u32 i = 0; i < headers.size(); i++)
       slist = curl_slist_append(slist, headers[i].c_str());
-    
+
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
-    std::string str_data = "";
-    for (std::map<std::string, std::string>::iterator i = data.begin(); i != data.end(); i++)
-    {
-      if (i != data.begin())
-        str_data += "&";
-      str_data += (*i).first + "=" + (*i).second;
-    }
-
-    char* post_fields = new char[str_data.size() + 1];
+    std::string str_data = modio::curlwrapper::mapDataToUrlString(data);
+    char *post_fields = new char[str_data.size() + 1];
     strcpy(post_fields, str_data.c_str());
 
     ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
@@ -214,7 +206,6 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
   writeLogLine(std::string("PUT: ") + url, MODIO_DEBUGLEVEL_LOG);
 
   CURL *curl;
-
   curl = curl_easy_init();
 
   if (curl)
@@ -227,19 +218,10 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
 
-    headers.push_back("Content-Type: application/x-www-form-urlencoded");
-
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
-    std::string str_data = "";
-    for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin(); i != curlform_copycontents.end(); i++)
-    {
-      if (str_data != "")
-        str_data += "&";
-      str_data += (*i).first + "=" + (*i).second;
-    }
-
-    char* post_fields = new char[str_data.size() + 1];
+    std::string str_data = modio::curlwrapper::multimapDataToUrlString(curlform_copycontents);
+    char *post_fields = new char[str_data.size() + 1];
     strcpy(post_fields, str_data.c_str());
 
     ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
@@ -255,92 +237,42 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
 
 void postForm(u32 call_number, std::string url, std::vector<std::string> headers, std::multimap<std::string, std::string> curlform_copycontents, std::map<std::string, std::string> curlform_files, std::function<void(u32 call_number, u32 response_code, nlohmann::json response)> callback)
 {
-  #ifdef MODIO_WINDOWS_DETECTED
-    writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
-    CURL *curl;
+#ifdef MODIO_WINDOWS_DETECTED
+  writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
+  CURL *curl;
 
-    curl = curl_easy_init();
+  curl = curl_easy_init();
 
+  if (curl)
+  {
     curl_mime *mime_form = NULL;
     curl_mimepart *field = NULL;
-    struct curl_slist *headerlist = NULL;
-    static const char buf[] = "Expect:";
 
-    if(curl)
-    {
-      setVerifies(curl);
+    setVerifies(curl);
 
-      mime_form = curl_mime_init(curl);
-
-      for (std::map<std::string, std::string>::iterator i = curlform_files.begin();
-          i != curlform_files.end();
-          i++)
-      {
-        field = curl_mime_addpart(mime_form);
-        curl_mime_name(field, (*i).first.c_str());
-        curl_mime_filedata(field, (*i).second.c_str());
-      }
-
-      for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin();
-          i != curlform_copycontents.end();
-          i++)
-      {
-        field = curl_mime_addpart(mime_form);
-        curl_mime_name(field, (*i).first.c_str());
-        curl_mime_data(field, (*i).second.c_str(), CURL_ZERO_TERMINATED);
-      }
-
-      field = curl_mime_addpart(mime_form);
-      curl_mime_name(field, "submit");
-      curl_mime_data(field, "send", CURL_ZERO_TERMINATED);
-
-      headers.push_back("Content-Type: multipart/form-data");
-      struct curl_slist *slist = NULL;
-      for (u32 i = 0; i < headers.size(); i++)
-      {
-        slist = curl_slist_append(slist, headers[i].c_str());
-      }
-
-      ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, mime_form, callback);
-
-      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-      //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-      curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime_form);
-
-      curl_multi_add_handle(curl_multi_handle, curl);
-    }
-  #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-    writeLogLine("POST FORM : " + url, MODIO_DEBUGLEVEL_LOG);
-    CURL *curl;
-
-    struct curl_httppost *formpost = NULL;
-    struct curl_httppost *lastptr = NULL;
+    mime_form = curl_mime_init(curl);
 
     for (std::map<std::string, std::string>::iterator i = curlform_files.begin();
-        i != curlform_files.end();
-        i++)
+         i != curlform_files.end();
+         i++)
     {
-      curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
-                  CURLFORM_FILE, (*i).second.c_str(), CURLFORM_END);
+      field = curl_mime_addpart(mime_form);
+      curl_mime_name(field, (*i).first.c_str());
+      curl_mime_filedata(field, (*i).second.c_str());
     }
 
     for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin();
-        i != curlform_copycontents.end();
-        i++)
+         i != curlform_copycontents.end();
+         i++)
     {
-      curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
-                  CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
+      field = curl_mime_addpart(mime_form);
+      curl_mime_name(field, (*i).first.c_str());
+      curl_mime_data(field, (*i).second.c_str(), CURL_ZERO_TERMINATED);
     }
 
-    curl_formadd(&formpost,
-                &lastptr,
-                CURLFORM_COPYNAME, "submit",
-                CURLFORM_COPYCONTENTS, "send",
-                CURLFORM_END);
-
-    curl = curl_easy_init();
+    field = curl_mime_addpart(mime_form);
+    curl_mime_name(field, "submit");
+    curl_mime_data(field, "send", CURL_ZERO_TERMINATED);
 
     headers.push_back("Content-Type: multipart/form-data");
     struct curl_slist *slist = NULL;
@@ -349,59 +281,97 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
       slist = curl_slist_append(slist, headers[i].c_str());
     }
 
-    if (curl)
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, mime_form, callback);
+
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+    curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime_form);
+
+    curl_multi_add_handle(curl_multi_handle, curl);
+  }
+#elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+  writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
+  CURL *curl;
+
+  curl = curl_easy_init();
+
+  if (curl)
+  {
+    struct curl_httppost *formpost = NULL;
+    struct curl_httppost *lastptr = NULL;
+
+    for (std::map<std::string, std::string>::iterator i = curlform_files.begin();
+         i != curlform_files.end();
+         i++)
     {
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-
-      url = modio::replaceSubstrings(url, " ", "%20");
-      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-      //setVerifies(curl);
-      setJsonResponseWrite(curl);
-
-      ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, formpost, callback);
-
-      //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
-      curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
-
-      //curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
-      curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-
-      curl_multi_add_handle(curl_multi_handle, curl);
+      curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
+                   CURLFORM_FILE, (*i).second.c_str(), CURLFORM_END);
     }
-  #endif
+
+    for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin();
+         i != curlform_copycontents.end();
+         i++)
+    {
+      curl_formadd(&formpost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
+                   CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
+    }
+
+    curl_formadd(&formpost,
+                 &lastptr,
+                 CURLFORM_COPYNAME, "submit",
+                 CURLFORM_COPYCONTENTS, "send",
+                 CURLFORM_END);
+
+    headers.push_back("Content-Type: multipart/form-data");
+    struct curl_slist *slist = NULL;
+    for (u32 i = 0; i < headers.size(); i++)
+    {
+      slist = curl_slist_append(slist, headers[i].c_str());
+    }
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+
+    url = modio::replaceSubstrings(url, " ", "%20");
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+    //setVerifies(curl);
+    setJsonResponseWrite(curl);
+
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, formpost, callback);
+
+    //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
+    curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+
+    //curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+
+    curl_multi_add_handle(curl_multi_handle, curl);
+  }
+#endif
 }
 
 void deleteCall(u32 call_number, std::string url, std::vector<std::string> headers, std::map<std::string, std::string> data, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
 {
   writeLogLine(std::string("DELETE: ") + url, MODIO_DEBUGLEVEL_LOG);
+  
   CURL *curl;
-
   curl = curl_easy_init();
-
-  struct curl_slist *slist = NULL;
-  for (u32 i = 0; i < headers.size(); i++)
-    slist = curl_slist_append(slist, headers[i].c_str());
 
   if (curl)
   {
+    struct curl_slist *slist = NULL;
+    for (u32 i = 0; i < headers.size(); i++)
+      slist = curl_slist_append(slist, headers[i].c_str());
+
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
-    headers.push_back("Content-Type: application/x-www-form-urlencoded");
-
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
-    std::string str_data = "";
-    for (std::map<std::string, std::string>::iterator i = data.begin(); i != data.end(); i++)
-    {
-      if (i != data.begin())
-        str_data += "&";
-      str_data += (*i).first + "=" + (*i).second;
-    }
-
-    char* post_fields = new char[str_data.size() + 1];
+    std::string str_data = modio::curlwrapper::mapDataToUrlString(data);
+    char *post_fields = new char[str_data.size() + 1];
     strcpy(post_fields, str_data.c_str());
 
     ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
@@ -457,18 +427,16 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
   CURL *curl;
   curl = curl_easy_init();
 
-  current_download_handle->path = path;
-  current_download_handle->pause_flag = false;
-  current_download_handle->curl = curl;
-
-  struct curl_slist *slist = NULL;
-  for (u32 i = 0; i < headers.size(); i++)
-    slist = curl_slist_append(slist, headers[i].c_str());
-
-  ongoing_downloads[curl] = new OngoingDownload(call_number, url, slist, callback);
-
   if (curl)
   {
+    current_download_handle->path = path;
+    current_download_handle->pause_flag = false;
+    current_download_handle->curl = curl;
+
+    struct curl_slist *slist = NULL;
+    for (u32 i = 0; i < headers.size(); i++)
+      slist = curl_slist_append(slist, headers[i].c_str());
+
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
@@ -480,6 +448,8 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetFileData);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+
+    ongoing_downloads[curl] = new OngoingDownload(call_number, url, slist, callback);
 
     curl_multi_add_handle(curl_multi_handle, curl);
   }
@@ -678,38 +648,37 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(queued_modfile_upload->mod_id) + "/files";
 
   writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
+  
   CURL *curl;
-
-  struct curl_httppost *lastptr = NULL;
-  static const char buf[] = "Expect:";
-
-  std::multimap<std::string, std::string> curlform_copycontents = modio::convertModfileCreatorToMultimap(queued_modfile_upload->modfile_creator.getModioModfileCreator());
-
-  curl_formadd(&current_modfile_upload_httppost, &lastptr, CURLFORM_COPYNAME, "filedata",
-               CURLFORM_FILE, modfile_zip_path.c_str(), CURLFORM_END);
-
-  for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin();
-       i != curlform_copycontents.end();
-       i++)
-  {
-    curl_formadd(&current_modfile_upload_httppost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
-                 CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
-  }
-
-  curl_formadd(&current_modfile_upload_httppost,
-               &lastptr,
-               CURLFORM_COPYNAME, "submit",
-               CURLFORM_COPYCONTENTS, "send",
-               CURLFORM_END);
-
   curl = curl_easy_init();
-
-  queued_modfile_upload->state = MODIO_MOD_STARTING_UPLOAD;
-  current_modfile_upload_curl_handle = curl;
-  current_queued_modfile_upload = queued_modfile_upload;
 
   if (curl)
   {
+    struct curl_httppost *lastptr = NULL;
+
+    std::multimap<std::string, std::string> curlform_copycontents = modio::convertModfileCreatorToMultimap(queued_modfile_upload->modfile_creator.getModioModfileCreator());
+
+    curl_formadd(&current_modfile_upload_httppost, &lastptr, CURLFORM_COPYNAME, "filedata",
+                CURLFORM_FILE, modfile_zip_path.c_str(), CURLFORM_END);
+
+    for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin();
+        i != curlform_copycontents.end();
+        i++)
+    {
+      curl_formadd(&current_modfile_upload_httppost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
+                  CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
+    }
+
+    curl_formadd(&current_modfile_upload_httppost,
+                &lastptr,
+                CURLFORM_COPYNAME, "submit",
+                CURLFORM_COPYCONTENTS, "send",
+                CURLFORM_END);
+
+    queued_modfile_upload->state = MODIO_MOD_STARTING_UPLOAD;
+    current_modfile_upload_curl_handle = curl;
+    current_queued_modfile_upload = queued_modfile_upload;
+
     for (u32 i = 0; i < modio::getHeaders().size(); i++)
       current_modfile_upload_slist = curl_slist_append(current_modfile_upload_slist, modio::getHeaders()[i].c_str());
 

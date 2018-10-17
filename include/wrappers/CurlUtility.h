@@ -34,20 +34,20 @@ public:
   std::string response;
   std::map<std::string, std::string> headers;
   struct curl_slist *slist = NULL;
-  char* post_fields;
-  #ifdef MODIO_WINDOWS_DETECTED
-    curl_mime *mime_form = NULL;
-  #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-    struct curl_httppost *formpost = NULL;
-  #endif
+  char *post_fields;
+#ifdef MODIO_WINDOWS_DETECTED
+  curl_mime *mime_form = NULL;
+#elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+  struct curl_httppost *formpost = NULL;
+#endif
   std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback;
 
-  #ifdef MODIO_WINDOWS_DETECTED
-    JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, curl_mime *curl_mime, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
-  #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-    JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
-  #endif
-  
+#ifdef MODIO_WINDOWS_DETECTED
+  JsonResponseHandler(u32 call_number, struct curl_slist *slist, char *post_fields, curl_mime *curl_mime, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+#elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+  JsonResponseHandler(u32 call_number, struct curl_slist *slist, char *post_fields, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+#endif
+
   ~JsonResponseHandler();
 };
 
@@ -58,7 +58,7 @@ public:
   std::string url;
   struct curl_slist *slist = NULL;
   std::function<void(u32 call_number, u32 response_code)> callback;
-  OngoingDownload(u32 call_number, std::string url, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code)> callback);
+  OngoingDownload(u32 call_number, std::string url, struct curl_slist *slist, std::function<void(u32 call_number, u32 response_code)> callback);
   ~OngoingDownload();
 };
 
@@ -84,7 +84,7 @@ extern CURL *current_modfile_upload_curl_handle;
 
 extern struct curl_slist *current_mod_download_slist;
 extern struct curl_slist *current_modfile_upload_slist;
-extern struct curl_httppost  *current_modfile_upload_httppost;
+extern struct curl_httppost *current_modfile_upload_httppost;
 
 extern QueuedModDownload *current_queued_mod_download;
 extern QueuedModfileUpload *current_queued_modfile_upload;
@@ -105,7 +105,9 @@ void downloadNextQueuedMod();
 void setHeaders(std::vector<std::string> headers, CURL *curl);
 void setVerifies(CURL *curl);
 void setJsonResponseWrite(CURL *curl);
-}
-}
+std::string mapDataToUrlString(std::map<std::string, std::string> data);
+std::string multimapDataToUrlString(std::multimap<std::string, std::string> data);
+} // namespace curlwrapper
+} // namespace modio
 
 #endif

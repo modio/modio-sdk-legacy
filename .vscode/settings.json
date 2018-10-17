@@ -74,6 +74,7 @@
         "deque": "cpp",
         "cinttypes": "cpp",
         "stdio.h": "c",
-        "set": "cpp"
+        "set": "cpp",
+        "unordered_set": "cpp"
     }
 }

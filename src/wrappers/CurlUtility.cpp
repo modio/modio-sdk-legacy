@@ -39,40 +39,40 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
 }
 
 #ifdef MODIO_WINDOWS_DETECTED
-  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, curl_mime *mime_form, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
-  {
-    this->response = "";
-    this->call_number = call_number;
-    this->slist = slist;
-    this->post_fields = post_fields;
-    this->mime_form = mime_form;
-    this->callback = callback;
-  }
+JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist *slist, char *post_fields, curl_mime *mime_form, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+{
+  this->response = "";
+  this->call_number = call_number;
+  this->slist = slist;
+  this->post_fields = post_fields;
+  this->mime_form = mime_form;
+  this->callback = callback;
+}
 #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
-  {
-    this->response = "";
-    this->call_number = call_number;
-    this->slist = slist;
-    this->post_fields = post_fields;
-    this->formpost = formpost;
-    this->callback = callback;
-  }
+JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist *slist, char *post_fields, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+{
+  this->response = "";
+  this->call_number = call_number;
+  this->slist = slist;
+  this->post_fields = post_fields;
+  this->formpost = formpost;
+  this->callback = callback;
+}
 #endif
 
 JsonResponseHandler::~JsonResponseHandler()
 {
   curl_slist_free_all(this->slist);
-  if(post_fields)
+  if (post_fields)
     delete[] post_fields;
-  #ifdef MODIO_WINDOWS_DETECTED
-    curl_mime_free(this->mime_form);
-  #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-    curl_formfree(this->formpost);
-  #endif
+#ifdef MODIO_WINDOWS_DETECTED
+  curl_mime_free(this->mime_form);
+#elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
+  curl_formfree(this->formpost);
+#endif
 }
 
-OngoingDownload::OngoingDownload(u32 call_number, std::string url, struct curl_slist * slist, std::function<void(u32 call_number, u32 response_code)> callback)
+OngoingDownload::OngoingDownload(u32 call_number, std::string url, struct curl_slist *slist, std::function<void(u32 call_number, u32 response_code)> callback)
 {
   this->url = url;
   this->call_number = call_number;
@@ -89,17 +89,17 @@ void updateModDownloadQueue()
 {
   nlohmann::json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
 
-  for(auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
+  for (auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
   {
     delete queued_mod_download;
   }
   modio::curlwrapper::mod_download_queue.clear();
 
-  for(auto &queued_mod_download_json : mod_download_queue_json)
+  for (auto &queued_mod_download_json : mod_download_queue_json)
   {
     ModioQueuedModDownload modio_queued_mod_download;
     modioInitQueuedModDownload(&modio_queued_mod_download, queued_mod_download_json);
-    QueuedModDownload* queued_mod_download = new QueuedModDownload();
+    QueuedModDownload *queued_mod_download = new QueuedModDownload();
     queued_mod_download->initialize(modio_queued_mod_download);
     modio::curlwrapper::mod_download_queue.push_back(queued_mod_download);
     modioFreeQueuedModDownload(&modio_queued_mod_download);
@@ -110,7 +110,7 @@ void updateModDownloadQueueFile()
 {
   modio::writeLogLine("Updating mod download queue file...", MODIO_DEBUGLEVEL_LOG);
   nlohmann::json mod_download_queue_json;
-  for(auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
+  for (auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
   {
     mod_download_queue_json.push_back(modio::toJson(*queued_mod_download));
   }
@@ -121,11 +121,11 @@ void updateModDownloadQueueFile()
 void updateModUploadQueueFile()
 {
   nlohmann::json mod_upload_queue_json;
-  for(auto &queued_mod_upload : modfile_upload_queue)
+  for (auto &queued_mod_upload : modfile_upload_queue)
   {
     mod_upload_queue_json.push_back(modio::toJson(*queued_mod_upload));
   }
-  writeJson(modio::getModIODirectory() + "mod_upload_queue.json",mod_upload_queue_json);
+  writeJson(modio::getModIODirectory() + "mod_upload_queue.json", mod_upload_queue_json);
 }
 
 void prioritizeModDownload(u32 mod_id)
@@ -133,29 +133,25 @@ void prioritizeModDownload(u32 mod_id)
   nlohmann::json result_json;
   nlohmann::json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
 
-  for(auto &queued_mod_download_json : mod_download_queue_json)
+  for (auto &queued_mod_download_json : mod_download_queue_json)
   {
-    if(modio::hasKey(queued_mod_download_json,"mod")
-        && modio::hasKey(queued_mod_download_json["mod"],"id")
-        && queued_mod_download_json["mod"]["id"] == mod_id)
+    if (modio::hasKey(queued_mod_download_json, "mod") && modio::hasKey(queued_mod_download_json["mod"], "id") && queued_mod_download_json["mod"]["id"] == mod_id)
     {
-      result_json.push_back(queued_mod_download_json);      
+      result_json.push_back(queued_mod_download_json);
     }
   }
 
-  for(auto &queued_mod_download_json : mod_download_queue_json)
+  for (auto &queued_mod_download_json : mod_download_queue_json)
   {
-    if(!modio::hasKey(queued_mod_download_json,"mod")
-        || !modio::hasKey(queued_mod_download_json["mod"],"id")
-        || queued_mod_download_json["mod"]["id"] != mod_id)
+    if (!modio::hasKey(queued_mod_download_json, "mod") || !modio::hasKey(queued_mod_download_json["mod"], "id") || queued_mod_download_json["mod"]["id"] != mod_id)
     {
-      result_json.push_back(queued_mod_download_json);      
+      result_json.push_back(queued_mod_download_json);
     }
   }
 
-  writeJson(modio::getModIODirectory() + "mod_download_queue.json",result_json);
+  writeJson(modio::getModIODirectory() + "mod_download_queue.json", result_json);
 
-  if(current_queued_mod_download)
+  if (current_queued_mod_download)
     current_queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
 }
 
@@ -190,5 +186,29 @@ void setJsonResponseWrite(CURL *curl)
   curl_easy_setopt(curl, CURLOPT_HEADERDATA, curl);
 }
 
+std::string mapDataToUrlString(std::map<std::string, std::string> data)
+{
+  std::string url_string = "";
+  for (std::map<std::string, std::string>::iterator i = data.begin(); i != data.end(); i++)
+  {
+    if (url_string != "")
+      url_string += "&";
+    url_string += (*i).first + "=" + (*i).second;
+  }
+  return url_string;
 }
+
+std::string multimapDataToUrlString(std::multimap<std::string, std::string> data)
+{
+  std::string url_string = "";
+  for (std::map<std::string, std::string>::iterator i = data.begin(); i != data.end(); i++)
+  {
+    if (url_string != "")
+      url_string += "&";
+    url_string += (*i).first + "=" + (*i).second;
+  }
+  return url_string;
 }
+
+} // namespace curlwrapper
+} // namespace modio
