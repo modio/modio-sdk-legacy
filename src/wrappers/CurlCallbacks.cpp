@@ -102,6 +102,7 @@ void onModDownloadFinished(CURL *curl)
 
     modio::curlwrapper::mod_download_queue.remove(current_queued_mod_download);
     delete current_queued_mod_download;
+    current_queued_mod_download = NULL;
 
     current_mod_download_curl_handle = NULL;
     current_mod_download_slist = NULL;

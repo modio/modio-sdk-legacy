@@ -39,20 +39,22 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
 }
 
 #ifdef MODIO_WINDOWS_DETECTED
-  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, curl_mime *mime_form, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, curl_mime *mime_form, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
   {
     this->response = "";
     this->call_number = call_number;
     this->slist = slist;
+    this->post_fields = post_fields;
     this->mime_form = mime_form;
     this->callback = callback;
   }
 #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+  JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
   {
     this->response = "";
     this->call_number = call_number;
     this->slist = slist;
+    this->post_fields = post_fields;
     this->formpost = formpost;
     this->callback = callback;
   }
@@ -61,6 +63,8 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
 JsonResponseHandler::~JsonResponseHandler()
 {
   curl_slist_free_all(this->slist);
+  if(post_fields)
+    delete[] post_fields;
   #ifdef MODIO_WINDOWS_DETECTED
     curl_mime_free(this->mime_form);
   #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
@@ -104,12 +108,14 @@ void updateModDownloadQueue()
 
 void updateModDownloadQueueFile()
 {
+  modio::writeLogLine("Updating mod download queue file...", MODIO_DEBUGLEVEL_LOG);
   nlohmann::json mod_download_queue_json;
   for(auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
   {
     mod_download_queue_json.push_back(modio::toJson(*queued_mod_download));
   }
   writeJson(modio::getModIODirectory() + "mod_download_queue.json", mod_download_queue_json);
+  modio::writeLogLine("Finished updating mod download queue file", MODIO_DEBUGLEVEL_LOG);
 }
 
 void updateModUploadQueueFile()

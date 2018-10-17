@@ -155,7 +155,7 @@ extern "C"
     if(mod)
     {
       if(mod->homepage_url)
-        delete mod->homepage_url;
+        delete[] mod->homepage_url;
       if(mod->name)
         delete[] mod->name;
       if(mod->name_id)

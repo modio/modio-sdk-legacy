@@ -34,6 +34,7 @@ public:
   std::string response;
   std::map<std::string, std::string> headers;
   struct curl_slist *slist = NULL;
+  char* post_fields;
   #ifdef MODIO_WINDOWS_DETECTED
     curl_mime *mime_form = NULL;
   #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
@@ -42,9 +43,9 @@ public:
   std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback;
 
   #ifdef MODIO_WINDOWS_DETECTED
-    JsonResponseHandler(u32 call_number, struct curl_slist * slist, curl_mime *curl_mime, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+    JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, curl_mime *curl_mime, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
   #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-    JsonResponseHandler(u32 call_number, struct curl_slist * slist, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
+    JsonResponseHandler(u32 call_number, struct curl_slist * slist, char* post_fields, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback);
   #endif
   
   ~JsonResponseHandler();

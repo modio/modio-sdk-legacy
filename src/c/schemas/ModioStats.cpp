@@ -62,7 +62,7 @@ extern "C"
     if(stats)
     {
       if(stats->ratings_display_text)
-        delete stats->ratings_display_text;
+        delete[] stats->ratings_display_text;
     }
   }
 }

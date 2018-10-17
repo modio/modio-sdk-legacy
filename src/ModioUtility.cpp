@@ -48,6 +48,7 @@ void addModsToDownloadQueue(std::vector<u32> mod_ids)
   {
     modioAddFilterInField(&filter, (char *)"id", (char *)modio::toString(mod_id).c_str());
   }
+  writeLogLine("XX0",MODIO_DEBUGLEVEL_LOG);
   modioGetAllMods(NULL, filter, &modio::onAddModsToDownloadQueue);
   modioFreeFilter(&filter);
 }

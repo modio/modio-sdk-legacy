@@ -11,6 +11,8 @@ void initCurl()
   current_modfile_upload_slist = NULL;
   current_modfile_upload_httppost = NULL;
 
+  current_queued_mod_download = NULL;
+
   current_download_handle = new CurrentDownloadHandle;
   current_download_handle->path = "";
   current_download_handle->pause_flag = false;
@@ -146,13 +148,12 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
 
   curl = curl_easy_init();
 
-  struct curl_slist *slist = NULL;
-  for (u32 i = 0; i < headers.size(); i++)
-    slist = curl_slist_append(slist, headers[i].c_str());
-
-  ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, callback);
   if (curl)
   {
+    struct curl_slist *slist = NULL;
+    for (u32 i = 0; i < headers.size(); i++)
+      slist = curl_slist_append(slist, headers[i].c_str());
+    
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
     url = modio::replaceSubstrings(url, " ", "%20");
@@ -160,6 +161,8 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
 
     setVerifies(curl);
     setJsonResponseWrite(curl);
+
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, NULL, callback);
 
     curl_multi_add_handle(curl_multi_handle, curl);
   }
@@ -173,14 +176,12 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
 
   curl = curl_easy_init();
 
-  struct curl_slist *slist = NULL;
-  for (u32 i = 0; i < headers.size(); i++)
-    slist = curl_slist_append(slist, headers[i].c_str());
-
-  ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, callback);
-
   if (curl)
   {
+    struct curl_slist *slist = NULL;
+    for (u32 i = 0; i < headers.size(); i++)
+      slist = curl_slist_append(slist, headers[i].c_str());
+    
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
@@ -194,7 +195,12 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
       str_data += (*i).first + "=" + (*i).second;
     }
 
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
+    char* post_fields = new char[str_data.size() + 1];
+    strcpy(post_fields, str_data.c_str());
+
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
+
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
 
     setVerifies(curl);
     setJsonResponseWrite(curl);
@@ -211,14 +217,12 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
 
   curl = curl_easy_init();
 
-  struct curl_slist *slist = NULL;
-  for (u32 i = 0; i < headers.size(); i++)
-    slist = curl_slist_append(slist, headers[i].c_str());
-
-  ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, callback);
-
   if (curl)
   {
+    struct curl_slist *slist = NULL;
+    for (u32 i = 0; i < headers.size(); i++)
+      slist = curl_slist_append(slist, headers[i].c_str());
+
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
@@ -235,7 +239,12 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
       str_data += (*i).first + "=" + (*i).second;
     }
 
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
+    char* post_fields = new char[str_data.size() + 1];
+    strcpy(post_fields, str_data.c_str());
+
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
+
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
 
     setVerifies(curl);
     setJsonResponseWrite(curl);
@@ -292,7 +301,7 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
         slist = curl_slist_append(slist, headers[i].c_str());
       }
 
-      ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, mime_form, callback);
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, mime_form, callback);
 
       curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
       //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -303,7 +312,7 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
       curl_multi_add_handle(curl_multi_handle, curl);
     }
   #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-    writeLogLine("POST FORM: " + url, MODIO_DEBUGLEVEL_LOG);
+    writeLogLine("POST FORM : " + url, MODIO_DEBUGLEVEL_LOG);
     CURL *curl;
 
     struct curl_httppost *formpost = NULL;
@@ -340,8 +349,6 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
       slist = curl_slist_append(slist, headers[i].c_str());
     }
 
-    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, formpost, callback);
-
     if (curl)
     {
       curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
@@ -352,8 +359,10 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
       //setVerifies(curl);
       setJsonResponseWrite(curl);
 
+      ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, formpost, callback);
+
       //if((argc == 2) && (!strcmp(argv[1], "noexpectheader")))
-      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, formpost);
+      curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
 
       //curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
       curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
@@ -374,8 +383,6 @@ void deleteCall(u32 call_number, std::string url, std::vector<std::string> heade
   for (u32 i = 0; i < headers.size(); i++)
     slist = curl_slist_append(slist, headers[i].c_str());
 
-  ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, callback);
-
   if (curl)
   {
     url = modio::replaceSubstrings(url, " ", "%20");
@@ -393,7 +400,13 @@ void deleteCall(u32 call_number, std::string url, std::vector<std::string> heade
         str_data += "&";
       str_data += (*i).first + "=" + (*i).second;
     }
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, str_data.c_str());
+
+    char* post_fields = new char[str_data.size() + 1];
+    strcpy(post_fields, str_data.c_str());
+
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
+
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
 
     setVerifies(curl);
     setJsonResponseWrite(curl);
