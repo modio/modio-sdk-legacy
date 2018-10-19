@@ -12,6 +12,7 @@ void modioOnSubmitReport(u32 call_number, u32 response_code, nlohmann::json resp
 
   delete submit_report_callbacks[call_number];
   submit_report_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
 }
 

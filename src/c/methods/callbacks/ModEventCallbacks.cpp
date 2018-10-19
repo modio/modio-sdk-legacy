@@ -20,10 +20,9 @@ void modioOnGetAllEvents(u32 call_number, u32 response_code, nlohmann::json resp
       events_array = new ModioEvent[events_array_size];
 
       for (u32 i = 0; i < events_array_size; i++)
-      {
         modioInitEvent(&(events_array[i]), response_json["data"][i]);
-      }
-    }else
+    }
+    else
     {
       modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
       response.code = 0;
@@ -58,17 +57,16 @@ void modioOnGetEvents(u32 call_number, u32 response_code, nlohmann::json respons
       events_array = new ModioEvent[events_array_size];
 
       for (u32 i = 0; i < events_array_size; i++)
-      {
         modioInitEvent(&(events_array[i]), response_json["data"][i]);
-      }
-    }else
+    }
+    else
     {
       modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
       response.code = 0;
     }
   }
   get_events_callbacks[call_number]->callback(get_events_callbacks[call_number]->object, response, events_array, events_array_size);
-  
+
   delete get_events_callbacks[call_number];
   get_events_callbacks.erase(call_number);
 

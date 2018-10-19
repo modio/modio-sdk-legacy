@@ -19,9 +19,7 @@ void modioOnGetAllMetadataKVP(u32 call_number, u32 response_code, nlohmann::json
       metadata_kvp_array_size = (u32)response_json["data"].size();
       metadata_kvp_array = new ModioMetadataKVP[metadata_kvp_array_size];
       for(u32 i=0; i<metadata_kvp_array_size; i++)
-      {
         modioInitMetadataKVP(&(metadata_kvp_array[i]), response_json["data"][i]);
-      }
     }else
     {
       modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);

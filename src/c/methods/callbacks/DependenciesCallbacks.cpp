@@ -22,7 +22,8 @@ void modioOnGetAllModDependencies(u32 call_number, u32 response_code, nlohmann::
       {
         modioInitDependency(&(dependencies_array[i]), response_json["data"][i]);
       }
-    }else
+    }
+    else
     {
       modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
       response.code = 0;
@@ -30,15 +31,13 @@ void modioOnGetAllModDependencies(u32 call_number, u32 response_code, nlohmann::
   }
 
   get_all_mod_dependencies_callbacks[call_number]->callback(get_all_mod_dependencies_callbacks[call_number]->object, response, dependencies_array, dependencies_array_size);
-  
+
   delete get_all_mod_dependencies_callbacks[call_number];
   get_all_mod_dependencies_callbacks.erase(call_number);
-  
+
   modioFreeResponse(&response);
   for (u32 i = 0; i < dependencies_array_size; i++)
-  {
     modioFreeDependency(&(dependencies_array[i]));
-  }
   if (dependencies_array)
     delete[] dependencies_array;
 }
@@ -48,12 +47,12 @@ void modioOnAddModDependencies(u32 call_number, u32 response_code, nlohmann::jso
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
-  
+
   add_mod_dependencies_callbacks[call_number]->callback(add_mod_dependencies_callbacks[call_number]->object, response);
 
   delete add_mod_dependencies_callbacks[call_number];
   add_mod_dependencies_callbacks.erase(call_number);
-  
+
   modioFreeResponse(&response);
 }
 
@@ -67,7 +66,7 @@ void modioOnDeleteModDependencies(u32 call_number, u32 response_code, nlohmann::
 
   delete delete_mod_dependencies_callbacks[call_number];
   delete_mod_dependencies_callbacks.erase(call_number);
-  
+
   modioFreeResponse(&response);
 }
 

@@ -22,7 +22,8 @@ void modioOnGetAllModComments(u32 call_number, u32 response_code, nlohmann::json
       {
         modioInitComment(&(comments_array[i]), response_json["data"][i]);
       }
-    }else
+    }
+    else
     {
       modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
       response.code = 0;
@@ -30,10 +31,10 @@ void modioOnGetAllModComments(u32 call_number, u32 response_code, nlohmann::json
   }
 
   get_all_mod_comments_callbacks[call_number]->callback(get_all_mod_comments_callbacks[call_number]->object, response, comments_array, comments_array_size);
-  
+
   delete get_all_mod_comments_callbacks[call_number];
   get_all_mod_comments_callbacks.erase(call_number);
-  
+
   modioFreeResponse(&response);
   for (u32 i = 0; i < comments_array_size; i++)
     modioFreeComment(&(comments_array[i]));
@@ -69,7 +70,7 @@ void modioOnDeleteModComment(u32 call_number, u32 response_code, nlohmann::json 
 
   delete delete_mod_comment_callbacks[call_number];
   delete_mod_comment_callbacks.erase(call_number);
-  
+
   modioFreeResponse(&response);
 }
 
