@@ -14,7 +14,7 @@ void addCallToCache(std::string url, nlohmann::json response_json)
   // TODO: Restore automatic cache removal?
   for (nlohmann::json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
   {
-    if ((*it)["url"] == url)
+    if (modio::hasKey((*it), "url") && modio::hasKey((*it), "file") && (*it)["url"] == url)
     {
       std::string filename = (*it)["file"];
       cache_file_json.erase(it);
@@ -37,7 +37,7 @@ std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
   nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
   for (nlohmann::json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
   {
-    if ((*it)["url"] == url)
+    if (modio::hasKey((*it), "url") && modio::hasKey((*it), "datetime") && modio::hasKey((*it), "file") && (*it)["url"] == url)
     {
       u32 current_time = modio::getCurrentTime();
       u32 file_datetime = (*it)["datetime"];
@@ -57,7 +57,7 @@ void addToInstalledModsJson(u32 mod_id, std::string path, u32 modfile_id, u32 da
   bool mod_reinstalled = false;
   for (auto &installed_mod : modio::installed_mods)
   {
-    if (installed_mod["mod_id"] == mod_id && installed_mod["path"] == path)
+    if (modio::hasKey(installed_mods, "mod_id") && modio::hasKey(installed_mods, "path") && installed_mod["mod_id"] == mod_id && installed_mod["path"] == path)
     {
       installed_mod["modfile_id"] = modfile_id;
       installed_mod["date_updated"] = date_updated;
@@ -110,7 +110,9 @@ void updateInstalledModsJson()
 
   for (auto stored_installed_mod : stored_installed_mods)
   {
-    if (checkIfModIsStillInstalled(stored_installed_mod["path"], stored_installed_mod["mod_id"]))
+    if (modio::hasKey(stored_installed_mod, "path")
+        && modio::hasKey(stored_installed_mod, "mod_id")
+        && checkIfModIsStillInstalled(stored_installed_mod["path"], stored_installed_mod["mod_id"]))
     {
       modio::installed_mods.push_back(stored_installed_mod);
     }
@@ -128,7 +130,8 @@ void clearOldCache()
   nlohmann::json resulting_cache_json;
   for (auto cache_file_json : cache_json)
   {
-    if (modio::hasKey(cache_file_json, "datetime"))
+    if (modio::hasKey(cache_file_json, "datetime")
+        && modio::hasKey(cache_file_json, "file"))
     {
       u32 cache_time = cache_file_json["datetime"];
       u32 time_difference = current_time - cache_time;
@@ -154,7 +157,9 @@ std::string getInstalledModPath(u32 mod_id)
 {
   for (auto installed_mod_json : modio::installed_mods)
   {
-    if (installed_mod_json["mod_id"] == mod_id)
+    if (modio::hasKey(installed_mod_json, "mod_id")
+        && modio::hasKey(installed_mod_json, "path")
+        && installed_mod_json["mod_id"] == mod_id)
     {
       return installed_mod_json["path"];
     }

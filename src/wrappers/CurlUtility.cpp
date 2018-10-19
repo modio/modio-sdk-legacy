@@ -135,7 +135,9 @@ void prioritizeModDownload(u32 mod_id)
 
   for (auto &queued_mod_download_json : mod_download_queue_json)
   {
-    if (modio::hasKey(queued_mod_download_json, "mod") && modio::hasKey(queued_mod_download_json["mod"], "id") && queued_mod_download_json["mod"]["id"] == mod_id)
+    if (modio::hasKey(queued_mod_download_json, "mod")
+        && modio::hasKey(queued_mod_download_json["mod"], "id")
+        && queued_mod_download_json["mod"]["id"] == mod_id)
     {
       result_json.push_back(queued_mod_download_json);
     }
@@ -143,7 +145,9 @@ void prioritizeModDownload(u32 mod_id)
 
   for (auto &queued_mod_download_json : mod_download_queue_json)
   {
-    if (!modio::hasKey(queued_mod_download_json, "mod") || !modio::hasKey(queued_mod_download_json["mod"], "id") || queued_mod_download_json["mod"]["id"] != mod_id)
+    if (modio::hasKey(queued_mod_download_json, "mod")
+        && modio::hasKey(queued_mod_download_json["mod"], "id")
+        && queued_mod_download_json["mod"]["id"] != mod_id)
     {
       result_json.push_back(queued_mod_download_json);
     }

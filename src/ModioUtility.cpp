@@ -74,8 +74,9 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
         bool reinstall = true;
         for (auto installed_mod : modio::installed_mods)
         {
-          if (installed_mod["mod_id"] == events_array[i].mod_id &&
-              installed_mod["date_updated"] >= events_array[i].date_added)
+          if (modio::hasKey(installed_mod,"mod_id") && modio::hasKey(installed_mod,"date_updated")
+              && installed_mod["mod_id"] == events_array[i].mod_id
+              && installed_mod["date_updated"] >= events_array[i].date_added)
           {
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
           }
