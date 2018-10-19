@@ -177,7 +177,6 @@ void modioOnGetUserMods(u32 call_number, u32 response_code, nlohmann::json respo
   get_user_mods_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
-  get_user_mods_callbacks[call_number]->callback(get_user_mods_callbacks[call_number]->object, response, mods, mods_size);
   for(u32 i=0; i<mods_size; i++)
     modioFreeMod(&mods[i]);
   if(mods)
