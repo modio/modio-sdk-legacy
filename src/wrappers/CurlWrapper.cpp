@@ -363,23 +363,22 @@ void deleteCall(u32 call_number, std::string url, std::vector<std::string> heade
     struct curl_slist *slist = NULL;
     for (u32 i = 0; i < headers.size(); i++)
       slist = curl_slist_append(slist, headers[i].c_str());
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
     std::string str_data = modio::curlwrapper::mapDataToUrlString(data);
     char *post_fields = new char[str_data.size() + 1];
     strcpy(post_fields, str_data.c_str());
-
-    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
-
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_fields);
 
     setVerifies(curl);
     setJsonResponseWrite(curl);
+
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, post_fields, NULL, callback);
 
     curl_multi_add_handle(curl_multi_handle, curl);
   }

@@ -20,16 +20,30 @@ void modioOnEmailExchanged(u32 call_number, u32 response_code, nlohmann::json re
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
+
   if(response.code == 200)
   {
-    modio::ACCESS_TOKEN = response_json["access_token"];
-    nlohmann::json token_json;
-    token_json["access_token"] = response_json["access_token"];
-    modio::writeJson(modio::getModIODirectory() + "authentication.json", token_json);
+    std::string access_token = "";
+    if (modio::hasKey(response_json, "access_token"))
+    {
+      access_token = response_json["access_token"];
+      modio::ACCESS_TOKEN = access_token;
+      nlohmann::json token_json;
+      token_json["access_token"] = access_token;
+      modio::writeJson(modio::getModIODirectory() + "authentication.json", token_json);
+    }
+    else
+    {
+      modio::writeLogLine("Could not retreive access token from server.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
+    }
   }
+
   email_exchange_params[call_number]->callback(email_exchange_params[call_number]->object, response);
+  
   delete email_exchange_params[call_number];
   email_exchange_params.erase(call_number);
+  
   modioFreeResponse(&response);
 }
 

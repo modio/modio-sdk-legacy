@@ -12,34 +12,34 @@ void modioOnGetModTags(u32 call_number, u32 response_code, nlohmann::json  respo
 
   ModioTag* tags_array = NULL;
   u32 tags_array_size = 0;
+  
   if(response.code == 200)
   {
-    try
+    if(modio::hasKey(response_json, "data"))
     {
-      if(modio::hasKey(response_json, "data"))
+      tags_array_size = (u32)response_json["data"].size();
+      tags_array = new ModioTag[tags_array_size];
+      for(u32 i=0; i<tags_array_size; i++)
       {
-        tags_array_size = (u32)response_json["data"].size();
-        tags_array = new ModioTag[tags_array_size];
-        for(u32 i=0; i<tags_array_size; i++)
-        {
-          modioInitTag(&(tags_array[i]), response_json["data"][i]);
-        }
+        modioInitTag(&(tags_array[i]), response_json["data"][i]);
       }
-    }catch(nlohmann::json::parse_error &e)
+    }else
     {
-      modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
     }
   }
+
   get_mod_tags_callbacks[call_number]->callback(get_mod_tags_callbacks[call_number]->object, response, tags_array, tags_array_size);
-  for(u32 i=0; i<tags_array_size; i++)
-  {
-    modioFreeTag(&(tags_array[i]));
-  }
-  if(tags_array)
-    delete[] tags_array;
+  
   delete get_mod_tags_callbacks[call_number];
   get_mod_tags_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
+  for(u32 i=0; i<tags_array_size; i++)
+    modioFreeTag(&(tags_array[i]));
+  if(tags_array)
+    delete[] tags_array;
 }
 
 void modioOnTagsAdded(u32 call_number, u32 response_code, nlohmann::json response_json)

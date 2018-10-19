@@ -15,7 +15,6 @@ void modioOnGetModStats(u32 call_number, u32 response_code, nlohmann::json respo
   get_mod_stats_callbacks[call_number]->callback(get_mod_stats_callbacks[call_number]->object, response, stats);
 
   delete get_mod_stats_callbacks[call_number];
-
   get_mod_stats_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
@@ -28,33 +27,33 @@ void modioOnGetAllModStats(u32 call_number, u32 response_code, nlohmann::json re
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
+  u32 mods_stats_size = 0;
+  ModioStats* mods_stats = NULL;
+
   if(response.code == 200)
   {
-    if(!get_all_mod_stats_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_all_mod_stats_callbacks[call_number]->url, response_json);
-
-    u32 mods_stats_size = (u32)response_json["data"].size();
-    ModioStats* mods_stats = new ModioStats[mods_stats_size];
-    for(u32 i=0; i<mods_stats_size; i++)
+    if(modio::hasKey(response_json, "data"))
     {
-      modioInitStats(&mods_stats[i], response_json["data"][i]);
-    }
+      if(!get_all_mod_stats_callbacks[call_number]->is_cache)
+        modio::addCallToCache(get_all_mod_stats_callbacks[call_number]->url, response_json);
 
-    get_all_mod_stats_callbacks[call_number]->callback(get_all_mod_stats_callbacks[call_number]->object, response, mods_stats, mods_stats_size);
-    
-    for(u32 i=0; i<mods_stats_size; i++)
-    {
-      modioFreeStats(&mods_stats[i]);
+      mods_stats_size = (u32)response_json["data"].size();
+      mods_stats = new ModioStats[mods_stats_size];
+      for(u32 i=0; i<mods_stats_size; i++)
+        modioInitStats(&mods_stats[i], response_json["data"][i]);
     }
-
-    delete[] mods_stats;
-  }else
-  {
-    get_all_mod_stats_callbacks[call_number]->callback(get_all_mod_stats_callbacks[call_number]->object, response, NULL, 0);
   }
+  
+  get_all_mod_stats_callbacks[call_number]->callback(get_all_mod_stats_callbacks[call_number]->object, response, mods_stats, mods_stats_size);
+  
   delete get_all_mod_stats_callbacks[call_number];
   get_all_mod_stats_callbacks.erase(call_number);
+  
   modioFreeResponse(&response);
+  for(u32 i=0; i<mods_stats_size; i++)
+    modioFreeStats(&mods_stats[i]);
+  if(mods_stats)
+    delete[] mods_stats;
 }
 
 void clearModStatsCallbackParams()
