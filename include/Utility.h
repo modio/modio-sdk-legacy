@@ -19,23 +19,13 @@
 #define MODIO_WINDOWS_DETECTED
 #endif
 
-#ifdef MODIO_WINDOWS_DETECTED
-#ifdef BUILDING_MODIO_DLL
-#define MODIO_DLL __declspec(dllexport)
-#else
-#define MODIO_DLL __declspec(dllimport)
-#endif
-#else
-#define MODIO_DLL
-#endif
-
 #include <iostream>
 #include <vector>
 #include <string.h>
 #include <fstream>
 
 #include "c/ModioC.h"
-#include "dependencies/json/json.hpp"
+#include "dependencies/nlohmann/json.hpp"
 #include "dependencies/minizip/minizip.h"
 #include "Globals.h"
 
@@ -49,6 +39,7 @@
 #include <windows.h>
 #include <strsafe.h>
 #include "dependencies/dirent/dirent.h"
+#include "vld.h"
 #endif
 
 #ifdef MODIO_OSX_DETECTED
@@ -86,12 +77,16 @@ void writeJson(const std::string& file_path, nlohmann::json json_object);
 std::string getModIODirectory();
 std::vector<std::string> getFilenames(const std::string& directory);
 bool isDirectory(const std::string& directory);
+bool directoryExists(const std::string& path);
 bool fileExists(const std::string& directory);
+std::string getDirectoryPath (const std::string& filename);
 void createDirectory(const std::string& directory);
 bool removeDirectory(const std::string& directory);
 void removeFile(const std::string& filename);
 double getFileSize(const std::string& file_path);
 void createPath(const std::string& strPathAndFile);
+std::vector<std::string> getHeaders();
+std::vector<std::string> getUrlEncodedHeaders();
 }
 
 #endif

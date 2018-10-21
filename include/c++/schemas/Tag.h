@@ -6,15 +6,16 @@
 
 namespace modio
 {
-  class Tag
-  {
-  public:
-    u32 date_added;
-    std::string name;
+class Tag
+{
+public:
+  u32 date_added;
+  std::string name;
 
-    void initialize(ModioTag tag);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioTag tag);
+};
+
+extern nlohmann::json toJson(Tag &tag);
+} // namespace modio
 
 #endif

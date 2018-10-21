@@ -26,7 +26,7 @@ extern "C" {
 #endif
 
 #ifndef _ZLIB_H
-#  include "../zlib/zlib.h"
+#  include <zlib.h>
 #endif
 
 #ifndef _ZLIBIOAPI_H

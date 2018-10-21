@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "dependencies/zlib/zlib.h"
+#include <zlib.h>
 #include "dependencies/minizip/zip.h"
 
 #ifdef STDC

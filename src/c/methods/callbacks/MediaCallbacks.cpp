@@ -15,6 +15,7 @@ void modioOnAddModLogo(u32 call_number, u32 response_code, nlohmann::json respon
   response.code = response_code;
 
   add_mod_logo_callbacks[call_number]->callback(add_mod_logo_callbacks[call_number]->object, response);
+  
   delete add_mod_logo_callbacks[call_number];
   add_mod_logo_callbacks.erase(call_number);
 
@@ -29,6 +30,7 @@ void modioOnAddModImages(u32 call_number, u32 response_code, nlohmann::json resp
 
   add_mod_images_callbacks[call_number]->callback(add_mod_images_callbacks[call_number]->object, response);
   delete add_mod_images_callbacks[call_number];
+  
   add_mod_images_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
@@ -42,6 +44,7 @@ void modioOnAddModYoutubeLinks(u32 call_number, u32 response_code, nlohmann::jso
 
   add_mod_youtube_links_callbacks[call_number]->callback(add_mod_youtube_links_callbacks[call_number]->object, response);
   delete add_mod_youtube_links_callbacks[call_number];
+  
   add_mod_youtube_links_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
@@ -54,6 +57,7 @@ void modioOnAddModSketchfabLinks(u32 call_number, u32 response_code, nlohmann::j
   response.code = response_code;
 
   add_mod_sketchfab_links_callbacks[call_number]->callback(add_mod_sketchfab_links_callbacks[call_number]->object, response);
+  
   delete add_mod_sketchfab_links_callbacks[call_number];
   add_mod_sketchfab_links_callbacks.erase(call_number);
 
@@ -67,6 +71,7 @@ void modioOnDeleteModImages(u32 call_number, u32 response_code, nlohmann::json r
   response.code = response_code;
 
   delete_mod_images_callbacks[call_number]->callback(delete_mod_images_callbacks[call_number]->object, response);
+  
   delete delete_mod_images_callbacks[call_number];
   delete_mod_images_callbacks.erase(call_number);
 
@@ -80,6 +85,7 @@ void modioOnDeleteModYoutubeLinks(u32 call_number, u32 response_code, nlohmann::
   response.code = response_code;
 
   delete_mod_youtube_links_callbacks[call_number]->callback(delete_mod_youtube_links_callbacks[call_number]->object, response);
+  
   delete delete_mod_youtube_links_callbacks[call_number];
   delete_mod_youtube_links_callbacks.erase(call_number);
 
@@ -93,8 +99,40 @@ void modioOnDeleteModSketchfabLinks(u32 call_number, u32 response_code, nlohmann
   response.code = response_code;
 
   delete_mod_sketchfab_links_callbacks[call_number]->callback(delete_mod_sketchfab_links_callbacks[call_number]->object, response);
+  
   delete delete_mod_sketchfab_links_callbacks[call_number];
   delete_mod_sketchfab_links_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
+}
+
+void clearMediaCallbackParams()
+{
+  for (auto add_mod_logo_callback : add_mod_logo_callbacks)
+    delete add_mod_logo_callback.second;
+  add_mod_logo_callbacks.clear();
+
+  for (auto add_mod_images_callback : add_mod_images_callbacks)
+    delete add_mod_images_callback.second;
+  add_mod_images_callbacks.clear();
+
+  for (auto add_mod_youtube_links_callback : add_mod_youtube_links_callbacks)
+    delete add_mod_youtube_links_callback.second;
+  add_mod_youtube_links_callbacks.clear();
+
+  for (auto add_mod_sketchfab_links_callback : add_mod_sketchfab_links_callbacks)
+    delete add_mod_sketchfab_links_callback.second;
+  add_mod_sketchfab_links_callbacks.clear();
+
+  for (auto delete_mod_images_callback : delete_mod_images_callbacks)
+    delete delete_mod_images_callback.second;
+  delete_mod_images_callbacks.clear();
+
+  for (auto delete_mod_youtube_links_callback : delete_mod_youtube_links_callbacks)
+    delete delete_mod_youtube_links_callback.second;
+  delete_mod_youtube_links_callbacks.clear();
+
+  for (auto delete_mod_sketchfab_links_callback : delete_mod_sketchfab_links_callbacks)
+    delete delete_mod_sketchfab_links_callback.second;
+  delete_mod_sketchfab_links_callbacks.clear();
 }

@@ -433,7 +433,7 @@ struct ModioInstalledMod
 {
   u32 mod_id;
   u32 modfile_id;
-  u32 updated_at;
+  u32 date_updated;
   char* path;
   ModioMod mod;
 };
@@ -627,7 +627,6 @@ u32 modioGetModfileUploadQueueCount();
 void modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
 u32 modioGetAllInstalledModsCount();
 void modioGetAllInstalledMods(ModioInstalledMod* installed_mods);
-bool modioGetAllInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod);  
 u32 modioGetModState(u32 mod_id);
 
 //Dependencies Methods

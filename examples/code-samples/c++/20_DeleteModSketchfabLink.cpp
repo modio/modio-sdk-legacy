@@ -26,11 +26,11 @@ int main(void)
   sketchfab_links.push_back("https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74");
   // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
   modio_instance.deleteModSketchfabLinks(mod_id, sketchfab_links, [&](const modio::Response &response) {
-    std::cout << "Edit Mod Logo response: " << response.code << std::endl;
+    std::cout << "Delete Mod Sketchfab Links response: " << response.code << std::endl;
 
-    if (response.code == 200)
+    if (response.code == 204)
     {
-      std::cout << "Image uploaded successfully!" << std::endl;
+      std::cout << "Sketchfab links deleted successfully!" << std::endl;
     }
 
     finish();

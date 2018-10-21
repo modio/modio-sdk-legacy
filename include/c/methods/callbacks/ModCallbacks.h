@@ -42,7 +42,7 @@ struct CallbackParamReturnsId
 };
 
 extern std::map< u32,GetModParams* > get_mod_callbacks;
-extern std::map< u32,AddModParams* > add_mod_callback;
+extern std::map< u32,AddModParams* > add_mod_callbacks;
 extern std::map< u32,DeleteModParams* > delete_mod_callbacks;
 extern std::map< u32,GetAllModsParams* > get_all_mods_callbacks;
 extern std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
@@ -52,5 +52,7 @@ void modioOnGetAllMods(u32 call_number, u32 response_code, nlohmann::json respon
 void modioOnModAdded(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnModDeleted(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnReturnIdCallback(u32 call_number, u32 response_code, nlohmann::json response_json);
+
+void clearModCallbackParams();
 
 #endif

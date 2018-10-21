@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIORESPONSE_H
 #define MODIO_MODIORESPONSE_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 #include "ModioError.h"

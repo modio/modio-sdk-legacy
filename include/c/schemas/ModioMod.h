@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIOMOD_H
 #define MODIO_MODIOMOD_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 #include "ModioLogo.h"

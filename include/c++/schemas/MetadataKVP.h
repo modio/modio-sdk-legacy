@@ -6,15 +6,16 @@
 
 namespace modio
 {
-  class MetadataKVP
-  {
-  public:
-    std::string metakey;
-    std::string metavalue;
+class MetadataKVP
+{
+public:
+  std::string metakey;
+  std::string metavalue;
 
-    void initialize(ModioMetadataKVP metadata_kvp);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioMetadataKVP metadata_kvp);
+};
+
+extern nlohmann::json toJson(MetadataKVP &metadata_kvp);
+} // namespace modio
 
 #endif

@@ -1,6 +1,18 @@
 #ifndef MODIO_MODIO_C_H
 #define MODIO_MODIO_C_H
 
+#ifdef MODIO_STATICLIB
+#  define MODIO_DLL
+#elif defined(MODIO_WINDOWS_DETECTED)
+#  ifdef MODIO_DYNAMICLIB
+#    define MODIO_DLL  __declspec(dllexport)
+#  else
+#    define MODIO_DLL  __declspec(dllimport)
+#  endif
+#else
+#  define MODIO_DLL
+#endif
+
 typedef unsigned int u32;
 typedef int i32;
 
@@ -433,7 +445,7 @@ extern "C"
   {
 	  u32 mod_id;
 	  u32 modfile_id;
-	  u32 updated_at;
+	  u32 date_updated;
 	  char* path;
 	  ModioMod mod;
   };
@@ -627,7 +639,6 @@ extern "C"
   void MODIO_DLL modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
   u32 MODIO_DLL modioGetAllInstalledModsCount();
   void MODIO_DLL modioGetAllInstalledMods(ModioInstalledMod* installed_mods);
-  bool MODIO_DLL modioGetAllInstalledModById(u32 mod_id, ModioInstalledMod *installed_mod);  
   u32 MODIO_DLL modioGetModState(u32 mod_id);
 
   //Dependencies Methods

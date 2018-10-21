@@ -72,6 +72,9 @@
         "*.rh": "cpp",
         "cstdarg": "cpp",
         "deque": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "stdio.h": "c",
+        "set": "cpp",
+        "unordered_set": "cpp"
     }
 }

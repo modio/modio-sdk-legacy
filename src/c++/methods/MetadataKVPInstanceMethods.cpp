@@ -15,7 +15,6 @@ namespace modio
   void Instance::addMetadataKVP(u32 mod_id, std::map<std::string, std::string> metadata_kvp, const std::function<void(const modio::Response& response)>& callback)
   {
     char** metadata_kvp_array = new char*[metadata_kvp.size()];
-
     u32 i = 0;
     for(const auto &current_metadata_kvp : metadata_kvp)
     {
@@ -25,18 +24,16 @@ namespace modio
       i++;
     }
 
-    const struct AddMetadataKVPCall* add_metadata_kvp_call = new AddMetadataKVPCall{metadata_kvp_array, (u32)metadata_kvp.size(), callback};
+    const struct AddMetadataKVPCall* add_metadata_kvp_call = new AddMetadataKVPCall{callback};
     add_metadata_kvp_calls[this->current_call_id] = (AddMetadataKVPCall*)add_metadata_kvp_call;
 
     modioAddMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onAddMetadataKVP);
     
-    for(int i=0; i<(int)metadata_kvp.size(); i++)
-    {
-      delete[] metadata_kvp_array[i];
-    }
-    delete[] metadata_kvp_array;
-    
     this->current_call_id++;
+
+    for(int i=0; i<(int)metadata_kvp.size(); i++)
+      delete[] metadata_kvp_array[i];
+    delete[] metadata_kvp_array;
   }
 
   void Instance::deleteMetadataKVP(u32 mod_id, std::map< std::string, std::string > metadata_kvp, const std::function<void(const modio::Response& response)>& callback)
@@ -51,17 +48,15 @@ namespace modio
       i++;
     }
 
-    const struct DeleteMetadataKVPCall* delete_metadata_kvp_call = new DeleteMetadataKVPCall{metadata_kvp_array, (u32)metadata_kvp.size(), callback};
+    const struct DeleteMetadataKVPCall* delete_metadata_kvp_call = new DeleteMetadataKVPCall{callback};
     delete_metadata_kvp_calls[this->current_call_id] = (DeleteMetadataKVPCall*)delete_metadata_kvp_call;
 
     modioDeleteMetadataKVP((void*)new u32(this->current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onDeleteMetadataKVP);
 
-    for(int i=0; i<(int)metadata_kvp.size(); i++)
-    {
-      delete[] metadata_kvp_array[i];
-    }
-    delete[] metadata_kvp_array;
-
     this->current_call_id++;
+
+    for(int i=0; i<(int)metadata_kvp.size(); i++)
+      delete[] metadata_kvp_array[i];
+    delete[] metadata_kvp_array;
   }
 }

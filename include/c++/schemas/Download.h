@@ -6,15 +6,16 @@
 
 namespace modio
 {
-  class Download
-  {
-  public:
-    u32 date_expires;
-    std::string binary_url;
+class Download
+{
+public:
+  u32 date_expires;
+  std::string binary_url;
 
-    void initialize(ModioDownload download);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioDownload download);
+};
+
+extern nlohmann::json toJson(Download &download);
+} // namespace modio
 
 #endif

@@ -7,16 +7,17 @@
 
 namespace modio
 {
-  class Image
-  {
-  public:
-    std::string filename;
-    std::string original;
-    std::string thumb_320x180;
+class Image
+{
+public:
+  std::string filename;
+  std::string original;
+  std::string thumb_320x180;
 
-    void initialize(ModioImage image);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioImage image);
+};
+
+extern nlohmann::json toJson(Image &image);
+} // namespace modio
 
 #endif

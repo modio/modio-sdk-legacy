@@ -4,6 +4,8 @@
 #include "CurlUtility.h"
 #include "CurlCallbacks.h"
 
+#pragma comment(lib, "ws2_32.lib")
+
 namespace modio
 {
 namespace curlwrapper

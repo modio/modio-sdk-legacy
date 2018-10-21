@@ -12,9 +12,9 @@ extern "C"
 		if (modio::hasKey(installed_mod_json, "modfile_id"))
 			installed_mod->modfile_id = installed_mod_json["modfile_id"];
 
-		installed_mod->updated_at = 0;
-		if (modio::hasKey(installed_mod_json, "updated_at"))
-			installed_mod->updated_at = installed_mod_json["updated_at"];
+		installed_mod->date_updated = 0;
+		if (modio::hasKey(installed_mod_json, "date_updated"))
+			installed_mod->date_updated = installed_mod_json["date_updated"];
 
 		installed_mod->path = NULL;
 		if (modio::hasKey(installed_mod_json, "path"))

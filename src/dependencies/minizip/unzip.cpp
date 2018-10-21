@@ -24,7 +24,7 @@
 #  define NOUNCRYPT
 #endif*/
 
-#include "dependencies/zlib/zlib.h"
+#include <zlib.h>
 #include "dependencies/minizip/unzip.h"
 #include "dependencies/minizip/crypt.h"
 

@@ -28,14 +28,13 @@ extern "C"
     game_tag_option->tags_array_size = 0;
     if(modio::hasKey(game_tag_option_json, "tags"))
     {
-      nlohmann::json sketchfab_json = game_tag_option_json["tags"];
-      game_tag_option->tags_array_size = (u32)sketchfab_json.size();
+      game_tag_option->tags_array_size = (u32)game_tag_option_json["tags"].size();
       game_tag_option->tags_array = new char*[game_tag_option->tags_array_size];
       for(int i=0; i<(int)game_tag_option->tags_array_size; i++)
       {
-        std::string sketchfab_str = sketchfab_json[i];
-        game_tag_option->tags_array[i]= new char[game_tag_option->tags_array_size + 1];
-        strcpy(game_tag_option->tags_array[i], sketchfab_str.c_str());
+        std::string tag_str = game_tag_option_json["tags"][i];
+        game_tag_option->tags_array[i]= new char[tag_str.size() + 1];
+        strcpy(game_tag_option->tags_array[i], tag_str.c_str());
       }
     }
   }
@@ -54,6 +53,7 @@ extern "C"
       {
         delete[] game_tag_option->tags_array[i];
       }
+
       if(game_tag_option->tags_array)
         delete[] game_tag_option->tags_array;
     }

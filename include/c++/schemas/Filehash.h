@@ -6,14 +6,15 @@
 
 namespace modio
 {
-  class Filehash
-  {
-  public:
-    std::string md5;
+class Filehash
+{
+public:
+  std::string md5;
 
-    void initialize(ModioFilehash filehash);
-    nlohmann::json toJson();
-  };
-}
+  void initialize(ModioFilehash filehash);
+};
+
+extern nlohmann::json toJson(Filehash &filehash);
+} // namespace modio
 
 #endif

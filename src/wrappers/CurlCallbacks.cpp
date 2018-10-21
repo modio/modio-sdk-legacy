@@ -16,6 +16,7 @@ void onJsonRequestFinished(CURL *curl)
   {
     u32 x_ratelimit_retryafter = atoi((const char *)ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
     modio::RETRY_AFTER = modio::getCurrentTime() + x_ratelimit_retryafter;
+    modio::writeLogLine("API request limit hit. Could not poll events. Rerying after " + modio::toString(modio::RETRY_AFTER), MODIO_DEBUGLEVEL_WARNING);
   }
 
   if (ongoing_call->headers.find("X-RateLimit-Remaining") != ongoing_call->headers.end())
@@ -32,9 +33,9 @@ void onJsonRequestFinished(CURL *curl)
     writeLogLine(response_json.dump(), MODIO_DEBUGLEVEL_ERROR);
   }
   ongoing_call->callback(ongoing_call->call_number, response_code, response_json);
-  call_count++;
   ongoing_calls.erase(curl);
   delete ongoing_call;
+  call_count++;
 }
 
 void onDownloadFinished(CURL *curl)
@@ -62,6 +63,7 @@ void onDownloadFinished(CURL *curl)
 void onModDownloadFinished(CURL *curl)
 {
   fclose(current_mod_download_file);
+  current_mod_download_file = NULL;
 
   if (current_queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
@@ -74,9 +76,12 @@ void onModDownloadFinished(CURL *curl)
 
     destination_path_str = addSlashIfNeeded(destination_path_str);
 
-    modio::writeJson(destination_path_str + std::string("modio.json"), current_queued_mod_download->mod.toJson());
+    modio::writeJson(destination_path_str + std::string("modio.json"), modio::toJson(current_queued_mod_download->mod));
 
-    modio::addToInstalledModsJson(current_queued_mod_download->mod.toJson(), destination_path_str);
+    modio::addToInstalledModsJson(current_queued_mod_download->mod_id,
+      destination_path_str,
+      current_queued_mod_download->mod.modfile.id,
+      current_queued_mod_download->mod.date_updated);
 
     writeLogLine("Finished installing mod", MODIO_DEBUGLEVEL_LOG);
 
@@ -95,10 +100,15 @@ void onModDownloadFinished(CURL *curl)
     if (modio::download_callback)
       modio::download_callback(response_code, current_queued_mod_download->mod.id);
 
+    modio::curlwrapper::mod_download_queue.remove(current_queued_mod_download);
     delete current_queued_mod_download;
+    current_queued_mod_download = NULL;
+
     current_mod_download_curl_handle = NULL;
 
-    mod_download_queue.remove(current_queued_mod_download);
+    curl_slist_free_all(current_mod_download_slist);
+    current_mod_download_slist = NULL;
+    
     updateModDownloadQueueFile();
     downloadNextQueuedMod();
   }
@@ -135,7 +145,13 @@ void onModfileUploadFinished(CURL *curl)
     }
 
     delete current_queued_modfile_upload;
+    curl_slist_free_all(current_modfile_upload_slist);
+    curl_formfree(current_modfile_upload_httppost);
+
     current_queued_modfile_upload = NULL;
+    current_modfile_upload_curl_handle = NULL;
+    current_modfile_upload_slist = NULL;
+    current_modfile_upload_httppost = NULL;
 
     if (modfile_upload_queue.size() > 0)
     {

@@ -1,7 +1,6 @@
 #ifndef MODIO_MODIOGAME_H
 #define MODIO_MODIOGAME_H
 
-#include "../../dependencies/json/json.hpp"
 #include "../../Utility.h"
 #include "../ModioC.h"
 #include "ModioUser.h"

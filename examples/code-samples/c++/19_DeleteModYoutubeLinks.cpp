@@ -26,11 +26,11 @@ int main(void)
   youtube_links.push_back("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
   modio_instance.deleteModYoutubeLinks(mod_id, youtube_links, [&](const modio::Response &response) {
-    std::cout << "Edit Mod Logo response: " << response.code << std::endl;
+    std::cout << "Delete Mod Youtube Links response: " << response.code << std::endl;
 
-    if (response.code == 200)
+    if (response.code == 204)
     {
-      std::cout << "Image uploaded successfully!" << std::endl;
+      std::cout << "Youtube links deleted successfully!" << std::endl;
     }
 
     finish();

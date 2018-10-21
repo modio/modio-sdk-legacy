@@ -8,6 +8,7 @@ void Instance::getAllModComments(u32 mod_id, modio::FilterCreator &filter, const
     get_all_mod_comments_calls[this->current_call_id] = (GetAllModCommentsCall *)get_all_mod_comments_call;
 
     modioGetAllModComments((void *)new u32(this->current_call_id), mod_id, *filter.getFilter(), &onGetAllModComments);
+
     this->current_call_id++;
 }
 
@@ -27,6 +28,7 @@ void Instance::deleteModComment(u32 mod_id, u32 comment_id, const std::function<
     delete_mod_comment_calls[this->current_call_id] = (DeleteModCommentCall *)delete_mod_comment_call;
 
     modioDeleteModComment((void *)new u32(this->current_call_id), mod_id, comment_id, &onDeleteModComment);
+
     this->current_call_id++;
 }
 } // namespace modio

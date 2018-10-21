@@ -6,18 +6,18 @@
 
 namespace modio
 {
-  class GameTagOption
-  {
-  public:
-    u32 hidden;
-    std::string name;
-    std::string type;
-    std::vector< std::string > tags;
+class GameTagOption
+{
+public:
+  u32 hidden;
+  std::string name;
+  std::string type;
+  std::vector<std::string> tags;
 
-    void initialize(ModioGameTagOption game_tag_option);
+  void initialize(ModioGameTagOption game_tag_option);
+};
 
-    nlohmann::json toJson();
-  };
-}
+extern nlohmann::json toJson(GameTagOption &game_tag_option);
+} // namespace modio
 
 #endif

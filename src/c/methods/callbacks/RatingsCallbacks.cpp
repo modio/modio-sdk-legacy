@@ -1,6 +1,6 @@
 #include "c/methods/callbacks/RatingsCallbacks.h"
 
-std::map< u32, AddModRatingParams* > add_mod_rating_callbacks;
+std::map<u32, AddModRatingParams *> add_mod_rating_callbacks;
 
 void modioOnAddModRating(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
@@ -12,4 +12,13 @@ void modioOnAddModRating(u32 call_number, u32 response_code, nlohmann::json resp
 
   delete add_mod_rating_callbacks[call_number];
   add_mod_rating_callbacks.erase(call_number);
+  
+  modioFreeResponse(&response);
+}
+
+void clearRatingsCallbackParams()
+{
+  for (auto add_mod_rating_callback : add_mod_rating_callbacks)
+    delete add_mod_rating_callback.second;
+  add_mod_rating_callbacks.clear();
 }

@@ -7,7 +7,7 @@ namespace modio
 {
   class MODIO_DLL ModfileEditor
   {
-    ModioModfileEditor* modfile_editor;
+    ModioModfileEditor modfile_editor;
   public:
     ModfileEditor();
     void setVersion(const std::string& version);

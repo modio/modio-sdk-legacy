@@ -28,4 +28,6 @@ extern std::map< u32,GetAllModStatsParams* > get_all_mod_stats_callbacks;
 void modioOnGetModStats(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetAllModStats(u32 call_number, u32 response_code, nlohmann::json response_json);
 
+void clearModStatsCallbackParams();
+
 #endif

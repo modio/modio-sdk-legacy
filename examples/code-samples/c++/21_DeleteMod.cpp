@@ -27,7 +27,7 @@ int main(void)
     std::cout << "Mod Delete response: " << response.code << std::endl;
     if (response.code == 204)
     {
-      std::cout << "Mod delete successfully" << std::endl;
+      std::cout << "Mod deleted successfully" << std::endl;
     }
     finish();
   });

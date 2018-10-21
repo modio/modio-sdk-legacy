@@ -1,12 +1,12 @@
 #include "c/methods/callbacks/MeCallbacks.h"
 
-std::map< u32, GetAuthenticatedUserParams* > get_authenticated_user_callbacks;
-std::map< u32, GetUserSubscriptionsParams* > get_user_subscriptions_callbacks;
-std::map< u32, GetUserEventsParams* > get_user_events_callbacks;
-std::map< u32, GetUserGamesParams* > get_user_games_callbacks;
-std::map< u32, GetUserModsParams* > get_user_mods_callbacks;
-std::map< u32, GetUserModfilesParams* > get_user_modfiles_callbacks;
-std::map< u32, GetUserRatingsParams* > get_user_ratings_callbacks;
+std::map<u32, GetAuthenticatedUserParams *> get_authenticated_user_callbacks;
+std::map<u32, GetUserSubscriptionsParams *> get_user_subscriptions_callbacks;
+std::map<u32, GetUserEventsParams *> get_user_events_callbacks;
+std::map<u32, GetUserGamesParams *> get_user_games_callbacks;
+std::map<u32, GetUserModsParams *> get_user_mods_callbacks;
+std::map<u32, GetUserModfilesParams *> get_user_modfiles_callbacks;
+std::map<u32, GetUserRatingsParams *> get_user_ratings_callbacks;
 
 void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
@@ -21,7 +21,9 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::j
 
   delete get_authenticated_user_callbacks[call_number];
   get_authenticated_user_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
+  modioFreeUser(&user);
 }
 
 void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -29,31 +31,38 @@ void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::j
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
+  ModioMod *mods = NULL;
+  u32 mods_size = 0;
 
-  if(response.code == 200)
+  if (response.code == 200)
   {
-    if(!get_user_subscriptions_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_user_subscriptions_callbacks[call_number]->url, response_json);
+    if (modio::hasKey(response_json, "data"))
+    {
+      if (!get_user_subscriptions_callbacks[call_number]->is_cache)
+        modio::addCallToCache(get_user_subscriptions_callbacks[call_number]->url, response_json);
 
-    u32 mods_size = (u32)response_json["data"].size();
-    ModioMod* mods = new ModioMod[mods_size];
-    for(u32 i=0; i<mods_size; i++)
-    {
-      modioInitMod(&mods[i], response_json["data"][i]);
+      mods_size = (u32)response_json["data"].size();
+      mods = new ModioMod[mods_size];
+      for (u32 i = 0; i < mods_size; i++)
+        modioInitMod(&mods[i], response_json["data"][i]);
     }
-    get_user_subscriptions_callbacks[call_number]->callback(get_user_subscriptions_callbacks[call_number]->object, response, mods, mods_size);
-    for(u32 i=0; i<mods_size; i++)
+    else
     {
-      modioFreeMod(&mods[i]);
+      modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
     }
-    delete[] mods;
-  }else
-  {
-    get_user_subscriptions_callbacks[call_number]->callback(get_user_subscriptions_callbacks[call_number]->object, response, NULL, 0);
   }
+
+  get_user_subscriptions_callbacks[call_number]->callback(get_user_subscriptions_callbacks[call_number]->object, response, mods, mods_size);
+
   delete get_user_subscriptions_callbacks[call_number];
   get_user_subscriptions_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
+  for (u32 i = 0; i < mods_size; i++)
+    modioFreeMod(&mods[i]);
+  if (mods)
+    delete[] mods;
 }
 
 void modioOnGetUserEvents(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -61,39 +70,36 @@ void modioOnGetUserEvents(u32 call_number, u32 response_code, nlohmann::json res
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
-
-  ModioEvent* events_array = NULL;
+  ModioEvent *events_array = NULL;
   u32 events_array_size = 0;
-  if(response.code == 200)
-  {
-    try
-    {
-      if(modio::hasKey(response_json, "data"))
-      {
-        events_array_size = (u32)response_json["data"].size();
-        events_array = new ModioEvent[events_array_size];
 
-        for(u32 i=0; i<events_array_size; i++)
-        {
-          modioInitEvent(&(events_array[i]), response_json["data"][i]);
-        }
-      }
-    }catch(nlohmann::json::parse_error &e)
+  if (response.code == 200)
+  {
+    if (modio::hasKey(response_json, "data"))
     {
-      modio::writeLogLine(std::string("Error parsing json: ") + e.what(), MODIO_DEBUGLEVEL_ERROR);
+      events_array_size = (u32)response_json["data"].size();
+      events_array = new ModioEvent[events_array_size];
+
+      for (u32 i = 0; i < events_array_size; i++)
+        modioInitEvent(&(events_array[i]), response_json["data"][i]);
+    }
+    else
+    {
+      modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
     }
   }
+
   get_user_events_callbacks[call_number]->callback(get_user_events_callbacks[call_number]->object, response, events_array, events_array_size);
 
-  for(u32 i=0; i<events_array_size; i++)
-  {
-    modioFreeEvent(&(events_array[i]));
-  }
-
-  if(events_array)
-    delete[] events_array;
   delete get_user_events_callbacks[call_number];
   get_user_events_callbacks.erase(call_number);
+
+  modioFreeResponse(&response);
+  for (u32 i = 0; i < events_array_size; i++)
+    modioFreeEvent(&(events_array[i]));
+  if (events_array)
+    delete[] events_array;
 }
 
 void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -101,31 +107,38 @@ void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json resp
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
+  ModioGame *games = NULL;
+  u32 games_size = 0;
 
-  if(response.code == 200)
+  if (response.code == 200)
   {
-    if(!get_user_games_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_user_games_callbacks[call_number]->url, response_json);
+    if (modio::hasKey(response_json, "data"))
+    {
+      if (!get_user_games_callbacks[call_number]->is_cache)
+        modio::addCallToCache(get_user_games_callbacks[call_number]->url, response_json);
 
-    u32 games_size = (u32)response_json["data"].size();
-    ModioGame* games = new ModioGame[games_size];
-    for(u32 i=0; i<games_size; i++)
-    {
-      modioInitGame(&games[i], response_json["data"][i]);
+      games_size = (u32)response_json["data"].size();
+      games = new ModioGame[games_size];
+      for (u32 i = 0; i < games_size; i++)
+        modioInitGame(&games[i], response_json["data"][i]);
     }
-    get_user_games_callbacks[call_number]->callback(get_user_games_callbacks[call_number]->object, response, games, games_size);
-    for(u32 i=0; i<games_size; i++)
+    else
     {
-      modioFreeGame(&games[i]);
+      modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
     }
-    delete[] games;
-  }else
-  {
-    get_user_games_callbacks[call_number]->callback(get_user_games_callbacks[call_number]->object, response, NULL, 0);
   }
+
+  get_user_games_callbacks[call_number]->callback(get_user_games_callbacks[call_number]->object, response, games, games_size);
+
   delete get_user_games_callbacks[call_number];
   get_user_games_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
+  for (u32 i = 0; i < games_size; i++)
+    modioFreeGame(&games[i]);
+  if (games)
+    delete[] games;
 }
 
 void modioOnGetUserMods(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -133,31 +146,38 @@ void modioOnGetUserMods(u32 call_number, u32 response_code, nlohmann::json respo
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
+  u32 mods_size = 0;
+  ModioMod *mods = NULL;
 
-  if(response.code == 200)
+  if (response.code == 200)
   {
-    if(!get_user_mods_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_user_mods_callbacks[call_number]->url, response_json);
+    if (modio::hasKey(response_json, "data"))
+    {
+      if (!get_user_mods_callbacks[call_number]->is_cache)
+        modio::addCallToCache(get_user_mods_callbacks[call_number]->url, response_json);
 
-    u32 mods_size = (u32)response_json["data"].size();
-    ModioMod* mods = new ModioMod[mods_size];
-    for(u32 i=0; i<mods_size; i++)
-    {
-      modioInitMod(&mods[i], response_json["data"][i]);
+      mods_size = (u32)response_json["data"].size();
+      mods = new ModioMod[mods_size];
+      for (u32 i = 0; i < mods_size; i++)
+        modioInitMod(&mods[i], response_json["data"][i]);
     }
-    get_user_mods_callbacks[call_number]->callback(get_user_mods_callbacks[call_number]->object, response, mods, mods_size);
-    for(u32 i=0; i<mods_size; i++)
+    else
     {
-      modioFreeMod(&mods[i]);
+      modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
     }
-    delete[] mods;
-  }else
-  {
-    get_user_mods_callbacks[call_number]->callback(get_user_mods_callbacks[call_number]->object, response, NULL, 0);
   }
+
+  get_user_mods_callbacks[call_number]->callback(get_user_mods_callbacks[call_number]->object, response, NULL, 0);
+
   delete get_user_mods_callbacks[call_number];
   get_user_mods_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
+  for (u32 i = 0; i < mods_size; i++)
+    modioFreeMod(&mods[i]);
+  if (mods)
+    delete[] mods;
 }
 
 void modioOnGetUserModfiles(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -165,31 +185,38 @@ void modioOnGetUserModfiles(u32 call_number, u32 response_code, nlohmann::json r
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
+  ModioModfile *modfiles = NULL;
+  u32 modfiles_size = 0;
 
-  if(response.code == 200)
+  if (response.code == 200)
   {
-    if(!get_user_modfiles_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_user_modfiles_callbacks[call_number]->url, response_json);
+    if (modio::hasKey(response_json, "data"))
+    {
+      if (!get_user_modfiles_callbacks[call_number]->is_cache)
+        modio::addCallToCache(get_user_modfiles_callbacks[call_number]->url, response_json);
 
-    u32 modfiles_size = (u32)response_json["data"].size();
-    ModioModfile* modfiles = new ModioModfile[modfiles_size];
-    for(u32 i=0; i<modfiles_size; i++)
-    {
-      modioInitModfile(&modfiles[i], response_json["data"][i]);
+      modfiles_size = (u32)response_json["data"].size();
+      modfiles = new ModioModfile[modfiles_size];
+      for (u32 i = 0; i < modfiles_size; i++)
+        modioInitModfile(&modfiles[i], response_json["data"][i]);
     }
-    get_user_modfiles_callbacks[call_number]->callback(get_user_modfiles_callbacks[call_number]->object, response, modfiles, modfiles_size);
-    for(u32 i=0; i<modfiles_size; i++)
+    else
     {
-      modioFreeModfile(&modfiles[i]);
+      modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
     }
-    delete[] modfiles;
-  }else
-  {
-    get_user_modfiles_callbacks[call_number]->callback(get_user_modfiles_callbacks[call_number]->object, response, NULL, 0);
   }
+
+  get_user_modfiles_callbacks[call_number]->callback(get_user_modfiles_callbacks[call_number]->object, response, modfiles, modfiles_size);
+
   delete get_user_modfiles_callbacks[call_number];
   get_user_modfiles_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
+  for (u32 i = 0; i < modfiles_size; i++)
+    modioFreeModfile(&modfiles[i]);
+  if (modfiles)
+    delete[] modfiles;
 }
 
 void modioOnGetUserRatings(u32 call_number, u32 response_code, nlohmann::json response_json)
@@ -197,29 +224,67 @@ void modioOnGetUserRatings(u32 call_number, u32 response_code, nlohmann::json re
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
+  ModioRating *ratings = NULL;
+  u32 ratings_size = 0;
 
-  if(response.code == 200)
+  if (response.code == 200)
   {
-    if(!get_user_ratings_callbacks[call_number]->is_cache)
-      modio::addCallToCache(get_user_ratings_callbacks[call_number]->url, response_json);
+    if (modio::hasKey(response_json, "data"))
+    {
+      if (!get_user_ratings_callbacks[call_number]->is_cache)
+        modio::addCallToCache(get_user_ratings_callbacks[call_number]->url, response_json);
 
-    u32 ratings_size = (u32)response_json["data"].size();
-    ModioRating* ratings = new ModioRating[ratings_size];
-    for(u32 i=0; i<ratings_size; i++)
-    {
-      modioInitRating(&ratings[i], response_json["data"][i]);
+      ratings_size = (u32)response_json["data"].size();
+      ratings = new ModioRating[ratings_size];
+      for (u32 i = 0; i < ratings_size; i++)
+        modioInitRating(&ratings[i], response_json["data"][i]);
     }
-    get_user_ratings_callbacks[call_number]->callback(get_user_ratings_callbacks[call_number]->object, response, ratings, ratings_size);
-    for(u32 i=0; i<ratings_size; i++)
+    else
     {
-      modioFreeRating(&ratings[i]);
+      modio::writeLogLine("Could not retreive data array from API.", MODIO_DEBUGLEVEL_ERROR);
+      response.code = 0;
     }
-    delete[] ratings;
-  }else
-  {
-    get_user_ratings_callbacks[call_number]->callback(get_user_ratings_callbacks[call_number]->object, response, NULL, 0);
   }
+
+  get_user_ratings_callbacks[call_number]->callback(get_user_ratings_callbacks[call_number]->object, response, ratings, ratings_size);
+
   delete get_user_ratings_callbacks[call_number];
   get_user_ratings_callbacks.erase(call_number);
+
   modioFreeResponse(&response);
+  for (u32 i = 0; i < ratings_size; i++)
+    modioFreeRating(&ratings[i]);
+  if (ratings)
+    delete[] ratings;
+}
+
+void clearMeCallbackParams()
+{
+  for (auto get_authenticated_user_callback : get_authenticated_user_callbacks)
+    delete get_authenticated_user_callback.second;
+  get_authenticated_user_callbacks.clear();
+
+  for (auto get_user_subscriptions_callback : get_user_subscriptions_callbacks)
+    delete get_user_subscriptions_callback.second;
+  get_user_subscriptions_callbacks.clear();
+
+  for (auto get_user_events_callback : get_user_events_callbacks)
+    delete get_user_events_callback.second;
+  get_user_events_callbacks.clear();
+
+  for (auto get_user_games_callback : get_user_games_callbacks)
+    delete get_user_games_callback.second;
+  get_user_games_callbacks.clear();
+
+  for (auto get_user_mods_callback : get_user_mods_callbacks)
+    delete get_user_mods_callback.second;
+  get_user_mods_callbacks.clear();
+
+  for (auto get_user_modfiles_callback : get_user_modfiles_callbacks)
+    delete get_user_modfiles_callback.second;
+  get_user_modfiles_callbacks.clear();
+
+  for (auto get_user_ratings_callback : get_user_ratings_callbacks)
+    delete get_user_ratings_callback.second;
+  get_user_ratings_callbacks.clear();
 }

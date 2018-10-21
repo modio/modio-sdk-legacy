@@ -155,7 +155,7 @@ extern "C"
     if(mod)
     {
       if(mod->homepage_url)
-        delete mod->homepage_url;
+        delete[] mod->homepage_url;
       if(mod->name)
         delete[] mod->name;
       if(mod->name_id)
@@ -170,7 +170,6 @@ extern "C"
         delete[] mod->metadata_blob;
       if(mod->profile_url)
         delete[] mod->profile_url;
-
       modioFreeLogo(&(mod->logo));
       modioFreeUser(&(mod->submitted_by));
       modioFreeModfile(&(mod->modfile));
@@ -181,6 +180,7 @@ extern "C"
       {
         modioFreeTag(&(mod->tags_array[i]));
       }
+
       if(mod->tags_array)
         delete[] mod->tags_array;
 
@@ -188,8 +188,10 @@ extern "C"
       {
         modioFreeMetadataKVP(&(mod->metadata_kvp_array[i]));
       }
+
       if(mod->metadata_kvp_array)
         delete[] mod->metadata_kvp_array;
+
     }
   }
 }
