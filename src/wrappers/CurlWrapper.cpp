@@ -181,10 +181,10 @@ void post(u32 call_number, std::string url, std::vector<std::string> headers, st
     for (u32 i = 0; i < headers.size(); i++)
       slist = curl_slist_append(slist, headers[i].c_str());
 
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+    
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
     std::string str_data = modio::curlwrapper::mapDataToUrlString(data);
     char *post_fields = new char[str_data.size() + 1];
@@ -214,11 +214,11 @@ void put(u32 call_number, std::string url, std::vector<std::string> headers, std
     for (u32 i = 0; i < headers.size(); i++)
       slist = curl_slist_append(slist, headers[i].c_str());
 
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+    
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
-
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
     std::string str_data = modio::curlwrapper::multimapDataToUrlString(curlform_copycontents);
     char *post_fields = new char[str_data.size() + 1];
@@ -277,18 +277,18 @@ void postForm(u32 call_number, std::string url, std::vector<std::string> headers
     headers.push_back("Content-Type: multipart/form-data");
     struct curl_slist *slist = NULL;
     for (u32 i = 0; i < headers.size(); i++)
-    {
       slist = curl_slist_append(slist, headers[i].c_str());
-    }
 
-    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, mime_form, callback);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+    curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime_form);
+    
+    setJsonResponseWrite(curl);
 
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-    curl_easy_setopt(curl, CURLOPT_MIMEPOST, mime_form);
-
+    ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, mime_form, callback);
+    
     curl_multi_add_handle(curl_multi_handle, curl);
   }
 #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
@@ -717,7 +717,7 @@ void queueModfileUpload(u32 mod_id, ModioModfileCreator *modio_modfile_creator)
   queued_modfile_upload->mod_id = mod_id;
   queued_modfile_upload->current_progress = 0;
   queued_modfile_upload->total_size = 0;
-  queued_modfile_upload->modfile_creator.initializeFromModioModfileCreator(modio_modfile_creator);
+  queued_modfile_upload->modfile_creator.initializeFromModioModfileCreator(*modio_modfile_creator);
   modfile_upload_queue.push_back(queued_modfile_upload);
 
   //updateModUploadQueueFile();

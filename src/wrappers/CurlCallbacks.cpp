@@ -105,6 +105,8 @@ void onModDownloadFinished(CURL *curl)
     current_queued_mod_download = NULL;
 
     current_mod_download_curl_handle = NULL;
+
+    curl_slist_free_all(current_mod_download_slist);
     current_mod_download_slist = NULL;
     
     updateModDownloadQueueFile();
@@ -156,8 +158,6 @@ void onModfileUploadFinished(CURL *curl)
       uploadModfile(modfile_upload_queue.front());
     }
   }
-
-  current_queued_modfile_upload = NULL;
   updateModUploadQueueFile();
 }
 } // namespace curlwrapper

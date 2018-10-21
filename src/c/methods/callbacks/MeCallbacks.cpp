@@ -117,8 +117,8 @@ void modioOnGetUserGames(u32 call_number, u32 response_code, nlohmann::json resp
       if (!get_user_games_callbacks[call_number]->is_cache)
         modio::addCallToCache(get_user_games_callbacks[call_number]->url, response_json);
 
-      u32 games_size = (u32)response_json["data"].size();
-      ModioGame *games = new ModioGame[games_size];
+      games_size = (u32)response_json["data"].size();
+      games = new ModioGame[games_size];
       for (u32 i = 0; i < games_size; i++)
         modioInitGame(&games[i], response_json["data"][i]);
     }

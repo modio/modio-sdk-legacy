@@ -78,6 +78,7 @@ void modioOnModAdded(u32 call_number, u32 response_code, nlohmann::json response
   add_mod_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
+  modioFreeMod(&mod);
 }
 
 void modioOnModDeleted(u32 call_number, u32 response_code, nlohmann::json response_json)

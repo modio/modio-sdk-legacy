@@ -7,7 +7,7 @@ namespace modio
 {
   class MODIO_DLL ModEditor
   {
-    ModioModEditor* mod_editor;
+    ModioModEditor mod_editor;
   public:
     ModEditor();
     void setVisible(u32 status);

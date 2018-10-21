@@ -8,9 +8,9 @@ namespace modio
 class MODIO_DLL ModfileCreator
 {
 public:
-  ModioModfileCreator *modio_modfile_creator;
+  ModioModfileCreator modio_modfile_creator;
   ModfileCreator();
-  void initializeFromModioModfileCreator(ModioModfileCreator *modio_modfile_creator);
+  void initializeFromModioModfileCreator(ModioModfileCreator& modio_modfile_creator);
   void setPath(const std::string &path);
   void setVersion(const std::string &version);
   void setChangelog(const std::string &changelog);

@@ -38,11 +38,11 @@ int main(void)
   std::cout << "Enter the summary: " << std::endl;
   std::cin >> summary;
 
-  std::cout << "Getting mods..." << std::endl;
+  std::cout << "Submitting report..." << std::endl;
 
   // Now we finished setting up the filters we are ready to request the mods
   modio_instance.submitReport(resource, id, type, name, summary, [&](const modio::Response &response) {
-    std::cout << "On delete mod comment response: " << response.code << std::endl;
+    std::cout << "Submit report response: " << response.code << std::endl;
     if (response.code == 201)
     {
       std::cout << "Success" << std::endl;
