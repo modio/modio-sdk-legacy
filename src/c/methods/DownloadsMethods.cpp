@@ -84,7 +84,7 @@ void modioGetAllInstalledMods(ModioInstalledMod *installed_mods)
 
 u32 modioGetAllInstalledModsCount()
 {
-  return modio::installed_mods.size();
+  return (u32)modio::installed_mods.size();
 }
 
 u32 modioGetModState(u32 mod_id)
