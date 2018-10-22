@@ -49,5 +49,7 @@ Our aim with [mod.io](https://mod.io), is to provide an open modding API. You ar
 * [Design](https://design.mod.io) is public and open source, the repository can be [found here](https://github.com/DBolical/modioDESIGN).
 * [API documentation](https://docs.mod.io) is public and open source, the repository can be [found here](https://github.com/DBolical/modioAPIDOCS).
 * [Browse engine tools](https://apps.mod.io), plugins and wrappers created by the community, or [share your own](https://apps.mod.io/add).
-* [Unity plugin](https://github.com/DBolical/modioUNITY), easily manage the browsing and install of mods in Unity Engine games.
+* [Unity plugin](https://github.com/DBolical/modioUNITY), easily manage the browsing and install of mods in Unity Engine games
+* [Python wrapper](https://github.com/ClementJ18/mod.io), a python wrapper for the mod.io API
+* [Rust wrapper](https://github.com/nickelc/modio-rs), rust interface for mod.io
 
