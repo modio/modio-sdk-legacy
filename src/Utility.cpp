@@ -274,13 +274,24 @@ bool isDirectory(const std::string &directory)
 
 bool directoryExists(const std::string& path)
 {
-  struct stat info;
-  if (stat(path.c_str(), &info) != 0)
-    return false;
-  else if (info.st_mode & S_IFDIR)
+  if(path == "")
     return true;
-
+  DIR* dir = opendir(modio::addSlashIfNeeded(path).c_str());
+  if (dir)
+  {
+    closedir(dir);
+    return true;
+  }
   return false;
+}
+
+std::string getDirectoryPath (const std::string& filename)
+{
+  size_t found;
+  found = filename.find_last_of("/\\");
+  if(found == std::string::npos)
+    return "";
+  return modio::addSlashIfNeeded(filename.substr(0,found));
 }
 
 bool fileExists(const std::string &directory)

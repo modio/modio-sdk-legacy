@@ -26,11 +26,11 @@ int main(void)
   images.push_back("example.png");
   // Now we provide the mod id and the local image path to upload the new logo. Thumbnails will be generated automatically
   modio_instance.deleteModImages(mod_id, images, [&](const modio::Response &response) {
-    std::cout << "Edit Mod Logo response: " << response.code << std::endl;
+    std::cout << "Delete Mod Images response: " << response.code << std::endl;
 
-    if (response.code == 200)
+    if (response.code == 204)
     {
-      std::cout << "Image uploaded successfully!" << std::endl;
+      std::cout << "Mod images deleted successfully!" << std::endl;
     }
 
     finish();

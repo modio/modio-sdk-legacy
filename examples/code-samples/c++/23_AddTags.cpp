@@ -28,7 +28,7 @@ int main(void)
   // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
   modio_instance.addModTags(mod_id, tags, [&](const modio::Response &response) {
     std::cout << "Add tags response: " << response.code << std::endl;
-    if (response.code == 204)
+    if (response.code == 201)
     {
       std::cout << "Tags added successfully" << std::endl;
     }

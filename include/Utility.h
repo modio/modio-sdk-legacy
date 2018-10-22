@@ -79,6 +79,7 @@ std::vector<std::string> getFilenames(const std::string& directory);
 bool isDirectory(const std::string& directory);
 bool directoryExists(const std::string& path);
 bool fileExists(const std::string& directory);
+std::string getDirectoryPath (const std::string& filename);
 void createDirectory(const std::string& directory);
 bool removeDirectory(const std::string& directory);
 void removeFile(const std::string& filename);

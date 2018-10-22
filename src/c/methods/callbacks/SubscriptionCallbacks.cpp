@@ -18,6 +18,7 @@ void modioOnSubscribeToMod(u32 call_number, u32 response_code, nlohmann::json re
   subscribe_to_mod_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
+
   modioFreeMod(&mod);
 }
 
