@@ -56,7 +56,7 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
   modio::clearLog();
 
   modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
-  modio::writeLogLine("Version 0.9.0", MODIO_DEBUGLEVEL_LOG);
+  modio::writeLogLine("v0.9.0", MODIO_DEBUGLEVEL_LOG);
 
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "mods/");
