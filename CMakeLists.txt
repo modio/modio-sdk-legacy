@@ -3,15 +3,22 @@ project(modio)
 set(CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 11)
 
-# Use -DMODIO_STATICLIB instead of -DMODIO_DYNAMICLIB when building statically
-add_definitions(-DMODIO_DYNAMICLIB -DCURL_STATICLIB)
+# set the link flag as static to compile statically, for example:
+# cmake -D link=static .
 
 include_directories(include additional_dependencies)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-# Use STATIC instead of SHARED to build when building statically
-add_library(modio SHARED ${SOURCES})
+if( link AND link STREQUAL "static" )
+  message("Building mod.io SDK statically")
+  add_definitions(-DMODIO_STATICLIB -DCURL_STATICLIB)
+  add_library(modio STATIC ${SOURCES})
+else()
+  message("Building mod.io SDK dynamically")
+  add_definitions(-DMODIO_DYNAMICLIB -DCURL_STATICLIB)
+  add_library(modio SHARED ${SOURCES})
+endif()
 
 IF (APPLE)
   find_package(ZLIB REQUIRED)
