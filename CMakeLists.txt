@@ -3,14 +3,14 @@ project(modio)
 set(CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 11)
 
-# set the link flag as static to compile statically, for example:
-# cmake -D link=static .
+# set the mode flag as static to compile statically, for example:
+# cmake -D mode=static .
 
 include_directories(include additional_dependencies)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-if( link AND link STREQUAL "static" )
+if( mode AND mode STREQUAL "static" )
   message("Building mod.io SDK statically")
   add_definitions(-DMODIO_STATICLIB -DCURL_STATICLIB)
   add_library(modio STATIC ${SOURCES})
