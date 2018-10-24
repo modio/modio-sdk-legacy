@@ -4,7 +4,9 @@
 #include "CurlUtility.h"
 #include "CurlCallbacks.h"
 
-#pragma comment(lib, "ws2_32.lib")
+#ifdef MODIO_WINDOWS_DETECTED
+#  pragma comment(lib, "ws2_32.lib")
+#endif
 
 namespace modio
 {
