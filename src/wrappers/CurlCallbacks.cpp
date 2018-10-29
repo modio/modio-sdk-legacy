@@ -67,23 +67,13 @@ void onModDownloadFinished(CURL *curl)
 
   if (current_queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
-    std::string destination_path_str = modio::getModIODirectory() + "mods/" + modio::toString(current_queued_mod_download->mod_id) + "/";
-    modio::createDirectory(destination_path_str);
-    writeLogLine("Extracting...", MODIO_DEBUGLEVEL_LOG);
-    modio::minizipwrapper::extract(current_queued_mod_download->path, destination_path_str);
-    writeLogLine("Removing temporary file...", MODIO_DEBUGLEVEL_LOG);
-    modio::removeFile(current_queued_mod_download->path);
+    std::string installation_path = modio::getModIODirectory() + "mods/" + modio::toString(current_queued_mod_download->mod_id) + "/";
+    std::string downloaded_zip_path = current_queued_mod_download->path;
+    nlohmann::json mod_json = modio::toJson(current_queued_mod_download->mod);
 
-    destination_path_str = addSlashIfNeeded(destination_path_str);
-
-    modio::writeJson(destination_path_str + std::string("modio.json"), modio::toJson(current_queued_mod_download->mod));
-
-    modio::addToInstalledModsJson(current_queued_mod_download->mod_id,
-      destination_path_str,
-      current_queued_mod_download->mod.modfile.id,
-      current_queued_mod_download->mod.date_updated);
-
-    writeLogLine("Finished installing mod", MODIO_DEBUGLEVEL_LOG);
+    addToDownloadedModsJson(installation_path, downloaded_zip_path, mod_json);
+    
+    writeLogLine("Finished downloading mod", MODIO_DEBUGLEVEL_LOG);
 
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);

@@ -9,7 +9,6 @@
 #include <curl/curl.h>
 #include "../Utility.h"
 #include "../Globals.h"
-#include "MinizipWrapper.h"
 #include "CurlProgressFunctions.h"
 #include "CurlWriteFunctions.h"
 #include "../c++/schemas/QueuedModDownload.h"

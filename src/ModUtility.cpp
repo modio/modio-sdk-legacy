@@ -52,6 +52,84 @@ std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
   return "";
 }
 
+void installDownloadedMods()
+{
+  modio::writeLogLine("Installing downloaded mods...", MODIO_DEBUGLEVEL_LOG);
+
+  nlohmann::json downloaded_mods = modio::openJson(modio::getModIODirectory() + "downloaded_mods.json");
+
+  for(auto &downloaded_mod : downloaded_mods)
+  {
+    std::string installation_path = downloaded_mod["installation_path"];
+    std::string downloaded_zip_path = downloaded_mod["downloaded_zip_path"];
+    nlohmann::json mod_json = downloaded_mod["mod"];
+
+    if(modio::hasKey(mod_json, "id") &&
+        modio::hasKey(mod_json, "modfile") &&
+        modio::hasKey(mod_json["modfile"], "id") &&
+        modio::hasKey(mod_json, "date_updated"))
+    {
+      u32 mod_id = mod_json["id"];
+      u32 modfile_id = mod_json["modfile"]["id"];
+      u32 date_updated = mod_json["date_updated"];
+
+      modio::writeLogLine("Installing mod " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+
+      modio::createDirectory(installation_path);
+      modio::writeLogLine("Extracting...", MODIO_DEBUGLEVEL_LOG);
+      modio::minizipwrapper::extract(downloaded_zip_path, installation_path);
+      modio::writeLogLine("Removing temporary file...", MODIO_DEBUGLEVEL_LOG);
+      modio::removeFile(downloaded_zip_path);
+      modio::writeJson(installation_path + std::string("modio.json"), mod_json);
+
+      modio::addToInstalledModsJson(mod_id,
+        installation_path,
+        modfile_id,
+        date_updated);
+
+      modio::writeLogLine("Finished installing mod", MODIO_DEBUGLEVEL_LOG);
+    }else
+    {
+      modio::writeLogLine("Mod data is missing, could not install mod.", MODIO_DEBUGLEVEL_ERROR);
+    }
+  }
+  nlohmann::json empty_json;
+  modio::writeJson(modio::getModIODirectory() + "downloaded_mods.json", empty_json);
+  modio::writeLogLine("Finished installing downloaded mods", MODIO_DEBUGLEVEL_LOG);
+}
+
+nlohmann::json createInstalledModJson(std::string installation_path, std::string downloaded_zip_path, nlohmann::json mod_json)
+{
+  nlohmann::json downloaded_mod;
+  downloaded_mod["installation_path"] = installation_path;
+  downloaded_mod["downloaded_zip_path"] = downloaded_zip_path;
+  downloaded_mod["mod"] = mod_json;
+  return downloaded_mod;
+}
+
+void addToDownloadedModsJson(std::string installation_path, std::string downloaded_zip_path, nlohmann::json mod_json)
+{
+  nlohmann::json downloaded_mods = modio::openJson(modio::getModIODirectory() + "downloaded_mods.json");
+
+  bool already_downloaded = false;
+
+  for(auto &downloaded_mod : downloaded_mods)
+  {
+    if(modio::hasKey(downloaded_mod, "mod") &&
+        modio::hasKey(downloaded_mod["mod"], "id") &&
+        downloaded_mod["mod"]["id"] == mod_json["id"])
+    {
+      already_downloaded = true;
+      downloaded_mod = createInstalledModJson(installation_path, downloaded_zip_path, mod_json);
+    }
+  }
+
+  if(!already_downloaded)
+    downloaded_mods.push_back(createInstalledModJson(installation_path, downloaded_zip_path, mod_json));
+
+  modio::writeJson(modio::getModIODirectory() + "downloaded_mods.json", downloaded_mods);
+}
+
 void addToInstalledModsJson(u32 mod_id, std::string path, u32 modfile_id, u32 date_updated)
 {
   bool mod_reinstalled = false;
