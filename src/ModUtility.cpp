@@ -135,7 +135,10 @@ void addToInstalledModsJson(u32 mod_id, std::string path, u32 modfile_id, u32 da
   bool mod_reinstalled = false;
   for (auto &installed_mod : modio::installed_mods)
   {
-    if (modio::hasKey(installed_mods, "mod_id") && modio::hasKey(installed_mods, "path") && installed_mod["mod_id"] == mod_id && installed_mod["path"] == path)
+    if (modio::hasKey(installed_mod, "mod_id") &&
+        modio::hasKey(installed_mod, "path") &&
+        installed_mod["mod_id"] == mod_id &&
+        installed_mod["path"] == path)
     {
       installed_mod["modfile_id"] = modfile_id;
       installed_mod["date_updated"] = date_updated;
