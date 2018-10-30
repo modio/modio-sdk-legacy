@@ -454,7 +454,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
   }
 }
 
-void onGetInstallMod(u32 call_number, u32 response_code, nlohmann::json response_json)
+void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   if (response_code == 200)
   {
@@ -569,7 +569,7 @@ void downloadMod(QueuedModDownload *queued_mod_download)
 
   std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(queued_mod_download->mod_id) + "?api_key=" + modio::API_KEY;
 
-  modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetInstallMod);
+  modio::curlwrapper::get(call_number, url, modio::getHeaders(), &onGetDownloadMod);
 }
 
 void queueModDownload(ModioMod &modio_mod)

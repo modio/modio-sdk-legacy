@@ -1,11 +1,16 @@
 #include "c/methods/DownloadsMethods.h"
 
 extern "C" {
-void modioInstallMod(u32 mod_id)
+void modioDownloadMod(u32 mod_id)
 {
   std::vector<u32> mod_ids;
   mod_ids.push_back(mod_id);
   modio::addModsToDownloadQueue(mod_ids);
+}
+
+void modioInstallDownloadedMods()
+{
+  modio::installDownloadedMods();
 }
 
 bool modioUninstallMod(u32 mod_id)

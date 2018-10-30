@@ -2,9 +2,14 @@
 
 namespace modio
 {
-void Instance::installMod(u32 mod_id)
+void Instance::downloadMod(u32 mod_id)
 {
-  modioInstallMod(mod_id);
+  modioDownloadMod(mod_id);
+}
+
+void Instance::installDownloadedMods()
+{
+  modioInstallDownloadedMods();
 }
 
 void Instance::uninstallMod(u32 mod_id)

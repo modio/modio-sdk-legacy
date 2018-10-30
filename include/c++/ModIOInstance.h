@@ -125,7 +125,8 @@ public:
   void getUserRatings(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Rating> &ratings)> &callback);
 
   //Downloads Methods
-  void installMod(u32 mod_id);
+  void downloadMod(u32 mod_id);
+  void installDownloadedMods();
   void uninstallMod(u32 mod_id);
   void pauseDownloads();
   void resumeDownloads();

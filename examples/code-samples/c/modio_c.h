@@ -614,7 +614,8 @@ void modioSetAutomaticUpdatesConfig(u32 option);
 void modioSetAllowBackgroundDownloadsConfig(u32 option);
 
 //Downloads Methods
-void modioInstallMod(u32 mod_id);
+void modioDownloadMod(u32 mod_id);
+void modioInstallDownloadedMods();
 bool modioUninstallMod(u32 mod_id);
 void modioPauseDownloads();
 void modioResumeDownloads();

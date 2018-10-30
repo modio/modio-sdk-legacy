@@ -626,7 +626,8 @@ extern "C"
   void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
 
   //Downloads Methods
-  void MODIO_DLL modioInstallMod(u32 mod_id);
+  void MODIO_DLL modioDownloadMod(u32 mod_id);
+  void MODIO_DLL modioInstallDownloadedMods();
   bool MODIO_DLL modioUninstallMod(u32 mod_id);
   void MODIO_DLL modioPauseDownloads();
   void MODIO_DLL modioResumeDownloads();

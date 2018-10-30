@@ -85,7 +85,6 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
         if (reinstall)
         {
           modio::writeLogLine("Modfile changed. Mod id: " + modio::toString(events_array[i].mod_id) + " Reisntalling...", MODIO_DEBUGLEVEL_LOG);
-          //modioInstallMod(events_array[i].mod_id);
           mod_to_download_queue_ids.push_back(events_array[i].mod_id);
         }
       }
@@ -157,7 +156,6 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioEvent *event
         if (modfile_path_str == "")
         {
           modio::writeLogLine("Installing mod. Id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
-          //modioInstallMod(events_array[i].mod_id);
           mod_to_download_queue_ids.push_back(events_array[i].mod_id);
         }
         break;
