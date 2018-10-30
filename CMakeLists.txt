@@ -50,6 +50,7 @@ IF (MSVC)
 ENDIF()
 
 IF( test AND test STREQUAL "on" )
+  message("Testing enabled")
   file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
   add_subdirectory(ext/gtest-1.8.0)
   enable_testing()

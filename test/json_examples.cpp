@@ -1,4 +1,71 @@
-#include "examples.h"
+#include "json_examples.h"
+
+nlohmann::json game_json = R"(
+{
+  "id": 2,
+  "status": 1,
+  "submitted_by": {
+    "id": 1,
+    "name_id": "xant",
+    "username": "XanT",
+    "date_online": 1509922961,
+    "avatar": {
+      "filename": "modio-color-dark.png",
+      "original": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+      "thumb_50x50": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+      "thumb_100x100": "https://static.mod.io/v1/images/branding/modio-color-dark.png"
+    },
+    "timezone": "America/Los_Angeles",
+    "language": "en",
+    "profile_url": "https://mod.io/members/xant"
+  },
+  "date_added": 1493702614,
+  "date_updated": 1499410290,
+  "date_live": 1499841403,
+  "presentation_option": 1,
+  "submission_option": 0,
+  "curation_option": 0,
+  "community_options": 3,
+  "revenue_options": 1500,
+  "api_access_options": 3,
+  "maturity_options": 0,
+  "ugc_name": "map",
+  "icon": {
+    "filename": "modio-color-dark.png",
+    "original": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+    "thumb_64x64": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+    "thumb_128x128": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+    "thumb_256x256": "https://static.mod.io/v1/images/branding/modio-color-dark.png"
+  },
+  "logo": {
+    "filename": "modio-color-dark.png",
+    "original": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+    "thumb_320x180": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+    "thumb_640x360": "https://static.mod.io/v1/images/branding/modio-color-dark.png",
+    "thumb_1280x720": "https://static.mod.io/v1/images/branding/modio-color-dark.png"
+  },
+  "header": {
+    "filename": "demo.png",
+    "original": "https://static.mod.io/v1/images/branding/modio-color-dark.png"
+  },
+  "name": "Rogue Knight",
+  "name_id": "rogue-knight",
+  "summary": "Rogue Knight is a brand new 2D pixel platformer.",
+  "instructions": "Instructions on the process to upload mods.",
+  "instructions_url": "https://www.rogue-knight-game.com/modding/getting-started",
+  "profile_url": "https://rogue-knight.mod.io",
+  "tag_options": [
+    {
+      "name": "Theme",
+      "type": "checkboxes",
+      "tags": [
+        "Horror"
+      ],
+      "hidden": false
+    }
+  ]
+} 
+)"_json;
 
 nlohmann::json mod_json = R"(
 	{
