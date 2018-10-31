@@ -3,7 +3,7 @@
 #include "modio.h"
 #include "json_examples.h"
 
-modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
+//modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
 
 TEST(IndependentMethod, TestModioGameInitialization)
 {
@@ -22,7 +22,6 @@ TEST(IndependentMethod, TestModioGameInitialization)
 	EXPECT_EQ(game.revenue_options, 1500);
 	EXPECT_EQ(game.api_access_options, 3);
 	EXPECT_EQ(game.maturity_options, 0);
-
 	EXPECT_STREQ(game.ugc_name, "map");
 	EXPECT_STREQ(game.name, "Rogue Knight");
 	EXPECT_STREQ(game.name_id, "rogue-knight");
@@ -30,6 +29,8 @@ TEST(IndependentMethod, TestModioGameInitialization)
 	EXPECT_STREQ(game.instructions, "Instructions on the process to upload mods.");
 	EXPECT_STREQ(game.instructions_url, "https://www.rogue-knight-game.com/modding/getting-started");
 	EXPECT_STREQ(game.profile_url, "https://rogue-knight.mod.io");
+
+	modioFreeGame(&game);
 }
 
 TEST(IndependentMethod, TestModioModInitialization)
@@ -53,4 +54,6 @@ TEST(IndependentMethod, TestModioModInitialization)
 	EXPECT_STREQ(mod.description_plaintext, "Rogue HD Pack does exactly what you thi...");
 	EXPECT_STREQ(mod.metadata_blob, "rogue,hd,high-res,4k,hd textures");
 	EXPECT_STREQ(mod.profile_url, "https://rogue-knight.mod.io/rogue-knight-hd-pack");
+
+	modioFreeMod(&mod);
 }
