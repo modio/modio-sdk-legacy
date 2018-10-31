@@ -21,7 +21,7 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    add_metadata_kvp_callbacks[call_number] = new AddMetadataKVPParams;
+    add_metadata_kvp_callbacks[call_number] = new GenericRequestParams;
     add_metadata_kvp_callbacks[call_number]->callback = callback;
     add_metadata_kvp_callbacks[call_number]->object = object;
 
@@ -45,7 +45,7 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    delete_metadata_kvp_callbacks[call_number] = new DeleteMetadataKVPParams;
+    delete_metadata_kvp_callbacks[call_number] = new GenericRequestParams;
     delete_metadata_kvp_callbacks[call_number]->callback = callback;
     delete_metadata_kvp_callbacks[call_number]->object = object;
 

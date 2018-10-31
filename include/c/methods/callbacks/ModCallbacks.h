@@ -7,6 +7,7 @@
 #include "../../schemas/ModioResponse.h"
 #include "../../schemas/ModioMod.h"
 #include "../../../ModUtility.h"
+#include "../../../ModioUtility.h"
 
 struct GetModParams
 {
@@ -28,12 +29,6 @@ struct AddModParams
   void (*callback)(void* object, ModioResponse response, ModioMod mod);
 };
 
-struct DeleteModParams
-{
-  void* object;
-  void (*callback)(void* object, ModioResponse response);
-};
-
 struct CallbackParamReturnsId
 {
   void* object;
@@ -43,7 +38,7 @@ struct CallbackParamReturnsId
 
 extern std::map< u32,GetModParams* > get_mod_callbacks;
 extern std::map< u32,AddModParams* > add_mod_callbacks;
-extern std::map< u32,DeleteModParams* > delete_mod_callbacks;
+extern std::map< u32,GenericRequestParams* > delete_mod_callbacks;
 extern std::map< u32,GetAllModsParams* > get_all_mods_callbacks;
 extern std::map< u32,CallbackParamReturnsId* > return_id_callbacks;
 

@@ -7,14 +7,9 @@
 #include "../../schemas/ModioResponse.h"
 #include "../../schemas/ModioMod.h"
 #include "../../../ModUtility.h"
+#include "../../../ModioUtility.h"
 
-struct AddModRatingParams
-{
-  void* object;
-  void (*callback)(void* object, ModioResponse response);
-};
-
-extern std::map< u32, AddModRatingParams* > add_mod_rating_callbacks;
+extern std::map< u32, GenericRequestParams* > add_mod_rating_callbacks;
 
 void modioOnAddModRating(u32 call_number, u32 response_code, nlohmann::json response_json);
 

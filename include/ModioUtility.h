@@ -7,6 +7,11 @@
 #include "c/ModioC.h"
 #include "c++/schemas/Mod.h"
 
+struct GenericRequestParams
+{
+  void* object;
+  void (*callback)(void* object, ModioResponse response);
+};
 
 namespace modio
 {

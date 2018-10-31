@@ -21,7 +21,7 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    add_mod_tags_callbacks[call_number] = new EditTagsParams;
+    add_mod_tags_callbacks[call_number] = new GenericRequestParams;
     add_mod_tags_callbacks[call_number]->callback = callback;
     add_mod_tags_callbacks[call_number]->object = object;
 
@@ -45,7 +45,7 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    delete_mod_tags_callbacks[call_number] = new DeleteModTagsParams;
+    delete_mod_tags_callbacks[call_number] = new GenericRequestParams;
     delete_mod_tags_callbacks[call_number]->callback = callback;
     delete_mod_tags_callbacks[call_number]->object = object;
 

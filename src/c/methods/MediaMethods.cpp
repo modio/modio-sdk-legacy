@@ -7,7 +7,7 @@ void modioAddModLogo(void* object, u32 mod_id, char* logo_path, void (*callback)
 {
   u32 call_number = modio::curlwrapper::getCallNumber();
 
-  add_mod_logo_callbacks[call_number] = new AddModLogoParams;
+  add_mod_logo_callbacks[call_number] = new GenericRequestParams;
   add_mod_logo_callbacks[call_number]->callback = callback;
   add_mod_logo_callbacks[call_number]->object = object;
 
@@ -24,7 +24,7 @@ void modioAddModImages(void* object, u32 mod_id, char** image_paths_array, u32 i
 {
   u32 call_number = modio::curlwrapper::getCallNumber();
 
-  add_mod_images_callbacks[call_number] = new AddModImagesParams;
+  add_mod_images_callbacks[call_number] = new GenericRequestParams;
   add_mod_images_callbacks[call_number]->callback = callback;
   add_mod_images_callbacks[call_number]->object = object;
 
@@ -46,7 +46,7 @@ void modioAddModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_arra
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
-  add_mod_youtube_links_callbacks[call_number] = new AddModYoutubeLinksParams;
+  add_mod_youtube_links_callbacks[call_number] = new GenericRequestParams;
   add_mod_youtube_links_callbacks[call_number]->callback = callback;
   add_mod_youtube_links_callbacks[call_number]->object = object;
 
@@ -65,7 +65,7 @@ void modioAddModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
-  add_mod_sketchfab_links_callbacks[call_number] = new AddModSketchfabLinksParams;
+  add_mod_sketchfab_links_callbacks[call_number] = new GenericRequestParams;
   add_mod_sketchfab_links_callbacks[call_number]->callback = callback;
   add_mod_sketchfab_links_callbacks[call_number]->object = object;
 
@@ -84,7 +84,7 @@ void modioDeleteModImages(void* object, u32 mod_id, char** image_paths_array, u3
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
-  delete_mod_images_callbacks[call_number] = new DeleteModImagesParams;
+  delete_mod_images_callbacks[call_number] = new GenericRequestParams;
   delete_mod_images_callbacks[call_number]->callback = callback;
   delete_mod_images_callbacks[call_number]->object = object;
 
@@ -103,7 +103,7 @@ void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_a
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
-  delete_mod_youtube_links_callbacks[call_number] = new DeleteModYoutubeLinksParams;
+  delete_mod_youtube_links_callbacks[call_number] = new GenericRequestParams;
   delete_mod_youtube_links_callbacks[call_number]->callback = callback;
   delete_mod_youtube_links_callbacks[call_number]->object = object;
 
@@ -122,7 +122,7 @@ void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_lin
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
-  delete_mod_sketchfab_links_callbacks[call_number] = new DeleteModSketchfabLinksParams;
+  delete_mod_sketchfab_links_callbacks[call_number] = new GenericRequestParams;
   delete_mod_sketchfab_links_callbacks[call_number]->callback = callback;
   delete_mod_sketchfab_links_callbacks[call_number]->object = object;
 

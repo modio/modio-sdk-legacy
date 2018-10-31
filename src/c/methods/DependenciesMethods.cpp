@@ -20,7 +20,7 @@ extern "C"
 
 		u32 call_number = modio::curlwrapper::getCallNumber();
 
-		add_mod_dependencies_callbacks[call_number] = new AddModDependienciesParams;
+		add_mod_dependencies_callbacks[call_number] = new GenericRequestParams;
 		add_mod_dependencies_callbacks[call_number]->callback = callback;
 		add_mod_dependencies_callbacks[call_number]->object = object;
 
@@ -43,7 +43,7 @@ extern "C"
 		std::map<std::string, std::string> data;
 		u32 call_number = modio::curlwrapper::getCallNumber();
 
-		delete_mod_dependencies_callbacks[call_number] = new DeleteModDependenciesParams;
+		delete_mod_dependencies_callbacks[call_number] = new GenericRequestParams;
 		delete_mod_dependencies_callbacks[call_number]->callback = callback;
 		delete_mod_dependencies_callbacks[call_number]->object = object;
 

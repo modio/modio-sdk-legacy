@@ -1,8 +1,8 @@
 #include "c/methods/callbacks/MetadataKVPCallbacks.h"
 
 std::map< u32, GetAllMetadataKVPParams* > get_all_metadata_kvp_callbacks;
-std::map< u32, AddMetadataKVPParams* > add_metadata_kvp_callbacks;
-std::map< u32, DeleteMetadataKVPParams* > delete_metadata_kvp_callbacks;
+std::map< u32, GenericRequestParams* > add_metadata_kvp_callbacks;
+std::map< u32, GenericRequestParams* > delete_metadata_kvp_callbacks;
 
 void modioOnGetAllMetadataKVP(u32 call_number, u32 response_code, nlohmann::json response_json)
 {

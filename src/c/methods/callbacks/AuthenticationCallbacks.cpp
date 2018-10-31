@@ -1,7 +1,7 @@
 #include "c/methods/callbacks/AuthenticationCallbacks.h"
 
-std::map<u32, EmailRequestParams *> email_request_params;
-std::map<u32, EmailExchangeParams *> email_exchange_params;
+std::map<u32, GenericRequestParams *> email_request_params;
+std::map<u32, GenericRequestParams *> email_exchange_params;
 
 void modioOnEmailRequested(u32 call_number, u32 response_code, nlohmann::json response_json)
 {

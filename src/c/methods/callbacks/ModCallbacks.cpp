@@ -2,7 +2,7 @@
 
 std::map<u32, GetModParams *> get_mod_callbacks;
 std::map<u32, AddModParams *> add_mod_callbacks;
-std::map<u32, DeleteModParams *> delete_mod_callbacks;
+std::map<u32, GenericRequestParams *> delete_mod_callbacks;
 std::map<u32, GetAllModsParams *> get_all_mods_callbacks;
 std::map<u32, CallbackParamReturnsId *> return_id_callbacks;
 

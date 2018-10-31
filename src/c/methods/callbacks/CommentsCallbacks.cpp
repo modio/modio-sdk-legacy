@@ -2,7 +2,7 @@
 
 std::map<u32, GetAllModCommentsParams *> get_all_mod_comments_callbacks;
 std::map<u32, GetModCommentParams *> get_mod_comment_callbacks;
-std::map<u32, DeleteModCommentParams *> delete_mod_comment_callbacks;
+std::map<u32, GenericRequestParams *> delete_mod_comment_callbacks;
 
 void modioOnGetAllModComments(u32 call_number, u32 response_code, nlohmann::json response_json)
 {

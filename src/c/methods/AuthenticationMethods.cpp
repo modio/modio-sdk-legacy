@@ -10,7 +10,7 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    email_request_params[call_number] = new EmailRequestParams;
+    email_request_params[call_number] = new GenericRequestParams;
     email_request_params[call_number]->callback = callback;
     email_request_params[call_number]->object = object;
 
@@ -27,7 +27,7 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    email_exchange_params[call_number] = new EmailExchangeParams;
+    email_exchange_params[call_number] = new GenericRequestParams;
     email_exchange_params[call_number]->callback = callback;
     email_exchange_params[call_number]->object = object;
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailexchange";
