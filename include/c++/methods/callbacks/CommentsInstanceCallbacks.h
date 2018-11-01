@@ -10,14 +10,9 @@ struct GetModCommentCall
   const std::function<void(const modio::Response &response, modio::Comment &comment)> callback;
 };
 
-struct DeleteModCommentCall
-{
-  const std::function<void(const modio::Response &response)> callback;
-};
-
 extern std::map<u32, GetAllModCommentsCall *> get_all_mod_comments_calls;
 extern std::map<u32, GetModCommentCall *> get_mod_comment_calls;
-extern std::map<u32, DeleteModCommentCall *> delete_mod_comment_calls;
+extern std::map<u32, GenericCall *> delete_mod_comment_calls;
 
 void onGetAllModComments(void *object, ModioResponse response, ModioComment *comments_array, u32 comments_array_size);
 void onGetModComment(void *object, ModioResponse response, ModioComment comment);

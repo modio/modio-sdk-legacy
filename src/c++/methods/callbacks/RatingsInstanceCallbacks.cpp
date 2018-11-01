@@ -2,7 +2,7 @@
 
 namespace modio
 {
-std::map<u32, AddModRatingCall *> add_mod_rating_calls;
+std::map<u32, GenericCall *> add_mod_rating_calls;
 
 void onAddModRating(void *object, ModioResponse modio_response)
 {

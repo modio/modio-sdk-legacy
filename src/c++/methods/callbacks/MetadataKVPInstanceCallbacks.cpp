@@ -3,8 +3,8 @@
 namespace modio
 {
 std::map<u32, GetAllMetadataKVPCall *> get_all_metadata_kvp_calls;
-std::map<u32, AddMetadataKVPCall *> add_metadata_kvp_calls;
-std::map<u32, DeleteMetadataKVPCall *> delete_metadata_kvp_calls;
+std::map<u32, GenericCall *> add_metadata_kvp_calls;
+std::map<u32, GenericCall *> delete_metadata_kvp_calls;
 
 void onGetAllMetadataKVP(void *object, ModioResponse modio_response, ModioMetadataKVP *metadata_kvp_array, u32 metadata_kvp_array_size)
 {

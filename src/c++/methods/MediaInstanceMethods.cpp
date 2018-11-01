@@ -4,8 +4,8 @@ namespace modio
 {
 void Instance::addModLogo(u32 mod_id, std::string logo_path, const std::function<void(const modio::Response &response)> &callback)
 {
-  const struct AddModLogoCall *add_mod_logo_call = new AddModLogoCall{callback};
-  add_mod_logo_calls[this->current_call_id] = (AddModLogoCall *)add_mod_logo_call;
+  const struct GenericCall *add_mod_logo_call = new GenericCall{callback};
+  add_mod_logo_calls[this->current_call_id] = (GenericCall *)add_mod_logo_call;
 
   modioAddModLogo((void *)new u32(this->current_call_id), mod_id, (char *)logo_path.c_str(), &onAddModLogo);
 
@@ -21,8 +21,8 @@ void Instance::addModImages(u32 mod_id, std::vector<std::string> image_paths, co
     strcpy(image_paths_array[i], (char *)image_paths[i].c_str());
   }
 
-  const struct AddModImagesCall *add_mod_images_call = new AddModImagesCall{callback};
-  add_mod_images_calls[this->current_call_id] = (AddModImagesCall *)add_mod_images_call;
+  const struct GenericCall *add_mod_images_call = new GenericCall{callback};
+  add_mod_images_calls[this->current_call_id] = (GenericCall *)add_mod_images_call;
 
   modioAddModImages((void *)new u32(this->current_call_id), mod_id, image_paths_array, (u32)image_paths.size(), &onAddModImages);
 
@@ -42,8 +42,8 @@ void Instance::addModYoutubeLinks(u32 mod_id, std::vector<std::string> youtube_l
     strcpy(youtube_links_array[i], (char *)youtube_links[i].c_str());
   }
 
-  const struct AddModYoutubeLinksCall *add_mod_youtube_links_call = new AddModYoutubeLinksCall{callback};
-  add_mod_youtube_links_calls[this->current_call_id] = (AddModYoutubeLinksCall *)add_mod_youtube_links_call;
+  const struct GenericCall *add_mod_youtube_links_call = new GenericCall{callback};
+  add_mod_youtube_links_calls[this->current_call_id] = (GenericCall *)add_mod_youtube_links_call;
 
   modioAddModYoutubeLinks((void *)new u32(this->current_call_id), mod_id, youtube_links_array, (u32)youtube_links.size(), &onAddModYoutubeLinks);
 
@@ -63,8 +63,8 @@ void Instance::addModSketchfabLinks(u32 mod_id, std::vector<std::string> sketchf
     strcpy(sketchfab_links_array[i], (char *)sketchfab_links[i].c_str());
   }
 
-  const struct AddModSketchfabLinksCall *add_mod_sketchfab_links_call = new AddModSketchfabLinksCall{callback};
-  add_mod_sketchfab_links_calls[this->current_call_id] = (AddModSketchfabLinksCall *)add_mod_sketchfab_links_call;
+  const struct GenericCall *add_mod_sketchfab_links_call = new GenericCall{callback};
+  add_mod_sketchfab_links_calls[this->current_call_id] = (GenericCall *)add_mod_sketchfab_links_call;
 
   modioAddModSketchfabLinks((void *)new u32(this->current_call_id), mod_id, sketchfab_links_array, (u32)sketchfab_links.size(), &onAddModSketchfabLinks);
 
@@ -84,8 +84,8 @@ void Instance::deleteModImages(u32 mod_id, std::vector<std::string> image_paths,
     strcpy(image_paths_array[i], (char *)image_paths[i].c_str());
   }
 
-  const struct DeleteModImagesCall *delete_mod_images_call = new DeleteModImagesCall{callback};
-  delete_mod_images_calls[this->current_call_id] = (DeleteModImagesCall *)delete_mod_images_call;
+  const struct GenericCall *delete_mod_images_call = new GenericCall{callback};
+  delete_mod_images_calls[this->current_call_id] = (GenericCall *)delete_mod_images_call;
 
   modioDeleteModImages((void *)new u32(this->current_call_id), mod_id, image_paths_array, (u32)image_paths.size(), &onDeleteModImages);
 
@@ -105,8 +105,8 @@ void Instance::deleteModYoutubeLinks(u32 mod_id, std::vector<std::string> youtub
     strcpy(youtube_links_array[i], (char *)youtube_links[i].c_str());
   }
 
-  const struct DeleteModYoutubeLinksCall *delete_mod_youtube_links_call = new DeleteModYoutubeLinksCall{callback};
-  delete_mod_youtube_links_calls[this->current_call_id] = (DeleteModYoutubeLinksCall *)delete_mod_youtube_links_call;
+  const struct GenericCall *delete_mod_youtube_links_call = new GenericCall{callback};
+  delete_mod_youtube_links_calls[this->current_call_id] = (GenericCall *)delete_mod_youtube_links_call;
 
   modioDeleteModYoutubeLinks((void *)new u32(this->current_call_id), mod_id, youtube_links_array, (u32)youtube_links.size(), &onDeleteModYoutubeLinks);
 
@@ -126,8 +126,8 @@ void Instance::deleteModSketchfabLinks(u32 mod_id, std::vector<std::string> sket
     strcpy(sketchfab_links_array[i], (char *)sketchfab_links[i].c_str());
   }
 
-  const struct DeleteModSketchfabLinksCall *delete_mod_sketchfab_links_call = new DeleteModSketchfabLinksCall{callback};
-  delete_mod_sketchfab_links_calls[this->current_call_id] = (DeleteModSketchfabLinksCall *)delete_mod_sketchfab_links_call;
+  const struct GenericCall *delete_mod_sketchfab_links_call = new GenericCall{callback};
+  delete_mod_sketchfab_links_calls[this->current_call_id] = (GenericCall *)delete_mod_sketchfab_links_call;
 
   modioDeleteModSketchfabLinks((void *)new u32(this->current_call_id), mod_id, sketchfab_links_array, (u32)sketchfab_links.size(), &onDeleteModSketchfabLinks);
 

@@ -39,8 +39,8 @@ void Instance::editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor &mod
 
 void Instance::deleteModfile(u32 mod_id, u32 modfile_id, const std::function<void(const modio::Response &response)> &callback)
 {
-  const struct DeleteModfileCall *delete_modfile_call = new DeleteModfileCall{callback};
-  delete_modfile_calls[this->current_call_id] = (DeleteModfileCall *)delete_modfile_call;
+  const struct GenericCall *delete_modfile_call = new GenericCall{callback};
+  delete_modfile_calls[this->current_call_id] = (GenericCall *)delete_modfile_call;
 
   modioDeleteModfile((void *)new u32(this->current_call_id), mod_id, modfile_id, &onDeleteModfile);
 
