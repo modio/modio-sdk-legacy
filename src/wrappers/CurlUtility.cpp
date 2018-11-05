@@ -12,21 +12,18 @@ std::map<CURL *, OngoingDownload *> ongoing_downloads;
 std::list<QueuedModDownload *> mod_download_queue;
 std::list<QueuedModfileUpload *> modfile_upload_queue;
 
-FILE *current_mod_download_file;
-
-CURL *current_mod_download_curl_handle;
 CURL *current_modfile_upload_curl_handle;
 
-struct curl_slist *current_mod_download_slist;
 struct curl_slist *current_modfile_upload_slist;
 struct curl_httppost *current_modfile_upload_httppost;
 
-QueuedModDownload *current_queued_mod_download;
 QueuedModfileUpload *current_queued_modfile_upload;
 CurrentDownloadHandle *current_download_handle;
 
 u32 call_count;
 u32 ongoing_call;
+
+CurrentModDownload* current_mod_download;
 
 std::list<QueuedModDownload *> getModDownloadQueue()
 {
@@ -155,8 +152,8 @@ void prioritizeModDownload(u32 mod_id)
 
   writeJson(modio::getModIODirectory() + "mod_download_queue.json", result_json);
 
-  if (current_queued_mod_download)
-    current_queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
+  if (current_mod_download->queued_mod_download)
+    current_mod_download->queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
 }
 
 void downloadNextQueuedMod()

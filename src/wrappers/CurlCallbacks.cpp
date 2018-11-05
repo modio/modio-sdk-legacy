@@ -62,14 +62,14 @@ void onDownloadFinished(CURL *curl)
 
 void onModDownloadFinished(CURL *curl)
 {
-  fclose(current_mod_download_file);
-  current_mod_download_file = NULL;
+  fclose(current_mod_download->file);
+  current_mod_download->file = NULL;
 
-  if (current_queued_mod_download->state == MODIO_MOD_DOWNLOADING)
+  if (current_mod_download->queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
-    std::string installation_path = modio::getModIODirectory() + "mods/" + modio::toString(current_queued_mod_download->mod_id) + "/";
-    std::string downloaded_zip_path = current_queued_mod_download->path;
-    nlohmann::json mod_json = modio::toJson(current_queued_mod_download->mod);
+    std::string installation_path = modio::getModIODirectory() + "mods/" + modio::toString(current_mod_download->queued_mod_download->mod_id) + "/";
+    std::string downloaded_zip_path = current_mod_download->queued_mod_download->path;
+    nlohmann::json mod_json = modio::toJson(current_mod_download->queued_mod_download->mod);
 
     addToDownloadedModsJson(installation_path, downloaded_zip_path, mod_json);
     
@@ -78,39 +78,37 @@ void onModDownloadFinished(CURL *curl)
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
-    if (response_code >= 200 || response_code < 300)
+    if (response_code >= 200 && response_code < 300)
     {
-      writeLogLine("Download finished successfully. Mod id: " + toString(current_queued_mod_download->mod_id) + " Url: " + current_queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine("Download finished successfully. Mod id: " + toString(current_mod_download->queued_mod_download->mod_id) + " Url: " + current_mod_download->queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
     }
     else
     {
-      writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(current_queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
+      writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(current_mod_download->queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
     }
 
     if (modio::download_callback)
-      modio::download_callback(response_code, current_queued_mod_download->mod.id);
+    {
+      modio::download_callback(response_code,  current_mod_download->queued_mod_download->mod.id);
+    }
 
-    modio::curlwrapper::mod_download_queue.remove(current_queued_mod_download);
-    delete current_queued_mod_download;
-    current_queued_mod_download = NULL;
+    modio::curlwrapper::mod_download_queue.remove(current_mod_download->queued_mod_download);
 
-    current_mod_download_curl_handle = NULL;
-
-    curl_slist_free_all(current_mod_download_slist);
-    current_mod_download_slist = NULL;
+    delete current_mod_download;
+    current_mod_download = NULL;
     
     updateModDownloadQueueFile();
     downloadNextQueuedMod();
   }
-  else if (current_queued_mod_download->state == MODIO_MOD_PAUSING)
+  else if (current_mod_download->queued_mod_download->state == MODIO_MOD_PAUSING)
   {
-    modio::writeLogLine("Mod " + modio::toString(current_queued_mod_download->mod_id) + " download paused", MODIO_DEBUGLEVEL_LOG);
-    current_queued_mod_download->state = MODIO_MOD_PAUSED;
+    modio::writeLogLine("Mod " + modio::toString(current_mod_download->queued_mod_download->mod_id) + " download paused", MODIO_DEBUGLEVEL_LOG);
+    current_mod_download->queued_mod_download->state = MODIO_MOD_PAUSED;
   }
-  else if (current_queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
+  else if (current_mod_download->queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
   {
-    modio::writeLogLine("Mod " + modio::toString(current_queued_mod_download->mod_id) + " download paused. Another mod is being prioritized.", MODIO_DEBUGLEVEL_LOG);
-    current_queued_mod_download->state = MODIO_MOD_QUEUED;
+    modio::writeLogLine("Mod " + modio::toString(current_mod_download->queued_mod_download->mod_id) + " download paused. Another mod is being prioritized.", MODIO_DEBUGLEVEL_LOG);
+    current_mod_download->queued_mod_download->state = MODIO_MOD_QUEUED;
     updateModDownloadQueue();
     downloadNextQueuedMod();
   }

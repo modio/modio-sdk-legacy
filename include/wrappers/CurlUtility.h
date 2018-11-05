@@ -68,6 +68,18 @@ struct CurrentDownloadHandle
   bool pause_flag;
 };
 
+class CurrentModDownload
+{
+public:
+  QueuedModDownload *queued_mod_download;
+  CURL *curl_handle;
+  struct curl_slist *slist;
+  FILE *file;
+
+  CurrentModDownload();
+  ~CurrentModDownload();
+};
+
 extern CURLM *curl_multi_handle;
 
 extern std::map<CURL *, JsonResponseHandler *> ongoing_calls;
@@ -76,16 +88,11 @@ extern std::map<CURL *, OngoingDownload *> ongoing_downloads;
 extern std::list<QueuedModDownload *> mod_download_queue;
 extern std::list<QueuedModfileUpload *> modfile_upload_queue;
 
-extern FILE *current_mod_download_file;
-
-extern CURL *current_mod_download_curl_handle;
 extern CURL *current_modfile_upload_curl_handle;
 
-extern struct curl_slist *current_mod_download_slist;
 extern struct curl_slist *current_modfile_upload_slist;
 extern struct curl_httppost *current_modfile_upload_httppost;
 
-extern QueuedModDownload *current_queued_mod_download;
 extern QueuedModfileUpload *current_queued_modfile_upload;
 extern CurrentDownloadHandle *current_download_handle;
 
@@ -94,6 +101,8 @@ extern u32 ongoing_call;
 
 std::list<QueuedModDownload *> getModDownloadQueue();
 std::list<QueuedModfileUpload *> getModfileUploadQueue();
+
+extern CurrentModDownload* current_mod_download;
 
 void updateModDownloadQueue();
 void updateModDownloadQueueFile();
