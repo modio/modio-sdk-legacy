@@ -23,6 +23,7 @@
 #include <vector>
 #include <string.h>
 #include <fstream>
+#include <chrono>
 
 #include "c/ModioC.h"
 #include "dependencies/nlohmann/json.hpp"
@@ -57,36 +58,37 @@ namespace modio
 std::string MODIO_DLL toString(i32 number);
 std::string MODIO_DLL toString(u32 number);
 std::string MODIO_DLL toString(double number);
-std::string replaceSubstrings(const std::string& str, const std::string& from, const std::string &to);
-std::string addSlashIfNeeded(const std::string& directory_path);
+std::string replaceSubstrings(const std::string &str, const std::string &from, const std::string &to);
+std::string addSlashIfNeeded(const std::string &directory_path);
 
 // Log methods
-void writeLogLine(const std::string& text, u32 debug_level);
+void writeLogLine(const std::string &text, u32 debug_level);
 void clearLog();
 
 // Time methods
 u32 getCurrentTime();
+double getCurrentTimeMillis();
 
 // Json methods
-bool hasKey(nlohmann::json json_object, const std::string& key);
-nlohmann::json toJson(const std::string& json_str);
-nlohmann::json openJson(const std::string& file_path);
-void writeJson(const std::string& file_path, nlohmann::json json_object);
+bool hasKey(nlohmann::json json_object, const std::string &key);
+nlohmann::json toJson(const std::string &json_str);
+nlohmann::json openJson(const std::string &file_path);
+void writeJson(const std::string &file_path, nlohmann::json json_object);
 
 // Filesystem methods
 std::string getModIODirectory();
-std::vector<std::string> getFilenames(const std::string& directory);
-bool isDirectory(const std::string& directory);
-bool directoryExists(const std::string& path);
-bool fileExists(const std::string& directory);
-std::string getDirectoryPath (const std::string& filename);
-void createDirectory(const std::string& directory);
-bool removeDirectory(const std::string& directory);
-void removeFile(const std::string& filename);
-double getFileSize(const std::string& file_path);
-void createPath(const std::string& strPathAndFile);
+std::vector<std::string> getFilenames(const std::string &directory);
+bool isDirectory(const std::string &directory);
+bool directoryExists(const std::string &path);
+bool fileExists(const std::string &directory);
+std::string getDirectoryPath(const std::string &filename);
+void createDirectory(const std::string &directory);
+bool removeDirectory(const std::string &directory);
+void removeFile(const std::string &filename);
+double getFileSize(const std::string &file_path);
+void createPath(const std::string &strPathAndFile);
 std::vector<std::string> getHeaders();
 std::vector<std::string> getUrlEncodedHeaders();
-}
+} // namespace modio
 
 #endif
