@@ -4,38 +4,10 @@ namespace modio
 {
 namespace curlwrapper
 {
-
-CurrentModDownload::CurrentModDownload()
-{
-  this->queued_mod_download = NULL;
-  this->curl_handle = NULL;
-  this->slist = NULL;
-  this->file = NULL;
-}
-
-CurrentModDownload::~CurrentModDownload()
-{
-  if(this->queued_mod_download)
-    delete this->queued_mod_download;
-  if(slist)
-    curl_slist_free_all(slist);
-  if (this->file)
-    fclose(this->file);
-  //if (curl_handle)
-  //  curl_easy_cleanup(curl_handle);
-}
-
 void initCurl()
 {
-  current_modfile_upload_slist = NULL;
-  current_modfile_upload_httppost = NULL;
-
   current_mod_download = NULL;
-
-  current_download_handle = new CurrentDownloadHandle;
-  current_download_handle->path = "";
-  current_download_handle->pause_flag = false;
-  current_download_handle->curl = NULL;
+  current_modfile_upload = NULL;
 
   curl_multi_handle = curl_multi_init();
 
@@ -82,22 +54,8 @@ void shutdownCurl()
   }
   modfile_upload_queue.clear();
 
-  if (current_modfile_upload_curl_handle)
-    curl_easy_cleanup(current_modfile_upload_curl_handle);
-
-  if (current_mod_download)
-    delete current_mod_download;
-
-  if (current_modfile_upload_slist)
-    curl_slist_free_all(current_modfile_upload_slist);
-
-  if (current_modfile_upload_httppost)
-    curl_formfree(current_modfile_upload_httppost);
-
-  //current_queued_modfile_upload // ???
-
-  if (current_download_handle)
-    delete current_download_handle; // ???
+  if (current_modfile_upload)
+    delete current_modfile_upload;
 }
 
 u32 getCallNumber()
@@ -128,22 +86,23 @@ void process()
       {
         onJsonRequestFinished(curl_handle);
       }
-
-      if (ongoing_downloads.find(curl_handle) != ongoing_downloads.end())
+      else if (ongoing_downloads.find(curl_handle) != ongoing_downloads.end())
       {
         onDownloadFinished(curl_handle);
       }
-
-      if (current_mod_download && current_mod_download->curl_handle && current_mod_download->curl_handle == curl_handle)
+      else if (current_mod_download && current_mod_download->curl_handle && current_mod_download->curl_handle == curl_handle)
       {
         onModDownloadFinished(curl_handle);
       }
-
-      if (current_modfile_upload_curl_handle && current_modfile_upload_curl_handle == curl_handle)
+      else if (current_modfile_upload && current_modfile_upload->curl_handle && current_modfile_upload->curl_handle == curl_handle)
       {
         onModfileUploadFinished(curl_handle);
       }
-
+      else
+      {
+        modio::writeLogLine("Unprocessed curl call finished.", MODIO_DEBUGLEVEL_ERROR);
+      }
+      
       curl_multi_remove_handle(curl_multi_handle, curl_handle);
       curl_easy_cleanup(curl_handle);
     }
@@ -404,22 +363,6 @@ void pauseModDownloads()
   {
     current_mod_download->queued_mod_download->state = MODIO_MOD_PAUSING;
   }
-
-  // File downloads
-  std::string path = current_download_handle->path;
-
-  if (path != "")
-  {
-    std::string extension = path.substr(path.length() - 4);
-
-    for (u32 i = 1; i < extension.size(); i++)
-      extension[i] = tolower(extension[i]);
-
-    if (extension == ".zip")
-    {
-      current_download_handle->pause_flag = true;
-    }
-  }
 }
 
 void resumeModDownloads()
@@ -441,10 +384,6 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
   if (curl)
   {
-    current_download_handle->path = path;
-    current_download_handle->pause_flag = false;
-    current_download_handle->curl = curl;
-
     struct curl_slist *slist = NULL;
     for (u32 i = 0; i < headers.size(); i++)
       slist = curl_slist_append(slist, headers[i].c_str());
@@ -635,20 +574,16 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   {
     writeLogLine("Could not find the modfile to upload: " + modfile_path, MODIO_DEBUGLEVEL_ERROR);
 
-    modfile_upload_queue.remove(queued_modfile_upload);
-    updateModUploadQueueFile();
-
     if (modio::upload_callback)
     {
       modio::upload_callback(0, queued_modfile_upload->mod_id);
     }
 
+    modfile_upload_queue.remove(queued_modfile_upload);
     delete queued_modfile_upload;
 
-    if (modfile_upload_queue.size() > 0)
-    {
-      uploadModfile(modfile_upload_queue.front());
-    }
+    updateModUploadQueueFile();
+    uploadNextQueuedModfile();
 
     return;
   }
@@ -664,42 +599,44 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 
   if (curl)
   {
+    current_modfile_upload = new CurrentModfileUpload();
+
     struct curl_httppost *lastptr = NULL;
 
     std::multimap<std::string, std::string> curlform_copycontents = modio::convertModfileCreatorToMultimap(queued_modfile_upload->modfile_creator.getModioModfileCreator());
 
-    curl_formadd(&current_modfile_upload_httppost, &lastptr, CURLFORM_COPYNAME, "filedata",
+    curl_formadd(&current_modfile_upload->httppost, &lastptr, CURLFORM_COPYNAME, "filedata",
                  CURLFORM_FILE, modfile_zip_path.c_str(), CURLFORM_END);
 
     for (std::map<std::string, std::string>::iterator i = curlform_copycontents.begin();
          i != curlform_copycontents.end();
          i++)
     {
-      curl_formadd(&current_modfile_upload_httppost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
+      curl_formadd(&current_modfile_upload->httppost, &lastptr, CURLFORM_COPYNAME, (*i).first.c_str(),
                    CURLFORM_COPYCONTENTS, (*i).second.c_str(), CURLFORM_END);
     }
 
-    curl_formadd(&current_modfile_upload_httppost,
+    curl_formadd(&current_modfile_upload->httppost,
                  &lastptr,
                  CURLFORM_COPYNAME, "submit",
                  CURLFORM_COPYCONTENTS, "send",
                  CURLFORM_END);
 
     queued_modfile_upload->state = MODIO_MOD_STARTING_UPLOAD;
-    current_modfile_upload_curl_handle = curl;
-    current_queued_modfile_upload = queued_modfile_upload;
+    current_modfile_upload->curl_handle = curl;
+    current_modfile_upload->queued_modfile_upload = queued_modfile_upload;
 
     for (u32 i = 0; i < modio::getHeaders().size(); i++)
-      current_modfile_upload_slist = curl_slist_append(current_modfile_upload_slist, modio::getHeaders()[i].c_str());
+      current_modfile_upload->slist = curl_slist_append(current_modfile_upload->slist, modio::getHeaders()[i].c_str());
 
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, current_modfile_upload_slist);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, current_modfile_upload->slist);
 
     url = modio::replaceSubstrings(url, " ", "%20");
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
     setVerifies(curl);
 
-    curl_easy_setopt(curl, CURLOPT_HTTPPOST, current_modfile_upload_httppost);
+    curl_easy_setopt(curl, CURLOPT_HTTPPOST, current_modfile_upload->httppost);
 
     curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, onModUploadProgress);
     curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, queued_modfile_upload);

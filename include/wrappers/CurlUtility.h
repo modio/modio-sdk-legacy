@@ -80,35 +80,39 @@ public:
   ~CurrentModDownload();
 };
 
+class CurrentModfileUpload
+{
+public:
+  QueuedModfileUpload *queued_modfile_upload;
+  CURL *curl_handle;
+  struct curl_slist *slist;
+  struct curl_httppost *httppost;
+
+  CurrentModfileUpload();
+  ~CurrentModfileUpload();
+};
+
 extern CURLM *curl_multi_handle;
-
-extern std::map<CURL *, JsonResponseHandler *> ongoing_calls;
-extern std::map<CURL *, OngoingDownload *> ongoing_downloads;
-
-extern std::list<QueuedModDownload *> mod_download_queue;
-extern std::list<QueuedModfileUpload *> modfile_upload_queue;
-
-extern CURL *current_modfile_upload_curl_handle;
-
-extern struct curl_slist *current_modfile_upload_slist;
-extern struct curl_httppost *current_modfile_upload_httppost;
-
-extern QueuedModfileUpload *current_queued_modfile_upload;
-extern CurrentDownloadHandle *current_download_handle;
-
 extern u32 call_count;
 extern u32 ongoing_call;
 
-std::list<QueuedModDownload *> getModDownloadQueue();
-std::list<QueuedModfileUpload *> getModfileUploadQueue();
+extern std::map<CURL *, JsonResponseHandler *> ongoing_calls;
+extern std::map<CURL *, OngoingDownload *> ongoing_downloads;
+extern std::list<QueuedModDownload *> mod_download_queue;
+extern std::list<QueuedModfileUpload *> modfile_upload_queue;
 
 extern CurrentModDownload* current_mod_download;
+extern CurrentModfileUpload* current_modfile_upload;
+
+std::list<QueuedModDownload *> getModDownloadQueue();
+std::list<QueuedModfileUpload *> getModfileUploadQueue();
 
 void updateModDownloadQueue();
 void updateModDownloadQueueFile();
 void updateModUploadQueueFile();
 void prioritizeModDownload(u32 mod_id);
 void downloadNextQueuedMod();
+void uploadNextQueuedModfile();
 
 void setHeaders(std::vector<std::string> headers, CURL *curl);
 void setVerifies(CURL *curl);

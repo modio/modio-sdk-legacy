@@ -93,6 +93,7 @@ void onModDownloadFinished(CURL *curl)
     }
 
     modio::curlwrapper::mod_download_queue.remove(current_mod_download->queued_mod_download);
+    delete current_mod_download->queued_mod_download;
 
     delete current_mod_download;
     current_mod_download = NULL;
@@ -117,34 +118,26 @@ void onModDownloadFinished(CURL *curl)
 
 void onModfileUploadFinished(CURL *curl)
 {
-  writeLogLine("Upload Finished. Mod id: " + toString(current_queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
+  writeLogLine("Upload Finished. Mod id: " + toString(current_modfile_upload->queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
 
-  if (current_queued_modfile_upload->state == MODIO_MOD_UPLOADING)
+  if (current_modfile_upload->queued_modfile_upload->state == MODIO_MOD_UPLOADING)
   {
-    modfile_upload_queue.remove(current_queued_modfile_upload);
-    updateModUploadQueueFile();
-
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
     if (modio::upload_callback)
     {
-      modio::upload_callback(response_code, current_queued_modfile_upload->mod_id);
+      modio::upload_callback(response_code, current_modfile_upload->queued_modfile_upload->mod_id);
     }
 
-    delete current_queued_modfile_upload;
-    curl_slist_free_all(current_modfile_upload_slist);
-    curl_formfree(current_modfile_upload_httppost);
+    delete current_modfile_upload->queued_modfile_upload;
+    modfile_upload_queue.remove(current_modfile_upload->queued_modfile_upload);
 
-    current_queued_modfile_upload = NULL;
-    current_modfile_upload_curl_handle = NULL;
-    current_modfile_upload_slist = NULL;
-    current_modfile_upload_httppost = NULL;
-
-    if (modfile_upload_queue.size() > 0)
-    {
-      uploadModfile(modfile_upload_queue.front());
-    }
+    delete current_modfile_upload;
+    current_modfile_upload = NULL;
+    
+    updateModUploadQueueFile();
+    uploadNextQueuedModfile();
   }
   updateModUploadQueueFile();
 }
