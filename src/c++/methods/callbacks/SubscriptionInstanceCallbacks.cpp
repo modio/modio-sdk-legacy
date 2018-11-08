@@ -3,7 +3,7 @@
 namespace modio
 {
 std::map<u32, SubscribeToModCall *> subscribe_to_mod_calls;
-std::map<u32, UnsubscribeFromModCall *> unsubscribe_from_mod_calls;
+std::map<u32, GenericCall *> unsubscribe_from_mod_calls;
 
 void onSubscribeToMod(void *object, ModioResponse modio_response, ModioMod mod)
 {

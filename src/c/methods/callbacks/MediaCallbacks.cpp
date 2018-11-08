@@ -1,12 +1,12 @@
 #include "c/methods/callbacks/MediaCallbacks.h"
 
-std::map< u32, AddModLogoParams* > add_mod_logo_callbacks;
-std::map< u32, AddModImagesParams* > add_mod_images_callbacks;
-std::map< u32, AddModYoutubeLinksParams* > add_mod_youtube_links_callbacks;
-std::map< u32, AddModSketchfabLinksParams* > add_mod_sketchfab_links_callbacks;
-std::map< u32, DeleteModImagesParams* > delete_mod_images_callbacks;
-std::map< u32, DeleteModYoutubeLinksParams* > delete_mod_youtube_links_callbacks;
-std::map< u32, DeleteModSketchfabLinksParams* > delete_mod_sketchfab_links_callbacks;
+std::map< u32, GenericRequestParams* > add_mod_logo_callbacks;
+std::map< u32, GenericRequestParams* > add_mod_images_callbacks;
+std::map< u32, GenericRequestParams* > add_mod_youtube_links_callbacks;
+std::map< u32, GenericRequestParams* > add_mod_sketchfab_links_callbacks;
+std::map< u32, GenericRequestParams* > delete_mod_images_callbacks;
+std::map< u32, GenericRequestParams* > delete_mod_youtube_links_callbacks;
+std::map< u32, GenericRequestParams* > delete_mod_sketchfab_links_callbacks;
 
 void modioOnAddModLogo(u32 call_number, u32 response_code, nlohmann::json response_json)
 {

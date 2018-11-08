@@ -62,65 +62,54 @@ void onDownloadFinished(CURL *curl)
 
 void onModDownloadFinished(CURL *curl)
 {
-  fclose(current_mod_download_file);
-  current_mod_download_file = NULL;
+  fclose(current_mod_download->file);
+  current_mod_download->file = NULL;
 
-  if (current_queued_mod_download->state == MODIO_MOD_DOWNLOADING)
+  if (current_mod_download->queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
-    std::string destination_path_str = modio::getModIODirectory() + "mods/" + modio::toString(current_queued_mod_download->mod_id) + "/";
-    modio::createDirectory(destination_path_str);
-    writeLogLine("Extracting...", MODIO_DEBUGLEVEL_LOG);
-    modio::minizipwrapper::extract(current_queued_mod_download->path, destination_path_str);
-    writeLogLine("Removing temporary file...", MODIO_DEBUGLEVEL_LOG);
-    modio::removeFile(current_queued_mod_download->path);
+    std::string installation_path = modio::getModIODirectory() + "mods/" + modio::toString(current_mod_download->queued_mod_download->mod_id) + "/";
+    std::string downloaded_zip_path = current_mod_download->queued_mod_download->path;
+    nlohmann::json mod_json = modio::toJson(current_mod_download->queued_mod_download->mod);
 
-    destination_path_str = addSlashIfNeeded(destination_path_str);
-
-    modio::writeJson(destination_path_str + std::string("modio.json"), modio::toJson(current_queued_mod_download->mod));
-
-    modio::addToInstalledModsJson(current_queued_mod_download->mod_id,
-      destination_path_str,
-      current_queued_mod_download->mod.modfile.id,
-      current_queued_mod_download->mod.date_updated);
-
-    writeLogLine("Finished installing mod", MODIO_DEBUGLEVEL_LOG);
+    addToDownloadedModsJson(installation_path, downloaded_zip_path, mod_json);
+    
+    writeLogLine("Finished downloading mod", MODIO_DEBUGLEVEL_LOG);
 
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
-    if (response_code >= 200 || response_code < 300)
+    if (response_code >= 200 && response_code < 300)
     {
-      writeLogLine("Download finished successfully. Mod id: " + toString(current_queued_mod_download->mod_id) + " Url: " + current_queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
+      writeLogLine("Download finished successfully. Mod id: " + toString(current_mod_download->queued_mod_download->mod_id) + " Url: " + current_mod_download->queued_mod_download->url, MODIO_DEBUGLEVEL_LOG);
     }
     else
     {
-      writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(current_queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
+      writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(current_mod_download->queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
     }
 
     if (modio::download_callback)
-      modio::download_callback(response_code, current_queued_mod_download->mod.id);
+    {
+      modio::download_callback(response_code,  current_mod_download->queued_mod_download->mod.id);
+    }
 
-    modio::curlwrapper::mod_download_queue.remove(current_queued_mod_download);
-    delete current_queued_mod_download;
-    current_queued_mod_download = NULL;
+    modio::curlwrapper::mod_download_queue.remove(current_mod_download->queued_mod_download);
+    delete current_mod_download->queued_mod_download;
 
-    current_mod_download_curl_handle = NULL;
-
-    curl_slist_free_all(current_mod_download_slist);
-    current_mod_download_slist = NULL;
+    delete current_mod_download;
+    current_mod_download = NULL;
     
     updateModDownloadQueueFile();
     downloadNextQueuedMod();
   }
-  else if (current_queued_mod_download->state == MODIO_MOD_PAUSING)
+  else if (current_mod_download->queued_mod_download->state == MODIO_MOD_PAUSING)
   {
-    modio::writeLogLine("Mod " + modio::toString(current_queued_mod_download->mod_id) + " download paused", MODIO_DEBUGLEVEL_LOG);
-    current_queued_mod_download->state = MODIO_MOD_PAUSED;
+    modio::writeLogLine("Mod " + modio::toString(current_mod_download->queued_mod_download->mod_id) + " download paused", MODIO_DEBUGLEVEL_LOG);
+    current_mod_download->queued_mod_download->state = MODIO_MOD_PAUSED;
   }
-  else if (current_queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
+  else if (current_mod_download->queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
   {
-    modio::writeLogLine("Mod " + modio::toString(current_queued_mod_download->mod_id) + " download paused. Another mod is being prioritized.", MODIO_DEBUGLEVEL_LOG);
-    current_queued_mod_download->state = MODIO_MOD_QUEUED;
+    modio::writeLogLine("Mod " + modio::toString(current_mod_download->queued_mod_download->mod_id) + " download paused. Another mod is being prioritized.", MODIO_DEBUGLEVEL_LOG);
+    current_mod_download->queued_mod_download->state = MODIO_MOD_QUEUED;
     updateModDownloadQueue();
     downloadNextQueuedMod();
   }
@@ -129,34 +118,26 @@ void onModDownloadFinished(CURL *curl)
 
 void onModfileUploadFinished(CURL *curl)
 {
-  writeLogLine("Upload Finished. Mod id: " + toString(current_queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
+  writeLogLine("Upload Finished. Mod id: " + toString(current_modfile_upload->queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
 
-  if (current_queued_modfile_upload->state == MODIO_MOD_UPLOADING)
+  if (current_modfile_upload->queued_modfile_upload->state == MODIO_MOD_UPLOADING)
   {
-    modfile_upload_queue.remove(current_queued_modfile_upload);
-    updateModUploadQueueFile();
-
     u32 response_code;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
     if (modio::upload_callback)
     {
-      modio::upload_callback(response_code, current_queued_modfile_upload->mod_id);
+      modio::upload_callback(response_code, current_modfile_upload->queued_modfile_upload->mod_id);
     }
 
-    delete current_queued_modfile_upload;
-    curl_slist_free_all(current_modfile_upload_slist);
-    curl_formfree(current_modfile_upload_httppost);
+    delete current_modfile_upload->queued_modfile_upload;
+    modfile_upload_queue.remove(current_modfile_upload->queued_modfile_upload);
 
-    current_queued_modfile_upload = NULL;
-    current_modfile_upload_curl_handle = NULL;
-    current_modfile_upload_slist = NULL;
-    current_modfile_upload_httppost = NULL;
-
-    if (modfile_upload_queue.size() > 0)
-    {
-      uploadModfile(modfile_upload_queue.front());
-    }
+    delete current_modfile_upload;
+    current_modfile_upload = NULL;
+    
+    updateModUploadQueueFile();
+    uploadNextQueuedModfile();
   }
   updateModUploadQueueFile();
 }

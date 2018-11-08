@@ -98,6 +98,13 @@ u32 getCurrentTime()
   return (u32)std::time(nullptr);
 }
 
+double getCurrentTimeMillis()
+{
+  std::chrono::milliseconds current_time =
+      std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+  return current_time.count();
+}
+
 // Json methods
 
 bool hasKey(nlohmann::json json_object, const std::string &key)
@@ -272,11 +279,11 @@ bool isDirectory(const std::string &directory)
   return false;
 }
 
-bool directoryExists(const std::string& path)
+bool directoryExists(const std::string &path)
 {
-  if(path == "")
+  if (path == "")
     return true;
-  DIR* dir = opendir(modio::addSlashIfNeeded(path).c_str());
+  DIR *dir = opendir(modio::addSlashIfNeeded(path).c_str());
   if (dir)
   {
     closedir(dir);
@@ -285,13 +292,13 @@ bool directoryExists(const std::string& path)
   return false;
 }
 
-std::string getDirectoryPath (const std::string& filename)
+std::string getDirectoryPath(const std::string &filename)
 {
   size_t found;
   found = filename.find_last_of("/\\");
-  if(found == std::string::npos)
+  if (found == std::string::npos)
     return "";
-  return modio::addSlashIfNeeded(filename.substr(0,found));
+  return modio::addSlashIfNeeded(filename.substr(0, found));
 }
 
 bool fileExists(const std::string &directory)
@@ -325,7 +332,7 @@ std::vector<std::string> getFilenames(const std::string &directory)
       {
         filenames.push_back(ent->d_name);
       }
-      if(current_dir)
+      if (current_dir)
         closedir(current_dir);
     }
     closedir(dir);
@@ -335,9 +342,9 @@ std::vector<std::string> getFilenames(const std::string &directory)
 
 void createDirectory(const std::string &directory)
 {
-  if(modio::directoryExists(directory))
+  if (modio::directoryExists(directory))
     return;
-  
+
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
   mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -410,7 +417,7 @@ double getFileSize(const std::string &file_path)
     fseek(fp, 0, SEEK_END);
     long fileSize = ftell(fp);
     file_size = ftell(fp);
-	fclose(fp);
+    fclose(fp);
   }
   return file_size;
 }

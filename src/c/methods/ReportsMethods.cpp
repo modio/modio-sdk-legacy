@@ -7,7 +7,7 @@ extern "C" {
     std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    submit_report_callbacks[call_number] = new SubmitReportParams;
+    submit_report_callbacks[call_number] = new GenericRequestParams;
     submit_report_callbacks[call_number]->callback = callback;
     submit_report_callbacks[call_number]->object = object;
 

@@ -21,8 +21,8 @@ void Instance::addModTags(u32 mod_id, std::vector<std::string> tags, const std::
     strcpy(tags_array[i], (char *)tags[i].c_str());
   }
 
-  const struct AddModTagsCall *add_mod_tags_call = new AddModTagsCall{callback};
-  add_mod_tags_calls[this->current_call_id] = (AddModTagsCall *)add_mod_tags_call;
+  const struct GenericCall *add_mod_tags_call = new GenericCall{callback};
+  add_mod_tags_calls[this->current_call_id] = (GenericCall *)add_mod_tags_call;
 
   modioAddModTags((void *)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onAddModTags);
 
@@ -42,8 +42,8 @@ void Instance::deleteModTags(u32 mod_id, std::vector<std::string> tags, const st
     strcpy(tags_array[i], (char *)tags[i].c_str());
   }
 
-  const struct DeleteModTagsCall *delete_mod_tags_call = new DeleteModTagsCall{callback};
-  delete_mod_tags_calls[this->current_call_id] = (DeleteModTagsCall *)delete_mod_tags_call;
+  const struct GenericCall *delete_mod_tags_call = new GenericCall{callback};
+  delete_mod_tags_calls[this->current_call_id] = (GenericCall *)delete_mod_tags_call;
 
   modioDeleteModTags((void *)new u32(this->current_call_id), mod_id, tags_array, (u32)tags.size(), &onDeleteModTags);
 

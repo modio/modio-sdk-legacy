@@ -77,7 +77,7 @@ extern "C"
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    delete_modfile_callbacks[call_number] = new DeleteModfileParams;
+    delete_modfile_callbacks[call_number] = new GenericRequestParams;
     delete_modfile_callbacks[call_number]->callback = callback;
     delete_modfile_callbacks[call_number]->object = object;
 

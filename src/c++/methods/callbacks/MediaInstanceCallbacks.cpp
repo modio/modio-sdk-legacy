@@ -2,13 +2,13 @@
 
 namespace modio
 {
-std::map<u32, AddModLogoCall *> add_mod_logo_calls;
-std::map<u32, AddModImagesCall *> add_mod_images_calls;
-std::map<u32, AddModYoutubeLinksCall *> add_mod_youtube_links_calls;
-std::map<u32, AddModSketchfabLinksCall *> add_mod_sketchfab_links_calls;
-std::map<u32, DeleteModImagesCall *> delete_mod_images_calls;
-std::map<u32, DeleteModYoutubeLinksCall *> delete_mod_youtube_links_calls;
-std::map<u32, DeleteModSketchfabLinksCall *> delete_mod_sketchfab_links_calls;
+std::map<u32, GenericCall *> add_mod_logo_calls;
+std::map<u32, GenericCall *> add_mod_images_calls;
+std::map<u32, GenericCall *> add_mod_youtube_links_calls;
+std::map<u32, GenericCall *> add_mod_sketchfab_links_calls;
+std::map<u32, GenericCall *> delete_mod_images_calls;
+std::map<u32, GenericCall *> delete_mod_youtube_links_calls;
+std::map<u32, GenericCall *> delete_mod_sketchfab_links_calls;
 
 void onAddModLogo(void *object, ModioResponse modio_response)
 {

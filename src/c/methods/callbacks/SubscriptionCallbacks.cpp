@@ -1,7 +1,7 @@
 #include "c/methods/callbacks/SubscriptionCallbacks.h"
 
 std::map<u32, SubscribeToModParams *> subscribe_to_mod_callbacks;
-std::map<u32, UnsubscribeFromModParams *> unsubscribe_from_mod_callbacks;
+std::map<u32, GenericRequestParams *> unsubscribe_from_mod_callbacks;
 
 void modioOnSubscribeToMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {

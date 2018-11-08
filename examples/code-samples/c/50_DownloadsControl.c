@@ -2,12 +2,12 @@
 
 bool finish = false;
 
-void onModInstalled(u32 response_code, u32 mod_id)
+void onModDownloaded(u32 response_code, u32 mod_id)
 {
-	printf("Install Mod response: %i\n", response_code);
+	printf("Downloaded Mod response: %i\n", response_code);
 	if (response_code == 200)
 	{
-		printf("Mod %i installed successfully!\n", mod_id);
+		printf("Mod %i downloaded successfully!\n", mod_id);
 	}
 
 	if (modioGetModDownloadQueueCount() == 0)
@@ -22,17 +22,17 @@ int main(void)
 
 	// In this example we are going to queue two mods downloads.
 	u32 mod_id;
-	printf("Enter a mod id to install: \n");
+	printf("Enter a mod id to download: \n");
 	scanf("%i", &mod_id);
-	modioInstallMod(mod_id);
+	modioDownloadMod(mod_id);
 
-	printf("Enter another mod id to install: \n");
+	printf("Enter another mod id to download: \n");
 	scanf("%i", &mod_id);
-	modioInstallMod(mod_id);
+	modioDownloadMod(mod_id);
 
-	printf("Installing mods...\n");
+	printf("Downloading mods...\n");
 
-	modioSetDownloadListener(&onModInstalled);
+	modioSetDownloadListener(&onModDownloaded);
 
 	while (!finish)
 	{

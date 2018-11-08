@@ -8,7 +8,7 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    add_mod_rating_callbacks[call_number] = new AddModRatingParams;
+    add_mod_rating_callbacks[call_number] = new GenericRequestParams;
     add_mod_rating_callbacks[call_number]->callback = callback;
     add_mod_rating_callbacks[call_number]->object = object;
 

@@ -2,8 +2,8 @@
 
 namespace modio
 {
-std::map<u32, EmailRequestCall *> email_request_calls;
-std::map<u32, EmailExchangeCall *> email_exchange_calls;
+std::map<u32, GenericCall *> email_request_calls;
+std::map<u32, GenericCall *> email_exchange_calls;
 
 void onEmailRequest(void *object, ModioResponse modio_response)
 {

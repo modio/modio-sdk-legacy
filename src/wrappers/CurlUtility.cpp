@@ -5,28 +5,16 @@ namespace modio
 namespace curlwrapper
 {
 CURLM *curl_multi_handle;
+u32 call_count;
+u32 ongoing_call;
 
 std::map<CURL *, JsonResponseHandler *> ongoing_calls;
 std::map<CURL *, OngoingDownload *> ongoing_downloads;
-
 std::list<QueuedModDownload *> mod_download_queue;
 std::list<QueuedModfileUpload *> modfile_upload_queue;
 
-FILE *current_mod_download_file;
-
-CURL *current_mod_download_curl_handle;
-CURL *current_modfile_upload_curl_handle;
-
-struct curl_slist *current_mod_download_slist;
-struct curl_slist *current_modfile_upload_slist;
-struct curl_httppost *current_modfile_upload_httppost;
-
-QueuedModDownload *current_queued_mod_download;
-QueuedModfileUpload *current_queued_modfile_upload;
-CurrentDownloadHandle *current_download_handle;
-
-u32 call_count;
-u32 ongoing_call;
+CurrentModDownload* current_mod_download;
+CurrentModfileUpload* current_modfile_upload;
 
 std::list<QueuedModDownload *> getModDownloadQueue()
 {
@@ -70,6 +58,38 @@ JsonResponseHandler::~JsonResponseHandler()
 #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
   curl_formfree(this->formpost);
 #endif
+}
+
+CurrentModDownload::CurrentModDownload()
+{
+  this->queued_mod_download = NULL;
+  this->curl_handle = NULL;
+  this->slist = NULL;
+  this->file = NULL;
+}
+
+CurrentModDownload::~CurrentModDownload()
+{
+  if(slist)
+    curl_slist_free_all(slist);
+  if (this->file)
+    fclose(this->file);
+}
+
+CurrentModfileUpload::CurrentModfileUpload()
+{
+  this->queued_modfile_upload = NULL;
+  this->curl_handle = NULL;
+  this->slist = NULL;
+  this->httppost = NULL;
+}
+
+CurrentModfileUpload::~CurrentModfileUpload()
+{
+  if(slist)
+    curl_slist_free_all(slist);
+  if (this->httppost)
+    curl_formfree(this->httppost);
 }
 
 OngoingDownload::OngoingDownload(u32 call_number, std::string url, struct curl_slist *slist, std::function<void(u32 call_number, u32 response_code)> callback)
@@ -155,8 +175,8 @@ void prioritizeModDownload(u32 mod_id)
 
   writeJson(modio::getModIODirectory() + "mod_download_queue.json", result_json);
 
-  if (current_queued_mod_download)
-    current_queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
+  if (current_mod_download->queued_mod_download)
+    current_mod_download->queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
 }
 
 void downloadNextQueuedMod()
@@ -164,6 +184,14 @@ void downloadNextQueuedMod()
   if (modio::curlwrapper::mod_download_queue.size() > 0)
   {
     downloadMod(modio::curlwrapper::mod_download_queue.front());
+  }
+}
+
+void uploadNextQueuedModfile()
+{
+  if (modfile_upload_queue.size() > 0)
+  {
+    uploadModfile(modfile_upload_queue.front());
   }
 }
 

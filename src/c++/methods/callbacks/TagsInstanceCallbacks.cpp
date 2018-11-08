@@ -3,8 +3,8 @@
 namespace modio
 {
 std::map<u32, GetModTagsCall *> get_mod_tags_calls;
-std::map<u32, AddModTagsCall *> add_mod_tags_calls;
-std::map<u32, DeleteModTagsCall *> delete_mod_tags_calls;
+std::map<u32, GenericCall *> add_mod_tags_calls;
+std::map<u32, GenericCall *> delete_mod_tags_calls;
 
 void onGetModTags(void *object, ModioResponse modio_response, ModioTag *tags_array, u32 tags_array_size)
 {

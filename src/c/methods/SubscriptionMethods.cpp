@@ -22,7 +22,7 @@ extern "C"
     std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    unsubscribe_from_mod_callbacks[call_number] = new UnsubscribeFromModParams;
+    unsubscribe_from_mod_callbacks[call_number] = new GenericRequestParams;
     unsubscribe_from_mod_callbacks[call_number]->callback = callback;
     unsubscribe_from_mod_callbacks[call_number]->object = object;
 

@@ -33,15 +33,17 @@ int main(void)
   std::cout << "Enter the mod id: " << std::endl;
   std::cin >> mod_id;
 
-  std::cout << "Installing mod..." << std::endl;
+  std::cout << "Downloading mod..." << std::endl;
 
-  modio_instance.installMod(mod_id);
+  modio_instance.downloadMod(mod_id);
   modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
-    std::cout << "Install mod response: " << response_code << std::endl;
+    std::cout << "Download mod response: " << response_code << std::endl;
 
     if (response_code == 200)
     {
-      std::cout << "Mod " << mod_id << " installed successfully" << std::endl;
+      std::cout << "Mod " << mod_id << " downloaded successfully" << std::endl;
+      std::cout << "Installing downloaded mods" << std::endl;
+      modio_instance.installDownloadedMods();
     }
 
     finish();

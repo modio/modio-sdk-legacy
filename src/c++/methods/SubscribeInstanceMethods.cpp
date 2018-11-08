@@ -14,8 +14,8 @@ void Instance::subscribeToMod(u32 mod_id, const std::function<void(const modio::
 
 void Instance::unsubscribeFromMod(u32 mod_id, const std::function<void(const modio::Response &response)> &callback)
 {
-  const struct UnsubscribeFromModCall *unsubscribe_from_mod_call = new UnsubscribeFromModCall{callback};
-  unsubscribe_from_mod_calls[this->current_call_id] = (UnsubscribeFromModCall *)unsubscribe_from_mod_call;
+  const struct GenericCall *unsubscribe_from_mod_call = new GenericCall{callback};
+  unsubscribe_from_mod_calls[this->current_call_id] = (GenericCall *)unsubscribe_from_mod_call;
 
   modioUnsubscribeFromMod((void *)new u32(this->current_call_id), mod_id, &onUnsubscribeFromMod);
 

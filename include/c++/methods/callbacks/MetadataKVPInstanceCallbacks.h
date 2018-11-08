@@ -6,19 +6,9 @@ struct GetAllMetadataKVPCall
   const std::function<void(const modio::Response &response, std::vector<modio::MetadataKVP> metadata_kvp)> callback;
 };
 
-struct AddMetadataKVPCall
-{
-  const std::function<void(const modio::Response &response)> callback;
-};
-
-struct DeleteMetadataKVPCall
-{
-  const std::function<void(const modio::Response &response)> callback;
-};
-
 extern std::map<u32, GetAllMetadataKVPCall *> get_all_metadata_kvp_calls;
-extern std::map<u32, AddMetadataKVPCall *> add_metadata_kvp_calls;
-extern std::map<u32, DeleteMetadataKVPCall *> delete_metadata_kvp_calls;
+extern std::map<u32, GenericCall *> add_metadata_kvp_calls;
+extern std::map<u32, GenericCall *> delete_metadata_kvp_calls;
 
 void onGetAllMetadataKVP(void *object, ModioResponse modio_response, ModioMetadataKVP *metadata_kvp_array, u32 metadata_kvp_array_size);
 void onAddMetadataKVP(void *object, ModioResponse modio_response);

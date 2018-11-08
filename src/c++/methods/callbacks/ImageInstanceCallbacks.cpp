@@ -2,7 +2,7 @@
 
 namespace modio
 {
-std::map<u32, DownloadImageCall *> download_image_calls;
+std::map<u32, GenericCall *> download_image_calls;
 
 void onDownloadImage(void *object, ModioResponse modio_response)
 {
@@ -24,5 +24,4 @@ void clearImageRequestCalls()
     delete download_image_call.second;
   download_image_calls.clear();
 }
-
 } // namespace modio

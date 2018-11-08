@@ -24,8 +24,8 @@ void Instance::getModComment(u32 mod_id, u32 comment_id, const std::function<voi
 
 void Instance::deleteModComment(u32 mod_id, u32 comment_id, const std::function<void(const modio::Response &response)> &callback)
 {
-    const struct DeleteModCommentCall *delete_mod_comment_call = new DeleteModCommentCall{callback};
-    delete_mod_comment_calls[this->current_call_id] = (DeleteModCommentCall *)delete_mod_comment_call;
+    const struct GenericCall *delete_mod_comment_call = new GenericCall{callback};
+    delete_mod_comment_calls[this->current_call_id] = (GenericCall *)delete_mod_comment_call;
 
     modioDeleteModComment((void *)new u32(this->current_call_id), mod_id, comment_id, &onDeleteModComment);
 

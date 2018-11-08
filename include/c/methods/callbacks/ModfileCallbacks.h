@@ -5,6 +5,7 @@
 #include "../../../Globals.h"
 #include "../../schemas/ModioModfile.h"
 #include "../../../ModUtility.h"
+#include "../../../ModioUtility.h"
 
 struct GetModfileParams
 {
@@ -33,17 +34,11 @@ struct EditModfileParams
   void (*callback)(void* object, ModioResponse response, ModioModfile modfile);
 };
 
-struct DeleteModfileParams
-{
-  void* object;
-  void (*callback)(void* object, ModioResponse response);
-};
-
 extern std::map< u32, GetModfileParams* > get_modfile_callbacks;
 extern std::map< u32, GetAllModfilesParams* > get_all_modfiles_callbacks;
 extern std::map< u32, AddModfileParams* > add_modfile_callbacks;
 extern std::map< u32, EditModfileParams* > edit_modfile_callbacks;
-extern std::map< u32, DeleteModfileParams* > delete_modfile_callbacks;
+extern std::map< u32, GenericRequestParams* > delete_modfile_callbacks;
 
 void modioOnGetModfile(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnGetAllModfiles(u32 call_number, u32 response_code, nlohmann::json response_json);

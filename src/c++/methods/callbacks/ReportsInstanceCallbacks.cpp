@@ -2,7 +2,7 @@
 
 namespace modio
 {
-std::map<u32, SubmitReportCall *> submit_report_calls;
+std::map<u32, GenericCall *> submit_report_calls;
 
 void onSubmitReport(void *object, ModioResponse modio_response)
 {

@@ -1,8 +1,8 @@
 #include "c/methods/callbacks/TagCallbacks.h"
 
 std::map<u32, GetModTagsParams *> get_mod_tags_callbacks;
-std::map<u32, EditTagsParams *> add_mod_tags_callbacks;
-std::map<u32, DeleteModTagsParams *> delete_mod_tags_callbacks;
+std::map<u32, GenericRequestParams *> add_mod_tags_callbacks;
+std::map<u32, GenericRequestParams *> delete_mod_tags_callbacks;
 
 void modioOnGetModTags(u32 call_number, u32 response_code, nlohmann::json response_json)
 {

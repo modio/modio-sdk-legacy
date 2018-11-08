@@ -4,7 +4,7 @@ namespace modio
 {
 std::map<u32, GetAllModCommentsCall *> get_all_mod_comments_calls;
 std::map<u32, GetModCommentCall *> get_mod_comment_calls;
-std::map<u32, DeleteModCommentCall *> delete_mod_comment_calls;
+std::map<u32, GenericCall *> delete_mod_comment_calls;
 
 void onGetAllModComments(void *object, ModioResponse modio_response, ModioComment *comments_array, u32 comments_array_size)
 {

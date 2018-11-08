@@ -47,7 +47,7 @@ extern "C"
         std::map<std::string, std::string> data;
         u32 call_number = modio::curlwrapper::getCallNumber();
 
-        delete_mod_comment_callbacks[call_number] = new DeleteModCommentParams;
+        delete_mod_comment_callbacks[call_number] = new GenericRequestParams;
         delete_mod_comment_callbacks[call_number]->callback = callback;
         delete_mod_comment_callbacks[call_number]->object = object;
 

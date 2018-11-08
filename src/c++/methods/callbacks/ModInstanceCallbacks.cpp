@@ -6,7 +6,7 @@ std::map<u32, GetModCall *> get_mod_calls;
 std::map<u32, GetAllModsCall *> get_all_mods_calls;
 std::map<u32, AddModCall *> add_mod_calls;
 std::map<u32, EditModCall *> edit_mod_calls;
-std::map<u32, DeleteModCall *> delete_mod_calls;
+std::map<u32, GenericCall *> delete_mod_calls;
 
 void onGetMod(void *object, ModioResponse modio_response, ModioMod mod)
 {

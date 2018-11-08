@@ -91,11 +91,10 @@ typedef int i32;
 #define MODIO_MOD_DOWNLOADING             4
 #define MODIO_MOD_PAUSING                 5
 #define MODIO_MOD_PAUSED                  6
-#define MODIO_MOD_EXTRACTING              7
-#define MODIO_MOD_INSTALLED               8
-#define MODIO_PRIORITIZING_OTHER_DOWNLOAD 9
-#define MODIO_MOD_STARTING_UPLOAD         10
-#define MODIO_MOD_UPLOADING               11
+#define MODIO_MOD_INSTALLED               7
+#define MODIO_PRIORITIZING_OTHER_DOWNLOAD 8
+#define MODIO_MOD_STARTING_UPLOAD         9
+#define MODIO_MOD_UPLOADING               10
 
 // Maturity options
 #define MODIO_MATURITY_NONE     0
@@ -626,7 +625,8 @@ extern "C"
   void MODIO_DLL modioSetAllowBackgroundDownloadsConfig(u32 option);
 
   //Downloads Methods
-  void MODIO_DLL modioInstallMod(u32 mod_id);
+  void MODIO_DLL modioDownloadMod(u32 mod_id);
+  void MODIO_DLL modioInstallDownloadedMods();
   bool MODIO_DLL modioUninstallMod(u32 mod_id);
   void MODIO_DLL modioPauseDownloads();
   void MODIO_DLL modioResumeDownloads();

@@ -2,12 +2,15 @@
 
 bool wait = true;
 
-void onInstallMod(u32 response_code, u32 mod_id)
+void onDownloadMod(u32 response_code, u32 mod_id)
 {
-  printf("Install mod response: %i\n", response_code);
+  printf("Download mod response: %i\n", response_code);
   if (response_code == 200)
   {
-    printf("Mod installed successfully!\n");
+    printf("Mod downloaded successfully!\n");
+    printf("Installing mods...\n");
+    modioInstallDownloadedMods();
+    printf("Finished installing mods\n");
   }
   wait = false;
 }
@@ -21,12 +24,12 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  printf("Installing modfile...\n");
+  printf("Downloading modfile...\n");
 
   // In order to know when a mod has been downloaded we can register a function as a listener
-  modioSetDownloadListener(&onInstallMod);
+  modioSetDownloadListener(&onDownloadMod);
   // To download the mod we only have to provide it's id
-  modioInstallMod(mod_id);
+  modioDownloadMod(mod_id);
 
   while (wait)
   {
