@@ -69,6 +69,8 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
   modio::API_KEY = api_key;
   if (root_path)
     modio::ROOT_PATH = root_path;
+  
+  modio::installDownloadedMods();
 
   loadEventPollingFile();
   loadAuthenticationFile();
@@ -80,8 +82,6 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
   modio::updateInstalledModsJson();
 
   modio::clearOldCache();
-
-  modio::installDownloadedMods();
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }
