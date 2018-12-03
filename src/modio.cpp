@@ -54,14 +54,14 @@ void loadAuthenticationFile()
 void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
 {
   modio::clearLog();
-
   modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
-  modio::writeLogLine("v0.10.1", MODIO_DEBUGLEVEL_LOG);
 
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
+
+  modio::writeLogLine("v0.10.1 preview", MODIO_DEBUGLEVEL_LOG);
 
   if (environment == MODIO_ENVIRONMENT_TEST)
     modio::MODIO_URL = "https://api.test.mod.io/";
