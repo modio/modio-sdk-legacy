@@ -53,14 +53,13 @@ void loadAuthenticationFile()
 
 void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
 {
-  modio::clearLog();
-  modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
-
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
 
+  modio::clearLog();
+  modio::writeLogLine("Initializing SDK", MODIO_DEBUGLEVEL_LOG);
   modio::writeLogLine("v0.10.1 preview", MODIO_DEBUGLEVEL_LOG);
 
   if (environment == MODIO_ENVIRONMENT_TEST)
@@ -85,13 +84,6 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }
-/*
-void init(int game_id, char* api_key, char* root_path)
-{
-  ROOT_PATH = root_path;
-  init(game_id, api_key);
-}
-*/
 
 void modioSetDebugLevel(u32 debug_level)
 {
