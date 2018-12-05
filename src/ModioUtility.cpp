@@ -205,6 +205,11 @@ void pollEvents()
       modioFreeFilter(&filter);
 
       modio::LAST_MOD_EVENT_POLL = current_time;
+    }else if(current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+    {
+      nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
+      event_polling_json["last_mod_event_poll"] = current_time;
+      modio::writeJson(modio::getModIODirectory() + "event_polling.json", event_polling_json);
     }
 
     if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL > modio::EVENT_POLL_INTERVAL)

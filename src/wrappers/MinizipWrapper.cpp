@@ -69,6 +69,7 @@ void extract(std::string zip_path, std::string directory_path)
       if (!out)
       {
         writeLogLine(std::string("error opening ") + final_filename, MODIO_DEBUGLEVEL_ERROR);
+        return;
       }
 
       err = UNZ_OK;
