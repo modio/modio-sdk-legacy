@@ -6,8 +6,7 @@ build_script:
     .\appveyor_build_config.bat
 test_script:
 - cmd: >-
-    cd test_build
-    Debug\runUnitTests.exe
+    test_build\Debug\runUnitTests.exe
 artifacts:
   - path: Windows.zip
     name: Windows
