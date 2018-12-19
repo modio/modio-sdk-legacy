@@ -4,20 +4,43 @@ os:
   - linux
   - osx
 
-dist: trusty
+dist: xenial
 sudo: false
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-5
-
 script:
-  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then CXX=/usr/bin/g++-5 CC=/usr/bin/gcc-5 cmake . ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake . ; fi
-  - cmake -Dtest=on .
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      cmake -D test=on . ;
+    else
+      CXX=/usr/bin/g++-5 CC=/usr/bin/gcc-5 cmake -Dtest=on . ;
+    fi
   - make -j2
   - make test
-  - ls
+  - if [[ "$TRAVIS_TAG" ]]; then
+      cmake -D mode=static . ;
+      make -j2 ; 
+    fi
+  - if [ "$TRAVIS_TAG" ]; then
+      if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+        zip Macos.zip libmodio.a libmodio.dylib;
+      else
+        zip Linux.zip libmodio.a libmodio.so;
+      fi
+    fi
+
+deploy:
+  - provider: releases
+    api_key: "${token}"
+    file:
+      - "Linux.zip"
+    skip_cleanup: true
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME != "osx"
+  - provider: releases
+    api_key: "${token}"
+    file:
+      - "Macos.zip"
+    skip_cleanup: true
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME == "osx"
