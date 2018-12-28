@@ -4,7 +4,7 @@ cmake -D mode=static -D test=on -D gtest_force_shared_crt=on -G "Visual Studio 1
 cmake --build . --config "Debug"
 
 if %APPVEYOR_REPO_TAG% == true (
-  echo "Release tag detected"
+  echo "Release tag detected, building and deploying releases"
   mkdir dynamic_build
   cd dynamic_build
   cmake -D test=on -G "Visual Studio 15" c:\projects\source
@@ -23,7 +23,7 @@ if %APPVEYOR_REPO_TAG% == true (
   cmake --build . --config "Release"
   7z a Windows.zip dynamic_build\Release\* static_build\Release\* dynamic_build_64bits\Release\* static_build_64bits\Release\*
 ) else (
-  echo "Release tag not detected"
+  echo "Release tag not detected, not building releases"
 )
 
 cd ..
