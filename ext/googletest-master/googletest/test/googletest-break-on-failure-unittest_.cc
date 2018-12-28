@@ -41,7 +41,11 @@
 #include "gtest/gtest.h"
 
 #if GTEST_OS_WINDOWS
-# include <windows.h>
+# ifdef MODIO_UE4_DETECTED 
+#   include <Windows/MinWindows.h>
+# else 
+#   include <windows.h>
+# endif
 # include <stdlib.h>
 #endif
 

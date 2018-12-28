@@ -219,7 +219,11 @@
 #    ifdef FAR
 #      undef FAR
 #    endif
-#    include <windows.h>
+#    ifdef MODIO_UE4_DETECTED 
+#      include <Windows/MinWindows.h>
+#    else 
+#      include <windows.h>
+#    endif
      /* No need for _export, use ZLIB.DEF instead. */
      /* For complete Windows compatibility, use WINAPI, not __stdcall. */
 #    define ZEXPORT WINAPI

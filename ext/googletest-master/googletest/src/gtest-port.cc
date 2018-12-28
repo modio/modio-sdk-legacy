@@ -38,7 +38,11 @@
 #include <memory>
 
 #if GTEST_OS_WINDOWS
-# include <windows.h>
+# ifdef MODIO_UE4_DETECTED 
+#   include <Windows/MinWindows.h>
+# else 
+#   include <windows.h>
+# endif
 # include <io.h>
 # include <sys/stat.h>
 # include <map>  // Used in ThreadLocal.
