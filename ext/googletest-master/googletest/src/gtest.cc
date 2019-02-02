@@ -81,7 +81,11 @@
 
 #elif GTEST_OS_WINDOWS_MOBILE  // We are on Windows CE.
 
-# include <windows.h>  // NOLINT
+# ifdef MODIO_UE4_DETECTED 
+#   include <Windows/MinWindows.h>
+# else 
+#   include <windows.h> // NOLINT
+# endif
 # undef min
 
 #elif GTEST_OS_WINDOWS  // We are on Windows proper.
@@ -104,7 +108,11 @@
 
 // cpplint thinks that the header is already included, so we want to
 // silence it.
-# include <windows.h>  // NOLINT
+# ifdef MODIO_UE4_DETECTED 
+#   include <Windows/MinWindows.h>
+# else 
+#   include <windows.h> // NOLINT
+# endif
 # undef min
 
 #else

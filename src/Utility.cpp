@@ -102,7 +102,7 @@ double getCurrentTimeMillis()
 {
   std::chrono::milliseconds current_time =
       std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-  return current_time.count();
+  return (double)current_time.count();
 }
 
 // Json methods

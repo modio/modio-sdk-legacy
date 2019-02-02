@@ -36,7 +36,11 @@
 #if GTEST_HAS_DEATH_TEST
 
 # if GTEST_HAS_SEH
-#  include <windows.h>          // For RaiseException().
+#  ifdef MODIO_UE4_DETECTED 
+#    include <Windows/MinWindows.h>
+#  else 
+#    include <windows.h>          // For RaiseException().
+#  endif
 # endif
 
 # include "gtest/gtest-spi.h"

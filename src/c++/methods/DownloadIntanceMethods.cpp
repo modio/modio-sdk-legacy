@@ -32,17 +32,17 @@ void Instance::prioritizeModDownload(u32 mod_id)
   modioPrioritizeModDownload(mod_id);
 }
 
-std::list<QueuedModDownload *> Instance::getModDownloadQueue()
+const std::list<QueuedModDownload *> Instance::getModDownloadQueue()
 {
   return curlwrapper::getModDownloadQueue();
 }
 
-std::list<QueuedModfileUpload *> Instance::getModfileUploadQueue()
+const std::list<QueuedModfileUpload *> Instance::getModfileUploadQueue()
 {
   return curlwrapper::getModfileUploadQueue();
 }
 
-std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
+const std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
 {
   std::vector<modio::InstalledMod> installed_mods;
 

@@ -15,7 +15,11 @@
 #ifndef _IOWIN32_H
 #define _IOWIN32_H
 
-#include <windows.h>
+#ifdef MODIO_UE4_DETECTED 
+#  include <Windows/MinWindows.h>
+#else 
+#  include <windows.h>  // NOLINT
+#endif
 
 #ifdef __cplusplus
 extern "C" {

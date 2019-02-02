@@ -40,7 +40,12 @@
 #include "src/gtest-internal-inl.h"
 
 #if GTEST_OS_WINDOWS_MOBILE
-# include <windows.h>  // NOLINT
+
+# ifdef MODIO_UE4_DETECTED 
+#   include <Windows/MinWindows.h>
+# else 
+#   include <windows.h>  // NOLINT
+# endif
 #elif GTEST_OS_WINDOWS
 # include <direct.h>  // NOLINT
 #endif  // GTEST_OS_WINDOWS_MOBILE

@@ -54,7 +54,11 @@
 #endif
 
 #if GTEST_OS_WINDOWS
-# include <windows.h>  // NOLINT
+#  ifdef MODIO_UE4_DETECTED 
+#    include <Windows/MinWindows.h>
+#  else 
+#    include <windows.h> // NOLINT
+#  endif
 #endif  // GTEST_OS_WINDOWS
 
 #include "gtest/gtest.h"

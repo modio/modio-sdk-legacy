@@ -409,7 +409,11 @@
 /* ws2tcpip.h is required here to properly make type definitions below. */
 #ifdef CURL_PULL_WS2TCPIP_H
 #  include <winsock2.h>
-#  include <windows.h>
+#  ifdef MODIO_UE4_DETECTED 
+#    include <Windows/MinWindows.h>
+#  else 
+#    include <windows.h>
+#  endif
 #  include <ws2tcpip.h>
 #endif
 
