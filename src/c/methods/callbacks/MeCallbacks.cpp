@@ -14,16 +14,21 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::j
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  ModioUser user;
-  modioInitUser(&user, response_json);
+  modioInitUser(&modio::current_user, response_json);
 
-  get_authenticated_user_callbacks[call_number]->callback(get_authenticated_user_callbacks[call_number]->object, response, user);
+  if(response_code >= 200 && response_code < 300)
+  {
+    nlohmann::json authentication_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
+    authentication_json["user"] = response_json;
+    modio::writeJson(modio::getModIODirectory() + "authentication.json", authentication_json);
+  }
+
+  get_authenticated_user_callbacks[call_number]->callback(get_authenticated_user_callbacks[call_number]->object, response, modio::current_user);
 
   delete get_authenticated_user_callbacks[call_number];
   get_authenticated_user_callbacks.erase(call_number);
 
   modioFreeResponse(&response);
-  modioFreeUser(&user);
 }
 
 void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::json response_json)

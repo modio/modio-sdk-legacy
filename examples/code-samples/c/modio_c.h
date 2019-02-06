@@ -487,6 +487,7 @@ void modioEmailRequest(void* object, char* email, void (*callback)(void* object,
 void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
 bool modioIsLoggedIn();
 void modioLogout();
+const struct ModioUser modioGetCurrentUser();
 
 //Image Methods
 void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response));

@@ -31,4 +31,12 @@ void Instance::emailExchange(const std::string &security_code, const std::functi
 
   this->current_call_id++;
 }
+
+modio::User Instance::getCurrentUser()
+{
+  modio::User user;
+  user.initialize(modioGetCurrentUser());
+  return user;
+}
+
 } // namespace modio
