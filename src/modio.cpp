@@ -92,6 +92,13 @@ void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
 
   modio::clearOldCache();
 
+  nlohmann::json authentication_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
+  if (modio::hasKey(authentication_json, "user"))
+    modioInitUser(&modio::current_user, authentication_json["user"]);
+
+  if (modioIsLoggedIn())
+    modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
+
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }
 
@@ -121,6 +128,8 @@ void modioShutdown()
   clearReportsCallbackParams();
   clearSubscriptionCallbackParams();
   clearTagCallbackParams();
+
+  modioFreeUser(&modio::current_user);
 
   modio::writeLogLine("mod.io C interface finished shutting down", MODIO_DEBUGLEVEL_LOG);
 }

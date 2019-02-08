@@ -2,6 +2,18 @@
 
 namespace modio
 {
+void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user)
+{
+  if (response.code >= 200 && response.code < 300)
+  {
+    modio::writeLogLine("Current user updated sucessfully.", MODIO_DEBUGLEVEL_LOG);
+  }
+  else
+  {
+    modio::writeLogLine("Could not update current user.", MODIO_DEBUGLEVEL_WARNING);
+  }
+}
+
 void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   if (response.code == 200)
@@ -74,9 +86,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioEvent *events
         bool reinstall = true;
         for (auto installed_mod : modio::installed_mods)
         {
-          if (modio::hasKey(installed_mod,"mod_id") && modio::hasKey(installed_mod,"date_updated")
-              && installed_mod["mod_id"] == events_array[i].mod_id
-              && installed_mod["date_updated"] >= events_array[i].date_added)
+          if (modio::hasKey(installed_mod, "mod_id") && modio::hasKey(installed_mod, "date_updated") && installed_mod["mod_id"] == events_array[i].mod_id && installed_mod["date_updated"] >= events_array[i].date_added)
           {
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
           }
@@ -205,7 +215,8 @@ void pollEvents()
       modioFreeFilter(&filter);
 
       modio::LAST_MOD_EVENT_POLL = current_time;
-    }else if(current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
+    }
+    else if (current_time - modio::LAST_MOD_EVENT_POLL > modio::EVENT_POLL_INTERVAL)
     {
       nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
       event_polling_json["last_mod_event_poll"] = current_time;

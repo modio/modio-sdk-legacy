@@ -29,9 +29,10 @@ void modioOnEmailExchanged(u32 call_number, u32 response_code, nlohmann::json re
     {
       access_token = response_json["access_token"];
       modio::ACCESS_TOKEN = access_token;
-      nlohmann::json token_json;
-      token_json["access_token"] = access_token;
-      modio::writeJson(modio::getModIODirectory() + "authentication.json", token_json);
+      nlohmann::json authentication_json;
+      authentication_json["access_token"] = access_token;
+      modio::writeJson(modio::getModIODirectory() + "authentication.json", authentication_json);
+      modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
     }
     else
     {

@@ -14,6 +14,7 @@ namespace modio
   u32 EVENT_POLL_INTERVAL = 15;
   u32 RETRY_AFTER = 0;
   u32 MAX_CACHE_TIME = 3600;
+  ModioUser current_user;
   void (*event_listener_callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size) = NULL;
   void (*download_callback)(u32 response_code, u32 mod_id) = NULL;
   void (*upload_callback)(u32 response_code, u32 mod_id) = NULL;
