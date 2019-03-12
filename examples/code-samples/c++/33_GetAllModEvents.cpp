@@ -31,7 +31,7 @@ int main(void)
   std::cout << "Getting events..." << std::endl;
 
   // Everything is setup up, let's retreive the events now
-  modio_instance.getAllEvents(filter, [&](const modio::Response &response, const std::vector<modio::Event> &events) {
+  modio_instance.getAllEvents(filter, [&](const modio::Response &response, const std::vector<modio::ModEvent> &events) {
     std::cout << "On get events response: " << response.code << std::endl;
     if (response.code == 200)
     {

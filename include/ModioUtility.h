@@ -7,6 +7,8 @@
 #include "c/ModioC.h"
 #include "c++/schemas/Mod.h"
 #include "c++/schemas/Response.h"
+#include "c/schemas/ModioUserEvent.h"
+#include "c/schemas/ModioModEvent.h"
 
 struct GenericRequestParams
 {

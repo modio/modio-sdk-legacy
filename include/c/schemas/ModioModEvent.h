@@ -6,8 +6,8 @@
 
 extern "C"
 {
-  void modioInitEvent(ModioEvent* event, nlohmann::json event_json);
-  void modioFreeEvent(ModioEvent* event);
+  void modioInitModEvent(ModioModEvent* event, nlohmann::json event_json);
+  void modioFreeModEvent(ModioModEvent* event);
 }
 
 #endif

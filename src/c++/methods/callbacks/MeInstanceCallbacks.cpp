@@ -52,14 +52,14 @@ void onGetUserSubscriptions(void *object, ModioResponse modio_response, ModioMod
   get_user_subscriptions_calls.erase(call_id);
 }
 
-void onGetUserEvents(void *object, ModioResponse modio_response, ModioEvent *events_array, u32 events_array_size)
+void onGetUserEvents(void *object, ModioResponse modio_response, ModioUserEvent *events_array, u32 events_array_size)
 {
   u32 call_id = *((u32 *)object);
 
   modio::Response response;
   response.initialize(modio_response);
 
-  std::vector<modio::Event> event_vector;
+  std::vector<modio::UserEvent> event_vector;
   event_vector.resize(events_array_size);
   for (u32 i = 0; i < events_array_size; i++)
   {

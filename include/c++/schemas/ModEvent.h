@@ -2,11 +2,11 @@
 #define MODIO_MODEVENT_H
 
 #include "../../Globals.h"
-#include "../../c/schemas/ModioEvent.h"
+#include "../../c/schemas/ModioModEvent.h"
 
 namespace modio
 {
-class Event
+class ModEvent
 {
 public:
   u32 id;
@@ -15,10 +15,10 @@ public:
   u32 event_type;
   u32 date_added;
 
-  void initialize(ModioEvent event);
+  void initialize(ModioModEvent event);
 };
 
-extern nlohmann::json toJson(Event &event);
+extern nlohmann::json toJson(ModEvent &event);
 } // namespace modio
 
 #endif

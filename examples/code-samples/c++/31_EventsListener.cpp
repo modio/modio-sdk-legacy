@@ -21,7 +21,7 @@ int main(void)
   std::cout << "Listening to mod events..." << std::endl;
 
   // You can register a function as callback for mod events
-  modio_instance.setEventListener([&](const modio::Response &response, const std::vector<modio::Event> &events) {
+  modio_instance.setEventListener([&](const modio::Response &response, const std::vector<modio::ModEvent> &events) {
     // The mod event callback is triggered in a constant interval of time, 15 seconds by default
     std::cout << "On event listener response: " << response.code << std::endl;
     if (response.code == 200)

@@ -1,6 +1,6 @@
 #include "modio_c.h"
 
-void onEvent(ModioResponse response, ModioEvent *events_array, u32 events_array_size)
+void onEvent(ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
 {
   // The mod event callback is triggered in a constant interval of time, 15 seconds by default
   printf("Event listener response: %i\n", response.code);

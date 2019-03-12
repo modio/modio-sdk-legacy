@@ -12,7 +12,7 @@ struct GetUserSubscriptionsCall
 
 struct GetUserEventsCall
 {
-  const std::function<void(const modio::Response &response, std::vector<modio::Event> events)> callback;
+  const std::function<void(const modio::Response &response, std::vector<modio::UserEvent> events)> callback;
 };
 
 struct GetUserGamesCall
@@ -45,7 +45,7 @@ extern std::map<u32, GetUserRatingsCall *> get_user_ratings_calls;
 
 void onGetAuthenticatedUser(void *object, ModioResponse modio_response, ModioUser modio_user);
 void onGetUserSubscriptions(void *object, ModioResponse modio_response, ModioMod mods[], u32 mods_size);
-void onGetUserEvents(void *object, ModioResponse modio_response, ModioEvent *events_array, u32 events_array_size);
+void onGetUserEvents(void *object, ModioResponse modio_response, ModioUserEvent *events_array, u32 events_array_size);
 void onGetUserGames(void *object, ModioResponse modio_response, ModioGame games[], u32 games_size);
 void onGetUserMods(void *object, ModioResponse modio_response, ModioMod mods[], u32 mods_size);
 void onGetUserModfiles(void *object, ModioResponse modio_response, ModioModfile modfiles[], u32 modfiles_size);
