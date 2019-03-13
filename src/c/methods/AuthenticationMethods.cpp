@@ -5,8 +5,6 @@ extern "C"
   void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
-    data["api_key"] = modio::API_KEY;
-    data["email"] = email;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 

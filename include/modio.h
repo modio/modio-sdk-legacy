@@ -13,6 +13,7 @@
 #include "c/methods/CommentsMethods.h"
 #include "c/methods/DependenciesMethods.h"
 #include "c/methods/DownloadsMethods.h"
+#include "c/methods/ExternalAuthenticationMethods.h"
 #include "c/methods/ImageMethods.h"
 #include "c/methods/MediaMethods.h"
 #include "c/methods/MeMethods.h"
