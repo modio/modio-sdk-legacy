@@ -93,6 +93,10 @@ typedef int i32;
 #define MODIO_MATURITY_VIOLENCE 4
 #define MODIO_MATURITY_EXPLICIT 8
 
+// Extenal Authentication Services
+#define MODIO_STEAM_AUTH  0
+#define MODIO_GOG_AUTH    1
+
 // Schemas
 typedef struct ModioAvatar ModioAvatar;
 typedef struct ModioComment ModioComment;
@@ -493,12 +497,17 @@ void modioSetEventListener(void (*callback)(ModioResponse response, ModioModEven
 void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
 void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
 
-//Authentication methods
+//Authentication Methods
 void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
 void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
 bool modioIsLoggedIn();
 void modioLogout();
 const struct ModioUser modioGetCurrentUser();
+
+//External Authentication Methods
+void modioGalaxyAuth(void* object, char* appdata, void (*callback)(void* object, ModioResponse response));
+void modioSteamAuth(void* object, unsigned char* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response));
+void modioLinkExternalAccount(void* object, u32 service, char* service_id, char* email, void (*callback)(void* object, ModioResponse response));
 
 //Image Methods
 void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response));

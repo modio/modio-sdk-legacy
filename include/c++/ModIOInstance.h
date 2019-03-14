@@ -31,6 +31,7 @@
 #include "methods/callbacks/CommentsInstanceCallbacks.h"
 #include "methods/callbacks/DependenciesInstanceCallbacks.h"
 #include "methods/callbacks/DownloadsInstanceCallbacks.h"
+#include "methods/callbacks/ExternalAuthenticationInstanceCallbacks.h"
 #include "methods/callbacks/ImageInstanceCallbacks.h"
 #include "methods/callbacks/MediaInstanceCallbacks.h"
 #include "methods/callbacks/MeInstanceCallbacks.h"
@@ -72,6 +73,11 @@ public:
   void emailRequest(const std::string &email, const std::function<void(const modio::Response &)> &callback);
   void emailExchange(const std::string &security_code, const std::function<void(const modio::Response &)> &callback);
   modio::User getCurrentUser();
+
+  //External Authentication Methods
+  void galaxyAuth(const std::string &appdata, const std::function<void(const modio::Response &)> &callback);
+  void steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const std::function<void(const modio::Response &)> &callback);
+  void linkExternalAccounts(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback);
 
   //Media Methods
   void downloadImage(const std::string &image_url, const std::string &path, const std::function<void(const modio::Response &)> &callback);
