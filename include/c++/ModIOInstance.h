@@ -77,7 +77,7 @@ public:
   //External Authentication Methods
   void galaxyAuth(const std::string &appdata, const std::function<void(const modio::Response &)> &callback);
   void steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const std::function<void(const modio::Response &)> &callback);
-  void linkExternalAccounts(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback);
+  void linkExternalAccount(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback);
 
   //Media Methods
   void downloadImage(const std::string &image_url, const std::string &path, const std::function<void(const modio::Response &)> &callback);

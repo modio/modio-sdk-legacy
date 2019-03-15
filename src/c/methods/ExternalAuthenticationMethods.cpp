@@ -11,7 +11,7 @@ extern "C"
     galaxy_auth_params[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/galaxyauth";
-    url += "&appdata=" + std::string(appdata);
+    url += "?appdata=" + std::string(appdata);
 
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnGalaxyAuth);
   }
@@ -25,9 +25,9 @@ extern "C"
     steam_auth_params[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/steamauth";
-    url += "&appdata=" + modio::base64Encode(rgubTicket, cubTicket);
+    url += "?appdata=" + modio::base64Encode(rgubTicket, cubTicket);
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnGalaxyAuth);
+    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
   }
 
   void modioLinkExternalAccount(void* object, u32 service, char* service_id, char* email, void (*callback)(void* object, ModioResponse response))
@@ -35,11 +35,11 @@ extern "C"
     std::map<std::string, std::string> data;
     switch (service)
     {
-      case MODIO_STEAM_AUTH:
+      case MODIO_SERVICE_STEAM:
         data["service"] = "steam";
         break;
 
-      case MODIO_GOG_AUTH:
+      case MODIO_SERVICE_GALAXY:
         data["service"] = "gog";
         break;
     }      

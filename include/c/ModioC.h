@@ -104,8 +104,8 @@ typedef int i32;
 #define MODIO_MATURITY_EXPLICIT 8
 
 // Extenal Authentication Services
-#define MODIO_STEAM_AUTH  0
-#define MODIO_GOG_AUTH    1
+#define MODIO_SERVICE_STEAM   0
+#define MODIO_SERVICE_GALAXY  1
 
 extern "C"
 {

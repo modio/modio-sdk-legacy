@@ -20,8 +20,11 @@ int main(void)
 
   bool wait = true;
 
-  // Auth works by sending an email with a code. Lets trigger that now
-  modioLinkExternalAccount(&wait, MODIO_STEAM_AUTH, "", "", &onLinkExternalAccount);
+  // Link mod.io accounts with service accounts such as Galaxy and Steam 
+  u32 service = MODIO_SERVICE_STEAM;
+  char* service_id = "USER SERVICE ID HERE";
+  char* email = "USER EMAIL HERE";
+  modioLinkExternalAccount(&wait, MODIO_SERVICE_STEAM, service_id, email, &onLinkExternalAccount);
 
   while (wait)
   {

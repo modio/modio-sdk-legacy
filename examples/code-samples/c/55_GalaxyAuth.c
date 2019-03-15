@@ -5,11 +5,11 @@ void onGalaxyAuth(void *object, ModioResponse response)
   bool *wait = object;
   if (response.code == 200)
   {
-    printf("GOG auth successful\n");
+    printf("Successful Galaxy authentication\n");
   }
   else
   {
-    printf("Error authenticating to GOG\n");
+    printf("Error while trying to authenticating to Galaxy\n");
   }
   *wait = false;
 }
@@ -20,8 +20,10 @@ int main(void)
 
   bool wait = true;
 
-  // Auth works by sending an email with a code. Lets trigger that now
-  modioGalaxyAuth(&wait, "", &onGalaxyAuth);
+  // Auth works by providing the Appdata param given by the Galaxy SDK
+  char *appdata = "GALAXY APPDATA HERE";
+  modioGalaxyAuth(&wait, appdata, &onGalaxyAuth);
+  
   while (wait)
   {
     modioProcess();

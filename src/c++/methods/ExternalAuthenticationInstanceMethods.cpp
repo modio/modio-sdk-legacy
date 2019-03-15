@@ -23,7 +23,7 @@ void Instance::steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const s
   this->current_call_id++;
 }
 
-void Instance::linkExternalAccounts(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback)
+void Instance::linkExternalAccount(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback)
 {
   const struct GenericCall *link_external_account_call = new GenericCall{callback};
   link_external_account_calls[this->current_call_id] = (GenericCall *)link_external_account_call;

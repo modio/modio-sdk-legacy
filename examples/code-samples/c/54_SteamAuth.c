@@ -20,8 +20,11 @@ int main(void)
 
   bool wait = true;
 
-  // Auth works by sending an email with a code. Lets trigger that now
-  modioSteamAuth(&wait, NULL, 0, &onSteamAuth);
+  // Auth works by providing the params given by the Steam SDK
+  unsigned char* rgubTicket = "BINARY DATA HERE";
+  u32 cubTicket = 0;
+  modioSteamAuth(&wait, rgubTicket, cubTicket, &onSteamAuth);
+  
   while (wait)
   {
     modioProcess();
