@@ -26,9 +26,9 @@ int main()
     std::cout << "Response code: " << response.code << std::endl;
 
     if (response.code == 200)
-      std::cout << "Please enter the 5 digit security code: ";
+      std::cout << "Account linked successfully";
     else
-      std::cout << "Error sending code" << std::endl;
+      std::cout << "Could not link account" << std::endl;
 
     finish();
   });
