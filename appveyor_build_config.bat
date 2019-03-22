@@ -21,9 +21,9 @@ if %APPVEYOR_REPO_TAG% == true (
   cd ..\static_build_64bits
   cmake -D mode=static -G "Visual Studio 15 Win64" c:\projects\source
   cmake --build . --config "Release"
+  cd ..
   7z a Windows.zip dynamic_build\Release\* static_build\Release\* dynamic_build_64bits\Release\* static_build_64bits\Release\*
 ) else (
   echo "Release tag not detected, not building releases"
+  cd ..
 )
-
-cd ..
