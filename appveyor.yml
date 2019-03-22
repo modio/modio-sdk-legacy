@@ -4,9 +4,6 @@ clone_folder: c:\projects\source
 build_script:
 - cmd: >-
     .\appveyor_build_config.bat
-test_script:
-- cmd: >-
-    test_build\Debug\runUnitTests.exe
 artifacts:
   - path: Windows.zip
     name: Windows
