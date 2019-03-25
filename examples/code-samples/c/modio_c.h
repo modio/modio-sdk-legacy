@@ -666,3 +666,8 @@ void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* nam
 //Stats Methods
 void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioStats mod));
 void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size));
+
+//Free Methods For Schemas Returned By Funtions
+void modioFreeInstalledMod(ModioInstalledMod* installed_mod);
+void modioFreeQueuedModDownload(ModioQueuedModDownload* queued_mod_download);
+void modioFreeQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload);
