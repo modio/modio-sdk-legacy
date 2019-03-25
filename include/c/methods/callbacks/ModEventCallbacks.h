@@ -3,18 +3,18 @@
 
 #include "../../../Globals.h"
 #include "../../schemas/ModioResponse.h"
-#include "../../schemas/ModioEvent.h"
+#include "../../schemas/ModioModEvent.h"
 
 struct GetEventsParams
 {
   void* object;
-  void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size);
+  void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size);
 };
 
 struct GetAllEventsParams
 {
   void* object;
-  void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size);
+  void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size);
 };
 
 extern std::map< u32, GetEventsParams* > get_events_callbacks;

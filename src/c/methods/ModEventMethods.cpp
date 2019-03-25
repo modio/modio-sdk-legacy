@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size))
+  void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
 
@@ -17,7 +17,7 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetEvents);
   }
 
-  void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size))
+  void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
 
@@ -32,7 +32,7 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllEvents);
   }
 
-  void modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size))
+  void modioSetEventListener(void (*callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
   {
     modio::event_listener_callback = callback;
   }

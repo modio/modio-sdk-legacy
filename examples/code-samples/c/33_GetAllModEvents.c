@@ -1,7 +1,7 @@
 #include "modio_c.h"
 #include <time.h>
 
-void onGetAllEvents(void *object, ModioResponse response, ModioEvent *events_array, u32 events_array_size)
+void onGetAllEvents(void *object, ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
 {
   bool *wait = object;
   printf("On get mod events response: %i\n", response.code);

@@ -36,12 +36,12 @@ void onEmailExchange(void *object, ModioResponse modio_response)
 
 void clearAuthenticationRequestCalls()
 {
-  for (auto email_request_param : email_request_params)
-    delete email_request_param.second;
-  email_request_params.clear();
+  for (auto email_request_call : email_request_calls)
+    delete email_request_call.second;
+  email_request_calls.clear();
 
-  for (auto email_exchange_param : email_exchange_params)
-    delete email_exchange_param.second;
-  email_exchange_params.clear();
+  for (auto email_exchange_call : email_exchange_calls)
+    delete email_exchange_call.second;
+  email_exchange_calls.clear();
 }
 } // namespace modio

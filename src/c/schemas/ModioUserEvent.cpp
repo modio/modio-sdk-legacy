@@ -1,12 +1,16 @@
-#include "c/schemas/ModioEvent.h"
+#include "c/schemas/ModioUserEvent.h"
 
 extern "C"
 {
-  void modioInitEvent(ModioEvent* event, nlohmann::json event_json)
+  void modioInitUserEvent(ModioUserEvent* event, nlohmann::json event_json)
   {
     event->id = 0;
     if(modio::hasKey(event_json, "id"))
       event->id = event_json["id"];
+
+    event->game_id = 0;
+    if(modio::hasKey(event_json, "game_id"))
+      event->game_id = event_json["game_id"];
 
     event->mod_id = 0;
     if(modio::hasKey(event_json, "mod_id"))
@@ -44,7 +48,7 @@ extern "C"
       event->date_added = event_json["date_added"];
   }
 
-  void modioFreeEvent(ModioEvent* tag)
+  void modioFreeUserEvent(ModioUserEvent* tag)
   {
     //No pointers
   }

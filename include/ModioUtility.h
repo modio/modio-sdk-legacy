@@ -7,6 +7,8 @@
 #include "c/ModioC.h"
 #include "c++/schemas/Mod.h"
 #include "c++/schemas/Response.h"
+#include "c/schemas/ModioUserEvent.h"
+#include "c/schemas/ModioModEvent.h"
 
 struct GenericRequestParams
 {
@@ -25,6 +27,7 @@ namespace modio
   void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user);
   void addModsToDownloadQueue(std::vector<u32> mod_ids);
   void pollEvents();
+  void updateAuthenticatedUser(std::string access_token);
 }
 
 #endif

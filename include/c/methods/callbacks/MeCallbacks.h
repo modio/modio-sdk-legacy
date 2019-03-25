@@ -5,7 +5,7 @@
 #include "../../schemas/ModioUser.h"
 #include "../../schemas/ModioMod.h"
 #include "../../schemas/ModioGame.h"
-#include "../../schemas/ModioEvent.h"
+#include "../../schemas/ModioUserEvent.h"
 #include "../../schemas/ModioRating.h"
 #include "../../../Globals.h"
 #include "../../../ModUtility.h"
@@ -27,7 +27,7 @@ struct GetUserSubscriptionsParams
 struct GetUserEventsParams
 {
   void* object;
-  void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size);
+  void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size);
 };
 
 struct GetUserGamesParams

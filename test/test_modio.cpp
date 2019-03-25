@@ -67,10 +67,10 @@ TEST(SchemaIntialization, TestModioImageInitialization)
 	modioFreeImage(&image);
 }
 
-TEST(SchemaIntialization, TestModioEventInitialization)
+TEST(SchemaIntialization, TestModioModEventInitialization)
 {
-	ModioEvent event;
-	modioInitEvent(&event, event_json);
+	ModioModEvent event;
+	modioInitModEvent(&event, event_json);
 
 	EXPECT_EQ(event.id, 13);
 	EXPECT_EQ(event.mod_id, 14);
@@ -78,7 +78,7 @@ TEST(SchemaIntialization, TestModioEventInitialization)
 	EXPECT_EQ(event.date_added, 1499846132);
 	EXPECT_EQ(event.event_type, MODIO_EVENT_MODFILE_CHANGED);
 
-	modioFreeEvent(&event);
+	modioFreeModEvent(&event);
 }
 
 TEST(SchemaIntialization, TestModioCommentInitialization)
