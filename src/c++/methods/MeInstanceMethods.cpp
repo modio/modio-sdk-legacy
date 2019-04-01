@@ -22,7 +22,7 @@ void Instance::getUserSubscriptions(modio::FilterCreator &filter, const std::fun
   this->current_call_id++;
 }
 
-void Instance::getUserEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback)
+void Instance::getUserEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::UserEvent> &events)> &callback)
 {
   const struct GetUserEventsCall *get_user_events_call = new GetUserEventsCall{callback};
   get_user_events_calls[this->current_call_id] = (GetUserEventsCall *)get_user_events_call;

@@ -93,13 +93,16 @@ typedef int i32;
 #define MODIO_MATURITY_VIOLENCE 4
 #define MODIO_MATURITY_EXPLICIT 8
 
+// Extenal Authentication Services
+#define MODIO_SERVICE_STEAM   0
+#define MODIO_SERVICE_GALAXY  1
+
 // Schemas
 typedef struct ModioAvatar ModioAvatar;
 typedef struct ModioComment ModioComment;
 typedef struct ModioDependency ModioDependency;
 typedef struct ModioDownload ModioDownload;
 typedef struct ModioError ModioError;
-typedef struct ModioEvent ModioEvent;
 typedef struct ModioFilehash ModioFilehash;
 typedef struct ModioGame ModioGame;
 typedef struct ModioGameTagOption ModioGameTagOption;
@@ -112,6 +115,7 @@ typedef struct ModioLogo ModioLogo;
 typedef struct ModioMedia ModioMedia;
 typedef struct ModioMetadataKVP ModioMetadataKVP;
 typedef struct ModioMod ModioMod;
+typedef struct ModioModEvent ModioModEvent;
 typedef struct ModioModfile ModioModfile;
 typedef struct ModioQueuedModDownload ModioQueuedModDownload;
 typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
@@ -120,6 +124,7 @@ typedef struct ModioResponse ModioResponse;
 typedef struct ModioStats ModioStats;
 typedef struct ModioTag ModioTag;
 typedef struct ModioUser ModioUser;
+typedef struct ModioUserEvent ModioUserEvent;
 // Creators
 typedef struct ModioFilterCreator ModioFilterCreator;
 typedef struct ModioModCreator ModioModCreator;
@@ -276,15 +281,6 @@ struct ModioError
   u32 errors_array_size;
 };
 
-struct ModioEvent
-{
-  u32 id;
-  u32 mod_id;
-  u32 user_id;
-  u32 event_type;
-  u32 date_added;
-};
-
 struct ModioFilehash
 {
   char* md5;
@@ -349,6 +345,15 @@ struct ModioMetadataKVP
 {
   char* metakey;
   char* metavalue;
+};
+
+struct ModioModEvent
+{
+  u32 id;
+  u32 mod_id;
+  u32 user_id;
+  u32 event_type;
+  u32 date_added;
 };
 
 struct ModioModfile
@@ -469,6 +474,16 @@ struct ModioResponse
   ModioError error;
 };
 
+struct ModioUserEvent
+{
+  u32 id;
+  u32 game_id;
+  u32 mod_id;
+  u32 user_id;
+  u32 event_type;
+  u32 date_added;
+};
+
 //General Methods
 void modioInit(u32 environment, u32 game_id, char* api_key, char* root_path);
 void modioShutdown();
@@ -478,16 +493,21 @@ void modioSleep(u32 milliseconds);
 void compressFiles(char* root_directory, char* filenames[], u32 filenames_size, char* zip_path);
 
 //Events
-void modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size));
-void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
-void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+void modioSetEventListener(void (*callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
+void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
+void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
 
-//Authentication methods
+//Authentication Methods
 void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
 void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
 bool modioIsLoggedIn();
 void modioLogout();
 const struct ModioUser modioGetCurrentUser();
+
+//External Authentication Methods
+void modioGalaxyAuth(void* object, char* appdata, void (*callback)(void* object, ModioResponse response));
+void modioSteamAuth(void* object, unsigned char* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response));
+void modioLinkExternalAccount(void* object, u32 service, char* service_id, char* email, void (*callback)(void* object, ModioResponse response));
 
 //Image Methods
 void modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response));
@@ -600,7 +620,7 @@ void modioFreeModEditor(ModioModEditor* update_mod_handler);
 //Me Methods
 void modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user));
 void modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
-void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size));
 void modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size));
 void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
 void modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
@@ -646,3 +666,8 @@ void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* nam
 //Stats Methods
 void modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioStats mod));
 void modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size));
+
+//Free Methods For Schemas Returned By Funtions
+void modioFreeInstalledMod(ModioInstalledMod* installed_mod);
+void modioFreeQueuedModDownload(ModioQueuedModDownload* queued_mod_download);
+void modioFreeQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload);

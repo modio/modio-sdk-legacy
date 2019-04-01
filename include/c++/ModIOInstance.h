@@ -17,7 +17,7 @@
 #include "schemas/Media.h"
 #include "schemas/MetadataKVP.h"
 #include "schemas/Mod.h"
-#include "schemas/Event.h"
+#include "schemas/ModEvent.h"
 #include "schemas/Modfile.h"
 #include "schemas/Rating.h"
 #include "schemas/Stats.h"
@@ -26,10 +26,12 @@
 #include "schemas/Response.h"
 #include "schemas/Tag.h"
 #include "schemas/User.h"
+#include "schemas/UserEvent.h"
 #include "methods/callbacks/AuthenticationInstanceCallbacks.h"
 #include "methods/callbacks/CommentsInstanceCallbacks.h"
 #include "methods/callbacks/DependenciesInstanceCallbacks.h"
 #include "methods/callbacks/DownloadsInstanceCallbacks.h"
+#include "methods/callbacks/ExternalAuthenticationInstanceCallbacks.h"
 #include "methods/callbacks/ImageInstanceCallbacks.h"
 #include "methods/callbacks/MediaInstanceCallbacks.h"
 #include "methods/callbacks/MeInstanceCallbacks.h"
@@ -61,9 +63,9 @@ public:
   void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path);
 
   //Events
-  void getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
-  void getAllEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
-  void setEventListener(const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
+  void getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::ModEvent> &events)> &callback);
+  void getAllEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::ModEvent> &events)> &callback);
+  void setEventListener(const std::function<void(const modio::Response &, const std::vector<modio::ModEvent> &events)> &callback);
 
   //Authentication Methods
   bool isLoggedIn() const;
@@ -71,6 +73,11 @@ public:
   void emailRequest(const std::string &email, const std::function<void(const modio::Response &)> &callback);
   void emailExchange(const std::string &security_code, const std::function<void(const modio::Response &)> &callback);
   modio::User getCurrentUser();
+
+  //External Authentication Methods
+  void galaxyAuth(const std::string &appdata, const std::function<void(const modio::Response &)> &callback);
+  void steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const std::function<void(const modio::Response &)> &callback);
+  void linkExternalAccount(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback);
 
   //Media Methods
   void downloadImage(const std::string &image_url, const std::string &path, const std::function<void(const modio::Response &)> &callback);
@@ -118,7 +125,7 @@ public:
   //Me Methods
   void getAuthenticatedUser(const std::function<void(const modio::Response &response, const modio::User &user)> &callback);
   void getUserSubscriptions(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
-  void getUserEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback);
+  void getUserEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::UserEvent> &events)> &callback);
   void getUserGames(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Game> &games)> &callback);
   void getUserMods(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Mod> &mods)> &callback);
   void getUserModfiles(modio::FilterCreator &filter, const std::function<void(const modio::Response &response, const std::vector<modio::Modfile> &modfiles)> &callback);

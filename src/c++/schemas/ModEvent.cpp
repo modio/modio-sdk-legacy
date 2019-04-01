@@ -1,8 +1,8 @@
-#include "c++/schemas/Event.h"
+#include "c++/schemas/ModEvent.h"
 
 namespace modio
 {
-void Event::initialize(ModioEvent modio_event)
+void ModEvent::initialize(ModioModEvent modio_event)
 {
   this->id = modio_event.id;
   this->mod_id = modio_event.mod_id;
@@ -11,7 +11,7 @@ void Event::initialize(ModioEvent modio_event)
   this->date_added = modio_event.date_added;
 }
 
-nlohmann::json toJson(Event &event)
+nlohmann::json toJson(ModEvent &event)
 {
   nlohmann::json event_json;
 

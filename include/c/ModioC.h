@@ -103,6 +103,10 @@ typedef int i32;
 #define MODIO_MATURITY_VIOLENCE 4
 #define MODIO_MATURITY_EXPLICIT 8
 
+// Extenal Authentication Services
+#define MODIO_SERVICE_STEAM   0
+#define MODIO_SERVICE_GALAXY  1
+
 extern "C"
 {
   // Schemas
@@ -111,7 +115,6 @@ extern "C"
   typedef struct ModioDependency ModioDependency;
   typedef struct ModioDownload ModioDownload;
   typedef struct ModioError ModioError;
-  typedef struct ModioEvent ModioEvent;
   typedef struct ModioFilehash ModioFilehash;
   typedef struct ModioGame ModioGame;
   typedef struct ModioGameTagOption ModioGameTagOption;
@@ -124,6 +127,7 @@ extern "C"
   typedef struct ModioMedia ModioMedia;
   typedef struct ModioMetadataKVP ModioMetadataKVP;
   typedef struct ModioMod ModioMod;
+  typedef struct ModioModEvent ModioModEvent;
   typedef struct ModioModfile ModioModfile;
   typedef struct ModioQueuedModDownload ModioQueuedModDownload;
   typedef struct ModioQueuedModfileUpload ModioQueuedModfileUpload;
@@ -132,6 +136,7 @@ extern "C"
   typedef struct ModioStats ModioStats;
   typedef struct ModioTag ModioTag;
   typedef struct ModioUser ModioUser;
+  typedef struct ModioUserEvent ModioUserEvent;
   // Creators
   typedef struct ModioFilterCreator ModioFilterCreator;
   typedef struct ModioModCreator ModioModCreator;
@@ -288,15 +293,6 @@ extern "C"
     u32 errors_array_size;
   };
 
-  struct ModioEvent
-  {
-    u32 id;
-    u32 mod_id;
-    u32 user_id;
-    u32 event_type;
-    u32 date_added;
-  };
-
   struct ModioFilehash
   {
     char* md5;
@@ -361,6 +357,15 @@ extern "C"
   {
     char* metakey;
     char* metavalue;
+  };
+
+  struct ModioModEvent
+  {
+    u32 id;
+    u32 mod_id;
+    u32 user_id;
+    u32 event_type;
+    u32 date_added;
   };
 
   struct ModioModfile
@@ -481,6 +486,16 @@ extern "C"
     ModioError error;
   };
 
+  struct ModioUserEvent
+  {
+    u32 id;
+    u32 game_id;
+    u32 mod_id;
+    u32 user_id;
+    u32 event_type;
+    u32 date_added;
+  };
+
   //General Methods
   void MODIO_DLL modioInit(u32 environment, u32 game_id, char* api_key, char* root_path);
   void MODIO_DLL modioShutdown();
@@ -490,16 +505,21 @@ extern "C"
   void MODIO_DLL compressFiles(char* root_directory, char* filenames[], u32 filenames_size, char* zip_path);
 
   //Events
-  void MODIO_DLL modioSetEventListener(void (*callback)(ModioResponse response, ModioEvent* events_array, u32 events_array_size));
-  void MODIO_DLL modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
-  void MODIO_DLL modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioSetEventListener(void (*callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
 
-  //Authentication methods
+  //Authentication Methods
   void MODIO_DLL modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
   bool MODIO_DLL modioIsLoggedIn();
   void MODIO_DLL modioLogout();
   const struct ModioUser MODIO_DLL modioGetCurrentUser();
+
+  //External Authentication Methods
+  void MODIO_DLL modioGalaxyAuth(void* object, char* appdata, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioSteamAuth(void* object, unsigned char* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioLinkExternalAccount(void* object, u32 service, char* service_id, char* email, void (*callback)(void* object, ModioResponse response));
 
   //Image Methods
   void MODIO_DLL modioDownloadImage(void* object, char* image_url, char* path, void (*callback)(void* object, ModioResponse response));
@@ -612,7 +632,7 @@ extern "C"
   //Me Methods
   void MODIO_DLL modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user));
   void MODIO_DLL modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
-  void MODIO_DLL modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioEvent* events_array, u32 events_array_size));
+  void MODIO_DLL modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size));
   void MODIO_DLL modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size));
   void MODIO_DLL modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size));
   void MODIO_DLL modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size));
@@ -658,6 +678,11 @@ extern "C"
   //Stats Methods
   void MODIO_DLL modioGetModStats(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioStats mod));
   void MODIO_DLL modioGetAllModStats(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioStats mods_stats[], u32 mods_stats_size));
+
+  //Free Methods For Schemas Returned By Funtions
+  void MODIO_DLL modioFreeInstalledMod(ModioInstalledMod* installed_mod);
+  void MODIO_DLL modioFreeQueuedModDownload(ModioQueuedModDownload* queued_mod_download);
+  void MODIO_DLL modioFreeQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload);
 }
 
 #endif

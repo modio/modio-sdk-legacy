@@ -9,7 +9,7 @@ void modioOnGetAllEvents(u32 call_number, u32 response_code, nlohmann::json resp
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
-  ModioEvent *events_array = NULL;
+  ModioModEvent *events_array = NULL;
   u32 events_array_size = 0;
 
   if (response.code == 200)
@@ -17,10 +17,10 @@ void modioOnGetAllEvents(u32 call_number, u32 response_code, nlohmann::json resp
     if (modio::hasKey(response_json, "data"))
     {
       events_array_size = (u32)response_json["data"].size();
-      events_array = new ModioEvent[events_array_size];
+      events_array = new ModioModEvent[events_array_size];
 
       for (u32 i = 0; i < events_array_size; i++)
-        modioInitEvent(&(events_array[i]), response_json["data"][i]);
+        modioInitModEvent(&(events_array[i]), response_json["data"][i]);
     }
     else
     {
@@ -36,7 +36,7 @@ void modioOnGetAllEvents(u32 call_number, u32 response_code, nlohmann::json resp
 
   modioFreeResponse(&response);
   for (u32 i = 0; i < events_array_size; i++)
-    modioFreeEvent(&(events_array[i]));
+    modioFreeModEvent(&(events_array[i]));
   if (events_array)
     delete[] events_array;
 }
@@ -46,7 +46,7 @@ void modioOnGetEvents(u32 call_number, u32 response_code, nlohmann::json respons
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
-  ModioEvent *events_array = NULL;
+  ModioModEvent *events_array = NULL;
   u32 events_array_size = 0;
 
   if (response.code == 200)
@@ -54,10 +54,10 @@ void modioOnGetEvents(u32 call_number, u32 response_code, nlohmann::json respons
     if (modio::hasKey(response_json, "data"))
     {
       events_array_size = (u32)response_json["data"].size();
-      events_array = new ModioEvent[events_array_size];
+      events_array = new ModioModEvent[events_array_size];
 
       for (u32 i = 0; i < events_array_size; i++)
-        modioInitEvent(&(events_array[i]), response_json["data"][i]);
+        modioInitModEvent(&(events_array[i]), response_json["data"][i]);
     }
     else
     {
@@ -72,7 +72,7 @@ void modioOnGetEvents(u32 call_number, u32 response_code, nlohmann::json respons
 
   modioFreeResponse(&response);
   for (u32 i = 0; i < events_array_size; i++)
-    modioFreeEvent(&(events_array[i]));
+    modioFreeModEvent(&(events_array[i]));
   if (events_array)
     delete[] events_array;
 }

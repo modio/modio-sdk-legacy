@@ -2,7 +2,7 @@
 
 namespace modio
 {
-void Instance::getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback)
+void Instance::getEvents(u32 mod_id, modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::ModEvent> &events)> &callback)
 {
   const struct GetEventsCall *get_events_call = new GetEventsCall{callback};
   get_events_calls[this->current_call_id] = (GetEventsCall *)get_events_call;
@@ -12,7 +12,7 @@ void Instance::getEvents(u32 mod_id, modio::FilterCreator &filter, const std::fu
   this->current_call_id++;
 }
 
-void Instance::getAllEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback)
+void Instance::getAllEvents(modio::FilterCreator &filter, const std::function<void(const modio::Response &, const std::vector<modio::ModEvent> &events)> &callback)
 {
   const struct GetAllEventsCall *get_all_events_call = new GetAllEventsCall{callback};
   get_all_events_calls[this->current_call_id] = (GetAllEventsCall *)get_all_events_call;
@@ -22,7 +22,7 @@ void Instance::getAllEvents(modio::FilterCreator &filter, const std::function<vo
   this->current_call_id++;
 }
 
-void Instance::setEventListener(const std::function<void(const modio::Response &, const std::vector<modio::Event> &events)> &callback)
+void Instance::setEventListener(const std::function<void(const modio::Response &, const std::vector<modio::ModEvent> &events)> &callback)
 {
   set_event_listener_call = new SetEventListenerCall{callback};
   modioSetEventListener(&onSetEventListener);
