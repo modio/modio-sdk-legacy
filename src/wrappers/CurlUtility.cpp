@@ -242,5 +242,33 @@ std::string multimapDataToUrlString(std::multimap<std::string, std::string> data
   return url_string;
 }
 
+void setupCurrentModDownload(CurrentModDownload *current_mod_download, u32 mod_id)
+{
+  for (auto queued_mod_iterator : modio::curlwrapper::mod_download_queue)
+  {
+    if (queued_mod_iterator->mod_id == mod_id)
+    {
+      current_mod_download->queued_mod_download = queued_mod_iterator;
+      break;
+    }
+  }
+}
+
+void handleOnGetDownloadModError(ModioMod* modio_mod)
+{
+  if (modio::download_callback)
+  {
+    modio::download_callback(404, modio_mod->id);
+  }
+
+  writeLogLine("Mod download removed from queue. Looking for other mod downloads queued.", MODIO_DEBUGLEVEL_LOG);
+
+  modio::curlwrapper::mod_download_queue.remove(current_mod_download->queued_mod_download);
+  delete current_mod_download->queued_mod_download;
+  updateModDownloadQueueFile();
+  downloadNextQueuedMod();
+  modioFreeMod(modio_mod);
+}
+
 } // namespace curlwrapper
 } // namespace modio
