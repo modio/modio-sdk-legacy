@@ -45,7 +45,7 @@ extern "C"
     modio::writeJson(modio::getModIODirectory() + "authentication.json", nlohmann::json({}));
   }
 
-  const struct ModioUser modioGetCurrentUser()
+  struct ModioUser modioGetCurrentUser()
   {
     return modio::current_user;
   }
