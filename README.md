@@ -2,7 +2,7 @@
 
 # mod.io SDK
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/modio/SDK/blob/master/LICENSE)
-[![Discord](https://img.shields.io/discord/389039439487434752.svg)](https://discord.mod.io)
+[![Discord](https://img.shields.io/discord/389039439487434752.svg?label=Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.mod.io)
 [![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/modio/SDK/wiki)
 [![Travis](https://img.shields.io/travis/modio/SDK.svg?logo=travis)](https://travis-ci.org/modio/SDK)
 
