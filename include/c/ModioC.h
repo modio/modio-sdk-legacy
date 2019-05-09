@@ -512,8 +512,8 @@ extern "C"
   void MODIO_DLL modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
 
   //Authentication Methods
-  void MODIO_DLL modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response));
-  void MODIO_DLL modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioEmailRequest(void* object, char const* email, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioEmailExchange(void* object, char const* security_code, void (*callback)(void* object, ModioResponse response));
   bool MODIO_DLL modioIsLoggedIn(void);
   void MODIO_DLL modioLogout(void);
   struct ModioUser MODIO_DLL modioGetCurrentUser(void);
