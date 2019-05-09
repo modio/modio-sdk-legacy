@@ -15,10 +15,9 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAuthenticatedUser);
   }
 
-  void modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
+  void modioGetUserSubscriptionsFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
-    std::string filter_string = modio::getFilterString(&filter);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/subscribed/?" + filter_string + "&api_key=" + modio::API_KEY;
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/subscribed/?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -28,7 +27,7 @@ extern "C"
     get_user_subscriptions_callbacks[call_number]->url = url;
     get_user_subscriptions_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, cache_max_age_seconds);
     if(cache_filename != "")
     {
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -43,11 +42,15 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserSubscriptions);
   }
 
-  void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
+  void modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
+    modioGetUserSubscriptionsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
+  }
 
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/events?" + filter_string + "&api_key=" + modio::API_KEY;
+  void modioGetUserEventsFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
+  {
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/events?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -58,10 +61,15 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserEvents);
   }
 
-  void modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size))
+  void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/games/?" + filter_string + "&api_key=" + modio::API_KEY;
+    modioGetUserEventsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
+  }
+
+  void modioGetUserGamesFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size))
+  {
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/games/?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -71,7 +79,7 @@ extern "C"
     get_user_games_callbacks[call_number]->url = url;
     get_user_games_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, cache_max_age_seconds);
     if(cache_filename != "")
     {
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -86,10 +94,15 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserGames);
   }
 
-  void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
+  void modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/mods/?" + filter_string + "&api_key=" + modio::API_KEY;
+    modioGetUserGamesFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
+  }
+
+  void modioGetUserModsFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
+  {
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/mods/?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -99,7 +112,7 @@ extern "C"
     get_user_mods_callbacks[call_number]->url = url;
     get_user_mods_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, cache_max_age_seconds);
     if(cache_filename != "")
     {
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -114,10 +127,15 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserMods);
   }
 
-  void modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
+  void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/files/?" + filter_string + "&api_key=" + modio::API_KEY;
+    modioGetUserModsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
+  }
+
+  void modioGetUserModfilesFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
+  {
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/files/?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -127,7 +145,7 @@ extern "C"
     get_user_modfiles_callbacks[call_number]->url = url;
     get_user_modfiles_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, cache_max_age_seconds);
     if(cache_filename != "")
     {
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -142,10 +160,15 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserModfiles);
   }
 
-  void modioGetUserRatings(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
+  void modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/ratings/?" + filter_string + "&api_key=" + modio::API_KEY;
+    modioGetUserModfilesFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
+  }
+
+  void modioGetUserRatingsFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
+  {
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/ratings/?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -155,7 +178,7 @@ extern "C"
     get_user_ratings_callbacks[call_number]->url = url;
     get_user_ratings_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, cache_max_age_seconds);
     if(cache_filename != "")
     {
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -169,4 +192,11 @@ extern "C"
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserRatings);
   }
+
+  void modioGetUserRatings(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
+  {
+    std::string filter_string = modio::getFilterString(&filter);
+    modioGetUserRatingsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
+  }
+
 }
