@@ -14,7 +14,7 @@ extern "C"
 		modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllModDependencies);
 	}
 
-	void modioAddModDependencies(void* object, u32 mod_id, u32* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response))
+	void modioAddModDependencies(void* object, u32 mod_id, u32 const* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response))
 	{
 		std::map<std::string, std::string> data;
 
@@ -38,7 +38,7 @@ extern "C"
 		modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnAddModDependencies);
 	}
 
-	void modioDeleteModDependencies(void* object, u32 mod_id, u32* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response))
+	void modioDeleteModDependencies(void* object, u32 mod_id, u32 const* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response))
 	{
 		std::map<std::string, std::string> data;
 		u32 call_number = modio::curlwrapper::getCallNumber();

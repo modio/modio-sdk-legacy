@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioDownloadImage(void *object, char *image_url, char *path, void (*callback)(void *object, ModioResponse modioresponse))
+  void modioDownloadImage(void *object, char const *image_url, char const *path, void (*callback)(void *object, ModioResponse modioresponse))
   {
     if (!modio::directoryExists(modio::getDirectoryPath(path)))
     {

@@ -15,7 +15,7 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllMetadataKVP);
   }
 
-  void modioAddMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
+  void modioAddMetadataKVP(void* object, u32 mod_id, char const* const* metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
@@ -39,7 +39,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnAddMetadataKVP);
   }
 
-  void modioDeleteMetadataKVP(void* object, u32 mod_id, char** metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
+  void modioDeleteMetadataKVP(void* object, u32 mod_id, char const* const* metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 

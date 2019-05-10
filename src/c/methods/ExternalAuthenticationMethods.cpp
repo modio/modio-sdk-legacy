@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioGalaxyAuth(void* object, char* appdata, void (*callback)(void* object, ModioResponse response))
+  void modioGalaxyAuth(void* object, char const* appdata, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -16,7 +16,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnGalaxyAuth);
   }
 
-  void modioSteamAuth(void* object, unsigned char* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response))
+  void modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -30,7 +30,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
   }
 
-  void modioLinkExternalAccount(void* object, u32 service, char* service_id, char* email, void (*callback)(void* object, ModioResponse response))
+  void modioLinkExternalAccount(void* object, u32 service, char const* service_id, char const* email, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
     switch (service)

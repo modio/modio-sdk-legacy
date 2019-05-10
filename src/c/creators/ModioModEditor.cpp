@@ -44,7 +44,7 @@ extern "C"
     strcpy(mod_editor->maturity_option, modio::toString(maturity_option).c_str());
   }
 
-  void modioSetModEditorName(ModioModEditor* mod_editor, char* name)
+  void modioSetModEditorName(ModioModEditor* mod_editor, char const* name)
   {
     if(mod_editor->name)
       delete[] mod_editor->name;
@@ -53,7 +53,7 @@ extern "C"
     strcpy(mod_editor->name, name);
   }
 
-  void modioSetModEditorNameid(ModioModEditor* mod_editor, char* name_id)
+  void modioSetModEditorNameid(ModioModEditor* mod_editor, char const* name_id)
   {
     if(mod_editor->name_id)
       delete[] mod_editor->name_id;
@@ -62,7 +62,7 @@ extern "C"
     strcpy(mod_editor->name_id, name_id);
   }
 
-  void modioSetModEditorSummary(ModioModEditor* mod_editor, char* summary)
+  void modioSetModEditorSummary(ModioModEditor* mod_editor, char const* summary)
   {
     if(mod_editor->summary)
       delete[] mod_editor->summary;
@@ -71,7 +71,7 @@ extern "C"
     strcpy(mod_editor->summary, summary);
   }
 
-  void modioSetModEditorDescription(ModioModEditor* mod_editor, char* description)
+  void modioSetModEditorDescription(ModioModEditor* mod_editor, char const* description)
   {
     if(mod_editor->description)
       delete[] mod_editor->description;
@@ -80,7 +80,7 @@ extern "C"
     strcpy(mod_editor->description, description);
   }
 
-  void modioSetModEditorHomepageURL(ModioModEditor* mod_editor, char* homepage_url)
+  void modioSetModEditorHomepageURL(ModioModEditor* mod_editor, char const* homepage_url)
   {
     if(mod_editor->homepage_url)
       delete[] mod_editor->homepage_url;
@@ -98,7 +98,7 @@ extern "C"
     strcpy(mod_editor->modfile, modio::toString(modfile).c_str());
   }
 
-  void modioSetModEditorMetadataBlob(ModioModEditor* mod_editor, char* metadata_blob)
+  void modioSetModEditorMetadataBlob(ModioModEditor* mod_editor, char const* metadata_blob)
   {
     if(mod_editor->metadata_blob)
       delete[] mod_editor->metadata_blob;
