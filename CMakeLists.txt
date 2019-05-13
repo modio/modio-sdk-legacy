@@ -43,11 +43,38 @@ ENDIF()
 
 IF (MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/zlib.lib )
-  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/zlib.lib )
-  endif()
+  target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib )
+
+  IF (crtmode AND crtmode STREQUAL "static")
+    set(CompilerFlags
+      CMAKE_CXX_FLAGS
+      CMAKE_CXX_FLAGS_DEBUG
+      CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_C_FLAGS
+      CMAKE_C_FLAGS_DEBUG
+      CMAKE_C_FLAGS_RELEASE
+    )
+
+    foreach(CompilerFlag ${CompilerFlags})
+      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+    endforeach()
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/static/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/static/zlib.lib )
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/static/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/static/zlib.lib )
+    endif()
+
+  ELSE()
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/zlib.lib )
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/zlib.lib )
+    endif()
+
+  ENDIF()
+
 ENDIF()
 
 IF( test AND test STREQUAL "on" )
