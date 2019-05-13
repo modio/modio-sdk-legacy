@@ -139,7 +139,7 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *e
     if (modio::event_listener_callback && events_array_size > 0)
     {
       ModioModEvent *mod_events_array = new ModioModEvent[events_array_size];
-      for(int i=0; i < events_array_size; i++)
+      for(u32 i=0; i < events_array_size; i++)
       {
         mod_events_array[i].id = events_array[i].id;
         mod_events_array[i].mod_id = events_array[i].mod_id;
@@ -150,7 +150,7 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *e
 
       modio::event_listener_callback(response, mod_events_array, events_array_size);
 
-      for(int i=0; i < events_array_size; i++)
+      for(u32 i=0; i < events_array_size; i++)
       {
         modioFreeModEvent(&mod_events_array[i]);
       }
