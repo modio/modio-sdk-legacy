@@ -2,11 +2,12 @@
 
 int main()
 {
-  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, YOUR_GAME_ID, "YOUR_API_KEY");
 
-  volatile static bool finished = false;
-
+  volatile static bool finished;
+  
   auto wait = [&]() {
+    finished = false;
     while (!finished)
     {
       modio_instance.sleep(10);
@@ -17,6 +18,17 @@ int main()
   auto finish = [&]() {
     finished = true;
   };
+
+  modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
+    std::cout << "Download mod response: " << response_code << std::endl;
+
+    if (response_code == 200)
+    {
+      std::cout << "Mod " << mod_id << " downloaded successfully" << std::endl;
+      modio_instance.installDownloadedMods();
+      std::cout << "Installed downloaded mods." << std::endl;
+    }
+  });
 
   // Check to see if we have a cookie and are already logged in
   if (!modio_instance.isLoggedIn())
@@ -53,23 +65,18 @@ int main()
       else
       {
         std::cout << "Error sending code" << std::endl;
-        finish();
       }
     });
     wait();
-  }
-  else
+  }else
   {
-    std::cout << "You are already logged in. Do you want to logout? (y/n)" << std::endl;
-    std::string userOption;
-    std::cin >> userOption;
-
-    if (userOption == "y")
-    {
-      modio_instance.logout();
-    }
+    std::cout << "You are already logged in" << std::endl;
   }
 
-  std::cout << "Process finished" << std::endl;
+  std::cout << "Download mods automatically by subscribing" << std::endl;
+  std::cout << "Waiting for mod downloads..." << std::endl;
+
+  wait();
+
   return 0;
 }

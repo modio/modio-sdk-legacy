@@ -30,6 +30,20 @@ extern "C"
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
   }
 
+  void modioSteamAuthEncoded(void* object, char* base64_ticket, void (*callback)(void* object, ModioResponse response))
+  {
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
+    steam_auth_encoded_params[call_number] = new GenericRequestParams;
+    steam_auth_encoded_params[call_number]->callback = callback;
+    steam_auth_encoded_params[call_number]->object = object;
+
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/steamauth";
+    url += "?appdata=" + std::string(base64_ticket);
+
+    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
+  }
+
   void modioLinkExternalAccount(void* object, u32 service, char* service_id, char* email, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;

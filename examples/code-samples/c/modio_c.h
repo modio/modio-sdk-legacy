@@ -507,6 +507,7 @@ const struct ModioUser modioGetCurrentUser();
 //External Authentication Methods
 void modioGalaxyAuth(void* object, char* appdata, void (*callback)(void* object, ModioResponse response));
 void modioSteamAuth(void* object, unsigned char* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response));
+void modioSteamAuthEncoded(void* object, char* base64_ticket, void (*callback)(void* object, ModioResponse response));
 void modioLinkExternalAccount(void* object, u32 service, char* service_id, char* email, void (*callback)(void* object, ModioResponse response));
 
 //Image Methods
