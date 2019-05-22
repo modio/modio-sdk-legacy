@@ -10,7 +10,7 @@ extern "C"
     modfile_editor->active = NULL;
   }
 
-  void modioSetModfileEditorVersion(ModioModfileEditor* modfile_editor, char* version)
+  void modioSetModfileEditorVersion(ModioModfileEditor* modfile_editor, char const* version)
   {
     if(modfile_editor->version)
       delete[] modfile_editor->version;
@@ -19,7 +19,7 @@ extern "C"
     strcpy(modfile_editor->version, version);
   }
 
-  void modioSetModfileEditorChangelog(ModioModfileEditor* modfile_editor, char* changelog)
+  void modioSetModfileEditorChangelog(ModioModfileEditor* modfile_editor, char const* changelog)
   {
     if(modfile_editor->changelog)
       delete[] modfile_editor->changelog;
@@ -28,7 +28,7 @@ extern "C"
     strcpy(modfile_editor->changelog, changelog);
   }
 
-  void modioSetModfileEditorMetadataBlob(ModioModfileEditor* modfile_editor, char* metadata_blob)
+  void modioSetModfileEditorMetadataBlob(ModioModfileEditor* modfile_editor, char const* metadata_blob)
   {
     if(modfile_editor->metadata_blob)
       delete[] modfile_editor->metadata_blob;

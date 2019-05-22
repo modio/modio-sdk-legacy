@@ -51,7 +51,7 @@ void loadAuthenticationFile()
   }
 }
 
-void modioInit(u32 environment, u32 game_id, char *api_key, char *root_path)
+void modioInit(u32 environment, u32 game_id, char const *api_key, char const *root_path)
 {
   if (root_path)
     modio::ROOT_PATH = root_path;
@@ -152,7 +152,7 @@ void modioSleep(u32 milliseconds)
 #endif
 }
 
-void compressFiles(char *root_directory, char *filenames[], u32 filenames_size, char *zip_path)
+void compressFiles(char const *root_directory, char const * const filenames[], u32 filenames_size, char const *zip_path)
 {
   std::vector<std::string> filenames_vector;
   for (u32 i = 0; i < filenames_size; i++)

@@ -15,7 +15,7 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModTags);
   }
 
-  void modioAddModTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
+  void modioAddModTags(void* object, u32 mod_id, char const* const* tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
@@ -39,7 +39,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnTagsAdded);
   }
 
-  void modioDeleteModTags(void* object, u32 mod_id, char** tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
+  void modioDeleteModTags(void* object, u32 mod_id, char const* const* tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 

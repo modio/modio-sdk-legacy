@@ -12,7 +12,7 @@ extern "C"
     modfile_creator->filehash = NULL;
   }
 
-  void modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char* path)
+  void modioSetModfileCreatorPath(ModioModfileCreator* modfile_creator, char const* path)
   {
     if(modfile_creator->path)
     delete[] modfile_creator->path;
@@ -21,7 +21,7 @@ extern "C"
     strcpy(modfile_creator->path, path);
   }
 
-  void modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char* version)
+  void modioSetModfileCreatorVersion(ModioModfileCreator* modfile_creator, char const* version)
   {
     if(modfile_creator->version)
       delete[] modfile_creator->version;
@@ -30,7 +30,7 @@ extern "C"
     strcpy(modfile_creator->version, version);
   }
 
-  void modioSetModfileCreatorChangelog(ModioModfileCreator* modfile_creator, char* changelog)
+  void modioSetModfileCreatorChangelog(ModioModfileCreator* modfile_creator, char const* changelog)
   {
     if(modfile_creator->changelog)
       delete[] modfile_creator->changelog;
@@ -39,7 +39,7 @@ extern "C"
     strcpy(modfile_creator->changelog, changelog);
   }
 
-  void modioSetModfileCreatorMetadataBlob(ModioModfileCreator* modfile_creator, char* metadata_blob)
+  void modioSetModfileCreatorMetadataBlob(ModioModfileCreator* modfile_creator, char const* metadata_blob)
   {
     if(modfile_creator->metadata_blob)
       delete[] modfile_creator->metadata_blob;
@@ -61,7 +61,7 @@ extern "C"
       strcpy(modfile_creator->active, "0");
   }
 
-  void modioSetModfileCreatorFilehash(ModioModfileCreator* modfile_creator, char* filehash)
+  void modioSetModfileCreatorFilehash(ModioModfileCreator* modfile_creator, char const* filehash)
   {
     if(modfile_creator->filehash)
       delete[] modfile_creator->filehash;

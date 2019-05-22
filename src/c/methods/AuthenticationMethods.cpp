@@ -2,7 +2,7 @@
 
 extern "C"
 {
-  void modioEmailRequest(void* object, char* email, void (*callback)(void* object, ModioResponse response))
+  void modioEmailRequest(void* object, char const* email, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
@@ -19,7 +19,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnEmailRequested);
   }
 
-  void modioEmailExchange(void* object, char* security_code, void (*callback)(void* object, ModioResponse response))
+  void modioEmailExchange(void* object, char const* security_code, void (*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
 
