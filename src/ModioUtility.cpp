@@ -269,4 +269,13 @@ void updateAuthenticatedUser(std::string access_token)
   modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
 }
 
+void handleDownloadImageError(void *object, void (*callback)(void *object, ModioResponse modioresponse))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  modioInitResponse(&response, empty_json);
+  callback(object, response);
+  modioFreeResponse(&response);
+}
+
 } // namespace modio
