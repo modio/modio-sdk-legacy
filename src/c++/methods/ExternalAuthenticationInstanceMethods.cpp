@@ -23,6 +23,16 @@ void Instance::steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const s
   this->current_call_id++;
 }
 
+void Instance::steamAuthEncoded(const std::string &base64_ticket, const std::function<void(const modio::Response &)> &callback)
+{
+  const struct GenericCall *steam_auth_encoded_call = new GenericCall{callback};
+  steam_auth_encoded_calls[this->current_call_id] = (GenericCall *)steam_auth_encoded_call;
+
+  modioSteamAuthEncoded((void *)new u32(this->current_call_id), (char *)base64_ticket.c_str(), &onSteamAuthEncoded);
+
+  this->current_call_id++;
+}
+
 void Instance::linkExternalAccount(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback)
 {
   const struct GenericCall *link_external_account_call = new GenericCall{callback};
