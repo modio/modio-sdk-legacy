@@ -1,4 +1,4 @@
-#include "c/methods/ImageMethods.h"https://github.com/modio/SDK/pull/82/conflict?name=include%252Fc%252FModioC.h&ancestor_oid=13b5beb0b9435710bca4288601022ace6146e3ac&base_oid=2d3e931a8ccc793fc86b6abc9b207f60e8de2e24&head_oid=e35d494931f902867378f1745ade1ebcb18ec7e4
+#include "c/methods/ImageMethods.h"
 
 extern "C"
 {
