@@ -392,7 +392,7 @@ extern "C"
   {
     u32 game_id;
     u32 mod_id;
-    u32 rating;
+    i32 rating;
     u32 date_added;
   };
 
