@@ -1,8 +1,8 @@
-#include "c/methods/ImageMethods.h"
+#include "c/methods/ImageMethods.h"https://github.com/modio/SDK/pull/82/conflict?name=include%252Fc%252FModioC.h&ancestor_oid=13b5beb0b9435710bca4288601022ace6146e3ac&base_oid=2d3e931a8ccc793fc86b6abc9b207f60e8de2e24&head_oid=e35d494931f902867378f1745ade1ebcb18ec7e4
 
 extern "C"
-{ 
-  void modioDownloadImage(void *object, char *image_url, char *path, void (*callback)(void *object, ModioResponse modioresponse))
+{
+  void modioDownloadImage(void *object, char const *image_url, char const *path, void (*callback)(void *object, ModioResponse modioresponse))
   {
     if (!modio::directoryExists(modio::getDirectoryPath(path)))
     {

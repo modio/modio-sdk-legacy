@@ -34,7 +34,7 @@ extern "C"
     strcpy(mod_creator->maturity_option, modio::toString(maturity_option).c_str());
   }
 
-  void modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char* logo_path)
+  void modioSetModCreatorLogoPath(ModioModCreator* mod_creator, char const* logo_path)
   {
     if(mod_creator->logo)
       delete[] mod_creator->logo;
@@ -43,7 +43,7 @@ extern "C"
     strcpy(mod_creator->logo, logo_path);
   }
 
-  void modioSetModCreatorName(ModioModCreator* mod_creator, char* name)
+  void modioSetModCreatorName(ModioModCreator* mod_creator, char const* name)
   {
     if(mod_creator->name)
       delete[] mod_creator->name;
@@ -52,7 +52,7 @@ extern "C"
     strcpy(mod_creator->name, name);
   }
 
-  void modioSetModCreatorNameid(ModioModCreator* mod_creator, char* name_id)
+  void modioSetModCreatorNameid(ModioModCreator* mod_creator, char const* name_id)
   {
     if(mod_creator->name_id)
     delete[] mod_creator->name_id;
@@ -61,7 +61,7 @@ extern "C"
     strcpy(mod_creator->name_id, name_id);
   }
 
-  void modioSetModCreatorSummary(ModioModCreator* mod_creator, char* summary)
+  void modioSetModCreatorSummary(ModioModCreator* mod_creator, char const* summary)
   {
     if(mod_creator->summary)
     delete[] mod_creator->summary;
@@ -70,7 +70,7 @@ extern "C"
     strcpy(mod_creator->summary, summary);
   }
 
-  void modioSetModCreatorDescription(ModioModCreator* mod_creator, char* description)
+  void modioSetModCreatorDescription(ModioModCreator* mod_creator, char const* description)
   {
     if(mod_creator->description)
     delete[] mod_creator->description;
@@ -79,7 +79,7 @@ extern "C"
     strcpy(mod_creator->description, description);
   }
 
-  void modioSetModCreatorHomepageURL(ModioModCreator* mod_creator, char* homepage_url)
+  void modioSetModCreatorHomepageURL(ModioModCreator* mod_creator, char const* homepage_url)
   {
     if(mod_creator->homepage_url)
       delete[] mod_creator->homepage_url;
@@ -88,7 +88,7 @@ extern "C"
     strcpy(mod_creator->homepage_url, homepage_url);
   }
 
-  void modioSetModCreatorMetadataBlob(ModioModCreator* mod_creator, char* metadata_blob)
+  void modioSetModCreatorMetadataBlob(ModioModCreator* mod_creator, char const* metadata_blob)
   {
     if(mod_creator->metadata_blob)
       delete[] mod_creator->metadata_blob;
@@ -97,7 +97,7 @@ extern "C"
     strcpy(mod_creator->metadata_blob, metadata_blob);
   }
 
-  void modioAddModCreatorTag(ModioModCreator* mod_creator, char* tag)
+  void modioAddModCreatorTag(ModioModCreator* mod_creator, char const* tag)
   {
     ModioListNode* new_tag = new ModioListNode;
     modioInitNode(new_tag);

@@ -3,7 +3,7 @@
 extern "C"
 {
 
-void modioAddModLogo(void* object, u32 mod_id, char* logo_path, void (*callback)(void* object, ModioResponse response))
+void modioAddModLogo(void* object, u32 mod_id, char const* logo_path, void (*callback)(void* object, ModioResponse response))
 {
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -20,7 +20,7 @@ void modioAddModLogo(void* object, u32 mod_id, char* logo_path, void (*callback)
   modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), curlform_copycontents, curlform_files, &modioOnAddModLogo);
 }
 
-void modioAddModImages(void* object, u32 mod_id, char** image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
+void modioAddModImages(void* object, u32 mod_id, char const* const* image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
 {
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -41,7 +41,7 @@ void modioAddModImages(void* object, u32 mod_id, char** image_paths_array, u32 i
   modio::curlwrapper::postForm(call_number, url, modio::getHeaders(), curlform_copycontents, curlform_files, &modioOnAddModImages);
 }
 
-void modioAddModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
+void modioAddModYoutubeLinks(void* object, u32 mod_id, char const* const* youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
@@ -60,7 +60,7 @@ void modioAddModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_arra
   modio::curlwrapper::post(call_number, url, modio::getHeaders(), data, &modioOnAddModYoutubeLinks);
 }
 
-void modioAddModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
+void modioAddModSketchfabLinks(void* object, u32 mod_id, char const* const* sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
@@ -79,7 +79,7 @@ void modioAddModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_
   modio::curlwrapper::post(call_number, url, modio::getHeaders(), data, &modioOnAddModSketchfabLinks);
 }
 
-void modioDeleteModImages(void* object, u32 mod_id, char** image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
+void modioDeleteModImages(void* object, u32 mod_id, char const* const* image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
 {
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
@@ -98,7 +98,7 @@ void modioDeleteModImages(void* object, u32 mod_id, char** image_paths_array, u3
   modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteModImages);
 }
 
-void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
+void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char const* const* youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
@@ -117,7 +117,7 @@ void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char** youtube_links_a
   modio::curlwrapper::deleteCall(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnDeleteModYoutubeLinks);
 }
 
-void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char** sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
+void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char const* const* sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();

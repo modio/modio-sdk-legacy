@@ -2,7 +2,7 @@
 
 extern "C" {
 
-  void modioSubmitReport(void* object, char* resource, u32 id, u32 type, char* name, char* summary, void(*callback)(void* object, ModioResponse response))
+  void modioSubmitReport(void* object, char const* resource, u32 id, u32 type, char const* name, char const* summary, void(*callback)(void* object, ModioResponse response))
   {
     std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
