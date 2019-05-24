@@ -24,12 +24,11 @@ int main(void)
 
   printf("Adding metadata kvp...\n");
 
-  char **metadata_kvp_array = (char **)malloc(1);
-  metadata_kvp_array[0] = (char *)malloc(100);
-  strcpy(metadata_kvp_array[0], "pistol-dmg:800\0");
+  char const *metadata_kvp_array[1];
+  metadata_kvp_array[0] = "pistol-dmg:800";
 
   // We add metadata key value pairs to a mod by providing the key and the value on a string separated by a colon :
-  modioAddMetadataKVP(&wait, mod_id, (char const* const* )metadata_kvp_array, 1, &onAddMetadataKVP);
+  modioAddMetadataKVP(&wait, mod_id, metadata_kvp_array, 1, &onAddMetadataKVP);
 
   while (wait)
   {

@@ -53,7 +53,7 @@ int main(void)
     printf("Sending email... \n");
 
     // Auth works by sending an email with a code. Lets trigger that now
-    modioEmailRequest(&wait, (char *)email, &onEmailRequest);
+    modioEmailRequest(&wait, email, &onEmailRequest);
     while (wait)
     {
       modioProcess();

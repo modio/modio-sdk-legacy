@@ -22,12 +22,11 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  char **images_array = (char **)malloc(1);
-  images_array[0] = (char *)malloc(100);
-  strcpy(images_array[0], "../ModExample/logo.png\0");
+  char const *images_array[1];
+  images_array[0] = "../ModExample/logo.png";
 
   printf("Getting mod...\n");
-  modioAddModImages(&wait, mod_id, (char const* const* )images_array, 1, &onAddModImages);
+  modioAddModImages(&wait, mod_id, images_array, 1, &onAddModImages);
 
   while (wait)
   {

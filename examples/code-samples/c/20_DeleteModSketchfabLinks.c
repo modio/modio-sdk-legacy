@@ -22,12 +22,11 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  char **sketchfab_links_array = (char **)malloc(1);
-  sketchfab_links_array[0] = (char *)malloc(100);
-  strcpy(sketchfab_links_array[0], "https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74\0");
+  char const *sketchfab_links_array[1];
+  sketchfab_links_array[0] = "https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74";
 
   printf("Getting mod...\n");
-  modioDeleteModSketchfabLinks(&wait, mod_id, (char const* const* )sketchfab_links_array, 1, &onDeleteModSketchfabLinks);
+  modioDeleteModSketchfabLinks(&wait, mod_id, sketchfab_links_array, 1, &onDeleteModSketchfabLinks);
 
   while (wait)
   {

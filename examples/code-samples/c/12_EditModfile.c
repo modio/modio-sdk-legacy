@@ -33,8 +33,8 @@ int main(void)
   ModioModfileEditor modfile_editor;
   modioInitModfileEditor(&modfile_editor);
   modioSetModfileEditorActive(&modfile_editor, false);
-  modioSetModfileEditorChangelog(&modfile_editor, (char *)"Stuff was changed on this mod via the examples.");
-  modioSetModfileEditorMetadataBlob(&modfile_editor, (char *)"The metadata was edited via the SDK examples.");
+  modioSetModfileEditorChangelog(&modfile_editor, "Stuff was changed on this mod via the examples.");
+  modioSetModfileEditorMetadataBlob(&modfile_editor, "The metadata was edited via the SDK examples.");
 
   // Once the modfile editor is set we are ready to edit the modfile
   modioEditModfile(&wait, mod_id, modfile_id, modfile_editor, &onEditModfile);

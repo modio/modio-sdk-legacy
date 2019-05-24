@@ -24,9 +24,8 @@ int main(void)
 
   printf("Adding tags...\n");
 
-  char **tags_array = (char **)malloc(1);
-  tags_array[0] = (char *)malloc(100);
-  strcpy(tags_array[0], "Hard\0");
+  char const *tags_array[1];
+  tags_array[0] = "Hard";
 
   // We delete tags by providing the selected Mod id and the tag names
   modioDeleteModTags(&wait, mod_id, (char const* const*)tags_array, 1, &onDeleteModTags);

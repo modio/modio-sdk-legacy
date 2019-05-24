@@ -24,12 +24,11 @@ int main(void)
 
   printf("Adding tags...\n");
 
-  char **tags_array = (char **)malloc(1);
-  tags_array[0] = (char *)malloc(100);
-  strcpy(tags_array[0], "Hard\0");
+  char const *tags_array[1];
+  tags_array[0] = "Hard";
 
   // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-  modioAddModTags(&wait, mod_id, (char const* const* )tags_array, 1, &onAddModTags);
+  modioAddModTags(&wait, mod_id, tags_array, 1, &onAddModTags);
 
   while (wait)
   {

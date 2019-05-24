@@ -23,7 +23,7 @@ int main(void)
   scanf("%i", &mod_id);
 
   printf("Getting mod...\n");
-  modioAddModLogo(&wait, mod_id, (char *)"../ModExample/logo.png", &onAddModLogo);
+  modioAddModLogo(&wait, mod_id, "../ModExample/logo.png", &onAddModLogo);
 
   while (wait)
   {

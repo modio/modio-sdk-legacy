@@ -22,12 +22,11 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  char **youtube_links_array = (char **)malloc(1);
-  youtube_links_array[0] = (char *)malloc(100);
-  strcpy(youtube_links_array[0], "https://www.youtube.com/watch?v=dQw4w9WgXcQ\0");
+  char const *youtube_links_array[1];
+  youtube_links_array[0] = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
   printf("Getting mod...\n");
-  modioAddModYoutubeLinks(&wait, mod_id, (char const* const* )youtube_links_array, 1, &onAddModYoutubeLinks);
+  modioAddModYoutubeLinks(&wait, mod_id, youtube_links_array, 1, &onAddModYoutubeLinks);
 
   while (wait)
   {
