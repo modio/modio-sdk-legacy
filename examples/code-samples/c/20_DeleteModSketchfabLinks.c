@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onDeleteModSketchfabLinks(void *object, ModioResponse response)
 {
@@ -27,7 +27,7 @@ int main(void)
   strcpy(sketchfab_links_array[0], "https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74\0");
 
   printf("Getting mod...\n");
-  modioDeleteModSketchfabLinks(&wait, mod_id, sketchfab_links_array, 1, &onDeleteModSketchfabLinks);
+  modioDeleteModSketchfabLinks(&wait, mod_id, (char const* const* )sketchfab_links_array, 1, &onDeleteModSketchfabLinks);
 
   while (wait)
   {

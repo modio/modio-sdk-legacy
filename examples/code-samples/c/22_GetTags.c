@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onGetModTags(void *object, ModioResponse response, ModioTag *tags_array, u32 tags_array_size)
 {

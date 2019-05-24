@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onSubmitReport(void *object, ModioResponse response)
 {

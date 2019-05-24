@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onDeleteMetadataKVP(void *object, ModioResponse response)
 {
@@ -30,7 +30,7 @@ int main(void)
 
   // We delete metadata key value pairs from a mod by providing a string with the same format we added it
   // Keep in mind the value can be omited, in that case all the values with the key provided will be deleted
-  modioDeleteMetadataKVP(&wait, mod_id, (char **)metadata_kvp_array, 1, &onDeleteMetadataKVP);
+  modioDeleteMetadataKVP(&wait, mod_id, (char const* const* )metadata_kvp_array, 1, &onDeleteMetadataKVP);
 
   while (wait)
   {

@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onGetMod(void *object, ModioResponse response, ModioMod mod)
 {

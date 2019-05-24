@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onDeleteModImages(void *object, ModioResponse response)
 {
@@ -27,7 +27,7 @@ int main(void)
   strcpy(images_array[0], "example.png\0");
 
   printf("Getting mod...\n");
-  modioDeleteModImages(&wait, mod_id, images_array, 1, &onDeleteModImages);
+  modioDeleteModImages(&wait, mod_id, (char const* const* )images_array, 1, &onDeleteModImages);
 
   while (wait)
   {

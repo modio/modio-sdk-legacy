@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onGetUserGames(void *object, ModioResponse response, ModioGame *games, u32 games_size)
 {

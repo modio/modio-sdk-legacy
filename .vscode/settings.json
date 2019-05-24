@@ -76,6 +76,7 @@
         "stdio.h": "c",
         "set": "cpp",
         "unordered_set": "cpp",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "modio.h": "c"
     }
 }

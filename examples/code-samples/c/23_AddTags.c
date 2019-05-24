@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onAddModTags(void *object, ModioResponse response)
 {
@@ -29,7 +29,7 @@ int main(void)
   strcpy(tags_array[0], "Hard\0");
 
   // We add tags to a mod by providing the tag names. Remember, they must be valid tags allowed by the parrent game
-  modioAddModTags(&wait, mod_id, (char **)tags_array, 1, &onAddModTags);
+  modioAddModTags(&wait, mod_id, (char const* const* )tags_array, 1, &onAddModTags);
 
   while (wait)
   {

@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onDeleteModYoutubeLinks(void *object, ModioResponse response)
 {
@@ -27,7 +27,7 @@ int main(void)
   strcpy(youtube_links_array[0], "https://www.youtube.com/watch?v=dQw4w9WgXcQ\0");
 
   printf("Getting mod...\n");
-  modioDeleteModYoutubeLinks(&wait, mod_id, youtube_links_array, 1, &onDeleteModYoutubeLinks);
+  modioDeleteModYoutubeLinks(&wait, mod_id, (char const* const* )youtube_links_array, 1, &onDeleteModYoutubeLinks);
 
   while (wait)
   {

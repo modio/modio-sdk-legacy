@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onAddModImages(void *object, ModioResponse response)
 {
@@ -27,7 +27,7 @@ int main(void)
   strcpy(images_array[0], "../ModExample/logo.png\0");
 
   printf("Getting mod...\n");
-  modioAddModImages(&wait, mod_id, images_array, 1, &onAddModImages);
+  modioAddModImages(&wait, mod_id, (char const* const* )images_array, 1, &onAddModImages);
 
   while (wait)
   {

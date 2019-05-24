@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 #include <time.h>
 
 void onGetUserRatings(void *object, ModioResponse response, ModioRating *ratings_array, u32 ratings_array_size)

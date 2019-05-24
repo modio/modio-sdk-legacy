@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onDeleteModTags(void *object, ModioResponse response)
 {
@@ -29,7 +29,7 @@ int main(void)
   strcpy(tags_array[0], "Hard\0");
 
   // We delete tags by providing the selected Mod id and the tag names
-  modioDeleteModTags(&wait, mod_id, (char **)tags_array, 1, &onDeleteModTags);
+  modioDeleteModTags(&wait, mod_id, (char const* const*)tags_array, 1, &onDeleteModTags);
 
   while (wait)
   {

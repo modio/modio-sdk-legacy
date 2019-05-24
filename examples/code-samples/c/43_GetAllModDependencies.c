@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onGetAllDependencies(void *object, ModioResponse response, ModioDependency *dependencies_array, u32 dependencies_array_size)
 {

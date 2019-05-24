@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onEvent(ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
 {

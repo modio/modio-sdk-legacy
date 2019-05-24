@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onGetAllModComments(void *object, ModioResponse response, ModioComment comments[], u32 comments_size)
 {

@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onEditModfile(void *object, ModioResponse response, ModioModfile modfile)
 {

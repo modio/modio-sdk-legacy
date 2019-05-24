@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 
 void onGetAllModStats(void *object, ModioResponse response, ModioStats *mods_stats, u32 mods_stats_size)
 {

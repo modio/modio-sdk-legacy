@@ -1,4 +1,4 @@
-#include "modio_c.h"
+#include "c/ModioC.h"
 #include <time.h>
 
 void onGetUserEvents(void *object, ModioResponse response, ModioUserEvent *events_array, u32 events_array_size)
