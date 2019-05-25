@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onGetUserGames(void *object, ModioResponse response, ModioGame *games, u32 games_size)
 {

@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 #include <time.h>
 
 void onGetUserRatings(void *object, ModioResponse response, ModioRating *ratings_array, u32 ratings_array_size)

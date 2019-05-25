@@ -1,4 +1,7 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
+#include <string.h>
 
 void onSubmitReport(void *object, ModioResponse response)
 {

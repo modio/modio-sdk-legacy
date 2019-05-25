@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onEditMod(void *object, ModioResponse response, ModioMod mod)
 {

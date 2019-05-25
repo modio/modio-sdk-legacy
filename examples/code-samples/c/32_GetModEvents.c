@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 #include <time.h>
 
 void onGetEvents(void *object, ModioResponse response, ModioModEvent *events_array, u32 events_array_size)

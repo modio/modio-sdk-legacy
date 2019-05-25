@@ -1,4 +1,7 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
+#include <string.h>
 
 bool wait = true;
 
@@ -52,7 +55,7 @@ int main(void)
     if (queue_size != 0)
     {
       // The upload queue contains all the information about the current uploads
-      ModioQueuedModfileUpload *upload_queue = malloc(queue_size * sizeof(*upload_queue));
+      ModioQueuedModfileUpload upload_queue[queue_size];
       modioGetModfileUploadQueue(upload_queue);
 
       printf("\n");

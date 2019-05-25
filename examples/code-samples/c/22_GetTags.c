@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onGetModTags(void *object, ModioResponse response, ModioTag *tags_array, u32 tags_array_size)
 {

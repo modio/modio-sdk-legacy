@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onEvent(ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
 {

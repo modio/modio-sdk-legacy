@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onGetAllModStats(void *object, ModioResponse response, ModioStats *mods_stats, u32 mods_stats_size)
 {

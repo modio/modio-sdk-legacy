@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onGetAllModComments(void *object, ModioResponse response, ModioComment comments[], u32 comments_size)
 {

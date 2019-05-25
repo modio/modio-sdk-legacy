@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onGetUserSubscriptions(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {

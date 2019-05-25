@@ -1,4 +1,8 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void onExchange(void *object, ModioResponse response)
 {

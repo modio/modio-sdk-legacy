@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onGetAllMetadataKVP(void *object, ModioResponse response, ModioMetadataKVP *metadata_kvp_array, u32 metadata_kvp_array_size)
 {

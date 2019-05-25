@@ -1,4 +1,6 @@
+#include <stdbool.h>
 #include "c/ModioC.h"
+#include <stdio.h>
 
 void onDeleteModSketchfabLinks(void *object, ModioResponse response)
 {

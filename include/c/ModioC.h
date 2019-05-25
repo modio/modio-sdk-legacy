@@ -1,11 +1,6 @@
 #ifndef MODIO_MODIO_C_H
 #define MODIO_MODIO_C_H
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-
 #ifdef MODIO_STATICLIB
 #  define MODIO_DLL
 #elif defined(MODIO_WINDOWS_DETECTED)
