@@ -15,10 +15,9 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetModfile);
   }
 
-  void modioGetAllModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
+  void modioGetAllModfilesFilterString(void* object, u32 mod_id, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
   {
-    std::string filter_string = modio::getFilterString(&filter);
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files?" + filter_string + "&api_key=" + modio::API_KEY;
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/files?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -28,7 +27,7 @@ extern "C"
     get_all_modfiles_callbacks[call_number]->url = url;
     get_all_modfiles_callbacks[call_number]->is_cache = false;
 
-    std::string cache_filename = modio::getCallFileFromCache(url, filter.cache_max_age_seconds);
+    std::string cache_filename = modio::getCallFileFromCache(url, cache_max_age_seconds);
     if(cache_filename != "")
     {
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
@@ -42,6 +41,12 @@ extern "C"
     }
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllModfiles);
+  }
+
+  void modioGetAllModfiles(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
+  {
+    std::string filter_string = modio::getFilterString(&filter);
+    modioGetAllModfilesFilterString(object, mod_id, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }
 
   void modioAddModfile(u32 mod_id, ModioModfileCreator modfile_creator)
