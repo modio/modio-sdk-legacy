@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "c/ModioC.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 bool finish = false;
 
@@ -42,7 +43,7 @@ int main(void)
 		if (queue_size != 0)
 		{
 			// The download queue contains all the information about the current downloads
-      ModioQueuedModDownload download_queue[queue_size];
+			ModioQueuedModDownload *download_queue = malloc(queue_size * sizeof *download_queue);
 			modioGetModDownloadQueue(download_queue);
 
 			printf("\n");
@@ -131,6 +132,7 @@ int main(void)
 				}
 				}
 			}
+			free(download_queue);
 		}
 
 		modioSleep(10);
