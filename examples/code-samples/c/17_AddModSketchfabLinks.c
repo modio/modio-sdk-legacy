@@ -1,4 +1,6 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
 
 void onAddModSketchfabLinks(void *object, ModioResponse response)
 {
@@ -13,7 +15,7 @@ void onAddModSketchfabLinks(void *object, ModioResponse response)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 
@@ -22,9 +24,8 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  char **sketchfab_links_array = (char **)malloc(1);
-  sketchfab_links_array[0] = (char *)malloc(100);
-  strcpy(sketchfab_links_array[0], "https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74\0");
+  char const *sketchfab_links_array[1];
+  sketchfab_links_array[0] = "https://sketchfab.com/models/7793b895f27841f4930e6b71f75a8d74";
 
   printf("Getting mod...\n");
   modioAddModSketchfabLinks(&wait, mod_id, sketchfab_links_array, 1, &onAddModSketchfabLinks);

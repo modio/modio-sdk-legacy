@@ -1,4 +1,8 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 void onExchange(void *object, ModioResponse response)
 {
@@ -33,12 +37,12 @@ void onEmailRequest(void *object, ModioResponse response)
   printf("Sending code... \n");
 
   // Finish the auth process by entering the security code
-  modioEmailExchange(wait, (char *)security_code, &onExchange);
+  modioEmailExchange(wait, security_code, &onExchange);
 }
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 
@@ -53,7 +57,7 @@ int main(void)
     printf("Sending email... \n");
 
     // Auth works by sending an email with a code. Lets trigger that now
-    modioEmailRequest(&wait, (char *)email, &onEmailRequest);
+    modioEmailRequest(&wait, email, &onEmailRequest);
     while (wait)
     {
       modioProcess();

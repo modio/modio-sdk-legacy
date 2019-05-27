@@ -1,4 +1,6 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
 
 void onDownloadImage(void *object, ModioResponse response)
 {
@@ -24,7 +26,7 @@ void onGetMod(void *object, ModioResponse response, ModioMod mod)
 
     // Now let's download the original logo full size to the selected path
     // Remember, you can also download other images such as headers and media images in different file sizes using the thumbnail fields
-    modioDownloadImage(wait, mod.logo.original, (char *)"../mods_dir/full.png", &onDownloadImage);
+    modioDownloadImage(wait, mod.logo.original, "../mods_dir/full.png", &onDownloadImage);
   }
   else
   {
@@ -34,7 +36,7 @@ void onGetMod(void *object, ModioResponse response, ModioMod mod)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 

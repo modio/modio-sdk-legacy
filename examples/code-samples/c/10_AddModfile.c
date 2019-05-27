@@ -1,4 +1,8 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 bool wait = true;
 
@@ -14,7 +18,7 @@ void onAddModfile(u32 response_code, u32 mod_id)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   if (!modioIsLoggedIn())
   {
@@ -52,7 +56,7 @@ int main(void)
     if (queue_size != 0)
     {
       // The upload queue contains all the information about the current uploads
-      ModioQueuedModfileUpload *upload_queue = malloc(queue_size * sizeof(*upload_queue));
+			ModioQueuedModfileUpload *upload_queue = malloc(queue_size * sizeof *upload_queue);
       modioGetModfileUploadQueue(upload_queue);
 
       printf("\n");
@@ -68,6 +72,7 @@ int main(void)
         printf("Upload progress: %f%%\n", (current_progress / total_size) * 100.0);
         printf("\n");
       }
+      free(upload_queue);
     }
 
     modioProcess();

@@ -1,8 +1,10 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   // First, let's check if there is at least one mod installed
   u32 installed_mods_count = modioGetAllInstalledModsCount();

@@ -1,4 +1,6 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
 
 void onDeleteModYoutubeLinks(void *object, ModioResponse response)
 {
@@ -13,7 +15,7 @@ void onDeleteModYoutubeLinks(void *object, ModioResponse response)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 
@@ -22,9 +24,8 @@ int main(void)
   u32 mod_id;
   scanf("%i", &mod_id);
 
-  char **youtube_links_array = (char **)malloc(1);
-  youtube_links_array[0] = (char *)malloc(100);
-  strcpy(youtube_links_array[0], "https://www.youtube.com/watch?v=dQw4w9WgXcQ\0");
+  char const *youtube_links_array[1];
+  youtube_links_array[0] = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
   printf("Getting mod...\n");
   modioDeleteModYoutubeLinks(&wait, mod_id, youtube_links_array, 1, &onDeleteModYoutubeLinks);

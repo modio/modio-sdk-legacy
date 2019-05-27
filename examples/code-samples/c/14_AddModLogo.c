@@ -1,4 +1,6 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
 
 void onAddModLogo(void *object, ModioResponse response)
 {
@@ -13,7 +15,7 @@ void onAddModLogo(void *object, ModioResponse response)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 
@@ -23,7 +25,7 @@ int main(void)
   scanf("%i", &mod_id);
 
   printf("Getting mod...\n");
-  modioAddModLogo(&wait, mod_id, (char *)"../ModExample/logo.png", &onAddModLogo);
+  modioAddModLogo(&wait, mod_id, "../ModExample/logo.png", &onAddModLogo);
 
   while (wait)
   {

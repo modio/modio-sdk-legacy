@@ -1,4 +1,6 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
 #include <time.h>
 
 void onGetUserEvents(void *object, ModioResponse response, ModioUserEvent *events_array, u32 events_array_size)
@@ -13,7 +15,7 @@ void onGetUserEvents(void *object, ModioResponse response, ModioUserEvent *event
     printf("Id: %i\n", (int)events_array[i].id);
     printf("Mod id: %i\n", (int)events_array[i].mod_id);
     printf("User id: %i\n", (int)events_array[i].user_id);
-    printf("Date added: %s\n", (char *)ctime((const time_t *)&events_array[i].date_added));
+    printf("Date added: %s\n", ctime((const time_t *)&events_array[i].date_added));
     printf("Event type: ");
     switch (events_array[i].event_type)
     {
@@ -40,7 +42,7 @@ void onGetUserEvents(void *object, ModioResponse response, ModioUserEvent *event
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 

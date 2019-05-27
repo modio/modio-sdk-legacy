@@ -1,4 +1,7 @@
-#include "modio_c.h"
+#include <stdbool.h>
+#include "c/ModioC.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 bool wait = true;
 
@@ -17,7 +20,7 @@ void onDownloadMod(u32 response_code, u32 mod_id)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, (char *)"e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   // Let's start by requesting a single mod
   printf("Please enter the mod id: \n");
@@ -38,7 +41,7 @@ int main(void)
     if (queue_size != 0)
     {
       // The download queue contains all the information about the current downloads
-      ModioQueuedModDownload *download_queue = malloc(queue_size * sizeof(*download_queue));
+			ModioQueuedModDownload *download_queue = malloc(queue_size * sizeof *download_queue);
       modioGetModDownloadQueue(download_queue);
 
       printf("\n");
@@ -55,6 +58,7 @@ int main(void)
         printf("Download progress: %f%%\n", (current_progress / total_size) * 100.0);
         printf("\n");
       }
+      free(download_queue);
     }
 
     modioProcess();
