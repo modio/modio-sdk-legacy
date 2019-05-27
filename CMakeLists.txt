@@ -31,6 +31,7 @@ IF (APPLE)
 ENDIF()
 
 IF (UNIX AND NOT APPLE)
+  add_definitions(-D_LARGEFILE64_SOURCE)
   target_link_libraries (modio curl)
 ENDIF ()
 
