@@ -2,11 +2,9 @@
 
 extern "C"
 {
-  void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
+  void modioGetEventsFilterString(void* object, u32 mod_id, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
   {
-    std::string filter_string = modio::getFilterString(&filter);
-
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/events?" + filter_string + "&api_key=" + modio::API_KEY;
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/events?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -17,11 +15,15 @@ extern "C"
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetEvents);
   }
 
-  void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
+  void modioGetEvents(void* object, u32 mod_id, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
   {
     std::string filter_string = modio::getFilterString(&filter);
+    modioGetEventsFilterString(object, mod_id, filter_string.c_str(), filter.cache_max_age_seconds, callback);
+  }
 
-    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/events?" + filter_string + "&api_key=" + modio::API_KEY;
+  void modioGetAllEventsFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
+  {
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/events?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -30,6 +32,12 @@ extern "C"
     get_all_events_callbacks[call_number]->object = object;
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetAllEvents);
+  }
+
+  void modioGetAllEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
+  {
+    std::string filter_string = modio::getFilterString(&filter);
+    modioGetAllEventsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }
 
   void modioSetEventListener(void (*callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size))
