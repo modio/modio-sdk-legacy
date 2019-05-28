@@ -6,9 +6,13 @@ set (CMAKE_CXX_STANDARD 11)
 # set the mode flag as static to compile statically, for example:
 # cmake -D mode=static .
 
-include_directories(include additional_dependencies)
+# MSVC: set the crtmode flag to 'static' to include the Visual C++
+# runtime statically. Requires libcurl to be built with /MT as well.
+# cmake -D crtmode=static .
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+include_directories(include additional_dependencies include/dependencies/miniz)
+
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 
 if( mode AND mode STREQUAL "static" )
   message("Building mod.io SDK statically")
@@ -22,19 +26,18 @@ else()
 endif()
 
 IF (APPLE)
-  find_package(ZLIB REQUIRED)
   find_package(CURL REQUIRED)
-  target_link_libraries(modio ${CURL_LIBRARIES} ZLIB::ZLIB)
+  target_link_libraries(modio ${CURL_LIBRARIES})
 ENDIF()
 
 IF (UNIX AND NOT APPLE)
-  target_link_libraries (modio curl z)
+  add_definitions(-D_LARGEFILE64_SOURCE)
+  target_link_libraries (modio curl)
 ENDIF ()
 
 IF (MINGW)
   target_link_libraries(modio
     ${CMAKE_SOURCE_DIR}/lib/MinGW/libcurl.a
-    ${CMAKE_SOURCE_DIR}/lib/MinGW/libz.a
     ${CMAKE_SOURCE_DIR}/lib/MinGW/libcrypto.dll.a
     ${CMAKE_SOURCE_DIR}/lib/MinGW/libeay32.dll
     ${CMAKE_SOURCE_DIR}/lib/MinGW/libssl.dll.a
@@ -43,11 +46,38 @@ ENDIF()
 
 IF (MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/zlib.lib )
-  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-    target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/libcurl_a.lib  ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/zlib.lib )
-  endif()
+  target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib )
+
+  IF (crtmode AND crtmode STREQUAL "static")
+    set(CompilerFlags
+      CMAKE_CXX_FLAGS
+      CMAKE_CXX_FLAGS_DEBUG
+      CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_C_FLAGS
+      CMAKE_C_FLAGS_DEBUG
+      CMAKE_C_FLAGS_RELEASE
+    )
+
+    foreach(CompilerFlag ${CompilerFlags})
+      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+    endforeach()
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/static/libcurl_a.lib)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/static/libcurl_a.lib)
+    endif()
+
+  ELSE()
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/libcurl_a.lib)
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/libcurl_a.lib)
+    endif()
+
+  ENDIF()
+
 ENDIF()
 
 IF( test AND test STREQUAL "on" )
