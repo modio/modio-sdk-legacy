@@ -6,24 +6,24 @@ cd ..
 
 if %APPVEYOR_REPO_TAG% == true (
   echo "Release tag detected, building and deploying releases"
-  mkdir dynamic_build
-  cd dynamic_build
+  mkdir dynamic_x86
+  cd dynamic_x86
   cmake -D test=on -G "Visual Studio 15" c:\projects\source
   cmake --build . --config "Release"
-  mkdir ..\static_build
-  cd ..\static_build
-  cmake -D mode=static -G "Visual Studio 15" c:\projects\source
-  cmake --build . --config "Release"
-  mkdir ..\dynamic_build_64bits
-  cd ..\dynamic_build_64bits
+  mkdir ..\dynamic_x64
+  cd ..\dynamic_x64
   cmake -G "Visual Studio 15 Win64" c:\projects\source
   cmake --build . --config "Release"
-  mkdir ..\static_build_64bits
-  cd ..\static_build_64bits
+  mkdir ..\static_x86
+  cd ..\static_x86
+  cmake -D mode=static -G "Visual Studio 15" c:\projects\source
+  cmake --build . --config "Release"
+  mkdir ..\static_x64
+  cd ..\static_x64
   cmake -D mode=static -G "Visual Studio 15 Win64" c:\projects\source
   cmake --build . --config "Release"
   cd ..
-  7z a Windows.zip dynamic_build\Release\* static_build\Release\* dynamic_build_64bits\Release\* static_build_64bits\Release\*
+  7z a Windows.zip dynamic_x86\Release\* dynamic_x64\Release\* static_x86\Release\* static_x64\Release\*
 ) else (
   echo "Release tag not detected, not building releases"
 )
