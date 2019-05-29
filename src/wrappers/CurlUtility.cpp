@@ -272,7 +272,7 @@ void handleOnGetDownloadModError(ModioMod* modio_mod)
 
 std::string dataURLEncode(std::string data)
 {
-  char *output = curl_easy_escape(NULL, data.c_str(), data.length());
+  char *output = curl_easy_escape(NULL, data.c_str(), (int)data.length());
   if(output) {
     data = std::string(output);
     curl_free(output);
