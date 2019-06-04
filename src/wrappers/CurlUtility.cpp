@@ -270,5 +270,15 @@ void handleOnGetDownloadModError(ModioMod* modio_mod)
   modioFreeMod(modio_mod);
 }
 
+std::string dataURLEncode(std::string data)
+{
+  char *output = curl_easy_escape(NULL, data.c_str(), (int)data.length());
+  if(output) {
+    data = std::string(output);
+    curl_free(output);
+  }
+  return data;
+}
+
 } // namespace curlwrapper
 } // namespace modio
