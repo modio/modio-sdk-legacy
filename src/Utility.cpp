@@ -502,7 +502,7 @@ std::vector<std::string> getUrlEncodedHeaders()
   return headers;
 }
 
-static const std::string base64_chars = 
+static const char base64_chars[] = 
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
              "abcdefghijklmnopqrstuvwxyz"
              "0123456789+/";
