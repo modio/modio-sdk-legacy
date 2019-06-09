@@ -4,26 +4,26 @@ namespace modio
 {
 namespace curlwrapper
 {
-CURLM *curl_multi_handle;
-u32 call_count;
-u32 ongoing_call;
+CURLM *g_curl_multi_handle;
+u32 g_call_count;
+u32 g_ongoing_call;
 
-std::map<CURL *, JsonResponseHandler *> ongoing_calls;
-std::map<CURL *, OngoingDownload *> ongoing_downloads;
-std::list<QueuedModDownload *> mod_download_queue;
-std::list<QueuedModfileUpload *> modfile_upload_queue;
+std::map<CURL *, JsonResponseHandler *> g_ongoing_calls;
+std::map<CURL *, OngoingDownload *> g_ongoing_downloads;
+std::list<QueuedModDownload *> g_mod_download_queue;
+std::list<QueuedModfileUpload *> g_modfile_upload_queue;
 
-CurrentModDownload* current_mod_download;
-CurrentModfileUpload* current_modfile_upload;
+CurrentModDownload* g_current_mod_download;
+CurrentModfileUpload* g_current_modfile_upload;
 
 std::list<QueuedModDownload *> getModDownloadQueue()
 {
-  return modio::curlwrapper::mod_download_queue;
+  return g_mod_download_queue;
 }
 
 std::list<QueuedModfileUpload *> getModfileUploadQueue()
 {
-  return modfile_upload_queue;
+  return g_modfile_upload_queue;
 }
 
 #ifdef MODIO_WINDOWS_DETECTED
@@ -109,11 +109,11 @@ void updateModDownloadQueue()
 {
   nlohmann::json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
 
-  for (auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
+  for (auto &queued_mod_download : g_mod_download_queue)
   {
     delete queued_mod_download;
   }
-  modio::curlwrapper::mod_download_queue.clear();
+  g_mod_download_queue.clear();
 
   for (auto &queued_mod_download_json : mod_download_queue_json)
   {
@@ -121,7 +121,7 @@ void updateModDownloadQueue()
     modioInitQueuedModDownload(&modio_queued_mod_download, queued_mod_download_json);
     QueuedModDownload *queued_mod_download = new QueuedModDownload();
     queued_mod_download->initialize(modio_queued_mod_download);
-    modio::curlwrapper::mod_download_queue.push_back(queued_mod_download);
+    g_mod_download_queue.push_back(queued_mod_download);
     modioFreeQueuedModDownload(&modio_queued_mod_download);
   }
 }
@@ -130,7 +130,7 @@ void updateModDownloadQueueFile()
 {
   modio::writeLogLine("Updating mod download queue file...", MODIO_DEBUGLEVEL_LOG);
   nlohmann::json mod_download_queue_json;
-  for (auto &queued_mod_download : modio::curlwrapper::mod_download_queue)
+  for (auto &queued_mod_download : g_mod_download_queue)
   {
     mod_download_queue_json.push_back(modio::toJson(*queued_mod_download));
   }
@@ -141,7 +141,7 @@ void updateModDownloadQueueFile()
 void updateModUploadQueueFile()
 {
   nlohmann::json mod_upload_queue_json;
-  for (auto &queued_mod_upload : modfile_upload_queue)
+  for (auto &queued_mod_upload : g_modfile_upload_queue)
   {
     mod_upload_queue_json.push_back(modio::toJson(*queued_mod_upload));
   }
@@ -175,23 +175,23 @@ void prioritizeModDownload(u32 mod_id)
 
   writeJson(modio::getModIODirectory() + "mod_download_queue.json", result_json);
 
-  if (current_mod_download->queued_mod_download)
-    current_mod_download->queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
+  if (g_current_mod_download->queued_mod_download)
+    g_current_mod_download->queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
 }
 
 void downloadNextQueuedMod()
 {
-  if (modio::curlwrapper::mod_download_queue.size() > 0)
+  if (g_mod_download_queue.size() > 0)
   {
-    downloadMod(modio::curlwrapper::mod_download_queue.front());
+    downloadMod(g_mod_download_queue.front());
   }
 }
 
 void uploadNextQueuedModfile()
 {
-  if (modfile_upload_queue.size() > 0)
+  if (g_modfile_upload_queue.size() > 0)
   {
-    uploadModfile(modfile_upload_queue.front());
+    uploadModfile(g_modfile_upload_queue.front());
   }
 }
 
@@ -244,7 +244,7 @@ std::string multimapDataToUrlString(std::multimap<std::string, std::string> data
 
 void setupCurrentModDownload(CurrentModDownload *current_mod_download, u32 mod_id)
 {
-  for (auto queued_mod_iterator : modio::curlwrapper::mod_download_queue)
+  for (auto queued_mod_iterator : g_mod_download_queue)
   {
     if (queued_mod_iterator->mod_id == mod_id)
     {
@@ -263,8 +263,8 @@ void handleOnGetDownloadModError(ModioMod* modio_mod)
 
   writeLogLine("Mod download removed from queue. Looking for other mod downloads queued.", MODIO_DEBUGLEVEL_LOG);
 
-  modio::curlwrapper::mod_download_queue.remove(current_mod_download->queued_mod_download);
-  delete current_mod_download->queued_mod_download;
+  g_mod_download_queue.remove(g_current_mod_download->queued_mod_download);
+  delete g_current_mod_download->queued_mod_download;
   updateModDownloadQueueFile();
   downloadNextQueuedMod();
   modioFreeMod(modio_mod);

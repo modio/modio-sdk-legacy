@@ -9,7 +9,7 @@ size_t onGetJsonData(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
   CURL *handle = (CURL *)userdata;
   u32 data_size = (u32)(size * nmemb);
-  ongoing_calls[handle]->response.append(ptr, data_size);
+  g_ongoing_calls[handle]->response.append(ptr, data_size);
   return data_size;
 }
 
@@ -47,7 +47,7 @@ size_t headerCallback(char *ptr, size_t size, size_t nitems, void *userdata)
     header_key = header_value = header;
   }
 
-  ongoing_calls[handle]->headers[header_key] = header_value;
+  g_ongoing_calls[handle]->headers[header_key] = header_value;
   
   return size * nitems;
 }
