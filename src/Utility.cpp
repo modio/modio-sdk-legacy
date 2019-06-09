@@ -2,6 +2,29 @@
 
 namespace modio
 {
+
+#ifdef MODIO_WINDOWS_DETECTED
+static wchar_t *WideCharFromString(std::string const &str)
+{
+  // returns the number of required wchar_t WITHOUT terminating NUL
+  size_t rl = mbstowcs(NULL, str.c_str(), 0);
+  wchar_t *wcstr = (wchar_t *)malloc((rl + 1) * sizeof *wcstr);
+  mbstowcs(wcstr, str.c_str(), INT_MAX);
+  return wcstr;
+}
+
+static std::string StringFromWideChar(wchar_t const *str)
+{
+  // returns the number of required bytes WITHOUT terminating NUL
+  size_t rl = wcstombs(NULL, str, 0);
+  char *cstr = (char *)malloc(rl + 1);
+  wcstombs(cstr, str, INT_MAX);
+  std::string ret(cstr);
+  free(cstr);
+  return ret;
+}
+#endif
+
 //String methods
 std::string toString(i32 number)
 {
@@ -196,8 +219,10 @@ static void removeEmptyDirectory(const std::string &path)
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
-  if (!RemoveDirectory(path.c_str()))
+  wchar_t *path_wc = WideCharFromString(path);
+  if (!RemoveDirectory(path_wc))
     writeLastErrorLog("RemoveDirectory");
+  free(path_wc);
 #endif
 }
 
@@ -210,7 +235,9 @@ static int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
   WIN32_FIND_DATA FileInformation; // File information
 
   strPattern = refcstrRootDirectory + "\\*.*";
-  hFile = ::FindFirstFile(strPattern.c_str(), &FileInformation);
+  wchar_t *strPattern_wc = WideCharFromString(strPattern);
+  hFile = ::FindFirstFile(strPattern_wc, &FileInformation);
+  free(strPattern_wc);
   if (hFile != INVALID_HANDLE_VALUE)
   {
     do
@@ -218,7 +245,7 @@ static int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
       if (FileInformation.cFileName[0] != '.')
       {
         strFilePath.erase();
-        strFilePath = refcstrRootDirectory + "\\" + FileInformation.cFileName;
+        strFilePath = refcstrRootDirectory + "\\" + StringFromWideChar(FileInformation.cFileName);
 
         if (FileInformation.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
@@ -230,13 +257,21 @@ static int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
         else
         {
           // Set file attributes
-          if (::SetFileAttributes(strFilePath.c_str(),
-                                  FILE_ATTRIBUTE_NORMAL) == FALSE)
+          wchar_t *strFilePath_wc = WideCharFromString(strFilePath);
+          if (::SetFileAttributes(strFilePath_wc, FILE_ATTRIBUTE_NORMAL) == FALSE)
+          {
+            free(strFilePath_wc);
             return ::GetLastError();
+          }
 
           // Delete file
-          if (::DeleteFile(strFilePath.c_str()) == FALSE)
+          if (::DeleteFile(strFilePath_wc) == FALSE)
+          {
+            free(strFilePath_wc);
             return ::GetLastError();
+          }
+
+          free(strFilePath_wc);
         }
       }
     } while (::FindNextFile(hFile, &FileInformation) == TRUE);
@@ -250,13 +285,21 @@ static int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
     else
     {
       // Set directory attributes
-      if (::SetFileAttributes(refcstrRootDirectory.c_str(),
-                              FILE_ATTRIBUTE_NORMAL) == FALSE)
+      wchar_t *refcstrRootDirectory_wc = WideCharFromString(refcstrRootDirectory);
+      if (::SetFileAttributes(refcstrRootDirectory_wc, FILE_ATTRIBUTE_NORMAL) == FALSE)
+      {
+        free(refcstrRootDirectory_wc);
         return ::GetLastError();
+      }
 
       // Delete directory
-      if (::RemoveDirectory(refcstrRootDirectory.c_str()) == FALSE)
+      if (::RemoveDirectory(refcstrRootDirectory_wc) == FALSE)
+      {
+        free(refcstrRootDirectory_wc);
         return ::GetLastError();
+      }
+
+      free(refcstrRootDirectory_wc);
     }
   }
   return 0;
@@ -351,8 +394,10 @@ void createDirectory(const std::string &directory)
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
-  if (!CreateDirectory((char *)directory.c_str(), NULL))
+  wchar_t *director_wc = WideCharFromString(directory);
+  if (!CreateDirectory(director_wc, NULL))
     writeLastErrorLog("CreateDirectory");
+  free(director_wc);
 #endif
 }
 
