@@ -24,7 +24,7 @@ void onGetAuthenticatedUser(void *object, ModioResponse modio_response, ModioUse
     user.initialize(modio_user);
   }
 
-  get_authenticated_user_calls[call_id]->callback((const Response &)response, user);
+  get_authenticated_user_calls[call_id]->callback(response, user);
 
   delete (u32 *)object;
   delete get_authenticated_user_calls[call_id];
@@ -45,7 +45,7 @@ void onGetUserSubscriptions(void *object, ModioResponse modio_response, ModioMod
     mods_vector[i].initialize(mods[i]);
   }
 
-  get_user_subscriptions_calls[call_id]->callback((const Response &)response, mods_vector);
+  get_user_subscriptions_calls[call_id]->callback(response, mods_vector);
 
   delete (u32 *)object;
   delete get_user_subscriptions_calls[call_id];
@@ -65,7 +65,7 @@ void onGetUserEvents(void *object, ModioResponse modio_response, ModioUserEvent 
   {
     event_vector[i].initialize(events_array[i]);
   }
-  get_user_events_calls[call_id]->callback((const Response &)response, event_vector);
+  get_user_events_calls[call_id]->callback(response, event_vector);
 
   delete get_user_events_calls[call_id];
   delete (u32 *)object;
@@ -86,7 +86,7 @@ void onGetUserGames(void *object, ModioResponse modio_response, ModioGame games[
     games_vector[i].initialize(games[i]);
   }
 
-  get_user_games_calls[call_id]->callback((const Response &)response, games_vector);
+  get_user_games_calls[call_id]->callback(response, games_vector);
 
   delete (u32 *)object;
   delete get_user_games_calls[call_id];
@@ -107,7 +107,7 @@ void onGetUserMods(void *object, ModioResponse modio_response, ModioMod mods[], 
     mods_vector[i].initialize(mods[i]);
   }
 
-  get_user_mods_calls[call_id]->callback((const Response &)response, mods_vector);
+  get_user_mods_calls[call_id]->callback(response, mods_vector);
 
   delete (u32 *)object;
   delete get_user_mods_calls[call_id];
@@ -128,7 +128,7 @@ void onGetUserModfiles(void *object, ModioResponse modio_response, ModioModfile 
     modfiles_vector[i].initialize(modfiles[i]);
   }
 
-  get_user_modfiles_calls[call_id]->callback((const Response &)response, modfiles_vector);
+  get_user_modfiles_calls[call_id]->callback(response, modfiles_vector);
 
   delete (u32 *)object;
   delete get_user_modfiles_calls[call_id];
@@ -149,7 +149,7 @@ void onGetUserRatings(void *object, ModioResponse modio_response, ModioRating ra
     ratings_vector[i].initialize(ratings[i]);
   }
 
-  get_user_ratings_calls[call_id]->callback((const Response &)response, ratings_vector);
+  get_user_ratings_calls[call_id]->callback(response, ratings_vector);
 
   delete (u32 *)object;
   delete get_user_ratings_calls[call_id];

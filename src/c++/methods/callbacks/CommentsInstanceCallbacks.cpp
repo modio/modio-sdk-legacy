@@ -20,7 +20,7 @@ void onGetAllModComments(void *object, ModioResponse modio_response, ModioCommen
     comments_vector[i].initialize(comments_array[i]);
   }
 
-  get_all_mod_comments_calls[call_id]->callback((const Response &)response, comments_vector);
+  get_all_mod_comments_calls[call_id]->callback(response, comments_vector);
 
   delete (u32 *)object;
   delete get_all_mod_comments_calls[call_id];
@@ -41,7 +41,7 @@ void onGetModComment(void *object, ModioResponse modio_response, ModioComment mo
     comment.initialize(modio_comment);
   }
 
-  get_mod_comment_calls[call_id]->callback((const Response &)response, comment);
+  get_mod_comment_calls[call_id]->callback(response, comment);
 
   delete (u32 *)object;
   delete get_mod_comment_calls[call_id];
@@ -55,7 +55,7 @@ void onDeleteModComment(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  delete_mod_comment_calls[call_id]->callback((const Response &)response);
+  delete_mod_comment_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete delete_mod_comment_calls[call_id];

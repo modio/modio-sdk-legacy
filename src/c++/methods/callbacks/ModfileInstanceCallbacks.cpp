@@ -21,7 +21,7 @@ void onGetModfile(void *object, ModioResponse modio_response, ModioModfile modfi
     modio_modfile.initialize(modfile);
   }
 
-  get_modfile_calls[call_id]->callback((const Response &)response, modio_modfile);
+  get_modfile_calls[call_id]->callback(response, modio_modfile);
 
   delete (u32 *)object;
   delete get_modfile_calls[call_id];
@@ -42,7 +42,7 @@ void onGetAllModfiles(void *object, ModioResponse modio_response, ModioModfile m
     modfiles_vector[i].initialize(modfiles[i]);
   }
 
-  get_all_modfiles_calls[call_id]->callback((const Response &)response, modfiles_vector);
+  get_all_modfiles_calls[call_id]->callback(response, modfiles_vector);
 
   delete (u32 *)object;
   delete get_all_modfiles_calls[call_id];
