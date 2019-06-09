@@ -31,7 +31,7 @@ namespace modio
     
     current_call_id++;
 
-    for(int i=0; i<(int)metadata_kvp.size(); i++)
+    for(i=0; i<metadata_kvp.size(); i++)
       delete[] metadata_kvp_array[i];
     delete[] metadata_kvp_array;
   }
@@ -55,7 +55,7 @@ namespace modio
 
     current_call_id++;
 
-    for(int i=0; i<(int)metadata_kvp.size(); i++)
+    for(i=0; i<metadata_kvp.size(); i++)
       delete[] metadata_kvp_array[i];
     delete[] metadata_kvp_array;
   }

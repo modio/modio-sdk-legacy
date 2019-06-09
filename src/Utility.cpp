@@ -428,10 +428,10 @@ bool removeDirectory(const std::string &directory)
     if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
     {
       snprintf(path, (size_t)PATH_MAX, "%s%s", directory_with_slash.c_str(), entry->d_name);
-      DIR *dir = opendir(path);
-      if (dir != NULL)
+      DIR *subdir = opendir(path);
+      if (subdir)
       {
-        closedir(dir);
+        closedir(subdir);
         removeDirectory(path);
       }
       writeLogLine("Deleting: " + std::string(path), MODIO_DEBUGLEVEL_LOG);

@@ -18,9 +18,9 @@ void addCallToCache(std::string url, nlohmann::json response_json)
   {
     if (modio::hasKey((*it), "url") && modio::hasKey((*it), "file") && (*it)["url"] == url)
     {
-      std::string filename = (*it)["file"];
+      std::string cache_filename = (*it)["file"];
       cache_file_json.erase(it);
-      modio::removeFile(modio::getModIODirectory() + "cache/" + filename);
+      modio::removeFile(modio::getModIODirectory() + "cache/" + cache_filename);
       break;
     }
   }
