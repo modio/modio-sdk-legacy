@@ -8,7 +8,7 @@ std::map<u32, GenericCall *> delete_metadata_kvp_calls;
 
 void onGetAllMetadataKVP(void *object, ModioResponse modio_response, ModioMetadataKVP *metadata_kvp_array, u32 metadata_kvp_array_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -22,33 +22,30 @@ void onGetAllMetadataKVP(void *object, ModioResponse modio_response, ModioMetada
   get_all_metadata_kvp_calls[call_id]->callback(response, metadata_kvp_vector);
 
   delete get_all_metadata_kvp_calls[call_id];
-  delete (u32 *)object;
   get_all_metadata_kvp_calls.erase(call_id);
 }
 
 void onAddMetadataKVP(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
 
   add_metadata_kvp_calls[call_id]->callback(response);
   delete add_metadata_kvp_calls[call_id];
-  delete (u32 *)object;
   add_metadata_kvp_calls.erase(call_id);
 }
 
 void onDeleteMetadataKVP(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
 
   delete_metadata_kvp_calls[call_id]->callback(response);
   delete delete_metadata_kvp_calls[call_id];
-  delete (u32 *)object;
   delete_metadata_kvp_calls.erase(call_id);
 }
 

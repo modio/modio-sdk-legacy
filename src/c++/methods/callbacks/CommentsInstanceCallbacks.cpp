@@ -8,7 +8,7 @@ std::map<u32, GenericCall *> delete_mod_comment_calls;
 
 void onGetAllModComments(void *object, ModioResponse modio_response, ModioComment *comments_array, u32 comments_array_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -22,14 +22,13 @@ void onGetAllModComments(void *object, ModioResponse modio_response, ModioCommen
 
   get_all_mod_comments_calls[call_id]->callback(response, comments_vector);
 
-  delete (u32 *)object;
   delete get_all_mod_comments_calls[call_id];
   get_all_mod_comments_calls.erase(call_id);
 }
 
 void onGetModComment(void *object, ModioResponse modio_response, ModioComment modio_comment)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -43,21 +42,19 @@ void onGetModComment(void *object, ModioResponse modio_response, ModioComment mo
 
   get_mod_comment_calls[call_id]->callback(response, comment);
 
-  delete (u32 *)object;
   delete get_mod_comment_calls[call_id];
   get_mod_comment_calls.erase(call_id);
 }
 
 void onDeleteModComment(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
 
   delete_mod_comment_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete delete_mod_comment_calls[call_id];
   delete_mod_comment_calls.erase(call_id);
 }

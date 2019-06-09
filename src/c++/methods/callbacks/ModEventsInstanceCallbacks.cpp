@@ -8,7 +8,7 @@ SetEventListenerCall *set_event_listener_call;
 
 void onGetEvents(void *object, ModioResponse modio_response, ModioModEvent *events_array, u32 events_array_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -22,13 +22,12 @@ void onGetEvents(void *object, ModioResponse modio_response, ModioModEvent *even
   get_events_calls[call_id]->callback(response, event_vector);
 
   delete get_events_calls[call_id];
-  delete (u32 *)object;
   get_events_calls.erase(call_id);
 }
 
 void onGetAllEvents(void *object, ModioResponse modio_response, ModioModEvent *events_array, u32 events_array_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -42,7 +41,6 @@ void onGetAllEvents(void *object, ModioResponse modio_response, ModioModEvent *e
   get_all_events_calls[call_id]->callback(response, event_vector);
 
   delete get_all_events_calls[call_id];
-  delete (u32 *)object;
   get_all_events_calls.erase(call_id);
 }
 

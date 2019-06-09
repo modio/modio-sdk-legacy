@@ -17,7 +17,7 @@ void Instance::emailRequest(const std::string &email, const std::function<void(c
   struct GenericCall *email_request_call = new GenericCall{callback};
   email_request_calls[current_call_id] = email_request_call;
 
-  modioEmailRequest(new u32(current_call_id), email.c_str(), &onEmailRequest);
+  modioEmailRequest((void*)((uintptr_t)current_call_id), email.c_str(), &onEmailRequest);
 
   current_call_id++;
 }
@@ -27,7 +27,7 @@ void Instance::emailExchange(const std::string &security_code, const std::functi
   struct GenericCall *email_exchange_call = new GenericCall{callback};
   email_exchange_calls[current_call_id] = email_exchange_call;
 
-  modioEmailExchange(new u32(current_call_id), security_code.c_str(), &onEmailExchange);
+  modioEmailExchange((void*)((uintptr_t)current_call_id), security_code.c_str(), &onEmailExchange);
 
   current_call_id++;
 }

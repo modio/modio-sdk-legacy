@@ -7,7 +7,7 @@ void Instance::getAuthenticatedUser(const std::function<void(const modio::Respon
   struct GetAuthenticatedUserCall *get_authenticated_user_call = new GetAuthenticatedUserCall{callback};
   get_authenticated_user_calls[current_call_id] = get_authenticated_user_call;
 
-  modioGetAuthenticatedUser(new u32(current_call_id), &onGetAuthenticatedUser);
+  modioGetAuthenticatedUser((void*)((uintptr_t)current_call_id), &onGetAuthenticatedUser);
 
   current_call_id++;
 }
@@ -17,7 +17,7 @@ void Instance::getUserSubscriptions(modio::FilterCreator &filter, const std::fun
   struct GetUserSubscriptionsCall *get_user_subscriptions_call = new GetUserSubscriptionsCall{callback};
   get_user_subscriptions_calls[current_call_id] = get_user_subscriptions_call;
 
-  modioGetUserSubscriptions(new u32(current_call_id), *filter.getFilter(), &onGetUserSubscriptions);
+  modioGetUserSubscriptions((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetUserSubscriptions);
 
   current_call_id++;
 }
@@ -27,7 +27,7 @@ void Instance::getUserEvents(modio::FilterCreator &filter, const std::function<v
   struct GetUserEventsCall *get_user_events_call = new GetUserEventsCall{callback};
   get_user_events_calls[current_call_id] = get_user_events_call;
 
-  modioGetUserEvents(new u32(current_call_id), *filter.getFilter(), &onGetUserEvents);
+  modioGetUserEvents((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetUserEvents);
 
   current_call_id++;
 }
@@ -37,7 +37,7 @@ void Instance::getUserGames(modio::FilterCreator &filter, const std::function<vo
   struct GetUserGamesCall *get_user_games_call = new GetUserGamesCall{callback};
   get_user_games_calls[current_call_id] = get_user_games_call;
 
-  modioGetUserGames(new u32(current_call_id), *filter.getFilter(), &onGetUserGames);
+  modioGetUserGames((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetUserGames);
 
   current_call_id++;
 }
@@ -47,7 +47,7 @@ void Instance::getUserMods(modio::FilterCreator &filter, const std::function<voi
   struct GetUserModsCall *get_user_mods_call = new GetUserModsCall{callback};
   get_user_mods_calls[current_call_id] = get_user_mods_call;
 
-  modioGetUserMods(new u32(current_call_id), *filter.getFilter(), &onGetUserMods);
+  modioGetUserMods((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetUserMods);
 
   current_call_id++;
 }
@@ -57,7 +57,7 @@ void Instance::getUserModfiles(modio::FilterCreator &filter, const std::function
   struct GetUserModfilesCall *get_user_modfiles_call = new GetUserModfilesCall{callback};
   get_user_modfiles_calls[current_call_id] = get_user_modfiles_call;
 
-  modioGetUserModfiles(new u32(current_call_id), *filter.getFilter(), &onGetUserModfiles);
+  modioGetUserModfiles((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetUserModfiles);
 
   current_call_id++;
 }
@@ -67,7 +67,7 @@ void Instance::getUserRatings(modio::FilterCreator &filter, const std::function<
   struct GetUserRatingsCall *get_user_ratings_call = new GetUserRatingsCall{callback};
   get_user_ratings_calls[current_call_id] = get_user_ratings_call;
 
-  modioGetUserRatings(new u32(current_call_id), *filter.getFilter(), &onGetUserRatings);
+  modioGetUserRatings((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetUserRatings);
 
   current_call_id++;
 }

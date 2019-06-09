@@ -7,7 +7,7 @@ void Instance::getModStats(u32 mod_id, const std::function<void(const modio::Res
   struct GetModStatsCall *get_mod_stats_call = new GetModStatsCall{callback};
   get_mod_stats_calls[current_call_id] = get_mod_stats_call;
 
-  modioGetModStats(new u32(current_call_id), mod_id, &onGetModStats);
+  modioGetModStats((void*)((uintptr_t)current_call_id), mod_id, &onGetModStats);
 
   current_call_id++;
 }
@@ -17,7 +17,7 @@ void Instance::getAllModStats(modio::FilterCreator &filter, const std::function<
   struct GetAllModStatsCall *get_all_mod_stats_call = new GetAllModStatsCall{callback};
   get_all_mod_stats_calls[current_call_id] = get_all_mod_stats_call;
 
-  modioGetAllModStats(new u32(current_call_id), *filter.getFilter(), &onGetAllModStats);
+  modioGetAllModStats((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetAllModStats);
 
   current_call_id++;
 }

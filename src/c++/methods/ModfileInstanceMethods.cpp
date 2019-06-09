@@ -7,7 +7,7 @@ void Instance::getModfile(u32 mod_id, u32 modfile_id, const std::function<void(c
   struct GetModfileCall *get_modfile_call = new GetModfileCall{callback};
   get_modfile_calls[current_call_id] = get_modfile_call;
 
-  modioGetModfile(new u32(current_call_id), mod_id, modfile_id, &onGetModfile);
+  modioGetModfile((void*)((uintptr_t)current_call_id), mod_id, modfile_id, &onGetModfile);
 
   current_call_id++;
 }
@@ -17,7 +17,7 @@ void Instance::getAllModfiles(u32 mod_id, modio::FilterCreator &filter, const st
   struct GetAllModfilesCall *get_all_modfiles_call = new GetAllModfilesCall{callback};
   get_all_modfiles_calls[current_call_id] = get_all_modfiles_call;
 
-  modioGetAllModfiles(new u32(current_call_id), mod_id, *filter.getFilter(), &onGetAllModfiles);
+  modioGetAllModfiles((void*)((uintptr_t)current_call_id), mod_id, *filter.getFilter(), &onGetAllModfiles);
 
   current_call_id++;
 }
@@ -32,7 +32,7 @@ void Instance::editModfile(u32 mod_id, u32 modfile_id, modio::ModfileEditor &mod
   struct EditModfileCall *edit_modfile_call = new EditModfileCall{callback};
   edit_modfile_calls[current_call_id] = edit_modfile_call;
 
-  modioEditModfile(new u32(current_call_id), mod_id, modfile_id, *modfile_handler.getModioModfileEditor(), &onEditModfile);
+  modioEditModfile((void*)((uintptr_t)current_call_id), mod_id, modfile_id, *modfile_handler.getModioModfileEditor(), &onEditModfile);
 
   current_call_id++;
 }
@@ -42,7 +42,7 @@ void Instance::deleteModfile(u32 mod_id, u32 modfile_id, const std::function<voi
   struct GenericCall *delete_modfile_call = new GenericCall{callback};
   delete_modfile_calls[current_call_id] = delete_modfile_call;
 
-  modioDeleteModfile(new u32(current_call_id), mod_id, modfile_id, &onDeleteModfile);
+  modioDeleteModfile((void*)((uintptr_t)current_call_id), mod_id, modfile_id, &onDeleteModfile);
 
   current_call_id++;
 }
