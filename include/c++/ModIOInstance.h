@@ -49,7 +49,7 @@ namespace modio
 {
 class MODIO_DLL Instance
 {
-  int current_call_id;
+  u32 current_call_id;
 
   Instance(const Instance&) = delete;
   Instance& operator=(const Instance&) = delete;

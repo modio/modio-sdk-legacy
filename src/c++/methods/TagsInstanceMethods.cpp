@@ -4,10 +4,10 @@ namespace modio
 {
 void Instance::getModTags(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::Tag> tags)> &callback)
 {
-  const struct GetModTagsCall *get_mod_tags_call = new GetModTagsCall{callback};
-  get_mod_tags_calls[current_call_id] = (GetModTagsCall *)get_mod_tags_call;
+  struct GetModTagsCall *get_mod_tags_call = new GetModTagsCall{callback};
+  get_mod_tags_calls[current_call_id] = get_mod_tags_call;
 
-  modioGetModTags((void *)new u32(current_call_id), mod_id, &onGetModTags);
+  modioGetModTags(new u32(current_call_id), mod_id, &onGetModTags);
 
   current_call_id++;
 }
@@ -15,20 +15,20 @@ void Instance::getModTags(u32 mod_id, const std::function<void(const modio::Resp
 void Instance::addModTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback)
 {
   char **tags_array = new char *[tags.size()];
-  for (int i = 0; i < (int)tags.size(); i++)
+  for (size_t i = 0; i < tags.size(); i++)
   {
     tags_array[i] = new char[tags[i].size() + 1];
     strcpy(tags_array[i], tags[i].c_str());
   }
 
-  const struct GenericCall *add_mod_tags_call = new GenericCall{callback};
-  add_mod_tags_calls[current_call_id] = (GenericCall *)add_mod_tags_call;
+  struct GenericCall *add_mod_tags_call = new GenericCall{callback};
+  add_mod_tags_calls[current_call_id] = add_mod_tags_call;
 
-  modioAddModTags((void *)new u32(current_call_id), mod_id, tags_array, (u32)tags.size(), &onAddModTags);
+  modioAddModTags(new u32(current_call_id), mod_id, tags_array, (u32)tags.size(), &onAddModTags);
 
   current_call_id++;
 
-  for (int i = 0; i < (int)tags.size(); i++)
+  for (size_t i = 0; i < tags.size(); i++)
     delete[] tags_array[i];
   delete[] tags_array;
 }
@@ -36,20 +36,20 @@ void Instance::addModTags(u32 mod_id, std::vector<std::string> tags, const std::
 void Instance::deleteModTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback)
 {
   char **tags_array = new char *[tags.size()];
-  for (int i = 0; i < (int)tags.size(); i++)
+  for (size_t i = 0; i < tags.size(); i++)
   {
     tags_array[i] = new char[tags[i].size() + 1];
     strcpy(tags_array[i], tags[i].c_str());
   }
 
-  const struct GenericCall *delete_mod_tags_call = new GenericCall{callback};
-  delete_mod_tags_calls[current_call_id] = (GenericCall *)delete_mod_tags_call;
+  struct GenericCall *delete_mod_tags_call = new GenericCall{callback};
+  delete_mod_tags_calls[current_call_id] = delete_mod_tags_call;
 
-  modioDeleteModTags((void *)new u32(current_call_id), mod_id, tags_array, (u32)tags.size(), &onDeleteModTags);
+  modioDeleteModTags(new u32(current_call_id), mod_id, tags_array, (u32)tags.size(), &onDeleteModTags);
 
   current_call_id++;
 
-  for (int i = 0; i < (int)tags.size(); i++)
+  for (size_t i = 0; i < tags.size(); i++)
     delete[] tags_array[i];
   delete[] tags_array;
 }

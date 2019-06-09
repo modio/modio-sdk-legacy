@@ -34,14 +34,14 @@ size_t headerCallback(char *ptr, size_t size, size_t nitems, void *userdata)
   header.append(d, size * nitems);
   
   std::string delimiter = ": ";
-  std::size_t delimiter_position = header.find(delimiter);
+  size_t delimiter_position = header.find(delimiter);
   std::string header_key = "";
   std::string header_value = "";
   
   if(delimiter_position != std::string::npos)
   {
     header_key.append(header.c_str(),delimiter_position);
-    header_value.append(header.begin() + delimiter_position + delimiter.size(), header.end());
+    header_value.append(header.begin() + (delimiter_position + delimiter.size()), header.end());
   }else
   {
     header_key = header_value = header;

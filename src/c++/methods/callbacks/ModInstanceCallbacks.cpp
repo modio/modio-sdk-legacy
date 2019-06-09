@@ -93,7 +93,7 @@ void onDeleteMod(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  delete_mod_calls[call_id]->callback((const modio::Response &)response);
+  delete_mod_calls[call_id]->callback((const Response &)response);
 
   delete (u32 *)object;
   delete delete_mod_calls[call_id];

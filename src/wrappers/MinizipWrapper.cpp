@@ -85,7 +85,7 @@ void extract(std::string zip_path, std::string directory_path)
         }
         if (err > 0)
         {
-          if (fwrite(read_buffer, err, 1, out) != 1)
+          if (fwrite(read_buffer, (size_t)err, 1, out) != 1)
           {
             writeLogLine("error " + toString(err) + " in writing extracted file", MODIO_DEBUGLEVEL_ERROR);
           }
@@ -128,14 +128,14 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
   const char *zipfilename = zip_path.c_str();
   const char *password = NULL;
   void *buf = NULL;
-  int size_buf = WRITEBUFFERSIZE;
+  size_t size_buf = WRITEBUFFERSIZE;
   int errclose = 0;
   int err = 0;
   int opt_overwrite = APPEND_STATUS_CREATE;
   int opt_compress_level = 9;
   int opt_exclude_path = 0;
 
-  buf = (void *)malloc(size_buf);
+  buf = malloc(size_buf);
   if (buf == NULL)
   {
     writeLogLine("Error allocating memory", MODIO_DEBUGLEVEL_ERROR);
@@ -157,17 +157,17 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
     writeLogLine(std::string("Creating ") + zipfilename, MODIO_DEBUGLEVEL_LOG);
   }
 
-  for (int i = 0; i < (int)filenames.size(); i++)
+  for (size_t i = 0; i < filenames.size(); i++)
   {
     if (filenames[i] == "modio.json")
       continue;
     std::string filename = filenames[i];
     std::string complete_file_path = root_directory + filename;
     FILE *fin = NULL;
-    int size_read = 0;
+    size_t size_read = 0;
     const char *filenameinzip = filename.c_str();
     const char *savefilenameinzip;
-    zip_fileinfo zi = {0};
+    zip_fileinfo zi = { };
     unsigned long crcFile = 0;
     int zip64 = 0;
 
@@ -222,7 +222,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
       /* Read contents of file and write it to zip */
       do
       {
-        size_read = (int)fread(buf, 1, size_buf, fin);
+        size_read = fread(buf, 1, size_buf, fin);
         if ((size_read < size_buf) && (feof(fin) == 0))
         {
           writeLogLine(std::string("Error in reading ") + filenameinzip, MODIO_DEBUGLEVEL_ERROR);
@@ -230,7 +230,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
 
         if (size_read > 0)
         {
-          err = zipWriteInFileInZip(zf, buf, size_read);
+          err = zipWriteInFileInZip(zf, buf, (unsigned int)size_read);
           if (err < 0)
             writeLogLine(std::string("Error in writing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
         }

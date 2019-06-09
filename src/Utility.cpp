@@ -41,7 +41,7 @@ std::string toString(i32 number)
     temp += number % 10 + 48;
     number /= 10;
   }
-  for (int i = 0; i < (int)temp.length(); i++)
+  for (size_t i = 0; i < temp.length(); i++)
     returnvalue += temp[temp.length() - i - 1];
   return returnvalue;
 }
@@ -227,7 +227,7 @@ static void removeEmptyDirectory(const std::string &path)
 }
 
 #ifdef MODIO_WINDOWS_DETECTED
-static int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
+static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 {
   HANDLE hFile;                    // Handle to directory
   std::string strFilePath;         // Filepath
@@ -250,7 +250,7 @@ static int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
         if (FileInformation.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
           // Delete subdirectory
-          int iRC = deleteDirectoryWindows(strFilePath);
+          DWORD iRC = deleteDirectoryWindows(strFilePath);
           if (iRC)
             return iRC;
         }
@@ -366,7 +366,7 @@ std::vector<std::string> getFilenames(const std::string &directory)
       if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
       {
         std::vector<std::string> subdirectories_filenames = getFilenames(directory_with_slash + ent->d_name);
-        for (int i = 0; i < (int)subdirectories_filenames.size(); i++)
+        for (size_t i = 0; i < subdirectories_filenames.size(); i++)
         {
           filenames.push_back(std::string(ent->d_name) + "/" + subdirectories_filenames[i]);
         }
@@ -404,11 +404,11 @@ void createDirectory(const std::string &directory)
 bool removeDirectory(const std::string &directory)
 {
 #ifdef MODIO_WINDOWS_DETECTED
-  int error_code = deleteDirectoryWindows(directory);
+  DWORD error_code = deleteDirectoryWindows(directory);
   if (error_code != 0)
-    modio::writeLogLine("Could not remove directory, error code: " + modio::toString(error_code), MODIO_DEBUGLEVEL_ERROR);
+    modio::writeLogLine("Could not remove directory, error code: " + modio::toString((u32)error_code), MODIO_DEBUGLEVEL_ERROR);
   return error_code == 0;
-#endif
+#else
 
   DIR *dir;
   struct dirent *entry;
@@ -443,6 +443,7 @@ bool removeDirectory(const std::string &directory)
   removeEmptyDirectory(directory_with_slash);
 
   return true;
+#endif
 }
 
 void removeFile(const std::string &filename)
@@ -460,7 +461,6 @@ double getFileSize(const std::string &file_path)
   if (fp)
   {
     fseek(fp, 0, SEEK_END);
-    long fileSize = ftell(fp);
     file_size = ftell(fp);
     fclose(fp);
   }
@@ -471,12 +471,12 @@ void createPath(const std::string &path)
 {
   std::string current_path;
   std::string tokenized_path = path;
-  u32 slash_position;
+  size_t slash_position;
 
   while (tokenized_path.length())
   {
-    slash_position = (int)tokenized_path.find('/');
-    if (slash_position == (u32)std::string::npos)
+    slash_position = tokenized_path.find('/');
+    if (slash_position == std::string::npos)
       break;
     current_path += tokenized_path.substr(0, slash_position) + "/";
     tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
