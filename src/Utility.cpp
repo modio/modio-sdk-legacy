@@ -209,22 +209,15 @@ static void writeLastErrorLog(const std::string &error_function)
 }
 #endif
 
+#if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
 static void removeEmptyDirectory(const std::string &path)
 {
-#if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
   if (remove(path.c_str()))
     writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
   else
     writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
-#endif
-
-#ifdef MODIO_WINDOWS_DETECTED
-  wchar_t *path_wc = WideCharFromString(path);
-  if (!RemoveDirectory(path_wc))
-    writeLastErrorLog("RemoveDirectory");
-  free(path_wc);
-#endif
 }
+#endif
 
 #ifdef MODIO_WINDOWS_DETECTED
 static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
