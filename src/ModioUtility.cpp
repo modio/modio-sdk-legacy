@@ -74,7 +74,7 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
 
     std::vector<u32> mod_edited_ids;
     std::vector<u32> mod_to_download_queue_ids;
-    for (int i = 0; i < (int)events_array_size; i++)
+    for (size_t i = 0; i < events_array_size; i++)
     {
       switch (events_array[i].event_type)
       {
@@ -160,7 +160,7 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
     modio::writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
 
     std::vector<u32> mod_to_download_queue_ids;
-    for (int i = 0; i < (int)events_array_size; i++)
+    for (size_t i = 0; i < events_array_size; i++)
     {
       switch (events_array[i].event_type)
       {
