@@ -101,7 +101,7 @@ void installDownloadedMods()
   modio::writeLogLine("Finished installing downloaded mods", MODIO_DEBUGLEVEL_LOG);
 }
 
-nlohmann::json createInstalledModJson(std::string installation_path, std::string downloaded_zip_path, nlohmann::json mod_json)
+static nlohmann::json createInstalledModJson(std::string installation_path, std::string downloaded_zip_path, nlohmann::json mod_json)
 {
   nlohmann::json downloaded_mod;
   downloaded_mod["installation_path"] = installation_path;

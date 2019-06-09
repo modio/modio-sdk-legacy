@@ -14,7 +14,7 @@ void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user)
   }
 }
 
-void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
+static void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   if (response.code == 200)
   {
@@ -25,7 +25,7 @@ void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mo
   }
 }
 
-void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
+static void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   if (response.code == 200)
   {
@@ -64,7 +64,7 @@ void addModsToDownloadQueue(std::vector<u32> mod_ids)
   modioFreeFilter(&filter);
 }
 
-void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
+static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
 {
   if (response.code == 200)
   {
@@ -132,7 +132,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *eve
   }
 }
 
-void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *events_array, u32 events_array_size)
+static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *events_array, u32 events_array_size)
 {
   if (response.code == 200)
   {

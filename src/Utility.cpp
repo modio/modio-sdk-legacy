@@ -160,7 +160,7 @@ void writeJson(const std::string &file_path, nlohmann::json json_object)
 // Filesystem methods
 
 #ifdef MODIO_WINDOWS_DETECTED
-void writeLastErrorLog(const std::string &error_function)
+static void writeLastErrorLog(const std::string &error_function)
 {
   //Get the error message, if any.
   DWORD errorMessageID = ::GetLastError();
@@ -186,7 +186,7 @@ void writeLastErrorLog(const std::string &error_function)
 }
 #endif
 
-void removeEmptyDirectory(const std::string &path)
+static void removeEmptyDirectory(const std::string &path)
 {
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
   if (remove(path.c_str()))
@@ -202,7 +202,7 @@ void removeEmptyDirectory(const std::string &path)
 }
 
 #ifdef MODIO_WINDOWS_DETECTED
-int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
+static int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 {
   HANDLE hFile;                    // Handle to directory
   std::string strFilePath;         // Filepath

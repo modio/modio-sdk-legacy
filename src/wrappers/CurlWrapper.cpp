@@ -406,7 +406,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
   }
 }
 
-void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json response_json)
+static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
   if (response_code == 200)
   {
