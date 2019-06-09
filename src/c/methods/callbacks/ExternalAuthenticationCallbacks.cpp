@@ -1,4 +1,4 @@
-#include "c/methods/callbacks/AuthenticationCallbacks.h"
+#include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
 
 std::map< u32,GenericRequestParams* > galaxy_auth_params;
 std::map< u32,GenericRequestParams* > steam_auth_params;
