@@ -8,6 +8,8 @@ namespace modio
   class MODIO_DLL ModCreator
   {
     ModioModCreator* mod_creator;
+    ModCreator(const ModCreator&) = delete;
+    ModCreator& operator=(const ModCreator&) = delete;
   public:
     ModCreator();
     void setVisible(u32 visible);

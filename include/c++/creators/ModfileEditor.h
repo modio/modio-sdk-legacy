@@ -8,6 +8,8 @@ namespace modio
   class MODIO_DLL ModfileEditor
   {
     ModioModfileEditor modfile_editor;
+    ModfileEditor(const ModfileEditor&) = delete;
+    ModfileEditor& operator=(const ModfileEditor&) = delete;
   public:
     ModfileEditor();
     void setVersion(const std::string& version);

@@ -7,6 +7,8 @@ namespace modio
 {
 class MODIO_DLL ModfileCreator
 {
+  ModfileCreator(const ModfileCreator&) = delete;
+  ModfileCreator& operator=(const ModfileCreator&) = delete;
 public:
   ModioModfileCreator modio_modfile_creator;
   ModfileCreator();
