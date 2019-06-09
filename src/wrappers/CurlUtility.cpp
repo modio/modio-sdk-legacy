@@ -27,82 +27,69 @@ std::list<QueuedModfileUpload *> getModfileUploadQueue()
 }
 
 #ifdef MODIO_WINDOWS_DETECTED
-JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist *slist, char *post_fields, curl_mime *mime_form, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+JsonResponseHandler::JsonResponseHandler(u32 call_number_, struct curl_slist *slist_, char *post_fields_, curl_mime *mime_form_, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback_)
+  : call_number(call_number_), response(""), slist(slist_), post_fields(post_fields_), mime_form(mime_form_), callback(callback_)
 {
-  this->response = "";
-  this->call_number = call_number;
-  this->slist = slist;
-  this->post_fields = post_fields;
-  this->mime_form = mime_form;
-  this->callback = callback;
 }
 #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-JsonResponseHandler::JsonResponseHandler(u32 call_number, struct curl_slist *slist, char *post_fields, struct curl_httppost *formpost, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback)
+JsonResponseHandler::JsonResponseHandler(u32 call_number_, struct curl_slist *slist_, char *post_fields_, struct curl_httppost *formpost_, std::function<void(u32 call_number, u32 response_code, nlohmann::json response_json)> callback_)
+  : call_number(call_number_), response(""), slist(slist_), post_fields(post_fields_), formpost(formpost_), callback(callback_)
 {
-  this->response = "";
-  this->call_number = call_number;
-  this->slist = slist;
-  this->post_fields = post_fields;
-  this->formpost = formpost;
-  this->callback = callback;
 }
 #endif
 
 JsonResponseHandler::~JsonResponseHandler()
 {
-  curl_slist_free_all(this->slist);
+  curl_slist_free_all(slist);
   if (post_fields)
     delete[] post_fields;
 #ifdef MODIO_WINDOWS_DETECTED
-  curl_mime_free(this->mime_form);
+  curl_mime_free(mime_form);
 #elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
-  curl_formfree(this->formpost);
+  curl_formfree(formpost);
 #endif
 }
 
 CurrentModDownload::CurrentModDownload()
 {
-  this->queued_mod_download = NULL;
-  this->curl_handle = NULL;
-  this->slist = NULL;
-  this->file = NULL;
+  queued_mod_download = NULL;
+  curl_handle = NULL;
+  slist = NULL;
+  file = NULL;
 }
 
 CurrentModDownload::~CurrentModDownload()
 {
   if(slist)
     curl_slist_free_all(slist);
-  if (this->file)
-    fclose(this->file);
+  if (file)
+    fclose(file);
 }
 
 CurrentModfileUpload::CurrentModfileUpload()
 {
-  this->queued_modfile_upload = NULL;
-  this->curl_handle = NULL;
-  this->slist = NULL;
-  this->httppost = NULL;
+  queued_modfile_upload = NULL;
+  curl_handle = NULL;
+  slist = NULL;
+  httppost = NULL;
 }
 
 CurrentModfileUpload::~CurrentModfileUpload()
 {
   if(slist)
     curl_slist_free_all(slist);
-  if (this->httppost)
-    curl_formfree(this->httppost);
+  if (httppost)
+    curl_formfree(httppost);
 }
 
-OngoingDownload::OngoingDownload(u32 call_number, std::string url, struct curl_slist *slist, std::function<void(u32 call_number, u32 response_code)> callback)
+OngoingDownload::OngoingDownload(u32 call_number_, std::string url_, struct curl_slist *slist_, std::function<void(u32 call_number, u32 response_code)> callback_)
+  : call_number(call_number_), url(url_), slist(slist_), callback(callback_)
 {
-  this->url = url;
-  this->call_number = call_number;
-  this->callback = callback;
-  this->slist = slist;
 }
 
 OngoingDownload::~OngoingDownload()
 {
-  curl_slist_free_all(this->slist);
+  curl_slist_free_all(slist);
 }
 
 void updateModDownloadQueue()
