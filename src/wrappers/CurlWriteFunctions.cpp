@@ -28,7 +28,7 @@ size_t onGetFileData(void *ptr, size_t size, size_t nmemb, void *stream)
 size_t headerCallback(char *ptr, size_t size, size_t nitems, void *userdata)
 {
   CURL *handle = (CURL *)userdata;
-  char *d = (char*)ptr;
+  char *d = ptr;
 
   std::string header = "";
   header.append(d, size * nitems);

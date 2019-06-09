@@ -5,11 +5,11 @@ namespace modio
 void Instance::getModTags(u32 mod_id, const std::function<void(const modio::Response &response, std::vector<modio::Tag> tags)> &callback)
 {
   const struct GetModTagsCall *get_mod_tags_call = new GetModTagsCall{callback};
-  get_mod_tags_calls[this->current_call_id] = (GetModTagsCall *)get_mod_tags_call;
+  get_mod_tags_calls[current_call_id] = (GetModTagsCall *)get_mod_tags_call;
 
-  modioGetModTags((void *)new u32(this->current_call_id), mod_id, &onGetModTags);
+  modioGetModTags((void *)new u32(current_call_id), mod_id, &onGetModTags);
 
-  this->current_call_id++;
+  current_call_id++;
 }
 
 void Instance::addModTags(u32 mod_id, std::vector<std::string> tags, const std::function<void(const modio::Response &response)> &callback)
@@ -18,15 +18,15 @@ void Instance::addModTags(u32 mod_id, std::vector<std::string> tags, const std::
   for (int i = 0; i < (int)tags.size(); i++)
   {
     tags_array[i] = new char[tags[i].size() + 1];
-    strcpy(tags_array[i], (char *)tags[i].c_str());
+    strcpy(tags_array[i], tags[i].c_str());
   }
 
   const struct GenericCall *add_mod_tags_call = new GenericCall{callback};
-  add_mod_tags_calls[this->current_call_id] = (GenericCall *)add_mod_tags_call;
+  add_mod_tags_calls[current_call_id] = (GenericCall *)add_mod_tags_call;
 
-  modioAddModTags((void *)new u32(this->current_call_id), mod_id, (char const* const* )tags_array, (u32)tags.size(), &onAddModTags);
+  modioAddModTags((void *)new u32(current_call_id), mod_id, tags_array, (u32)tags.size(), &onAddModTags);
 
-  this->current_call_id++;
+  current_call_id++;
 
   for (int i = 0; i < (int)tags.size(); i++)
     delete[] tags_array[i];
@@ -39,15 +39,15 @@ void Instance::deleteModTags(u32 mod_id, std::vector<std::string> tags, const st
   for (int i = 0; i < (int)tags.size(); i++)
   {
     tags_array[i] = new char[tags[i].size() + 1];
-    strcpy(tags_array[i], (char *)tags[i].c_str());
+    strcpy(tags_array[i], tags[i].c_str());
   }
 
   const struct GenericCall *delete_mod_tags_call = new GenericCall{callback};
-  delete_mod_tags_calls[this->current_call_id] = (GenericCall *)delete_mod_tags_call;
+  delete_mod_tags_calls[current_call_id] = (GenericCall *)delete_mod_tags_call;
 
-  modioDeleteModTags((void *)new u32(this->current_call_id), mod_id, (char const* const* )tags_array, (u32)tags.size(), &onDeleteModTags);
+  modioDeleteModTags((void *)new u32(current_call_id), mod_id, tags_array, (u32)tags.size(), &onDeleteModTags);
 
-  this->current_call_id++;
+  current_call_id++;
 
   for (int i = 0; i < (int)tags.size(); i++)
     delete[] tags_array[i];

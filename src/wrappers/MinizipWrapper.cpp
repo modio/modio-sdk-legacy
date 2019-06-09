@@ -125,7 +125,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
   //#ifdef USEWIN32IOAPI
   //  zlib_filefunc64_def ffunc = {0};
   //#endif
-  char *zipfilename = (char *)zip_path.c_str();
+  const char *zipfilename = zip_path.c_str();
   const char *password = NULL;
   void *buf = NULL;
   int size_buf = WRITEBUFFERSIZE;

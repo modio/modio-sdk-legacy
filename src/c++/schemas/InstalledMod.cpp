@@ -4,12 +4,12 @@ namespace modio
 {
 void InstalledMod::initialize(ModioInstalledMod modio_installed_mod)
 {
-	this->mod_id = modio_installed_mod.mod_id;
-	this->modfile_id = modio_installed_mod.modfile_id;
-	this->date_updated = modio_installed_mod.date_updated;
+	mod_id = modio_installed_mod.mod_id;
+	modfile_id = modio_installed_mod.modfile_id;
+	date_updated = modio_installed_mod.date_updated;
 	if (modio_installed_mod.path)
-		this->path = modio_installed_mod.path;
-	this->mod.initialize(modio_installed_mod.mod);
+		path = modio_installed_mod.path;
+	mod.initialize(modio_installed_mod.mod);
 }
 
 nlohmann::json toJson(InstalledMod &installed_mod)

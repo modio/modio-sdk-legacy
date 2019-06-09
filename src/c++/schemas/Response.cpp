@@ -4,13 +4,13 @@ namespace modio
 {
 void Response::initialize(ModioResponse modio_response)
 {
-  this->code = modio_response.code;
-  this->result_count = modio_response.result_count;
-  this->result_limit = modio_response.result_limit;
-  this->result_offset = modio_response.result_offset;
-  this->result_total = modio_response.result_total;
-  this->result_cached = modio_response.result_cached;
-  this->error.initialize(modio_response.error);
+  code = modio_response.code;
+  result_count = modio_response.result_count;
+  result_limit = modio_response.result_limit;
+  result_offset = modio_response.result_offset;
+  result_total = modio_response.result_total;
+  result_cached = modio_response.result_cached;
+  error.initialize(modio_response.error);
 }
 
 nlohmann::json toJson(Response &response)

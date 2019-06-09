@@ -4,12 +4,12 @@ namespace modio
 {
 void UserEvent::initialize(ModioUserEvent modio_event)
 {
-  this->id = modio_event.id;
-  this->game_id = modio_event.game_id;
-  this->mod_id = modio_event.mod_id;
-  this->user_id = modio_event.user_id;
-  this->event_type = modio_event.event_type;
-  this->date_added = modio_event.date_added;
+  id = modio_event.id;
+  game_id = modio_event.game_id;
+  mod_id = modio_event.mod_id;
+  user_id = modio_event.user_id;
+  event_type = modio_event.event_type;
+  date_added = modio_event.date_added;
 }
 
 nlohmann::json toJson(UserEvent &event)
