@@ -51,7 +51,7 @@ const std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
   modioGetAllInstalledMods(modio_installed_mods);
 
   all_installed_mods.resize(installed_mods_size);
-  for (u32 i = 0; i < (u32)installed_mods_size; i++)
+  for (size_t i = 0; i < installed_mods_size; i++)
   {
     all_installed_mods[i].initialize(modio_installed_mods[i]);
     modioFreeInstalledMod(&modio_installed_mods[i]);
