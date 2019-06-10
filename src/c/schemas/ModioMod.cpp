@@ -24,15 +24,15 @@ extern "C"
     if(modio::hasKey(mod_json, "maturity_option"))
       mod->maturity_option = mod_json["maturity_option"];
 
-    mod->date_added = -1;
+    mod->date_added = 0;
     if(modio::hasKey(mod_json, "date_added"))
       mod->date_added = mod_json["date_added"];
 
-    mod->date_updated = -1;
+    mod->date_updated = 0;
     if(modio::hasKey(mod_json, "date_updated"))
     mod->date_updated = mod_json["date_updated"];
 
-    mod->date_live = -1;
+    mod->date_live = 0;
     if(modio::hasKey(mod_json, "date_live"))
       mod->date_live = mod_json["date_live"];
 

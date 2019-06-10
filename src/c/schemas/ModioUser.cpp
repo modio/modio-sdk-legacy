@@ -8,7 +8,7 @@ extern "C"
     if(modio::hasKey(user_json, "id"))
       user->id = user_json["id"];
 
-    user->date_online = -1;
+    user->date_online = 0;
     if(modio::hasKey(user_json, "date_online"))
       user->date_online = user_json["date_online"];
 
