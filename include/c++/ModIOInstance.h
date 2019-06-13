@@ -49,8 +49,10 @@ namespace modio
 {
 class MODIO_DLL Instance
 {
-  int current_call_id;
+  u32 current_call_id;
 
+  Instance(const Instance&) = delete;
+  Instance& operator=(const Instance&) = delete;
 public:
   Instance(u32 environment, u32 game_id, const std::string &api_key);
   Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path);

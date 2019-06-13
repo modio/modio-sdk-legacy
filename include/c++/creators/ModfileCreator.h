@@ -7,10 +7,12 @@ namespace modio
 {
 class MODIO_DLL ModfileCreator
 {
+  ModfileCreator(const ModfileCreator&) = delete;
+  ModfileCreator& operator=(const ModfileCreator&) = delete;
 public:
   ModioModfileCreator modio_modfile_creator;
   ModfileCreator();
-  void initializeFromModioModfileCreator(ModioModfileCreator& modio_modfile_creator);
+  void initializeFromModioModfileCreator(ModioModfileCreator& other_modfile_creator);
   void setPath(const std::string &path);
   void setVersion(const std::string &version);
   void setChangelog(const std::string &changelog);

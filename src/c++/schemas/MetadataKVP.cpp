@@ -5,10 +5,10 @@ namespace modio
 void MetadataKVP::initialize(ModioMetadataKVP modio_metadata_kvp)
 {
   if (modio_metadata_kvp.metakey)
-    this->metakey = modio_metadata_kvp.metakey;
+    metakey = modio_metadata_kvp.metakey;
 
   if (modio_metadata_kvp.metavalue)
-    this->metavalue = modio_metadata_kvp.metavalue;
+    metavalue = modio_metadata_kvp.metavalue;
 }
 
 nlohmann::json toJson(MetadataKVP &metadata_kvp)

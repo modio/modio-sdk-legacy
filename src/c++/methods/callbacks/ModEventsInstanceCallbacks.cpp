@@ -19,7 +19,7 @@ void onGetEvents(void *object, ModioResponse modio_response, ModioModEvent *even
   {
     event_vector[i].initialize(events_array[i]);
   }
-  get_events_calls[call_id]->callback((const Response &)response, event_vector);
+  get_events_calls[call_id]->callback(response, event_vector);
 
   delete get_events_calls[call_id];
   delete (u32 *)object;
@@ -39,7 +39,7 @@ void onGetAllEvents(void *object, ModioResponse modio_response, ModioModEvent *e
   {
     event_vector[i].initialize(events_array[i]);
   }
-  get_all_events_calls[call_id]->callback((const Response &)response, event_vector);
+  get_all_events_calls[call_id]->callback(response, event_vector);
 
   delete get_all_events_calls[call_id];
   delete (u32 *)object;
@@ -57,7 +57,7 @@ void onSetEventListener(ModioResponse modio_response, ModioModEvent *events_arra
   {
     events_vector[i].initialize(events_array[i]);
   }
-  set_event_listener_call->callback((const Response &)response, events_vector);
+  set_event_listener_call->callback(response, events_vector);
 }
 
 void clearModEventsRequestCalls()

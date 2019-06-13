@@ -11,7 +11,7 @@ void onAddModRating(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  add_mod_rating_calls[call_id]->callback((const Response &)response);
+  add_mod_rating_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete add_mod_rating_calls[call_id];

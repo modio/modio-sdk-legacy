@@ -14,7 +14,7 @@ void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user)
   }
 }
 
-void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
+static void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   if (response.code == 200)
   {
@@ -25,7 +25,7 @@ void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mo
   }
 }
 
-void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
+static void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   if (response.code == 200)
   {
@@ -46,7 +46,7 @@ void updateModsCache(std::vector<u32> mod_ids)
   modioInitFilter(&filter);
   for (auto &mod_id : mod_ids)
   {
-    modioAddFilterInField(&filter, (char *)"id", (char *)modio::toString(mod_id).c_str());
+    modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
   }
   modioGetAllMods(NULL, filter, &onModsUpdateEvent);
   modioFreeFilter(&filter);
@@ -58,13 +58,13 @@ void addModsToDownloadQueue(std::vector<u32> mod_ids)
   modioInitFilter(&filter);
   for (auto &mod_id : mod_ids)
   {
-    modioAddFilterInField(&filter, (char *)"id", (char *)modio::toString(mod_id).c_str());
+    modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
   }
   modioGetAllMods(NULL, filter, &modio::onAddModsToDownloadQueue);
   modioFreeFilter(&filter);
 }
 
-void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
+static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
 {
   if (response.code == 200)
   {
@@ -74,7 +74,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *eve
 
     std::vector<u32> mod_edited_ids;
     std::vector<u32> mod_to_download_queue_ids;
-    for (int i = 0; i < (int)events_array_size; i++)
+    for (size_t i = 0; i < events_array_size; i++)
     {
       switch (events_array[i].event_type)
       {
@@ -132,7 +132,7 @@ void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *eve
   }
 }
 
-void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *events_array, u32 events_array_size)
+static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *events_array, u32 events_array_size)
 {
   if (response.code == 200)
   {
@@ -160,7 +160,7 @@ void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *e
     modio::writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
 
     std::vector<u32> mod_to_download_queue_ids;
-    for (int i = 0; i < (int)events_array_size; i++)
+    for (size_t i = 0; i < events_array_size; i++)
     {
       switch (events_array[i].event_type)
       {
@@ -220,13 +220,13 @@ void pollEvents()
 
       ModioFilterCreator filter;
       modioInitFilter(&filter);
-      modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
-      modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
+      modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
+      modioAddFilterSmallerThanField(&filter, "date_added", modio::toString(current_time).c_str());
 
       for (auto installed_mod : modio::installed_mods)
       {
         if (modio::hasKey(installed_mod, "mod_id"))
-          modioAddFilterInField(&filter, (char *)"mod_id", (char *)modio::toString((u32)installed_mod["mod_id"]).c_str());
+          modioAddFilterInField(&filter, "mod_id", modio::toString((u32)installed_mod["mod_id"]).c_str());
       }
 
       modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);
@@ -247,9 +247,9 @@ void pollEvents()
 
       ModioFilterCreator filter;
       modioInitFilter(&filter);
-      modioAddFilterFieldValue(&filter, (char*)"game_id", (char*)toString(modio::GAME_ID).c_str());
-      modioAddFilterMinField(&filter, (char *)"date_added", (char *)modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
-      modioAddFilterSmallerThanField(&filter, (char *)"date_added", (char *)modio::toString(current_time).c_str());
+      modioAddFilterFieldValue(&filter, "game_id", toString(modio::GAME_ID).c_str());
+      modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
+      modioAddFilterSmallerThanField(&filter, "date_added", modio::toString(current_time).c_str());
 
       modioGetUserEvents(NULL, filter, &onGetUserEventsPoll);
       modioFreeFilter(&filter);

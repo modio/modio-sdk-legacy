@@ -4,10 +4,10 @@ namespace modio
 {
 void Rating::initialize(ModioRating modio_rating)
 {
-  this->game_id = modio_rating.game_id;
-  this->mod_id = modio_rating.mod_id;
-  this->rating = modio_rating.rating;
-  this->date_added = modio_rating.date_added;
+  game_id = modio_rating.game_id;
+  mod_id = modio_rating.mod_id;
+  rating = modio_rating.rating;
+  date_added = modio_rating.date_added;
 }
 
 nlohmann::json toJson(Rating &rating)

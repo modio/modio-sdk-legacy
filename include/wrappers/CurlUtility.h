@@ -92,17 +92,17 @@ public:
   ~CurrentModfileUpload();
 };
 
-extern CURLM *curl_multi_handle;
-extern u32 call_count;
-extern u32 ongoing_call;
+extern CURLM *g_curl_multi_handle;
+extern u32 g_call_count;
+extern u32 g_ongoing_call;
 
-extern std::map<CURL *, JsonResponseHandler *> ongoing_calls;
-extern std::map<CURL *, OngoingDownload *> ongoing_downloads;
-extern std::list<QueuedModDownload *> mod_download_queue;
-extern std::list<QueuedModfileUpload *> modfile_upload_queue;
+extern std::map<CURL *, JsonResponseHandler *> g_ongoing_calls;
+extern std::map<CURL *, OngoingDownload *> g_ongoing_downloads;
+extern std::list<QueuedModDownload *> g_mod_download_queue;
+extern std::list<QueuedModfileUpload *> g_modfile_upload_queue;
 
-extern CurrentModDownload* current_mod_download;
-extern CurrentModfileUpload* current_modfile_upload;
+extern CurrentModDownload* g_current_mod_download;
+extern CurrentModfileUpload* g_current_modfile_upload;
 
 std::list<QueuedModDownload *> getModDownloadQueue();
 std::list<QueuedModfileUpload *> getModfileUploadQueue();

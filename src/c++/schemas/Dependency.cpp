@@ -4,8 +4,8 @@ namespace modio
 {
 void Dependency::initialize(ModioDependency modio_dependency)
 {
-	this->mod_id = modio_dependency.mod_id;
-	this->date_added = modio_dependency.date_added;
+	mod_id = modio_dependency.mod_id;
+	date_added = modio_dependency.date_added;
 }
 
 nlohmann::json toJson(Dependency &dependency)

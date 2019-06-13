@@ -19,7 +19,7 @@ void onSubscribeToMod(void *object, ModioResponse modio_response, ModioMod mod)
     modio_mod.initialize(mod);
   }
 
-  subscribe_to_mod_calls[call_id]->callback((const Response &)response, modio_mod);
+  subscribe_to_mod_calls[call_id]->callback(response, modio_mod);
 
   delete (u32 *)object;
   delete subscribe_to_mod_calls[call_id];
@@ -33,7 +33,7 @@ void onUnsubscribeFromMod(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  unsubscribe_from_mod_calls[call_id]->callback((const Response &)response);
+  unsubscribe_from_mod_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete unsubscribe_from_mod_calls[call_id];

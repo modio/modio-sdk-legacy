@@ -11,7 +11,7 @@ void onSubmitReport(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  submit_report_calls[call_id]->callback((const Response &)response);
+  submit_report_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete submit_report_calls[call_id];

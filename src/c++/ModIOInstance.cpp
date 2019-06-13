@@ -4,14 +4,14 @@ namespace modio
 {
 Instance::Instance(u32 environment, u32 game_id, const std::string &api_key)
 {
-  this->current_call_id = 0;
-  modioInit(environment, game_id, (char *)api_key.c_str(), NULL);
+  current_call_id = 0;
+  modioInit(environment, game_id, api_key.c_str(), NULL);
 }
 
 Instance::Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path)
 {
-  this->current_call_id = 0;
-  modioInit(environment, game_id, (char *)api_key.c_str(), (char *)root_path.c_str());
+  current_call_id = 0;
+  modioInit(environment, game_id, api_key.c_str(), root_path.c_str());
 }
 
 Instance::~Instance()
