@@ -13,9 +13,9 @@ Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C a
 
 ```
 modio::FilterCreator filter_creator;
-filter_creator.setLimit(5); // limit to 5 results
-filter_creator.setOffset(0); // paginate trough the results with the offset
-filter_creator.setSort("date_updated", false); // Show retrieve the recently updated mods first
+filter_creator.setLimit(5); // limit the number of results
+filter_creator.setOffset(0); // paginate through the results by using a limit and offset together
+filter_creator.setSort("date_updated", false); // the filtering system allows flexible queries
 
 modio_instance.getAllMods(filter_creator, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
 {
