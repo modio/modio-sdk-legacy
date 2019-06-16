@@ -7,10 +7,6 @@
 
 Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
 
-## Getting started
-
-If you are a game developer and want to add mod.io SDK functionality to your project visit our [documentation overview](https://github.com/modio/SDK/wiki). Our [getting started guide](https://apps.mod.io/guides/getting-started) is a good place to start if you are completely new to [mod.io](https://mod.io).
-
 ## Usage
 
 ### Browse mods
@@ -25,12 +21,14 @@ modio_instance.getAllMods(filter_creator, [&](const modio::Response& response, c
 {
   if(response.code == 200)
   {
-    //Mods retreived!
+    // Mod data retreived!
   }
 });
 ```
 
 ### Auth
+
+Authentication enables automatic installs and updates under the hood.
 
 First step is to request a security code to your email.
 
@@ -39,7 +37,7 @@ modio_instance.emailRequest("example@mail.com", [&](const modio::Response& respo
 {
   if (response.code == 200)
   {
-    //Authentication code successfully requested
+    // Authentication code successfully sent to the e-mail
   }
 });
 ```
@@ -51,7 +49,7 @@ modio_instance.emailExchange("50AD4", [&](const modio::Response& response)
 {
   if (response.code == 200)
   {
-    //Email exchanged successfully
+    // Email exchanged successfully, you are now authenticated
   }
 });
 ```
@@ -67,7 +65,7 @@ modio_instance.galaxyAuth(appdata, [&](const modio::Response &response)
 {
   if (response.code == 200)
   {
-    //Successful Galaxy authentication
+    // Successful Galaxy authentication
   }
 });
 ```
@@ -79,14 +77,14 @@ modio_instance.steamAuth(rgubTicket, cubTicket, [&](const modio::Response &respo
 {
   if (response.code == 200)
   {
-    //Successful Steam authentication
+    // Successful Steam authentication
   }
 });
 ```
 
 ### Subscriptions
 
-Download and remove mods locally by subribing and unsubscribing.
+Download mods automatically by subscribing, uninstall them by unsubscribing.
 
 #### Subscribe
 
@@ -95,7 +93,7 @@ modio_instance.subscribeToMod(mod_id, [&](const modio::Response& response, const
 {
   if(response.code == 201)
   {
-    //Subscribed to mod successfully
+    // Subscribed to mod successfully, the mod will be added automatically to the download queue
   }
 });
 ```
@@ -107,7 +105,7 @@ modio_instance.unsubscribeFromMod(mod_id, [&](const modio::Response& response)
 {
   if(response.code == 204)
   {
-    //Unsubscribed from mod successfully
+    // Unsubscribed from mod successfully, it will be uninstalled from local storage
   }
 });
 ```
@@ -131,7 +129,7 @@ modio_instance.addMod(mod_creator, [&](const modio::Response& response, const mo
 {
   if(response.code == 201)
   {
-    //Mod successfully added
+    // Mod profile successfully added
   }
 });
 ```
@@ -155,7 +153,7 @@ modio_instance.addModfile(requested_mod.id, modfile_creator);
 modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
   if (response_code == 200)
   {
-    //Mod successfully downloaded
+    // Mod successfully downloaded. Call the modio_instance.installDownloadedMods(); to install, keep in mind this is not an async function.
   }
 });
 ```
@@ -170,6 +168,31 @@ modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
   }
 });
 ```
+
+### Feature rich integration
+
+Visit the [wiki](https://github.com/modio/SDK/wiki) to learn how to integrate dependencies, comments, ratings, stats, reports and more.
+
+## Getting started
+
+If you are a game developer, first step is to add mod support to your game. Once mod support is up and running, [create your games profile](https://mod.io/games/add) on mod.io, to get an API key and access to all [functionality mod.io offers](https://apps.mod.io/guides/getting-started).
+Next, download the latest [SDK release](https://github.com/modio/SDK/releases) and unpack it into your project, then head over to the [GitHub Wiki](https://github.com/modio/SDK/wiki/Getting-Started) and follow the guides corresponding to your setup.
+
+```
+#include "modio.h"
+
+// ...
+
+modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, MY_GAME_ID, "MY API KEY");
+
+// ...
+
+void myGameTick()
+{
+  modio_instance.process();
+}
+```
+
 
 ## Contributions Welcome
 Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://apps.mod.io) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.

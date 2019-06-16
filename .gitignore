@@ -32,6 +32,7 @@
 *.app
 
 .vs/
+.vscode/
 build/
 
 src/modio.so
