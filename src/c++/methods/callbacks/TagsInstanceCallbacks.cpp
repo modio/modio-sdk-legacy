@@ -19,7 +19,7 @@ void onGetModTags(void *object, ModioResponse modio_response, ModioTag *tags_arr
   {
     tags_vector[i].initialize(tags_array[i]);
   }
-  get_mod_tags_calls[call_id]->callback((const Response &)response, tags_vector);
+  get_mod_tags_calls[call_id]->callback(response, tags_vector);
 
   delete get_mod_tags_calls[call_id];
   delete (u32 *)object;
@@ -33,7 +33,7 @@ void onAddModTags(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  add_mod_tags_calls[call_id]->callback((const Response &)response);
+  add_mod_tags_calls[call_id]->callback(response);
   delete add_mod_tags_calls[call_id];
   delete (u32 *)object;
   add_mod_tags_calls.erase(call_id);
@@ -46,7 +46,7 @@ void onDeleteModTags(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  delete_mod_tags_calls[call_id]->callback((const Response &)response);
+  delete_mod_tags_calls[call_id]->callback(response);
   delete delete_mod_tags_calls[call_id];
   delete (u32 *)object;
   delete_mod_tags_calls.erase(call_id);

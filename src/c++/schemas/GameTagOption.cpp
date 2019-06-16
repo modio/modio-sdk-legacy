@@ -4,17 +4,17 @@ namespace modio
 {
 void GameTagOption::initialize(ModioGameTagOption modio_game_tag_option)
 {
-  this->hidden = modio_game_tag_option.hidden;
+  hidden = modio_game_tag_option.hidden;
 
   if (modio_game_tag_option.name)
-    this->name = modio_game_tag_option.name;
+    name = modio_game_tag_option.name;
   if (modio_game_tag_option.type)
-    this->type = modio_game_tag_option.type;
+    type = modio_game_tag_option.type;
 
-  this->tags.resize(modio_game_tag_option.tags_array_size);
+  tags.resize(modio_game_tag_option.tags_array_size);
   for (u32 i = 0; i < modio_game_tag_option.tags_array_size; i++)
   {
-    this->tags[i] = modio_game_tag_option.tags_array[i];
+    tags[i] = modio_game_tag_option.tags_array[i];
   }
 }
 

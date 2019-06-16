@@ -8,6 +8,8 @@ namespace modio
   class MODIO_DLL FilterCreator
   {
     ModioFilterCreator* filter;
+    FilterCreator(const FilterCreator&) = delete;
+    FilterCreator& operator=(const FilterCreator&) = delete;
   public:
     FilterCreator();
     void setSort(const std::string& field, bool ascending);

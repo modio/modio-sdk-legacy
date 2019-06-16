@@ -13,7 +13,7 @@ void onEmailRequest(void *object, ModioResponse modio_response)
 
   response.initialize(modio_response);
 
-  email_request_calls[call_id]->callback((const modio::Response &)response);
+  email_request_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete email_request_calls[call_id];
@@ -27,7 +27,7 @@ void onEmailExchange(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  email_exchange_calls[call_id]->callback((const modio::Response &)response);
+  email_exchange_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete email_exchange_calls[call_id];

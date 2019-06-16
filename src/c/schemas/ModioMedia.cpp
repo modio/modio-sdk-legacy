@@ -11,7 +11,7 @@ extern "C"
       nlohmann::json youtube_json = media_json["youtube"];
       media->youtube_size = (u32)youtube_json.size();
       media->youtube_array = new char*[media->youtube_size];
-      for(int i=0; i<(int)media->youtube_size; i++)
+      for(size_t i=0; i<media->youtube_size; i++)
       {
         std::string youtube_str = youtube_json[i];
         media->youtube_array[i]= new char[youtube_str.size() + 1];
@@ -26,7 +26,7 @@ extern "C"
       nlohmann::json sketchfab_json = media_json["sketchfab"];
       media->sketchfab_size = (u32)sketchfab_json.size();
       media->sketchfab_array = new char*[media->sketchfab_size];
-      for(int i=0; i<(int)media->sketchfab_size; i++)
+      for(size_t i=0; i<media->sketchfab_size; i++)
       {
         std::string sketchfab_str = sketchfab_json[i];
         media->sketchfab_array[i]= new char[sketchfab_str.size() + 1];
@@ -41,7 +41,7 @@ extern "C"
       nlohmann::json images_json = media_json["images"];
       media->images_size = (u32)images_json.size();
       media->images_array = new ModioImage[media->images_size];
-      for(int i=0; i<(int)media->images_size; i++)
+      for(size_t i=0; i<media->images_size; i++)
       {
         modioInitImage(&(media->images_array[i]), images_json[i]);
       }
@@ -52,21 +52,21 @@ extern "C"
   {
     if(media)
     {
-      for(int i=0; i<(int)media->youtube_size; i++)
+      for(size_t i=0; i<media->youtube_size; i++)
       {
         delete[] media->youtube_array[i];
       }
       if(media->youtube_array)
         delete[] media->youtube_array;
 
-      for(int i=0; i<(int)media->sketchfab_size; i++)
+      for(size_t i=0; i<media->sketchfab_size; i++)
       {
         delete[] media->sketchfab_array[i];
       }
       if(media->sketchfab_array)
         delete[] media->sketchfab_array;
 
-      for(int i=0; i<(int)media->images_size; i++)
+      for(size_t i=0; i<media->images_size; i++)
       {
         modioFreeImage(&(media->images_array[i]));
       }

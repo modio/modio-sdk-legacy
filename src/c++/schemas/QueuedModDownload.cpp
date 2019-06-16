@@ -4,15 +4,15 @@ namespace modio
 {
 void QueuedModDownload::initialize(ModioQueuedModDownload queued_mod_download)
 {
-  this->state = queued_mod_download.state;
-  this->mod_id = queued_mod_download.mod_id;
-  this->current_progress = queued_mod_download.current_progress;
-  this->total_size = queued_mod_download.total_size;
+  state = queued_mod_download.state;
+  mod_id = queued_mod_download.mod_id;
+  current_progress = queued_mod_download.current_progress;
+  total_size = queued_mod_download.total_size;
   if (queued_mod_download.url)
-    this->url = queued_mod_download.url;
+    url = queued_mod_download.url;
   if (queued_mod_download.path)
-    this->path = queued_mod_download.path;
-  this->mod.initialize(queued_mod_download.mod);
+    path = queued_mod_download.path;
+  mod.initialize(queued_mod_download.mod);
 }
 
 nlohmann::json toJson(QueuedModDownload &queued_mod_download)

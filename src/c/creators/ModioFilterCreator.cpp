@@ -3,12 +3,12 @@
 
 namespace modio
 {
-  std::string getField(std::string str)
+  static std::string getField(std::string str)
   {
     return str.substr(0,str.find("="));
   }
 
-  bool appendIfExists(ModioListNode* list, std::string field, std::string value)
+  static bool appendIfExists(ModioListNode* list, std::string field, std::string value)
   {
     for(ModioListNode* iterator = list; iterator != NULL; iterator = iterator->next)
     {
@@ -25,7 +25,7 @@ namespace modio
     return false;
   }
 
-  bool replaceIfExists(ModioListNode* list, std::string field, std::string value)
+  static bool replaceIfExists(ModioListNode* list, std::string field, std::string value)
   {
     for(ModioListNode* iterator = list; iterator != NULL; iterator = iterator->next)
     {
@@ -42,7 +42,7 @@ namespace modio
     return false;
   }
 
-  ModioListNode* addNewNode(ModioListNode* list, std::string value)
+  static ModioListNode* addNewNode(ModioListNode* list, std::string value)
   {
     ModioListNode* node = new ModioListNode;
     node->value = new char[value.size() + 1];
@@ -234,7 +234,7 @@ extern "C"
 
 namespace modio
 {
-  std::string addParam(std::string filter_string, char* param)
+  static std::string addParam(std::string filter_string, char* param)
   {
     if(param)
     {
@@ -245,7 +245,7 @@ namespace modio
     return filter_string;
   }
 
-  std::string addParam(std::string filter_string, ModioListNode* param_list)
+  static std::string addParam(std::string filter_string, ModioListNode* param_list)
   {
     for(ModioListNode* iterator = param_list; iterator != NULL; iterator = iterator->next)
     {

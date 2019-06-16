@@ -20,7 +20,7 @@ void onGetAllModDependencies(void *object, ModioResponse modio_response, ModioDe
     dependencies_vector[i].initialize(dependencies_array[i]);
   }
 
-  get_all_mod_dependencies_calls[call_id]->callback((const Response &)response, dependencies_vector);
+  get_all_mod_dependencies_calls[call_id]->callback(response, dependencies_vector);
 
   delete (u32 *)object;
   delete get_all_mod_dependencies_calls[call_id];
@@ -34,7 +34,7 @@ void onAddModDependencies(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  add_mod_dependencies_calls[call_id]->callback((const Response &)response);
+  add_mod_dependencies_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete add_mod_dependencies_calls[call_id];
@@ -48,7 +48,7 @@ void onDeleteModDependencies(void *object, ModioResponse modio_response)
   modio::Response response;
   response.initialize(modio_response);
 
-  delete_mod_dependencies_calls[call_id]->callback((const Response &)response);
+  delete_mod_dependencies_calls[call_id]->callback(response);
 
   delete (u32 *)object;
   delete delete_mod_dependencies_calls[call_id];

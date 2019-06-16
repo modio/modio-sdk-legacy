@@ -2,6 +2,29 @@
 
 namespace modio
 {
+
+#ifdef MODIO_WINDOWS_DETECTED
+static wchar_t *WideCharFromString(std::string const &str)
+{
+  // returns the number of required wchar_t WITHOUT terminating NUL
+  size_t rl = mbstowcs(NULL, str.c_str(), 0);
+  wchar_t *wcstr = (wchar_t *)malloc((rl + 1) * sizeof *wcstr);
+  mbstowcs(wcstr, str.c_str(), INT_MAX);
+  return wcstr;
+}
+
+static std::string StringFromWideChar(wchar_t const *str)
+{
+  // returns the number of required bytes WITHOUT terminating NUL
+  size_t rl = wcstombs(NULL, str, 0);
+  char *cstr = (char *)malloc(rl + 1);
+  wcstombs(cstr, str, INT_MAX);
+  std::string ret(cstr);
+  free(cstr);
+  return ret;
+}
+#endif
+
 //String methods
 std::string toString(i32 number)
 {
@@ -18,7 +41,7 @@ std::string toString(i32 number)
     temp += number % 10 + 48;
     number /= 10;
   }
-  for (int i = 0; i < (int)temp.length(); i++)
+  for (size_t i = 0; i < temp.length(); i++)
     returnvalue += temp[temp.length() - i - 1];
   return returnvalue;
 }
@@ -160,7 +183,7 @@ void writeJson(const std::string &file_path, nlohmann::json json_object)
 // Filesystem methods
 
 #ifdef MODIO_WINDOWS_DETECTED
-void writeLastErrorLog(const std::string &error_function)
+static void writeLastErrorLog(const std::string &error_function)
 {
   //Get the error message, if any.
   DWORD errorMessageID = ::GetLastError();
@@ -186,23 +209,18 @@ void writeLastErrorLog(const std::string &error_function)
 }
 #endif
 
-void removeEmptyDirectory(const std::string &path)
-{
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
+static void removeEmptyDirectory(const std::string &path)
+{
   if (remove(path.c_str()))
     writeLogLine(path + " removed", MODIO_DEBUGLEVEL_LOG);
   else
     writeLogLine("Could not remove " + path, MODIO_DEBUGLEVEL_ERROR);
-#endif
-
-#ifdef MODIO_WINDOWS_DETECTED
-  if (!RemoveDirectory(path.c_str()))
-    writeLastErrorLog("RemoveDirectory");
-#endif
 }
+#endif
 
 #ifdef MODIO_WINDOWS_DETECTED
-int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
+static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 {
   HANDLE hFile;                    // Handle to directory
   std::string strFilePath;         // Filepath
@@ -210,7 +228,9 @@ int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
   WIN32_FIND_DATA FileInformation; // File information
 
   strPattern = refcstrRootDirectory + "\\*.*";
-  hFile = ::FindFirstFile(strPattern.c_str(), &FileInformation);
+  wchar_t *strPattern_wc = WideCharFromString(strPattern);
+  hFile = ::FindFirstFile(strPattern_wc, &FileInformation);
+  free(strPattern_wc);
   if (hFile != INVALID_HANDLE_VALUE)
   {
     do
@@ -218,25 +238,33 @@ int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
       if (FileInformation.cFileName[0] != '.')
       {
         strFilePath.erase();
-        strFilePath = refcstrRootDirectory + "\\" + FileInformation.cFileName;
+        strFilePath = refcstrRootDirectory + "\\" + StringFromWideChar(FileInformation.cFileName);
 
         if (FileInformation.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
           // Delete subdirectory
-          int iRC = deleteDirectoryWindows(strFilePath);
+          DWORD iRC = deleteDirectoryWindows(strFilePath);
           if (iRC)
             return iRC;
         }
         else
         {
           // Set file attributes
-          if (::SetFileAttributes(strFilePath.c_str(),
-                                  FILE_ATTRIBUTE_NORMAL) == FALSE)
+          wchar_t *strFilePath_wc = WideCharFromString(strFilePath);
+          if (::SetFileAttributes(strFilePath_wc, FILE_ATTRIBUTE_NORMAL) == FALSE)
+          {
+            free(strFilePath_wc);
             return ::GetLastError();
+          }
 
           // Delete file
-          if (::DeleteFile(strFilePath.c_str()) == FALSE)
+          if (::DeleteFile(strFilePath_wc) == FALSE)
+          {
+            free(strFilePath_wc);
             return ::GetLastError();
+          }
+
+          free(strFilePath_wc);
         }
       }
     } while (::FindNextFile(hFile, &FileInformation) == TRUE);
@@ -250,13 +278,21 @@ int deleteDirectoryWindows(const std::string &refcstrRootDirectory)
     else
     {
       // Set directory attributes
-      if (::SetFileAttributes(refcstrRootDirectory.c_str(),
-                              FILE_ATTRIBUTE_NORMAL) == FALSE)
+      wchar_t *refcstrRootDirectory_wc = WideCharFromString(refcstrRootDirectory);
+      if (::SetFileAttributes(refcstrRootDirectory_wc, FILE_ATTRIBUTE_NORMAL) == FALSE)
+      {
+        free(refcstrRootDirectory_wc);
         return ::GetLastError();
+      }
 
       // Delete directory
-      if (::RemoveDirectory(refcstrRootDirectory.c_str()) == FALSE)
+      if (::RemoveDirectory(refcstrRootDirectory_wc) == FALSE)
+      {
+        free(refcstrRootDirectory_wc);
         return ::GetLastError();
+      }
+
+      free(refcstrRootDirectory_wc);
     }
   }
   return 0;
@@ -323,7 +359,7 @@ std::vector<std::string> getFilenames(const std::string &directory)
       if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
       {
         std::vector<std::string> subdirectories_filenames = getFilenames(directory_with_slash + ent->d_name);
-        for (int i = 0; i < (int)subdirectories_filenames.size(); i++)
+        for (size_t i = 0; i < subdirectories_filenames.size(); i++)
         {
           filenames.push_back(std::string(ent->d_name) + "/" + subdirectories_filenames[i]);
         }
@@ -351,19 +387,21 @@ void createDirectory(const std::string &directory)
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
-  if (!CreateDirectory((char *)directory.c_str(), NULL))
+  wchar_t *director_wc = WideCharFromString(directory);
+  if (!CreateDirectory(director_wc, NULL))
     writeLastErrorLog("CreateDirectory");
+  free(director_wc);
 #endif
 }
 
 bool removeDirectory(const std::string &directory)
 {
 #ifdef MODIO_WINDOWS_DETECTED
-  int error_code = deleteDirectoryWindows(directory);
+  DWORD error_code = deleteDirectoryWindows(directory);
   if (error_code != 0)
-    modio::writeLogLine("Could not remove directory, error code: " + modio::toString(error_code), MODIO_DEBUGLEVEL_ERROR);
+    modio::writeLogLine("Could not remove directory, error code: " + modio::toString((u32)error_code), MODIO_DEBUGLEVEL_ERROR);
   return error_code == 0;
-#endif
+#else
 
   DIR *dir;
   struct dirent *entry;
@@ -383,10 +421,10 @@ bool removeDirectory(const std::string &directory)
     if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
     {
       snprintf(path, (size_t)PATH_MAX, "%s%s", directory_with_slash.c_str(), entry->d_name);
-      DIR *dir = opendir(path);
-      if (dir != NULL)
+      DIR *subdir = opendir(path);
+      if (subdir)
       {
-        closedir(dir);
+        closedir(subdir);
         removeDirectory(path);
       }
       writeLogLine("Deleting: " + std::string(path), MODIO_DEBUGLEVEL_LOG);
@@ -398,6 +436,7 @@ bool removeDirectory(const std::string &directory)
   removeEmptyDirectory(directory_with_slash);
 
   return true;
+#endif
 }
 
 void removeFile(const std::string &filename)
@@ -415,7 +454,6 @@ double getFileSize(const std::string &file_path)
   if (fp)
   {
     fseek(fp, 0, SEEK_END);
-    long fileSize = ftell(fp);
     file_size = ftell(fp);
     fclose(fp);
   }
@@ -426,12 +464,12 @@ void createPath(const std::string &path)
 {
   std::string current_path;
   std::string tokenized_path = path;
-  u32 slash_position;
+  size_t slash_position;
 
   while (tokenized_path.length())
   {
-    slash_position = (int)tokenized_path.find('/');
-    if (slash_position == (u32)std::string::npos)
+    slash_position = tokenized_path.find('/');
+    if (slash_position == std::string::npos)
       break;
     current_path += tokenized_path.substr(0, slash_position) + "/";
     tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
@@ -457,7 +495,7 @@ std::vector<std::string> getUrlEncodedHeaders()
   return headers;
 }
 
-static const std::string base64_chars = 
+static const char base64_chars[] = 
              "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
              "abcdefghijklmnopqrstuvwxyz"
              "0123456789+/";

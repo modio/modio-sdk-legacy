@@ -45,7 +45,7 @@ IF (MINGW)
 ENDIF()
 
 IF (MSVC)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS -DUNICODE -D_UNICODE)
   target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib )
 
   IF (crtmode AND crtmode STREQUAL "static")

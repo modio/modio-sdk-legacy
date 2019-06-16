@@ -19,7 +19,7 @@ void onGetModStats(void *object, ModioResponse modio_response, ModioStats modio_
     stats.initialize(modio_stats);
   }
 
-  get_mod_stats_calls[call_id]->callback((const Response &)response, stats);
+  get_mod_stats_calls[call_id]->callback(response, stats);
 
   delete (u32 *)object;
   delete get_mod_stats_calls[call_id];
@@ -40,7 +40,7 @@ void onGetAllModStats(void *object, ModioResponse modio_response, ModioStats mod
     mod_stats_vector[i].initialize(modio_mods_stats[i]);
   }
 
-  get_all_mod_stats_calls[call_id]->callback((const Response &)response, mod_stats_vector);
+  get_all_mod_stats_calls[call_id]->callback(response, mod_stats_vector);
 
   delete (u32 *)object;
   delete get_all_mod_stats_calls[call_id];

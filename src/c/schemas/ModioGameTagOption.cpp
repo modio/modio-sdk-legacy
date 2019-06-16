@@ -30,7 +30,7 @@ extern "C"
     {
       game_tag_option->tags_array_size = (u32)game_tag_option_json["tags"].size();
       game_tag_option->tags_array = new char*[game_tag_option->tags_array_size];
-      for(int i=0; i<(int)game_tag_option->tags_array_size; i++)
+      for(size_t i=0; i<game_tag_option->tags_array_size; i++)
       {
         std::string tag_str = game_tag_option_json["tags"][i];
         game_tag_option->tags_array[i]= new char[tag_str.size() + 1];
@@ -49,7 +49,7 @@ extern "C"
       if(game_tag_option->type)
         delete[] game_tag_option->type;
 
-      for(int i=0; i<(int)game_tag_option->tags_array_size; i++)
+      for(size_t i=0; i<game_tag_option->tags_array_size; i++)
       {
         delete[] game_tag_option->tags_array[i];
       }

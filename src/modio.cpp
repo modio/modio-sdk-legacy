@@ -1,6 +1,6 @@
 #include "modio.h"
 
-void loadEventPollingFile()
+static void loadEventPollingFile()
 {
   modio::writeLogLine("Loading mod events data...", MODIO_DEBUGLEVEL_LOG);
 
@@ -19,7 +19,7 @@ void loadEventPollingFile()
   }
 }
 
-void loadAuthenticationFile()
+static void loadAuthenticationFile()
 {
   modio::writeLogLine("Loading authentication data...", MODIO_DEBUGLEVEL_LOG);
 

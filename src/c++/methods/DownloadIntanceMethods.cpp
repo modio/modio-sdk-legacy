@@ -44,22 +44,22 @@ const std::list<QueuedModfileUpload *> Instance::getModfileUploadQueue()
 
 const std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
 {
-  std::vector<modio::InstalledMod> installed_mods;
+  std::vector<modio::InstalledMod> all_installed_mods;
 
   u32 installed_mods_size = modioGetAllInstalledModsCount();
   ModioInstalledMod *modio_installed_mods = new ModioInstalledMod[installed_mods_size];
   modioGetAllInstalledMods(modio_installed_mods);
 
-  installed_mods.resize(installed_mods_size);
+  all_installed_mods.resize(installed_mods_size);
   for (u32 i = 0; i < (u32)installed_mods_size; i++)
   {
-    installed_mods[i].initialize(modio_installed_mods[i]);
+    all_installed_mods[i].initialize(modio_installed_mods[i]);
     modioFreeInstalledMod(&modio_installed_mods[i]);
   }
 
   delete[] modio_installed_mods;
 
-  return installed_mods;
+  return all_installed_mods;
 }
 
 void Instance::setDownloadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback)
