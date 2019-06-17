@@ -7,6 +7,24 @@
 
 Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
 
+## Features
+
+| Feature | Supported |
+|----------|------------ |
+| Windows / Linux / MacOS | ✔ |
+| Standalone | ✔ |
+| Open Source | ✔ |
+| Free | ✔ |
+| Async Callbacks | ✔ |
+| Events | ✔ |
+| Prebuilt download and upload queue | ✔ |
+| Automatic downloads and updates | ✔ |
+| Email / Steam / GOG authentication | ✔ |
+| Browse / search / tag mods | ✔ |
+| Mod dependencies / comments / stats | ✔ |
+| Multilanguage C interface | ✔ |
+| MIT license | ✔ |
+
 ## Usage
 
 ### Browse mods
@@ -106,6 +124,18 @@ modio_instance.unsubscribeFromMod(mod_id, [&](const modio::Response& response)
   if(response.code == 204)
   {
     // Unsubscribed from mod successfully, it will be uninstalled from local storage
+  }
+});
+```
+
+### Mod ratings
+
+```
+modio_instance.addModRating(mod_id, 1 /*or -1 for negative rating*/, [&](const modio::Response& response)
+{
+  if(response.code == 201)
+  {
+    // Mod rating submitted successfully
   }
 });
 ```
