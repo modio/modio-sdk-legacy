@@ -118,12 +118,12 @@ Share mods by creating a mod profile and attaching modfiles to it.
 
 ```
 modio::ModCreator mod_creator;
-mod_creator.setLogoPath("ModExample/logo.png");
-mod_creator.setName("Example Mod Test30");
-mod_creator.setHomepage("http://www.webpage.com");
-mod_creator.setSummary("Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
-mod_creator.addTag("Easy");
-mod_creator.addTag("Medium");
+mod_creator.setName("Graphics Overhaul Mod");
+mod_creator.setLogoPath("path/to/image.jpg");
+mod_creator.setHomepage("http://www.garphicsoverhaulmod.com");
+mod_creator.setSummary("Short descriptive summary here.");
+mod_creator.addTag("Graphics");
+mod_creator.addTag("HD");
 
 modio_instance.addMod(mod_creator, [&](const modio::Response& response, const modio::Mod& mod)
 {
@@ -138,9 +138,9 @@ modio_instance.addMod(mod_creator, [&](const modio::Response& response, const mo
 
 ```
 modio::ModfileCreator modfile_creator;
-modfile_creator.setModfilePath("ModExample/modfile/");
+modfile_creator.setModfilePath("path/to/mod_folder/");
 modfile_creator.setModfileVersion("v1.1.0");
-modfile_creator.setModfileChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+modfile_creator.setModfileChangelog("<p>Rogue Knights v1.2.0 Changelog</p></p>New Featu...");
 
 modio_instance.addModfile(requested_mod.id, modfile_creator);
 ```
