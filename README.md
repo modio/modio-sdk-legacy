@@ -7,9 +7,192 @@
 
 Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
 
+## Usage
+
+### Browse mods
+
+```
+modio::FilterCreator filter_creator;
+filter_creator.setLimit(5); // limit the number of results
+filter_creator.setOffset(0); // paginate through the results by using a limit and offset together
+filter_creator.setSort("date_updated", false); // the filtering system allows flexible queries
+
+modio_instance.getAllMods(filter_creator, [&](const modio::Response& response, const std::vector<modio::Mod> & mods)
+{
+  if(response.code == 200)
+  {
+    // Mod data retreived!
+  }
+});
+```
+
+### Auth
+
+Authentication enables automatic installs and updates under the hood.
+
+First step is to request a security code to your email.
+
+```
+modio_instance.emailRequest("example@mail.com", [&](const modio::Response& response)
+{
+  if (response.code == 200)
+  {
+    // Authentication code successfully sent to the e-mail
+  }
+});
+```
+
+Finish authentication by submitting the 5-digit code.
+
+```
+modio_instance.emailExchange("50AD4", [&](const modio::Response& response)
+{
+  if (response.code == 200)
+  {
+    // Email exchanged successfully, you are now authenticated
+  }
+});
+```
+
+### External Auth
+
+If your game is running inside a popular distribution platform such as Steam or GOG Galaxy you can authenticate 100% seamlessly.
+
+#### Galaxy Auth
+
+```
+modio_instance.galaxyAuth(appdata, [&](const modio::Response &response)
+{
+  if (response.code == 200)
+  {
+    // Successful Galaxy authentication
+  }
+});
+```
+
+#### Steam Auth
+
+```
+modio_instance.steamAuth(rgubTicket, cubTicket, [&](const modio::Response &response)
+{
+  if (response.code == 200)
+  {
+    // Successful Steam authentication
+  }
+});
+```
+
+### Subscriptions
+
+Download mods automatically by subscribing, uninstall them by unsubscribing.
+
+#### Subscribe
+
+```
+modio_instance.subscribeToMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
+{
+  if(response.code == 201)
+  {
+    // Subscribed to mod successfully, the mod will be added automatically to the download queue
+  }
+});
+```
+
+#### Unsubscribe
+
+```
+modio_instance.unsubscribeFromMod(mod_id, [&](const modio::Response& response)
+{
+  if(response.code == 204)
+  {
+    // Unsubscribed from mod successfully, it will be uninstalled from local storage
+  }
+});
+```
+
+### Mod submission
+
+Share mods by creating a mod profile and attaching modfiles to it.
+
+#### Create a mod profile
+
+```
+modio::ModCreator mod_creator;
+mod_creator.setLogoPath("ModExample/logo.png");
+mod_creator.setName("Example Mod Test30");
+mod_creator.setHomepage("http://www.webpage.com");
+mod_creator.setSummary("Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
+mod_creator.addTag("Easy");
+mod_creator.addTag("Medium");
+
+modio_instance.addMod(mod_creator, [&](const modio::Response& response, const modio::Mod& mod)
+{
+  if(response.code == 201)
+  {
+    // Mod profile successfully added
+  }
+});
+```
+
+#### Upload a modfile
+
+```
+modio::ModfileCreator modfile_creator;
+modfile_creator.setModfilePath("ModExample/modfile/");
+modfile_creator.setModfileVersion("v1.1.0");
+modfile_creator.setModfileChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+
+modio_instance.addModfile(requested_mod.id, modfile_creator);
+```
+
+### Listeners
+
+#### Download listener
+
+```
+modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
+  if (response_code == 200)
+  {
+    // Mod successfully downloaded. Call the modio_instance.installDownloadedMods(); to install, keep in mind this is not an async function.
+  }
+});
+```
+
+#### Upload listener
+
+```
+modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
+  if (response_code == 201)
+  {
+    //Mod successfully uploaded
+  }
+});
+```
+
+### Feature rich integration
+
+Visit the [wiki](https://github.com/modio/SDK/wiki) to learn how to integrate dependencies, comments, ratings, stats, reports and more.
+
 ## Getting started
 
-If you are a game developer and want to add mod.io SDK functionality to your project visit our [documentation overview](https://github.com/modio/SDK/wiki). Our [getting started guide](https://apps.mod.io/guides/getting-started) is a good place to start if you are completely new to [mod.io](https://mod.io).
+If you are a game developer, first step is to add mod support to your game. Once mod support is up and running, [create your games profile](https://mod.io/games/add) on mod.io, to get an API key and access to all [functionality mod.io offers](https://apps.mod.io/guides/getting-started).
+Next, download the latest [SDK release](https://github.com/modio/SDK/releases) and unpack it into your project, then head over to the [GitHub Wiki](https://github.com/modio/SDK/wiki/Getting-Started) and follow the guides corresponding to your setup.
+
+```
+#include "modio.h"
+
+// ...
+
+modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, MY_GAME_ID, "MY API KEY");
+
+// ...
+
+void myGameTick()
+{
+  modio_instance.process();
+}
+```
+
 
 ## Contributions Welcome
 Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://apps.mod.io) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.
