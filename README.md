@@ -21,12 +21,12 @@ modio_instance.getAllMods(filter_creator, [&](const modio::Response& response, c
 {
   if(response.code == 200)
   {
-    // Mod data retreived!
+    // Mod data retrieved!
   }
 });
 ```
 
-### Auth
+### Auth (via email)
 
 Authentication enables automatic installs and updates under the hood.
 
