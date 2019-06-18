@@ -7,7 +7,7 @@ std::map<u32, GetAllModStatsCall *> get_all_mod_stats_calls;
 
 void onGetModStats(void *object, ModioResponse modio_response, ModioStats modio_stats)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -21,14 +21,13 @@ void onGetModStats(void *object, ModioResponse modio_response, ModioStats modio_
 
   get_mod_stats_calls[call_id]->callback(response, stats);
 
-  delete (u32 *)object;
   delete get_mod_stats_calls[call_id];
   get_mod_stats_calls.erase(call_id);
 }
 
 void onGetAllModStats(void *object, ModioResponse modio_response, ModioStats modio_mods_stats[], u32 modio_mods_stats_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -42,7 +41,6 @@ void onGetAllModStats(void *object, ModioResponse modio_response, ModioStats mod
 
   get_all_mod_stats_calls[call_id]->callback(response, mod_stats_vector);
 
-  delete (u32 *)object;
   delete get_all_mod_stats_calls[call_id];
   get_all_mod_stats_calls.erase(call_id);
 }

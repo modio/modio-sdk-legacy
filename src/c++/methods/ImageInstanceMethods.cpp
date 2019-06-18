@@ -7,7 +7,7 @@ void Instance::downloadImage(const std::string &image_url, const std::string &pa
   struct GenericCall *download_image_call = new GenericCall{callback};
   download_image_calls[current_call_id] = download_image_call;
 
-  modioDownloadImage(new u32(current_call_id), image_url.c_str(), path.c_str(), &onDownloadImage);
+  modioDownloadImage((void*)((uintptr_t)current_call_id), image_url.c_str(), path.c_str(), &onDownloadImage);
 
   current_call_id++;
 }

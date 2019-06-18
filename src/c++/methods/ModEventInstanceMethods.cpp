@@ -7,7 +7,7 @@ void Instance::getEvents(u32 mod_id, modio::FilterCreator &filter, const std::fu
   struct GetEventsCall *get_events_call = new GetEventsCall{callback};
   get_events_calls[current_call_id] = get_events_call;
 
-  modioGetEvents(new u32(current_call_id), mod_id, *filter.getFilter(), &onGetEvents);
+  modioGetEvents((void*)((uintptr_t)current_call_id), mod_id, *filter.getFilter(), &onGetEvents);
 
   current_call_id++;
 }
@@ -17,7 +17,7 @@ void Instance::getAllEvents(modio::FilterCreator &filter, const std::function<vo
   struct GetAllEventsCall *get_all_events_call = new GetAllEventsCall{callback};
   get_all_events_calls[current_call_id] = get_all_events_call;
 
-  modioGetAllEvents(new u32(current_call_id), *filter.getFilter(), &onGetAllEvents);
+  modioGetAllEvents((void*)((uintptr_t)current_call_id), *filter.getFilter(), &onGetAllEvents);
 
   current_call_id++;
 }

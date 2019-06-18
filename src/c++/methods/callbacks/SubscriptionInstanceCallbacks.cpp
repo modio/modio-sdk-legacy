@@ -7,7 +7,7 @@ std::map<u32, GenericCall *> unsubscribe_from_mod_calls;
 
 void onSubscribeToMod(void *object, ModioResponse modio_response, ModioMod mod)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -21,21 +21,19 @@ void onSubscribeToMod(void *object, ModioResponse modio_response, ModioMod mod)
 
   subscribe_to_mod_calls[call_id]->callback(response, modio_mod);
 
-  delete (u32 *)object;
   delete subscribe_to_mod_calls[call_id];
   subscribe_to_mod_calls.erase(call_id);
 }
 
 void onUnsubscribeFromMod(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
 
   unsubscribe_from_mod_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete unsubscribe_from_mod_calls[call_id];
   unsubscribe_from_mod_calls.erase(call_id);
 }

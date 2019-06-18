@@ -7,7 +7,7 @@ void Instance::getAllModDependencies(u32 mod_id, const std::function<void(const 
 	struct GetAllModDependenciesCall *get_all_mod_dependencies_call = new GetAllModDependenciesCall{callback};
 	get_all_mod_dependencies_calls[current_call_id] = get_all_mod_dependencies_call;
 
-	modioGetAllModDependencies(new u32(current_call_id), mod_id, &onGetAllModDependencies);
+	modioGetAllModDependencies((void*)((uintptr_t)current_call_id), mod_id, &onGetAllModDependencies);
 
 	current_call_id++;
 }
@@ -21,7 +21,7 @@ void Instance::addModDependencies(u32 mod_id, std::vector<u32> dependencies, con
 	struct GenericCall *add_mod_dependencies_call = new GenericCall{callback};
 	add_mod_dependencies_calls[current_call_id] = add_mod_dependencies_call;
 
-	modioAddModDependencies(new u32(current_call_id), mod_id, dependencies_array, (u32)dependencies.size(), &onAddModDependencies);
+	modioAddModDependencies((void*)((uintptr_t)current_call_id), mod_id, dependencies_array, (u32)dependencies.size(), &onAddModDependencies);
 	
 	current_call_id++;
 
@@ -37,7 +37,7 @@ void Instance::deleteModDependencies(u32 mod_id, std::vector<u32> dependencies, 
 	struct GenericCall *delete_mod_dependencies_call = new GenericCall{callback};
 	delete_mod_dependencies_calls[current_call_id] = delete_mod_dependencies_call;
 
-	modioDeleteModDependencies(new u32(current_call_id), mod_id, dependencies_array, (u32)dependencies.size(), &onDeleteModDependencies);
+	modioDeleteModDependencies((void*)((uintptr_t)current_call_id), mod_id, dependencies_array, (u32)dependencies.size(), &onDeleteModDependencies);
 	
 	current_call_id++;
 

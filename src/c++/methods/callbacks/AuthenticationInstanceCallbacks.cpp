@@ -7,7 +7,7 @@ std::map<u32, GenericCall *> email_exchange_calls;
 
 void onEmailRequest(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
 
@@ -15,21 +15,19 @@ void onEmailRequest(void *object, ModioResponse modio_response)
 
   email_request_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete email_request_calls[call_id];
   email_request_calls.erase(call_id);
 }
 
 void onEmailExchange(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
 
   email_exchange_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete email_exchange_calls[call_id];
   email_exchange_calls.erase(call_id);
 }

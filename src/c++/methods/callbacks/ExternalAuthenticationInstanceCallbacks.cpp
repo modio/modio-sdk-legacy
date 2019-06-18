@@ -9,7 +9,7 @@ std::map<u32, GenericCall *> link_external_account_calls;
 
 void onGalaxyAuth(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
 
@@ -17,14 +17,13 @@ void onGalaxyAuth(void *object, ModioResponse modio_response)
 
   galaxy_auth_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete galaxy_auth_calls[call_id];
   galaxy_auth_calls.erase(call_id);
 }
 
 void onSteamAuth(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
 
@@ -32,14 +31,13 @@ void onSteamAuth(void *object, ModioResponse modio_response)
 
   steam_auth_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete steam_auth_calls[call_id];
   steam_auth_calls.erase(call_id);
 }
 
 void onSteamAuthEncoded(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
 
@@ -47,14 +45,13 @@ void onSteamAuthEncoded(void *object, ModioResponse modio_response)
 
   steam_auth_encoded_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete steam_auth_encoded_calls[call_id];
   steam_auth_encoded_calls.erase(call_id);
 }
 
 void onLinkExternalAccount(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
 
@@ -62,7 +59,6 @@ void onLinkExternalAccount(void *object, ModioResponse modio_response)
 
   link_external_account_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete link_external_account_calls[call_id];
   link_external_account_calls.erase(call_id);
 }
