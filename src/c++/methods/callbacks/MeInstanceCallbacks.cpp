@@ -12,7 +12,7 @@ std::map<u32, GetUserRatingsCall *> get_user_ratings_calls;
 
 void onGetAuthenticatedUser(void *object, ModioResponse modio_response, ModioUser modio_user)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -26,14 +26,13 @@ void onGetAuthenticatedUser(void *object, ModioResponse modio_response, ModioUse
 
   get_authenticated_user_calls[call_id]->callback(response, user);
 
-  delete (u32 *)object;
   delete get_authenticated_user_calls[call_id];
   get_authenticated_user_calls.erase(call_id);
 }
 
 void onGetUserSubscriptions(void *object, ModioResponse modio_response, ModioMod mods[], u32 mods_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -47,14 +46,13 @@ void onGetUserSubscriptions(void *object, ModioResponse modio_response, ModioMod
 
   get_user_subscriptions_calls[call_id]->callback(response, mods_vector);
 
-  delete (u32 *)object;
   delete get_user_subscriptions_calls[call_id];
   get_user_subscriptions_calls.erase(call_id);
 }
 
 void onGetUserEvents(void *object, ModioResponse modio_response, ModioUserEvent *events_array, u32 events_array_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -68,13 +66,12 @@ void onGetUserEvents(void *object, ModioResponse modio_response, ModioUserEvent 
   get_user_events_calls[call_id]->callback(response, event_vector);
 
   delete get_user_events_calls[call_id];
-  delete (u32 *)object;
   get_user_events_calls.erase(call_id);
 }
 
 void onGetUserGames(void *object, ModioResponse modio_response, ModioGame games[], u32 games_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -88,14 +85,13 @@ void onGetUserGames(void *object, ModioResponse modio_response, ModioGame games[
 
   get_user_games_calls[call_id]->callback(response, games_vector);
 
-  delete (u32 *)object;
   delete get_user_games_calls[call_id];
   get_user_games_calls.erase(call_id);
 }
 
 void onGetUserMods(void *object, ModioResponse modio_response, ModioMod mods[], u32 mods_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -109,14 +105,13 @@ void onGetUserMods(void *object, ModioResponse modio_response, ModioMod mods[], 
 
   get_user_mods_calls[call_id]->callback(response, mods_vector);
 
-  delete (u32 *)object;
   delete get_user_mods_calls[call_id];
   get_user_mods_calls.erase(call_id);
 }
 
 void onGetUserModfiles(void *object, ModioResponse modio_response, ModioModfile modfiles[], u32 modfiles_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -130,14 +125,13 @@ void onGetUserModfiles(void *object, ModioResponse modio_response, ModioModfile 
 
   get_user_modfiles_calls[call_id]->callback(response, modfiles_vector);
 
-  delete (u32 *)object;
   delete get_user_modfiles_calls[call_id];
   get_user_modfiles_calls.erase(call_id);
 }
 
 void onGetUserRatings(void *object, ModioResponse modio_response, ModioRating ratings[], u32 ratings_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -151,7 +145,6 @@ void onGetUserRatings(void *object, ModioResponse modio_response, ModioRating ra
 
   get_user_ratings_calls[call_id]->callback(response, ratings_vector);
 
-  delete (u32 *)object;
   delete get_user_ratings_calls[call_id];
   get_user_ratings_calls.erase(call_id);
 }

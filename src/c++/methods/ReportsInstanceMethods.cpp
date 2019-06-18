@@ -7,7 +7,7 @@ namespace modio
 		struct GenericCall* submit_report_call = new GenericCall{ callback };
 		submit_report_calls[current_call_id] = submit_report_call;
 
-		modioSubmitReport(new u32(current_call_id), resource.c_str(), id, type, name.c_str(), summary.c_str(), &onSubmitReport);
+		modioSubmitReport((void*)((uintptr_t)current_call_id), resource.c_str(), id, type, name.c_str(), summary.c_str(), &onSubmitReport);
 
 		current_call_id++;
 	}

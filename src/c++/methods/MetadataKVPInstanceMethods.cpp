@@ -7,7 +7,7 @@ namespace modio
     struct GetAllMetadataKVPCall* get_all_metadata_kvp_call = new GetAllMetadataKVPCall{callback};
     get_all_metadata_kvp_calls[current_call_id] = get_all_metadata_kvp_call;
 
-    modioGetAllMetadataKVP(new u32(current_call_id), mod_id, &onGetAllMetadataKVP);
+    modioGetAllMetadataKVP((void*)((uintptr_t)current_call_id), mod_id, &onGetAllMetadataKVP);
 
     current_call_id++;
   }
@@ -27,7 +27,7 @@ namespace modio
     struct GenericCall* add_metadata_kvp_call = new GenericCall{callback};
     add_metadata_kvp_calls[current_call_id] = add_metadata_kvp_call;
 
-    modioAddMetadataKVP(new u32(current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onAddMetadataKVP);
+    modioAddMetadataKVP((void*)((uintptr_t)current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onAddMetadataKVP);
     
     current_call_id++;
 
@@ -51,7 +51,7 @@ namespace modio
     struct GenericCall* delete_metadata_kvp_call = new GenericCall{callback};
     delete_metadata_kvp_calls[current_call_id] = delete_metadata_kvp_call;
 
-    modioDeleteMetadataKVP(new u32(current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onDeleteMetadataKVP);
+    modioDeleteMetadataKVP((void*)((uintptr_t)current_call_id), mod_id, metadata_kvp_array, (u32)metadata_kvp.size(), &onDeleteMetadataKVP);
 
     current_call_id++;
 

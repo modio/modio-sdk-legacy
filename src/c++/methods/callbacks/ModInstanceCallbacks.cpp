@@ -10,7 +10,7 @@ std::map<u32, GenericCall *> delete_mod_calls;
 
 void onGetMod(void *object, ModioResponse modio_response, ModioMod mod)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -24,14 +24,13 @@ void onGetMod(void *object, ModioResponse modio_response, ModioMod mod)
 
   get_mod_calls[call_id]->callback(response, modio_mod);
 
-  delete (u32 *)object;
   delete get_mod_calls[call_id];
   get_mod_calls.erase(call_id);
 }
 
 void onGetAllMods(void *object, ModioResponse modio_response, ModioMod mods[], u32 mods_size)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -45,14 +44,13 @@ void onGetAllMods(void *object, ModioResponse modio_response, ModioMod mods[], u
 
   get_all_mods_calls[call_id]->callback(response, mods_vector);
 
-  delete (u32 *)object;
   delete get_all_mods_calls[call_id];
   get_all_mods_calls.erase(call_id);
 }
 
 void onAddMod(void *object, ModioResponse modio_response, ModioMod mod)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -66,14 +64,13 @@ void onAddMod(void *object, ModioResponse modio_response, ModioMod mod)
 
   add_mod_calls[call_id]->callback(response, modio_mod);
 
-  delete (u32 *)object;
   delete add_mod_calls[call_id];
   add_mod_calls.erase(call_id);
 }
 
 void onEditMod(void *object, ModioResponse modio_response, ModioMod mod)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
@@ -81,21 +78,19 @@ void onEditMod(void *object, ModioResponse modio_response, ModioMod mod)
   modio::Mod modio_mod;
   edit_mod_calls[call_id]->callback(response, modio_mod);
 
-  delete (u32 *)object;
   delete edit_mod_calls[call_id];
   edit_mod_calls.erase(call_id);
 }
 
 void onDeleteMod(void *object, ModioResponse modio_response)
 {
-  u32 call_id = *((u32 *)object);
+  u32 call_id = (u32)((uintptr_t)object);
 
   modio::Response response;
   response.initialize(modio_response);
 
   delete_mod_calls[call_id]->callback(response);
 
-  delete (u32 *)object;
   delete delete_mod_calls[call_id];
   delete_mod_calls.erase(call_id);
 }

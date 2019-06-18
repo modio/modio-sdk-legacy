@@ -7,11 +7,29 @@
 
 Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
 
+## Features
+
+| Feature | Supported |
+|----------|------------ |
+| Windows / Linux / MacOS | ✔ |
+| Standalone | ✔ |
+| Open Source | ✔ |
+| Free | ✔ |
+| Async Callbacks | ✔ |
+| Events | ✔ |
+| Prebuilt download and upload queue | ✔ |
+| Automatic downloads and updates | ✔ |
+| Email / Steam / GOG authentication | ✔ |
+| Browse / search / tag mods | ✔ |
+| Mod dependencies / comments / stats | ✔ |
+| Multilanguage C interface | ✔ |
+| MIT license | ✔ |
+
 ## Usage
 
 ### Browse mods
 
-```
+```c++
 modio::FilterCreator filter_creator;
 filter_creator.setLimit(5); // limit the number of results
 filter_creator.setOffset(0); // paginate through the results by using a limit and offset together
@@ -21,18 +39,18 @@ modio_instance.getAllMods(filter_creator, [&](const modio::Response& response, c
 {
   if(response.code == 200)
   {
-    // Mod data retreived!
+    // Mod data retrieved!
   }
 });
 ```
 
-### Auth
+### Auth (via email)
 
 Authentication enables automatic installs and updates under the hood.
 
 First step is to request a security code to your email.
 
-```
+```c++
 modio_instance.emailRequest("example@mail.com", [&](const modio::Response& response)
 {
   if (response.code == 200)
@@ -44,7 +62,7 @@ modio_instance.emailRequest("example@mail.com", [&](const modio::Response& respo
 
 Finish authentication by submitting the 5-digit code.
 
-```
+```c++
 modio_instance.emailExchange("50AD4", [&](const modio::Response& response)
 {
   if (response.code == 200)
@@ -60,7 +78,7 @@ If your game is running inside a popular distribution platform such as Steam or 
 
 #### Galaxy Auth
 
-```
+```c++
 modio_instance.galaxyAuth(appdata, [&](const modio::Response &response)
 {
   if (response.code == 200)
@@ -72,7 +90,7 @@ modio_instance.galaxyAuth(appdata, [&](const modio::Response &response)
 
 #### Steam Auth
 
-```
+```c++
 modio_instance.steamAuth(rgubTicket, cubTicket, [&](const modio::Response &response)
 {
   if (response.code == 200)
@@ -88,7 +106,7 @@ Download mods automatically by subscribing, uninstall them by unsubscribing.
 
 #### Subscribe
 
-```
+```c++
 modio_instance.subscribeToMod(mod_id, [&](const modio::Response& response, const modio::Mod& mod)
 {
   if(response.code == 201)
@@ -100,12 +118,24 @@ modio_instance.subscribeToMod(mod_id, [&](const modio::Response& response, const
 
 #### Unsubscribe
 
-```
+```c++
 modio_instance.unsubscribeFromMod(mod_id, [&](const modio::Response& response)
 {
   if(response.code == 204)
   {
     // Unsubscribed from mod successfully, it will be uninstalled from local storage
+  }
+});
+```
+
+### Mod ratings
+
+```c++
+modio_instance.addModRating(mod_id, 1 /*or -1 for negative rating*/, [&](const modio::Response& response)
+{
+  if(response.code == 201)
+  {
+    // Mod rating submitted successfully
   }
 });
 ```
@@ -116,14 +146,14 @@ Share mods by creating a mod profile and attaching modfiles to it.
 
 #### Create a mod profile
 
-```
+```c++
 modio::ModCreator mod_creator;
-mod_creator.setLogoPath("ModExample/logo.png");
-mod_creator.setName("Example Mod Test30");
-mod_creator.setHomepage("http://www.webpage.com");
-mod_creator.setSummary("Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples. Mod added via the SDK examples.");
-mod_creator.addTag("Easy");
-mod_creator.addTag("Medium");
+mod_creator.setName("Graphics Overhaul Mod");
+mod_creator.setLogoPath("path/to/image.jpg");
+mod_creator.setHomepage("http://www.garphicsoverhaulmod.com");
+mod_creator.setSummary("Short descriptive summary here.");
+mod_creator.addTag("Graphics");
+mod_creator.addTag("HD");
 
 modio_instance.addMod(mod_creator, [&](const modio::Response& response, const modio::Mod& mod)
 {
@@ -136,11 +166,11 @@ modio_instance.addMod(mod_creator, [&](const modio::Response& response, const mo
 
 #### Upload a modfile
 
-```
+```c++
 modio::ModfileCreator modfile_creator;
-modfile_creator.setModfilePath("ModExample/modfile/");
+modfile_creator.setModfilePath("path/to/mod_folder/");
 modfile_creator.setModfileVersion("v1.1.0");
-modfile_creator.setModfileChangelog("This is a change log, this is a changelog , this is a changelog , this is a changelog , this is a changelog , this is a changelog, this is a changelog , this is a changelog , this is a changelog");
+modfile_creator.setModfileChangelog("<p>Rogue Knights v1.2.0 Changelog</p></p>New Featu...");
 
 modio_instance.addModfile(requested_mod.id, modfile_creator);
 ```
@@ -149,7 +179,7 @@ modio_instance.addModfile(requested_mod.id, modfile_creator);
 
 #### Download listener
 
-```
+```c++
 modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
   if (response_code == 200)
   {
@@ -160,7 +190,7 @@ modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
 
 #### Upload listener
 
-```
+```c++
 modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
   if (response_code == 201)
   {
@@ -171,14 +201,14 @@ modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
 
 ### Feature rich integration
 
-Visit the [wiki](https://github.com/modio/SDK/wiki) to learn how to integrate dependencies, comments, ratings, stats, reports and more.
+Visit the [wiki](https://github.com/modio/SDK/wiki) to learn how to integrate dependencies, comments, stats, reports and more.
 
 ## Getting started
 
 If you are a game developer, first step is to add mod support to your game. Once mod support is up and running, [create your games profile](https://mod.io/games/add) on mod.io, to get an API key and access to all [functionality mod.io offers](https://apps.mod.io/guides/getting-started).
 Next, download the latest [SDK release](https://github.com/modio/SDK/releases) and unpack it into your project, then head over to the [GitHub Wiki](https://github.com/modio/SDK/wiki/Getting-Started) and follow the guides corresponding to your setup.
 
-```
+```c++
 #include "modio.h"
 
 // ...
