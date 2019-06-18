@@ -201,7 +201,7 @@ modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
 
 ### Feature rich integration
 
-Visit the [wiki](https://github.com/modio/SDK/wiki) to learn how to integrate dependencies, comments, ratings, stats, reports and more.
+Visit the [wiki](https://github.com/modio/SDK/wiki) to learn how to integrate dependencies, comments, stats, reports and more.
 
 ## Getting started
 
