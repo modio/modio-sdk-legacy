@@ -14,7 +14,7 @@ void onJsonRequestFinished(CURL *curl)
 
   if (ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
   {
-    u32 x_ratelimit_retryafter = atoi(ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
+    u32 x_ratelimit_retryafter = stoul(ongoing_call->headers["X-Ratelimit-RetryAfter"]);
     modio::RETRY_AFTER = modio::getCurrentTime() + x_ratelimit_retryafter;
     modio::writeLogLine("API request limit hit. Could not poll events. Rerying after " + modio::toString(modio::RETRY_AFTER), MODIO_DEBUGLEVEL_WARNING);
   }
