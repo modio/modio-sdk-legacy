@@ -4,7 +4,7 @@ extern "C"
 {
   void modioInitError(ModioError* error, nlohmann::json error_json)
   {
-    error->code = -1;
+    error->code = 0;
     if(modio::hasKey(error_json, "code"))
       error->code = error_json["code"];
 
