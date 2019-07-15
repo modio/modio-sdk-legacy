@@ -96,7 +96,7 @@ void modioInit(u32 environment, u32 game_id, char const *api_key, char const *ro
   if (modio::hasKey(authentication_json, "user"))
     modioInitUser(&modio::current_user, authentication_json["user"]);
 
-  if (modioIsLoggedIn())
+  if (modio::ACCESS_TOKEN != "")
     modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);

@@ -4,6 +4,7 @@ namespace modio
 {
   std::string API_KEY;
   std::string ACCESS_TOKEN = "";
+  bool IS_LOGGED_IN = false;
   u32 GAME_ID;
   std::string ROOT_PATH = "";
   u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
