@@ -21,6 +21,10 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::j
     nlohmann::json authentication_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
     authentication_json["user"] = response_json;
     modio::writeJson(modio::getModIODirectory() + "authentication.json", authentication_json);
+  }else if(response_code >= 401)
+  {
+    nlohmann::json blank_json;
+    modio::writeJson(modio::getModIODirectory() + "authentication.json", blank_json);
   }
 
   get_authenticated_user_callbacks[call_number]->callback(get_authenticated_user_callbacks[call_number]->object, response, modio::current_user);
