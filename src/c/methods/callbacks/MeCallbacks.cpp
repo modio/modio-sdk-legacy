@@ -16,6 +16,7 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::j
 
   modioInitUser(&modio::current_user, response_json);
 
+  modio::IS_LOGGED_IN = false;
   if(response_code >= 200 && response_code < 300)
   {
     nlohmann::json authentication_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
@@ -26,10 +27,6 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::j
   {
     nlohmann::json blank_json;
     modio::writeJson(modio::getModIODirectory() + "authentication.json", blank_json);
-    modio::IS_LOGGED_IN = false;
-  }else
-  {
-    modio::IS_LOGGED_IN = false;
   }
   
 
