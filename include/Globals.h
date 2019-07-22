@@ -24,6 +24,7 @@ namespace modio
   extern u32 BACKGROUND_DOWNLOADS;
   extern u32 RETRY_AFTER;
   extern ModioUser current_user;
+  extern std::vector<u32> downloaded_mods;
   extern void (*event_listener_callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size);
   extern void (*download_callback)(u32 response_code, u32 mod_id);
   extern void (*upload_callback)(u32 response_code, u32 mod_id);
