@@ -95,6 +95,7 @@ typedef int i32;
 #define MODIO_PRIORITIZING_OTHER_DOWNLOAD 8
 #define MODIO_MOD_STARTING_UPLOAD         9
 #define MODIO_MOD_UPLOADING               10
+#define MODIO_MOD_DOWNLOADED              11
 
 // Maturity options
 #define MODIO_MATURITY_NONE     0
