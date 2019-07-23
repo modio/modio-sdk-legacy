@@ -94,13 +94,19 @@ u32 modioGetAllInstalledModsCount()
 
 u32 modioGetModState(u32 mod_id)
 {
-  for(auto queued_mod_download : modio::curlwrapper::getModDownloadQueue())
+  for(auto& queued_mod_download : modio::curlwrapper::getModDownloadQueue())
   {
     if(queued_mod_download->mod_id == mod_id)
       return queued_mod_download->state;
   }
 
-  for(auto installed_mod : modio::installed_mods)
+  for(auto& downloaded_mod : modio::downloaded_mods)
+  {
+    if(downloaded_mod == mod_id)
+      return MODIO_MOD_DOWNLOADED;
+  }
+
+  for(auto& installed_mod : modio::installed_mods)
   {
     if(modio::hasKey(installed_mod, "mod_id") && installed_mod["mod_id"] == mod_id)
       return MODIO_MOD_INSTALLED;

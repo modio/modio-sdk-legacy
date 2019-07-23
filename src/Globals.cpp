@@ -4,6 +4,7 @@ namespace modio
 {
   std::string API_KEY;
   std::string ACCESS_TOKEN = "";
+  bool IS_LOGGED_IN = false;
   u32 GAME_ID;
   std::string ROOT_PATH = "";
   u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
@@ -15,6 +16,7 @@ namespace modio
   u32 RETRY_AFTER = 0;
   u32 MAX_CACHE_TIME = 3600;
   ModioUser current_user;
+  std::vector<u32> downloaded_mods;
   void (*event_listener_callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size) = NULL;
   void (*download_callback)(u32 response_code, u32 mod_id) = NULL;
   void (*upload_callback)(u32 response_code, u32 mod_id) = NULL;
