@@ -12,9 +12,11 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/galaxyauth";
     url += "?api_key=" + modio::API_KEY;    
-    url += "&appdata=" + std::string(appdata);
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnGalaxyAuth);
+    std::map<std::string, std::string> data;
+    data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(appdata));
+
+    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnGalaxyAuth);
   }
 
   void modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response))
@@ -27,9 +29,11 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/steamauth";
     url += "?api_key=" + modio::API_KEY;
-    url += "&appdata=" + modio::base64Encode(rgubTicket, cubTicket);
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
+    std::map<std::string, std::string> data;
+    data["appdata"] = modio::curlwrapper::dataURLEncode(modio::base64Encode(rgubTicket, cubTicket));
+
+    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnSteamAuth);
   }
 
   void modioSteamAuthEncoded(void* object, char const* base64_ticket, void (*callback)(void* object, ModioResponse response))
@@ -42,9 +46,11 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/steamauth";
     url += "?api_key=" + modio::API_KEY;
-    url += "&appdata=" + std::string(base64_ticket);
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
+    std::map<std::string, std::string> data;
+    data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(base64_ticket));
+
+    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnSteamAuthEncoded);
   }
 
   void modioLinkExternalAccount(void* object, u32 service, char const* service_id, char const* email, void (*callback)(void* object, ModioResponse response))
