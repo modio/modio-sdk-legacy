@@ -11,7 +11,8 @@ extern "C"
     galaxy_auth_params[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/galaxyauth";
-    url += "?appdata=" + std::string(appdata);
+    url += "?api_key=" + modio::API_KEY;    
+    url += "&appdata=" + std::string(appdata);
 
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnGalaxyAuth);
   }
@@ -25,7 +26,8 @@ extern "C"
     steam_auth_params[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/steamauth";
-    url += "?appdata=" + modio::base64Encode(rgubTicket, cubTicket);
+    url += "?api_key=" + modio::API_KEY;
+    url += "&appdata=" + modio::base64Encode(rgubTicket, cubTicket);
 
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
   }
@@ -39,7 +41,8 @@ extern "C"
     steam_auth_encoded_params[call_number]->object = object;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/steamauth";
-    url += "?appdata=" + std::string(base64_ticket);
+    url += "?api_key=" + modio::API_KEY;
+    url += "&appdata=" + std::string(base64_ticket);
 
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), std::map<std::string, std::string>(), &modioOnSteamAuth);
   }

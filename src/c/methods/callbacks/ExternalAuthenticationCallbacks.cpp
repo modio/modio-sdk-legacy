@@ -63,16 +63,23 @@ void modioOnSteamAuth(u32 call_number, u32 response_code, nlohmann::json respons
 
 void modioOnSteamAuthEncoded(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
+  modio::writeLogLine("Steam auth encoded returned.", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
+  
+  modio::writeLogLine("Auth encoded response retrieved.", MODIO_DEBUGLEVEL_LOG);
 
   if (response.code == 200)
   {
+    modio::writeLogLine("Auth encoded returned successfully.", MODIO_DEBUGLEVEL_LOG);
     std::string access_token = "";
     if (modio::hasKey(response_json, "access_token"))
     {
+      modio::writeLogLine("Authenticating user...", MODIO_DEBUGLEVEL_LOG);
       modio::updateAuthenticatedUser(response_json["access_token"]);
+      modio::writeLogLine("User authenticated!", MODIO_DEBUGLEVEL_LOG);
     }
     else
     {
@@ -81,12 +88,14 @@ void modioOnSteamAuthEncoded(u32 call_number, u32 response_code, nlohmann::json 
     }
   }
 
+  modio::writeLogLine("Cleaning up...", MODIO_DEBUGLEVEL_LOG);
   steam_auth_encoded_params[call_number]->callback(steam_auth_encoded_params[call_number]->object, response);
 
   delete steam_auth_encoded_params[call_number];
   steam_auth_encoded_params.erase(call_number);
 
   modioFreeResponse(&response);
+  modio::writeLogLine("On auth encoded finished", MODIO_DEBUGLEVEL_LOG);
 }
 
 void modioOnLinkExternalAccount(u32 call_number, u32 response_code, nlohmann::json response_json)
