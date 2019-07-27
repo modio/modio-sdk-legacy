@@ -304,6 +304,23 @@ std::string getModIODirectory()
   return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
 }
 
+std::string getFilename(std::string file_path)
+{
+  size_t last_slash = file_path.find_last_of("/\\");
+  if (last_slash == std::string::npos)
+    return file_path;
+  std::string filename = file_path.substr(last_slash + 1);
+  return filename;
+}
+
+std::string getFileExtension(std::string path)
+{
+  size_t last_point = path.find_last_of(".");
+  if (last_point == std::string::npos)
+    return "";
+  return path.substr(last_point + 1);
+}
+
 bool isDirectory(const std::string &directory)
 {
   DIR *dir;

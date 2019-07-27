@@ -552,12 +552,21 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 
   if (modio::isDirectory(modfile_path))
   {
+    writeLogLine("Directory detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
     modio::minizipwrapper::compressDirectory(modfile_path, modfile_zip_path);
   }
-  else if (modio::fileExists(modfile_path))
+  else if (modio::fileExists(modfile_path) && modio::getFileExtension(modfile_path) == "zip")
   {
+    writeLogLine("Zip file detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modfile_path;
+  }else if(modio::fileExists(modfile_path))
+  {
+    writeLogLine("File detected " + modfile_path, MODIO_DEBUGLEVEL_LOG);
+    modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
+    std::vector<std::string> filenames;
+    filenames.push_back(modio::getFilename(modfile_path));
+    modio::minizipwrapper::compressFiles(modio::getDirectoryPath(modfile_path), filenames, modfile_zip_path);
   }
   else
   {
