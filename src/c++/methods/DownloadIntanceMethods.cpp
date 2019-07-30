@@ -42,6 +42,20 @@ const std::list<QueuedModfileUpload *> Instance::getModfileUploadQueue()
   return curlwrapper::getModfileUploadQueue();
 }
 
+const modio::InstalledMod Instance::getInstalledMod(u32 mod_id)
+{
+  modio::InstalledMod installed_mod;
+  ModioInstalledMod *modio_installed_mod = new ModioInstalledMod;
+
+  modioGetInstalledMod(mod_id, modio_installed_mod);
+  installed_mod.initialize(*modio_installed_mod);
+  modioFreeInstalledMod(modio_installed_mod);
+
+  delete modio_installed_mod;
+
+  return installed_mod;
+}
+
 const std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
 {
   std::vector<modio::InstalledMod> all_installed_mods;
