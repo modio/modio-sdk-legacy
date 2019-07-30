@@ -68,7 +68,7 @@ extern "C"
     }      
 
     data["service_id"] = service_id;
-    data["email"] = email;
+    data["email"] = modio::curlwrapper::dataURLEncode(email);
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
