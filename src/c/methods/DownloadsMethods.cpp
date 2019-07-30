@@ -109,6 +109,19 @@ void modioGetAllInstalledMods(ModioInstalledMod *installed_mods)
   }
 }
 
+u32 modioGetAllDownloadedModsCount()
+{
+  return (u32)modio::downloaded_mods.size();
+}
+
+void modioGetAllDownloadedMods(u32* downloaded_mods)
+{
+  for(size_t i=0; i<(u32)modio::downloaded_mods.size(); i++)
+  {
+    downloaded_mods[i] = modio::downloaded_mods[i];
+  }
+}
+
 u32 modioGetModState(u32 mod_id)
 {
   for(auto& queued_mod_download : modio::curlwrapper::getModDownloadQueue())
