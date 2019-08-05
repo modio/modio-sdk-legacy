@@ -97,7 +97,14 @@ void modioInit(u32 environment, u32 game_id, char const *api_key, char const *ro
     modioInitUser(&modio::current_user, authentication_json["user"]);
 
   if (modio::ACCESS_TOKEN != "")
+  {
     modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
+    
+    ModioFilterCreator filter;
+    modioInitFilter(&filter);
+    modioGetUserRatings(NULL, filter, &modio::onUpdateCurrentUserRatings);
+    modioFreeFilter(&filter);
+  }
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }

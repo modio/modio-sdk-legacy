@@ -14,6 +14,27 @@ void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user)
   }
 }
 
+void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRating *ratings_array, u32 ratings_array_size)
+{
+  if (response.code >= 200 && response.code < 300)
+  {
+    modio::writeLogLine("Current user ratings updated sucessfully.", MODIO_DEBUGLEVEL_LOG);
+    for(u32 i=0; i<ratings_array_size; i++)
+    {
+      if(ratings_array[i].rating == 1)
+        modio::current_user_ratings[ratings_array[i].mod_id] = MODIO_RATING_POSITIVE;
+      else if(ratings_array[i].rating == -1)
+        modio::current_user_ratings[ratings_array[i].mod_id] = MODIO_RATING_NEGATIVE;
+      else
+        modio::current_user_ratings[ratings_array[i].mod_id] = MODIO_RATING_UNDEFINED;
+    }
+  }
+  else
+  {
+    modio::writeLogLine("Could not update current user ratings.", MODIO_DEBUGLEVEL_WARNING);
+  }
+}
+
 static void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   if (response.code == 200)
