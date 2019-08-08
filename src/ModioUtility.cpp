@@ -16,6 +16,7 @@ void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user)
 
 void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRating *ratings_array, u32 ratings_array_size)
 {
+  modio::current_user_ratings.clear();
   if (response.code >= 200 && response.code < 300)
   {
     modio::writeLogLine("Current user ratings updated sucessfully.", MODIO_DEBUGLEVEL_LOG);
@@ -288,6 +289,14 @@ void updateAuthenticatedUser(std::string access_token)
   authentication_json["access_token"] = access_token;
   modio::writeJson(modio::getModIODirectory() + "authentication.json", authentication_json);
   modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
+}
+
+void updateUserRatings()
+{
+  ModioFilterCreator filter;
+  modioInitFilter(&filter);
+  modioGetUserRatings(NULL, filter, &modio::onUpdateCurrentUserRatings);
+  modioFreeFilter(&filter);
 }
 
 void handleDownloadImageError(void *object, void (*callback)(void *object, ModioResponse modioresponse))

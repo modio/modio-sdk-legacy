@@ -28,6 +28,7 @@ void modioOnEmailExchanged(u32 call_number, u32 response_code, nlohmann::json re
     if (modio::hasKey(response_json, "access_token"))
     {
       modio::updateAuthenticatedUser(response_json["access_token"]);
+      modio::updateUserRatings();
     }
     else
     {

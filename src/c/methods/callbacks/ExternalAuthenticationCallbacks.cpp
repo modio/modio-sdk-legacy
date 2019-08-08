@@ -17,6 +17,7 @@ void modioOnGalaxyAuth(u32 call_number, u32 response_code, nlohmann::json respon
     if (modio::hasKey(response_json, "access_token"))
     {
       modio::updateAuthenticatedUser(response_json["access_token"]);
+      modio::updateUserRatings();
     }
     else
     {
@@ -45,6 +46,7 @@ void modioOnSteamAuth(u32 call_number, u32 response_code, nlohmann::json respons
     if (modio::hasKey(response_json, "access_token"))
     {
       modio::updateAuthenticatedUser(response_json["access_token"]);
+      modio::updateUserRatings();
     }
     else
     {
@@ -80,6 +82,7 @@ void modioOnSteamAuthEncoded(u32 call_number, u32 response_code, nlohmann::json 
       modio::writeLogLine("Authenticating user...", MODIO_DEBUGLEVEL_LOG);
       modio::updateAuthenticatedUser(response_json["access_token"]);
       modio::writeLogLine("User authenticated!", MODIO_DEBUGLEVEL_LOG);
+      modio::updateUserRatings();
     }
     else
     {
