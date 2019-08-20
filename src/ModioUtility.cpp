@@ -289,6 +289,7 @@ void updateAuthenticatedUser(std::string access_token)
   authentication_json["access_token"] = access_token;
   modio::writeJson(modio::getModIODirectory() + "authentication.json", authentication_json);
   modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
+  modio::updateUserRatings();
 }
 
 void updateUserRatings()
