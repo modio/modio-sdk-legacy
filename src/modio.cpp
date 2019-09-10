@@ -165,3 +165,21 @@ void compressFiles(char const *root_directory, char const * const filenames[], u
   }
   modio::minizipwrapper::compressFiles(root_directory, filenames_vector, zip_path);
 }
+
+void windowsUTF8ToAnsi(const char* UTF8_string, char* ansi_string)
+{
+  #ifdef MODIO_WINDOWS_DETECTED
+    char* utf8_char = (char*)UTF8_string;
+    int length = MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)utf8_char, -1, NULL, 0);
+    if (length > 0)
+    {
+      wchar_t* wide = new wchar_t[length];
+      MultiByteToWideChar(CP_UTF8, 0, (LPCSTR)utf8_char, -1, wide, length);
+
+      size_t convertedChars = 0;
+      wcstombs_s(&convertedChars, ansi_string, length, wide, _TRUNCATE);
+      std::string return_value = ansi_string;
+      delete[] wide;
+    }
+  #endif
+}
