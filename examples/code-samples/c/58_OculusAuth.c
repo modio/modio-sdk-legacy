@@ -24,7 +24,7 @@ int main(void)
 
   // Auth works by providing the data given by the Oculus SDK
   char *nonce = "GALAXY NONCE PROOF HERE";
-  u32 user_id = 123123;
+  char *user_id = "123123";
   char *access_token = "GALAXY AUTH TOKEN HERE";
   char *email = NULL; // Optional email param
   u32 date_expires = 0; // Optional expiration date param, 0 will be ignored

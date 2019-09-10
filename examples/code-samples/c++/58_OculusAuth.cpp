@@ -21,7 +21,7 @@ int main()
   // Auth works by providing the Appdata param given by the Oculus SDK
   std::string appdata = "";
   std::string nonce = "GALAXY NONCE PROOF HERE";
-  u32 user_id = 123123;
+  std::string user_id = "123123";
   std::string access_token = "GALAXY AUTH TOKEN HERE";
   std::string email = ""; // Optional email param, "" will be ignored
   u32 date_expires = 0; // Optional expiration date param, 0 will be ignored
