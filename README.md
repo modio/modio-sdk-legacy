@@ -91,7 +91,7 @@ modio_instance.galaxyAuth(appdata, [&](const modio::Response &response)
 #### Oculus Auth
 
 ```c++
-modio_instance.oculusAuth(nonce, user_id, access_token, email, date_expires, [&](const modio::Response &response)
+modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, date_expires, [&](const modio::Response &response)
 {
   if (response.code == 200)
   {

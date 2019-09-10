@@ -19,7 +19,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnGalaxyAuth);
   }
 
-    void modioOculusAuth(void* object, char const* nonce, char const* user_id, char const* access_token, char const* email, u32 date_expires, void (*callback)(void* object, ModioResponse response))
+    void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, u32 date_expires, void (*callback)(void* object, ModioResponse response))
     {
       u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -32,7 +32,7 @@ extern "C"
 
       std::map<std::string, std::string> data;
       data["nonce"] = modio::curlwrapper::dataURLEncode(std::string(nonce));
-      data["user_id"] = modio::curlwrapper::dataURLEncode(std::string(user_id));
+      data["user_id"] = modio::curlwrapper::dataURLEncode(std::string(oculus_user_id));
       data["access_token"] = modio::curlwrapper::dataURLEncode(std::string(access_token));
       if(email)
         data["email"] = modio::curlwrapper::dataURLEncode(std::string(email));
