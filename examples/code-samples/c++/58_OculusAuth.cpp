@@ -21,11 +21,11 @@ int main()
   // Auth works by providing the Appdata param given by the Oculus SDK
   std::string appdata = "";
   std::string nonce = "GALAXY NONCE PROOF HERE";
-  std::string user_id = "123123";
+  std::string oculus_user_id = "123123";
   std::string access_token = "GALAXY AUTH TOKEN HERE";
   std::string email = ""; // Optional email param, "" will be ignored
   u32 date_expires = 0; // Optional expiration date param, 0 will be ignored
-  modio_instance.oculusAuth(nonce, user_id, access_token, email, date_expires, [&](const modio::Response &response) {
+  modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, date_expires, [&](const modio::Response &response) {
     std::cout << "Response code: " << response.code << std::endl;
 
     if (response.code == 200)
