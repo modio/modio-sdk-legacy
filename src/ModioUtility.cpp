@@ -284,7 +284,6 @@ void pollEvents()
 
       ModioFilterCreator filter;
       modioInitFilter(&filter);
-      modioAddFilterFieldValue(&filter, "game_id", toString(modio::GAME_ID).c_str());
       //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
       modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_USER_EVENT_POLL_ID).c_str());
 
@@ -313,6 +312,12 @@ void updateUserRatings()
   modioInitFilter(&filter);
   modioGetUserRatings(NULL, filter, &modio::onUpdateCurrentUserRatings);
   modioFreeFilter(&filter);
+}
+
+void addGameIdFilter(ModioFilterCreator &filter)
+{
+  if(!modio::RETRIEVE_MODS_FROM_OTHER_GAMES)
+    modioAddFilterFieldValue(&filter, "game_id", modio::toString(modio::GAME_ID).c_str());
 }
 
 void handleDownloadImageError(void *object, void (*callback)(void *object, ModioResponse modioresponse))

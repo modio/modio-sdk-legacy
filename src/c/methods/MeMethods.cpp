@@ -1,4 +1,5 @@
 #include "c/methods/MeMethods.h"
+#include "ModioUtility.h"
 
 extern "C"
 {
@@ -44,6 +45,8 @@ extern "C"
 
   void modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
+    modio::addGameIdFilter(filter);
+
     std::string filter_string = modio::getFilterString(&filter);
     modioGetUserSubscriptionsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }
@@ -63,6 +66,8 @@ extern "C"
 
   void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
   {
+    modio::addGameIdFilter(filter);
+    
     std::string filter_string = modio::getFilterString(&filter);
     modioGetUserEventsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }
@@ -129,6 +134,8 @@ extern "C"
 
   void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
+    modio::addGameIdFilter(filter);
+    
     std::string filter_string = modio::getFilterString(&filter);
     modioGetUserModsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }
@@ -162,6 +169,8 @@ extern "C"
 
   void modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
   {
+    modio::addGameIdFilter(filter);
+    
     std::string filter_string = modio::getFilterString(&filter);
     modioGetUserModfilesFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }
@@ -195,6 +204,8 @@ extern "C"
 
   void modioGetUserRatings(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
   {
+    modio::addGameIdFilter(filter);
+    
     std::string filter_string = modio::getFilterString(&filter);
     modioGetUserRatingsFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }

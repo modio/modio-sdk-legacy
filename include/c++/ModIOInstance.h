@@ -55,7 +55,7 @@ class MODIO_DLL Instance
   Instance& operator=(const Instance&) = delete;
 public:
   Instance(u32 environment, u32 game_id, const std::string &api_key);
-  Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path);
+  Instance(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, const std::string &api_key, const std::string &root_path);
   ~Instance();
 
   //General Methods

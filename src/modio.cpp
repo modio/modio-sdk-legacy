@@ -51,8 +51,10 @@ static void loadAuthenticationFile()
   }
 }
 
-void modioInit(u32 environment, u32 game_id, char const *api_key, char const *root_path)
+void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const *api_key, char const *root_path)
 {
+  modio::RETRIEVE_MODS_FROM_OTHER_GAMES = retrieve_mods_from_other_games;
+  
   if (root_path)
     modio::ROOT_PATH = root_path;
   

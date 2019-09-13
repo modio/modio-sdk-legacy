@@ -8,6 +8,7 @@ namespace modio
   u32 GAME_ID;
   std::string ROOT_PATH = "";
   u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
+  bool RETRIEVE_MODS_FROM_OTHER_GAMES = false;
   std::string MODIO_URL = "https://api.mod.io/";
   std::string MODIO_VERSION_PATH = "v1/";
   u32 LAST_MOD_EVENT_POLL_ID = 0;

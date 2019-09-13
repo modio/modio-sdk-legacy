@@ -14,6 +14,7 @@ namespace modio
   extern u32 GAME_ID;
   extern std::string ROOT_PATH;
   extern u32 DEBUG_LEVEL;
+  extern bool RETRIEVE_MODS_FROM_OTHER_GAMES;
   extern std::string MODIO_URL;
   extern std::string MODIO_VERSION_PATH;
   extern u32 MAX_CACHE_TIME;
