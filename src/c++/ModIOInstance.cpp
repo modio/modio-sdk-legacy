@@ -49,6 +49,16 @@ void Instance::setDebugLevel(u32 debug_level)
   modioSetDebugLevel(debug_level);
 }
 
+void Instance::setModEventsPollInterval(u32 interval_in_seconds)
+{
+  modioSetModEventsPollInterval(interval_in_seconds);
+}
+
+void Instance::setUserEventsPollInterval(u32 interval_in_seconds)
+{
+  modioSetUserEventsPollInterval(interval_in_seconds);
+}
+
 void Instance::sleep(u32 milliseconds)
 {
   modioSleep(milliseconds);

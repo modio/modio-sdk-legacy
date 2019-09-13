@@ -113,6 +113,16 @@ void modioSetDebugLevel(u32 debug_level)
   modio::DEBUG_LEVEL = debug_level;
 }
 
+void MODIO_DLL modioSetModEventsPollInterval(u32 interval_in_seconds)
+{
+  modio::MOD_EVENT_POLL_INTERVAL = interval_in_seconds;
+}
+
+void MODIO_DLL modioSetUserEventsPollInterval(u32 interval_in_seconds)
+{
+  modio::USER_EVENT_POLL_INTERVAL = interval_in_seconds;
+}
+
 void modioShutdown()
 {
   modio::writeLogLine("mod.io C interface is shutting down", MODIO_DEBUGLEVEL_LOG);

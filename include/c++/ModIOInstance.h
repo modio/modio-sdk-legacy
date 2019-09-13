@@ -61,6 +61,8 @@ public:
   //General Methods
   void process();
   void setDebugLevel(u32 debug_level);
+  void setModEventsPollInterval(u32 interval_in_seconds);
+  void setUserEventsPollInterval(u32 interval_in_seconds);
   void sleep(u32 milliseconds);
   void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path);
 
