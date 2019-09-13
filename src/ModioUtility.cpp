@@ -246,53 +246,53 @@ void pollEvents()
 {
   u32 current_time = modio::getCurrentTime();
 
-  if (current_time >= modio::RETRY_AFTER)
+  //if (current_time >= modio::RETRY_AFTER)
+  //{
+  if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL_TIME > modio::MOD_EVENT_POLL_INTERVAL)
   {
-    if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL_TIME > modio::MOD_EVENT_POLL_INTERVAL)
+    modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
+
+    ModioFilterCreator filter;
+    modioInitFilter(&filter);
+    modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_MOD_EVENT_POLL_ID).c_str());
+    //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
+    //modioAddFilterSmallerThanField(&filter, "date_added", modio::toString(current_time).c_str());
+
+    for (auto installed_mod : modio::installed_mods)
     {
-      modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
-
-      ModioFilterCreator filter;
-      modioInitFilter(&filter);
-      modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_MOD_EVENT_POLL_ID).c_str());
-      //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
-      //modioAddFilterSmallerThanField(&filter, "date_added", modio::toString(current_time).c_str());
-
-      for (auto installed_mod : modio::installed_mods)
-      {
-        if (modio::hasKey(installed_mod, "mod_id"))
-          modioAddFilterInField(&filter, "mod_id", modio::toString((u32)installed_mod["mod_id"]).c_str());
-      }
-
-      modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);
-      modioFreeFilter(&filter);
-
-      modio::LAST_MOD_EVENT_POLL_TIME = current_time;
+      if (modio::hasKey(installed_mod, "mod_id"))
+        modioAddFilterInField(&filter, "mod_id", modio::toString((u32)installed_mod["mod_id"]).c_str());
     }
-    /*
-    else if (current_time - modio::LAST_MOD_EVENT_POLL > modio::MOD_EVENT_POLL_INTERVAL)
-    {
-      nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
-      event_polling_json["last_mod_event_poll"] = current_time;
-      modio::writeJson(modio::getModIODirectory() + "event_polling.json", event_polling_json);
-    }
-    */
 
-    if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL_TIME > modio::USER_EVENT_POLL_INTERVAL)
-    {
-      modio::writeLogLine("Polling user events", MODIO_DEBUGLEVEL_LOG);
+    modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);
+    modioFreeFilter(&filter);
 
-      ModioFilterCreator filter;
-      modioInitFilter(&filter);
-      //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
-      modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_USER_EVENT_POLL_ID).c_str());
-
-      modioGetUserEvents(NULL, filter, &onGetUserEventsPoll);
-      modioFreeFilter(&filter);
-
-      modio::LAST_USER_EVENT_POLL_TIME = current_time;
-    }
+    modio::LAST_MOD_EVENT_POLL_TIME = current_time;
   }
+  /*
+  else if (current_time - modio::LAST_MOD_EVENT_POLL > modio::MOD_EVENT_POLL_INTERVAL)
+  {
+    nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
+    event_polling_json["last_mod_event_poll"] = current_time;
+    modio::writeJson(modio::getModIODirectory() + "event_polling.json", event_polling_json);
+  }
+  */
+
+  if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL_TIME > modio::USER_EVENT_POLL_INTERVAL)
+  {
+    modio::writeLogLine("Polling user events", MODIO_DEBUGLEVEL_LOG);
+
+    ModioFilterCreator filter;
+    modioInitFilter(&filter);
+    //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
+    modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_USER_EVENT_POLL_ID).c_str());
+
+    modioGetUserEvents(NULL, filter, &onGetUserEventsPoll);
+    modioFreeFilter(&filter);
+
+    modio::LAST_USER_EVENT_POLL_TIME = current_time;
+  }
+  //}
 }
 
 void updateAuthenticatedUser(std::string access_token)
