@@ -4,14 +4,14 @@ static void loadEventPollingFile()
 {
   modio::writeLogLine("Loading mod events data...", MODIO_DEBUGLEVEL_LOG);
 
-  modio::LAST_MOD_EVENT_POLL = 0;
+  modio::LAST_MOD_EVENT_POLL_ID = 0;
 
   nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
 
-  if (modio::hasKey(event_polling_json, "last_mod_event_poll"))
+  if (modio::hasKey(event_polling_json, "last_mod_event_poll_id"))
   {
-    modio::LAST_MOD_EVENT_POLL = event_polling_json["last_mod_event_poll"];
-    modio::writeLogLine("Mod events data loaded. The last mod event poll was at " + modio::toString(modio::LAST_MOD_EVENT_POLL), MODIO_DEBUGLEVEL_LOG);
+    modio::LAST_MOD_EVENT_POLL_ID = event_polling_json["last_mod_event_poll_id"];
+    modio::writeLogLine("Mod events data loaded. The last mod event id polled was " + modio::toString(modio::LAST_MOD_EVENT_POLL_ID), MODIO_DEBUGLEVEL_LOG);
   }
   else
   {
@@ -24,7 +24,7 @@ static void loadAuthenticationFile()
   modio::writeLogLine("Loading authentication data...", MODIO_DEBUGLEVEL_LOG);
 
   modio::ACCESS_TOKEN = "";
-  modio::LAST_USER_EVENT_POLL = 0;
+  modio::LAST_USER_EVENT_POLL_ID = 0;
 
   nlohmann::json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
 
@@ -35,10 +35,10 @@ static void loadAuthenticationFile()
 
     modio::writeLogLine("Authentication token found. You are logged in.", MODIO_DEBUGLEVEL_LOG);
 
-    if (modio::hasKey(token_file_json, "last_user_event_poll"))
+    if (modio::hasKey(token_file_json, "last_user_event_poll_id"))
     {
-      modio::LAST_USER_EVENT_POLL = token_file_json["last_user_event_poll"];
-      modio::writeLogLine("User events data loaded. The last user event poll was at " + modio::toString(modio::LAST_USER_EVENT_POLL), MODIO_DEBUGLEVEL_LOG);
+      modio::LAST_USER_EVENT_POLL_ID = token_file_json["last_user_event_poll_id"];
+      modio::writeLogLine("User events data loaded. The last user event id polled was " + modio::toString(modio::LAST_USER_EVENT_POLL_ID), MODIO_DEBUGLEVEL_LOG);
     }
     else
     {
@@ -72,7 +72,7 @@ void modioInit(u32 environment, u32 game_id, char const *api_key, char const *ro
     modio::writeLogLine(".modio/ directory created at current workspace.", MODIO_DEBUGLEVEL_LOG);
   }
   
-  modio::writeLogLine("v0.11.3 DEV", MODIO_DEBUGLEVEL_LOG);
+  modio::writeLogLine("v0.11.4 DEV", MODIO_DEBUGLEVEL_LOG);
 
   if (environment == MODIO_ENVIRONMENT_TEST)
     modio::MODIO_URL = "https://api.test.mod.io/";
