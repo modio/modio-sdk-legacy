@@ -419,12 +419,11 @@ static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json 
 
     if (g_current_mod_download->queued_mod_download == NULL)
     {
-      modioFreeMod(&modio_mod);
-      writeLogLine("Could not find mod " + modio::toString(modio_mod.id) + "on the download queue. It won't be downloaded.", MODIO_DEBUGLEVEL_LOG);
+      writeLogLine("Could not find mod " + modio::toString(modio_mod.id) + "on the download queue. It won't be downloaded.", MODIO_DEBUGLEVEL_ERROR);
+      handleOnGetDownloadModError(&modio_mod);
       return;
     }
 
-    //TODO: Return a download listener error if mod has no modfile
     if (modio_mod.modfile.download.binary_url == NULL)
     {
       modio::writeLogLine("The mod " + modio::toString(modio_mod.id) + " has no modfile to be downloaded", MODIO_DEBUGLEVEL_ERROR);
