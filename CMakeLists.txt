@@ -32,7 +32,7 @@ ENDIF()
 
 IF (UNIX AND NOT APPLE)
   add_definitions(-D_LARGEFILE64_SOURCE)
-  target_link_libraries (modio curl)
+  target_link_libraries (modio ${CMAKE_SOURCE_DIR}/lib/linux/libcurl.a libssl.a libcrypto.a -static-libgcc -static-libstdc++)
 ENDIF ()
 
 IF (MINGW)
