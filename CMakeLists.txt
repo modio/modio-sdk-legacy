@@ -34,7 +34,7 @@ IF (UNIX AND NOT APPLE)
   add_definitions(-D_LARGEFILE64_SOURCE)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-  target_link_libraries (modio ${CMAKE_SOURCE_DIR}/lib/linux/libcurl.a ssl crypto pthread -static-libgcc -static-libstdc++)
+  target_link_libraries (modio curl)
 ENDIF ()
 
 IF (MINGW)
