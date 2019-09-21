@@ -122,10 +122,14 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
 
   if (curl)
   {
+    writeLogLine("A", MODIO_DEBUGLEVEL_LOG);
+
     struct curl_slist *slist = NULL;
     for (u32 i = 0; i < headers.size(); i++)
       slist = curl_slist_append(slist, headers[i].c_str());
 
+    writeLogLine("B", MODIO_DEBUGLEVEL_LOG);
+    
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
     url = modio::replaceSubstrings(url, " ", "%20");
@@ -134,9 +138,12 @@ void get(u32 call_number, std::string url, std::vector<std::string> headers, std
     setVerifies(curl);
     setJsonResponseWrite(curl);
 
+    writeLogLine("C", MODIO_DEBUGLEVEL_LOG);
+
     g_ongoing_calls[curl] = new JsonResponseHandler(call_number, slist, NULL, NULL, callback);
 
     curl_multi_add_handle(g_curl_multi_handle, curl);
+    writeLogLine("D", MODIO_DEBUGLEVEL_LOG);
   }
 }
 
@@ -408,6 +415,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
 static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json response_json)
 {
+  modio::writeLogLine("onGetDownloadMod returned " + modio::toString(response_code), MODIO_DEBUGLEVEL_LOG);
   if (response_code == 200)
   {
     ModioMod modio_mod;
