@@ -62,11 +62,14 @@ void onDownloadFinished(CURL *curl)
 
 void onModDownloadFinished(CURL *curl)
 {
+  writeLogLine("Mod download finished", MODIO_DEBUGLEVEL_LOG);
   fclose(g_current_mod_download->file);
   g_current_mod_download->file = NULL;
+  writeLogLine("File closed", MODIO_DEBUGLEVEL_LOG);
 
   if (g_current_mod_download->queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
+    writeLogLine("Case: mod download finished", MODIO_DEBUGLEVEL_LOG);
     std::string installation_path = modio::getModIODirectory() + "mods/" + modio::toString(g_current_mod_download->queued_mod_download->mod_id) + "/";
     std::string downloaded_zip_path = g_current_mod_download->queued_mod_download->path;
     nlohmann::json mod_json = modio::toJson(g_current_mod_download->queued_mod_download->mod);
@@ -114,6 +117,7 @@ void onModDownloadFinished(CURL *curl)
     downloadNextQueuedMod();
   }
   updateModDownloadQueueFile();
+  writeLogLine("On mod download finished", MODIO_DEBUGLEVEL_LOG);
 }
 
 void onModfileUploadFinished(CURL *curl)
