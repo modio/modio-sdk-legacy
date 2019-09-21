@@ -67,6 +67,9 @@ void onModDownloadFinished(CURL *curl)
   g_current_mod_download->file = NULL;
   writeLogLine("File closed", MODIO_DEBUGLEVEL_LOG);
 
+  u32 response_code;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
   if (g_current_mod_download->queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
     writeLogLine("Case: mod download finished", MODIO_DEBUGLEVEL_LOG);
@@ -77,9 +80,6 @@ void onModDownloadFinished(CURL *curl)
     addToDownloadedModsJson(installation_path, downloaded_zip_path, mod_json);
     
     writeLogLine("Finished downloading mod", MODIO_DEBUGLEVEL_LOG);
-
-    u32 response_code;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
     if (response_code >= 200 && response_code < 300)
     {
@@ -124,11 +124,11 @@ void onModfileUploadFinished(CURL *curl)
 {
   writeLogLine("Upload Finished. Mod id: " + toString(g_current_modfile_upload->queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
 
+  u32 response_code;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
   if (g_current_modfile_upload->queued_modfile_upload->state == MODIO_MOD_UPLOADING)
   {
-    u32 response_code;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-
     if (modio::upload_callback)
     {
       modio::upload_callback(response_code, g_current_modfile_upload->queued_modfile_upload->mod_id);
