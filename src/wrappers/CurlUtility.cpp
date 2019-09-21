@@ -168,9 +168,14 @@ void prioritizeModDownload(u32 mod_id)
 
 void downloadNextQueuedMod()
 {
+  writeLogLine("Looking for more queued mods", MODIO_DEBUGLEVEL_LOG);  
   if (g_mod_download_queue.size() > 0)
   {
+    writeLogLine("Downloading next mod on the download queue", MODIO_DEBUGLEVEL_LOG);  
     downloadMod(g_mod_download_queue.front());
+  }else
+  {
+    writeLogLine("The queue is empty, no more mods to download", MODIO_DEBUGLEVEL_LOG);    
   }
 }
 
