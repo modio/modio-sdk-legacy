@@ -91,7 +91,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
     return;
 
   std::ofstream log_file(getModIODirectory() + "log", std::ios::app);
-  log_file << "[" << modio::getCurrentTime() << "] ";
+  log_file << "[" << modio::getCurrentTimeSeconds() << "] ";
   if (debug_level == MODIO_DEBUGLEVEL_ERROR)
   {
     log_file << "[Error] ";
@@ -116,7 +116,7 @@ void clearLog()
 
 // Time methods
 
-u32 getCurrentTime()
+u32 getCurrentTimeSeconds()
 {
   return (u32)std::time(nullptr);
 }
@@ -124,7 +124,7 @@ u32 getCurrentTime()
 double getCurrentTimeMillis()
 {
   std::chrono::milliseconds current_time =
-      std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+  std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
   return (double)current_time.count();
 }
 

@@ -244,7 +244,7 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
 
 void pollEvents()
 {
-  u32 current_time = modio::getCurrentTime();
+  u32 current_time = modio::getCurrentTimeSeconds();
 
   //if (current_time >= modio::RETRY_AFTER)
   //{

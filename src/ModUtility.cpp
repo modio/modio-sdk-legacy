@@ -4,15 +4,11 @@ namespace modio
 {
 void addCallToCache(std::string url, nlohmann::json response_json)
 {
-  double current_time_millis = modio::getCurrentTimeMillis();
-  std::string current_time_string = modio::toString(current_time_millis);
-  current_time_string.erase(current_time_string.find('.'), std::string::npos);
+  u32 current_time_seconds = modio::getCurrentTimeSeconds();
+  std::string current_time_string = modio::toString(current_time_seconds);
   std::string filename = current_time_string + ".json";
-
   modio::writeJson(modio::getModIODirectory() + "cache/" + filename, response_json);
-
   nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
-
   // TODO: Restore automatic cache removal?
   for (nlohmann::json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
   {
@@ -26,7 +22,7 @@ void addCallToCache(std::string url, nlohmann::json response_json)
   }
 
   nlohmann::json cache_object;
-  cache_object["datetime"] = current_time_millis;
+  cache_object["datetime"] = current_time_seconds;
   cache_object["file"] = filename;
   cache_object["url"] = url;
   cache_file_json.push_back(cache_object);
@@ -37,15 +33,15 @@ void addCallToCache(std::string url, nlohmann::json response_json)
 std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
 {
   nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
-  double current_time = modio::getCurrentTimeMillis();
+  u32 current_time = modio::getCurrentTimeSeconds();
   for (nlohmann::json::iterator it = cache_file_json.begin(); it != cache_file_json.end(); ++it)
   {
     if (modio::hasKey((*it), "url") && modio::hasKey((*it), "datetime") && modio::hasKey((*it), "file") && (*it)["url"] == url)
     {
-      double file_datetime = (*it)["datetime"];
-      double difference = current_time - file_datetime;
+      u32 file_datetime = (*it)["datetime"];
+      u32 difference = current_time - file_datetime;
 
-      if (difference <= max_age_seconds * 1000)
+      if (difference <= max_age_seconds)
       {
         return (*it)["file"];
       }
@@ -186,7 +182,7 @@ void updateInstalledModsJson()
 void clearOldCache()
 {
   modio::writeLogLine("Clearing old cache files...", MODIO_DEBUGLEVEL_LOG);
-  u32 current_time = modio::getCurrentTime();
+  u32 current_time = modio::getCurrentTimeSeconds();
   nlohmann::json cache_json = modio::openJson(modio::getModIODirectory() + "cache.json");
   nlohmann::json resulting_cache_json;
   for (auto cache_file_json : cache_json)
@@ -196,7 +192,7 @@ void clearOldCache()
       u32 cache_time = cache_file_json["datetime"];
       u32 time_difference = current_time - cache_time;
 
-      if (time_difference > MAX_CACHE_TIME)
+      if (time_difference > MAX_CACHE_TIME_SECONDS)
       {
         std::string cache_file_to_delete_path = modio::getModIODirectory() + "cache/";
         std::string cache_filename = cache_file_json["file"];

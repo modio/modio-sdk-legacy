@@ -19,7 +19,7 @@ namespace modio
   u32 USER_EVENT_POLL_INTERVAL = 15;
   u32 EVENT_POLL_INTERVAL = 15;
   u32 RETRY_AFTER = 0;
-  u32 MAX_CACHE_TIME = 3600;
+  u32 MAX_CACHE_TIME_SECONDS = 120;
   ModioUser current_user;
   std::vector<u32> downloaded_mods;
   std::map<u32,u32> current_user_ratings; // maps[mod_id, rating_type]

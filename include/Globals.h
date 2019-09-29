@@ -17,7 +17,7 @@ namespace modio
   extern bool RETRIEVE_MODS_FROM_OTHER_GAMES;
   extern std::string MODIO_URL;
   extern std::string MODIO_VERSION_PATH;
-  extern u32 MAX_CACHE_TIME;
+  extern u32 MAX_CACHE_TIME_SECONDS;
   extern u32 LAST_MOD_EVENT_POLL_ID;
   extern u32 LAST_MOD_EVENT_POLL_TIME;
   extern u32 MOD_EVENT_POLL_INTERVAL;
