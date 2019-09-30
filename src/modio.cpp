@@ -103,6 +103,7 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
     
     modio::updateUserRatings();
+    modio::updateUserSubscriptions();
   }
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);

@@ -27,7 +27,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnAddModRating);
   }
 
-  u32 modioGetUserModRating(u32 mod_id)
+  u32 modioGetCurrentUserModRating(u32 mod_id)
   {
     if ( modio::current_user_ratings.find(mod_id) == modio::current_user_ratings.end() )
       return MODIO_RATING_UNDEFINED;

@@ -36,6 +36,23 @@ void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRatin
   }
 }
 
+void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, ModioMod *mods, u32 mods_size)
+{
+  modio::current_user_subscriptions.clear();
+  if (response.code >= 200 && response.code < 300)
+  {
+    modio::writeLogLine("Current user subscriptions updated sucessfully.", MODIO_DEBUGLEVEL_LOG);
+    for(u32 i=0; i<mods_size; i++)
+    {
+      modio::current_user_subscriptions.insert(mods[i].id);
+    }
+  }
+  else
+  {
+    modio::writeLogLine("Could not update current user ratings.", MODIO_DEBUGLEVEL_WARNING);
+  }
+}
+
 static void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
   if (response.code == 200)
@@ -304,6 +321,7 @@ void updateAuthenticatedUser(std::string access_token)
   modio::writeJson(modio::getModIODirectory() + "authentication.json", authentication_json);
   modioGetAuthenticatedUser(NULL, &modio::onUpdateCurrentUser);
   modio::updateUserRatings();
+  modio::updateUserSubscriptions();
 }
 
 void updateUserRatings()
@@ -311,6 +329,14 @@ void updateUserRatings()
   ModioFilterCreator filter;
   modioInitFilter(&filter);
   modioGetUserRatings(NULL, filter, &modio::onUpdateCurrentUserRatings);
+  modioFreeFilter(&filter);
+}
+
+void updateUserSubscriptions()
+{
+  ModioFilterCreator filter;
+  modioInitFilter(&filter);
+  modioGetUserSubscriptions(NULL, filter, &modio::onUpdateCurrentUserSubscriptions);
   modioFreeFilter(&filter);
 }
 
