@@ -231,6 +231,7 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
       case MODIO_EVENT_USER_SUBSCRIBE:
       {
         modio::writeLogLine("Current User subscribed to a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Installing...", MODIO_DEBUGLEVEL_LOG);
+        modio::current_user_subscriptions.insert(events_array[i].mod_id);
         std::string modfile_path_str = modio::getInstalledModPath(events_array[i].mod_id);
         if (modfile_path_str == "")
         {
@@ -242,6 +243,7 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
       case MODIO_EVENT_USER_UNSUBSCRIBE:
       {
         modio::writeLogLine("Current User unsubscribed from a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Uninstalling...", MODIO_DEBUGLEVEL_LOG);
+        modio::current_user_subscriptions.erase(events_array[i].mod_id);
         modioUninstallMod(events_array[i].mod_id);
         break;
       }
