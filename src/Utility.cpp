@@ -235,8 +235,14 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
   {
     do
     {
-      if (FileInformation.cFileName[0] != '.')
+      if ( wcscmp (FileInformation.cFileName, L".") != 0
+          && wcscmp (FileInformation.cFileName, L"..") != 0)
       {
+        std::wstring ws_filename(FileInformation.cFileName);
+        std::string str_filename(ws_filename.begin(), ws_filename.end());
+
+        writeLogLine("Deleting file: " + str_filename, MODIO_DEBUGLEVEL_LOG);
+
         strFilePath.erase();
         strFilePath = refcstrRootDirectory + "\\" + StringFromWideChar(FileInformation.cFileName);
 

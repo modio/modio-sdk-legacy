@@ -717,6 +717,7 @@ extern "C"
 
   // General Utility Methods 
   void MODIO_DLL compressFiles(char const* root_directory, char const* const filenames[], u32 filenames_size, char const* zip_path);
+  void MODIO_DLL extractFiles(char const* zip_path, char const* directory_path);
   void MODIO_DLL windowsUTF8ToAnsi(const char* UTF8_string, char* ansi_string);
 #ifdef __cplusplus
 }

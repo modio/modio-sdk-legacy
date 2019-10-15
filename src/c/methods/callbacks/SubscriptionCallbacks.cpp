@@ -35,7 +35,7 @@ void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::jso
 
   if(response_code >= 200 && response_code <300)
   {
-    modio::current_user_subscriptions.erase(subscribe_to_mod_callbacks[call_number]->mod_id);
+    modio::current_user_subscriptions.erase(unsubscribe_from_mod_callbacks[call_number]->mod_id);
   }
 
   unsubscribe_from_mod_callbacks[call_number]->callback(unsubscribe_from_mod_callbacks[call_number]->object, response);

@@ -179,6 +179,11 @@ void compressFiles(char const *root_directory, char const * const filenames[], u
   modio::minizipwrapper::compressFiles(root_directory, filenames_vector, zip_path);
 }
 
+void extractFiles(char const* zip_path, char const* directory_path)
+{
+  modio::minizipwrapper::extract(zip_path, directory_path);
+}
+
 void windowsUTF8ToAnsi(const char* UTF8_string, char* ansi_string)
 {
   #ifdef MODIO_WINDOWS_DETECTED
