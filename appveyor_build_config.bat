@@ -1,6 +1,6 @@
 mkdir test_build
 cd test_build
-cmake -D mode=static -D test=on -D gtest_force_shared_crt=on -G "Visual Studio 15" c:\projects\source
+cmake -D BUILD_SHARED_LIBS=OFF -D test=on -D gtest_force_shared_crt=on -G "Visual Studio 15" c:\projects\source
 cmake --build . --config "Debug"
 cd ..
 
@@ -16,11 +16,11 @@ if %APPVEYOR_REPO_TAG% == true (
   cmake --build . --config "Release"
   mkdir ..\static_x86
   cd ..\static_x86
-  cmake -D mode=static -G "Visual Studio 15" c:\projects\source
+  cmake -D BUILD_SHARED_LIBS=OFF -G "Visual Studio 15" c:\projects\source
   cmake --build . --config "Release"
   mkdir ..\static_x64
   cd ..\static_x64
-  cmake -D mode=static -G "Visual Studio 15 Win64" c:\projects\source
+  cmake -D BUILD_SHARED_LIBS=OFF -G "Visual Studio 15 Win64" c:\projects\source
   cmake --build . --config "Release"
   cd ..
   7z a Windows.zip dynamic_x86\Release\* dynamic_x64\Release\* static_x86\Release\* static_x64\Release\*

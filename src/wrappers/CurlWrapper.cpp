@@ -23,8 +23,8 @@ void shutdownCurl()
 {
   pauseModDownloads();
 
-  g_ongoing_call = -1;
-  g_call_count = -1;
+  g_ongoing_call = 0;
+  g_call_count = 0;
 
   curl_multi_cleanup(g_curl_multi_handle);
 
