@@ -262,12 +262,7 @@ void compressDirectory(std::string directory, std::string zip_path)
 {
   directory = modio::addSlashIfNeeded(directory);
   writeLogLine("Compressing directory " + directory, MODIO_DEBUGLEVEL_LOG);
-  std::vector<std::string> filenames = getFilenames(directory);
-  for(u32 i=0; i<filenames.size(); i++)
-  {
-    filenames[i] = filenames[i];
-  }
-  compressFiles(directory, filenames, zip_path);
+  compressFiles(directory, getFilenames(directory), zip_path);
 }
 }
 }

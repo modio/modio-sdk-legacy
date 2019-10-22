@@ -4,17 +4,18 @@ extern "C"
 {
     void modioGetAllModCommentsFilterString(void *object, u32 mod_id, char const *filter_string, u32 cache_max_age_seconds, void (*callback)(void *object, ModioResponse response, ModioComment comments[], u32 comments_size))
     {
-        std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/comments?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
+        std::string url_without_api_key = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/comments?" + (filter_string ? filter_string : "");
+        std::string url = url_without_api_key + "&api_key=" + modio::API_KEY;
 
         u32 call_number = modio::curlwrapper::getCallNumber();
 
         get_all_mod_comments_callbacks[call_number] = new GetAllModCommentsParams;
         get_all_mod_comments_callbacks[call_number]->callback = callback;
         get_all_mod_comments_callbacks[call_number]->object = object;
-        get_all_mod_comments_callbacks[call_number]->url = url;
+        get_all_mod_comments_callbacks[call_number]->url = url_without_api_key;
         get_all_mod_comments_callbacks[call_number]->is_cache = false;
 
-        std::string cache_filename = modio::getCallFileFromCache(url, cache_max_age_seconds);
+        std::string cache_filename = modio::getCallFileFromCache(url_without_api_key, cache_max_age_seconds);
         if (cache_filename != "")
         {
             nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);

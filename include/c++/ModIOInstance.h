@@ -55,12 +55,14 @@ class MODIO_DLL Instance
   Instance& operator=(const Instance&) = delete;
 public:
   Instance(u32 environment, u32 game_id, const std::string &api_key);
-  Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path);
+  Instance(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, const std::string &api_key, const std::string &root_path);
   ~Instance();
 
   //General Methods
   void process();
   void setDebugLevel(u32 debug_level);
+  void setModEventsPollInterval(u32 interval_in_seconds);
+  void setUserEventsPollInterval(u32 interval_in_seconds);
   void sleep(u32 milliseconds);
   void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path);
 
@@ -74,10 +76,12 @@ public:
   void logout() const;
   void emailRequest(const std::string &email, const std::function<void(const modio::Response &)> &callback);
   void emailExchange(const std::string &security_code, const std::function<void(const modio::Response &)> &callback);
+  void authenticateViaToken(const std::string &access_token);
   modio::User getCurrentUser();
 
   //External Authentication Methods
   void galaxyAuth(const std::string &appdata, const std::function<void(const modio::Response &)> &callback);
+  void oculusAuth(const std::string &nonce, const std::string &oculus_user_id, const std::string &access_token, const std::string &email, u32 date_expires, const std::function<void(const modio::Response &)> &callback);
   void steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const std::function<void(const modio::Response &)> &callback);
   void steamAuthEncoded(const std::string &base64_token, const std::function<void(const modio::Response &)> &callback);
   void linkExternalAccount(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback);
@@ -120,10 +124,13 @@ public:
 
   //Ratings Methods
   void addModRating(u32 mod_id, bool vote_up, const std::function<void(const modio::Response &response)> &callback);
+  u32 getCurrentUserModRating(u32 mod_id);
 
   //Subscription Methods
   void subscribeToMod(u32 mod_id, const std::function<void(const modio::Response &response, const modio::Mod &mod)> &callback);
   void unsubscribeFromMod(u32 mod_id, const std::function<void(const modio::Response &response)> &callback);
+  bool isCurrentUserSubscribed(u32 mod_id);
+  const std::vector<u32> getCurrentUserSubscriptions();
 
   //Me Methods
   void getAuthenticatedUser(const std::function<void(const modio::Response &response, const modio::User &user)> &callback);
@@ -145,7 +152,9 @@ public:
   void setUploadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback);
   const std::list<QueuedModDownload *> getModDownloadQueue();
   const std::list<QueuedModfileUpload *> getModfileUploadQueue();
+  const modio::InstalledMod getInstalledMod(u32 mod_id);
   const std::vector<modio::InstalledMod> getAllInstalledMods();
+  const std::vector<u32> getAllDownloadedMods();
   u32 getModState(u32 mod_id);
 
   //Dependencies Methods

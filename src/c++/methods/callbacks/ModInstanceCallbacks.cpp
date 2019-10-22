@@ -76,6 +76,12 @@ void onEditMod(void *object, ModioResponse modio_response, ModioMod mod)
   response.initialize(modio_response);
 
   modio::Mod modio_mod;
+
+  if (modio_response.code == 200)
+  {
+    modio_mod.initialize(mod);
+  }
+
   edit_mod_calls[call_id]->callback(response, modio_mod);
 
   delete edit_mod_calls[call_id];

@@ -25,9 +25,14 @@ struct GenericCall
 namespace modio
 {
   void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user);
+  void onUpdateCurrentUserRatings(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size);
+  void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, ModioMod mods[], u32 mods_size);
   void addModsToDownloadQueue(std::vector<u32> mod_ids);
   void pollEvents();
   void updateAuthenticatedUser(std::string access_token);
+  void updateUserRatings();
+  void updateUserSubscriptions();
+  void addGameIdFilter(ModioFilterCreator &filter);
 
   // Error handling
   void handleDownloadImageError(void *object, void (*callback)(void *object, ModioResponse modioresponse));

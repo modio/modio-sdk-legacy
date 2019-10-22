@@ -24,7 +24,15 @@ extern "C"
 			strcpy(installed_mod->path, path_str.c_str());
 		}
 
-		nlohmann::json mod_cache_json = modio::openJson(modio::addSlashIfNeeded(installed_mod->path) + "modio.json");
+		nlohmann::json mod_cache_json;
+		if(installed_mod->path)
+		{
+			std::string modio_json_path = modio::addSlashIfNeeded(installed_mod->path) + "modio.json";
+			if(modio::fileExists(modio_json_path))
+			{
+				mod_cache_json = modio::openJson(modio::addSlashIfNeeded(installed_mod->path) + "modio.json");
+			}
+		}
 		modioInitMod(&(installed_mod->mod), mod_cache_json);
 	}
 

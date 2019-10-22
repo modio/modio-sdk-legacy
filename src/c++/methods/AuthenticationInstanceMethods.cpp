@@ -32,6 +32,11 @@ void Instance::emailExchange(const std::string &security_code, const std::functi
   current_call_id++;
 }
 
+void Instance::authenticateViaToken(const std::string &access_token)
+{
+  modioAuthenticateViaToken(access_token.c_str());
+}
+
 modio::User Instance::getCurrentUser()
 {
   modio::User user;

@@ -3,6 +3,7 @@
 namespace modio
 {
 std::map<u32, GenericCall *> galaxy_auth_calls;
+std::map<u32, GenericCall *> oculus_auth_calls;
 std::map<u32, GenericCall *> steam_auth_calls;
 std::map<u32, GenericCall *> steam_auth_encoded_calls;
 std::map<u32, GenericCall *> link_external_account_calls;
@@ -19,6 +20,20 @@ void onGalaxyAuth(void *object, ModioResponse modio_response)
 
   delete galaxy_auth_calls[call_id];
   galaxy_auth_calls.erase(call_id);
+}
+
+void onOculusAuth(void *object, ModioResponse modio_response)
+{
+  u32 call_id = (u32)((uintptr_t)object);
+
+  modio::Response response;
+
+  response.initialize(modio_response);
+
+  oculus_auth_calls[call_id]->callback(response);
+
+  delete oculus_auth_calls[call_id];
+  oculus_auth_calls.erase(call_id);
 }
 
 void onSteamAuth(void *object, ModioResponse modio_response)
@@ -68,6 +83,10 @@ void clearExternalAuthenticationRequestCalls()
   for (auto galaxy_auth_call : galaxy_auth_calls)
     delete galaxy_auth_call.second;
   galaxy_auth_calls.clear();
+
+  for (auto oculus_auth_call : oculus_auth_calls)
+    delete oculus_auth_call.second;
+  oculus_auth_calls.clear();
 
   for (auto steam_auth_call : steam_auth_calls)
     delete steam_auth_call.second;

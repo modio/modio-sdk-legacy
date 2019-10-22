@@ -108,6 +108,11 @@ typedef int i32;
 #define MODIO_SERVICE_STEAM   0
 #define MODIO_SERVICE_GALAXY  1
 
+// Rating type
+#define MODIO_RATING_UNDEFINED  0
+#define MODIO_RATING_NEGATIVE   1
+#define MODIO_RATING_POSITIVE   2
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -500,12 +505,13 @@ extern "C"
   };
 
   //General Methods
-  void MODIO_DLL modioInit(u32 environment, u32 game_id, char const* api_key, char const* root_path);
+  void MODIO_DLL modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const* api_key, char const* root_path);
   void MODIO_DLL modioShutdown(void);
   void MODIO_DLL modioSetDebugLevel(u32 debug_level);
+  void MODIO_DLL modioSetModEventsPollInterval(u32 interval_in_seconds);
+  void MODIO_DLL modioSetUserEventsPollInterval(u32 interval_in_seconds);
   void MODIO_DLL modioProcess(void);
   void MODIO_DLL modioSleep(u32 milliseconds);
-  void MODIO_DLL compressFiles(char const* root_directory, char const* const filenames[], u32 filenames_size, char const* zip_path);
 
   //Events
   void MODIO_DLL modioSetEventListener(void (*callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size));
@@ -517,12 +523,14 @@ extern "C"
   //Authentication Methods
   void MODIO_DLL modioEmailRequest(void* object, char const* email, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioEmailExchange(void* object, char const* security_code, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioAuthenticateViaToken(char const* access_token);
   bool MODIO_DLL modioIsLoggedIn(void);
   void MODIO_DLL modioLogout(void);
   struct ModioUser MODIO_DLL modioGetCurrentUser(void);
 
   //External Authentication Methods
   void MODIO_DLL modioGalaxyAuth(void* object, char const* appdata, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, u32 date_expires, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioSteamAuthEncoded(void* object, char const* base64_ticket, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioLinkExternalAccount(void* object, u32 service, char const* service_id, char const* email, void (*callback)(void* object, ModioResponse response));
@@ -557,10 +565,14 @@ extern "C"
 
   //Ratings Methods
   void MODIO_DLL modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void* object, ModioResponse response));
+  u32 MODIO_DLL modioGetCurrentUserModRating(u32 mod_id);
 
   //Subscription Methods
   void MODIO_DLL modioSubscribeToMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod));
   void MODIO_DLL modioUnsubscribeFromMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response));
+  bool MODIO_DLL modioIsCurrentUserSubscribed(u32 mod_id);
+  u32 MODIO_DLL modioGetCurrentUserSubscriptionsCount();
+  void MODIO_DLL modioGetCurrentUserSubscriptions(u32 *mod_id_array);
 
   //Tags Methods
   void MODIO_DLL modioGetModTags(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioTag* tags_array, u32 tags_array_size));
@@ -672,8 +684,11 @@ extern "C"
   void MODIO_DLL modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
   u32 MODIO_DLL modioGetModfileUploadQueueCount(void);
   void MODIO_DLL modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
+  void MODIO_DLL modioGetInstalledMod(u32 mod_id, ModioInstalledMod *installed_mods);
   u32 MODIO_DLL modioGetAllInstalledModsCount(void);
   void MODIO_DLL modioGetAllInstalledMods(ModioInstalledMod* installed_mods);
+  u32 MODIO_DLL modioGetAllDownloadedModsCount(void);
+  void MODIO_DLL modioGetAllDownloadedMods(u32* downloaded_mods);
   u32 MODIO_DLL modioGetModState(u32 mod_id);
 
   //Dependencies Methods
@@ -699,6 +714,11 @@ extern "C"
   void MODIO_DLL modioFreeInstalledMod(ModioInstalledMod* installed_mod);
   void MODIO_DLL modioFreeQueuedModDownload(ModioQueuedModDownload* queued_mod_download);
   void MODIO_DLL modioFreeQueuedModfileUpload(ModioQueuedModfileUpload* queued_modfile_upload);
+
+  // General Utility Methods 
+  void MODIO_DLL compressFiles(char const* root_directory, char const* const filenames[], u32 filenames_size, char const* zip_path);
+  void MODIO_DLL extractFiles(char const* zip_path, char const* directory_path);
+  void MODIO_DLL windowsUTF8ToAnsi(const char* UTF8_string, char* ansi_string);
 #ifdef __cplusplus
 }
 #endif

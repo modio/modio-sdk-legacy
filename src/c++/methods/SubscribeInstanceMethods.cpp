@@ -21,4 +21,16 @@ void Instance::unsubscribeFromMod(u32 mod_id, const std::function<void(const mod
 
   current_call_id++;
 }
+
+bool Instance::isCurrentUserSubscribed(u32 mod_id)
+{
+  return modioIsCurrentUserSubscribed(mod_id);
+}
+
+const std::vector<u32> Instance::getCurrentUserSubscriptions()
+{
+  std::vector<u32> return_value(modio::current_user_subscriptions.begin(), modio::current_user_subscriptions.end());
+  return return_value;
+}
+
 } // namespace modio

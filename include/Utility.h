@@ -68,13 +68,15 @@ std::string MODIO_DLL toString(u32 number);
 std::string MODIO_DLL toString(double number);
 std::string replaceSubstrings(const std::string &str, const std::string &from, const std::string &to);
 std::string addSlashIfNeeded(const std::string &directory_path);
+std::string getFilename(std::string file_path);
+std::string getFileExtension(std::string path);
 
 // Log methods
 void writeLogLine(const std::string &text, u32 debug_level);
 void clearLog();
 
 // Time methods
-u32 getCurrentTime();
+u32 getCurrentTimeSeconds();
 double getCurrentTimeMillis();
 
 // Json methods
@@ -86,6 +88,7 @@ void writeJson(const std::string &file_path, nlohmann::json json_object);
 // Filesystem methods
 std::string getModIODirectory();
 std::vector<std::string> getFilenames(const std::string &directory);
+std::vector<std::string> getDirectoryNames(const std::string &root_directory);
 bool isDirectory(const std::string &directory);
 bool directoryExists(const std::string &path);
 bool fileExists(const std::string &directory);

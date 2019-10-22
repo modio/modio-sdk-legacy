@@ -14,8 +14,8 @@ void onJsonRequestFinished(CURL *curl)
 
   if (ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
   {
-    u32 x_ratelimit_retryafter = stoul(ongoing_call->headers["X-Ratelimit-RetryAfter"]);
-    modio::RETRY_AFTER = modio::getCurrentTime() + x_ratelimit_retryafter;
+    u32 x_ratelimit_retryafter = atoi(ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
+    modio::RETRY_AFTER = modio::getCurrentTimeSeconds() + x_ratelimit_retryafter;
     modio::writeLogLine("API request limit hit. Could not poll events. Rerying after " + modio::toString(modio::RETRY_AFTER), MODIO_DEBUGLEVEL_WARNING);
   }
 
@@ -62,11 +62,17 @@ void onDownloadFinished(CURL *curl)
 
 void onModDownloadFinished(CURL *curl)
 {
+  writeLogLine("Mod download finished", MODIO_DEBUGLEVEL_LOG);
   fclose(g_current_mod_download->file);
   g_current_mod_download->file = NULL;
+  writeLogLine("File closed", MODIO_DEBUGLEVEL_LOG);
+
+  u32 response_code;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
   if (g_current_mod_download->queued_mod_download->state == MODIO_MOD_DOWNLOADING)
   {
+    writeLogLine("Case: mod download finished", MODIO_DEBUGLEVEL_LOG);
     std::string installation_path = modio::getModIODirectory() + "mods/" + modio::toString(g_current_mod_download->queued_mod_download->mod_id) + "/";
     std::string downloaded_zip_path = g_current_mod_download->queued_mod_download->path;
     nlohmann::json mod_json = modio::toJson(g_current_mod_download->queued_mod_download->mod);
@@ -74,9 +80,6 @@ void onModDownloadFinished(CURL *curl)
     addToDownloadedModsJson(installation_path, downloaded_zip_path, mod_json);
     
     writeLogLine("Finished downloading mod", MODIO_DEBUGLEVEL_LOG);
-
-    u32 response_code;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
     if (response_code >= 200 && response_code < 300)
     {
@@ -114,17 +117,18 @@ void onModDownloadFinished(CURL *curl)
     downloadNextQueuedMod();
   }
   updateModDownloadQueueFile();
+  writeLogLine("On mod download finished", MODIO_DEBUGLEVEL_LOG);
 }
 
 void onModfileUploadFinished(CURL *curl)
 {
   writeLogLine("Upload Finished. Mod id: " + toString(g_current_modfile_upload->queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
 
+  u32 response_code;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+
   if (g_current_modfile_upload->queued_modfile_upload->state == MODIO_MOD_UPLOADING)
   {
-    u32 response_code;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-
     if (modio::upload_callback)
     {
       modio::upload_callback(response_code, g_current_modfile_upload->queued_modfile_upload->mod_id);

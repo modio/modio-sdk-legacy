@@ -5,13 +5,13 @@ namespace modio
 Instance::Instance(u32 environment, u32 game_id, const std::string &api_key)
 {
   current_call_id = 0;
-  modioInit(environment, game_id, api_key.c_str(), NULL);
+  modioInit(environment, game_id, false, api_key.c_str(), NULL);
 }
 
-Instance::Instance(u32 environment, u32 game_id, const std::string &api_key, const std::string &root_path)
+Instance::Instance(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, const std::string &api_key, const std::string &root_path)
 {
   current_call_id = 0;
-  modioInit(environment, game_id, api_key.c_str(), root_path.c_str());
+  modioInit(environment, game_id, retrieve_mods_from_other_games, api_key.c_str(), root_path.c_str());
 }
 
 Instance::~Instance()
@@ -47,6 +47,16 @@ Instance::~Instance()
 void Instance::setDebugLevel(u32 debug_level)
 {
   modioSetDebugLevel(debug_level);
+}
+
+void Instance::setModEventsPollInterval(u32 interval_in_seconds)
+{
+  modioSetModEventsPollInterval(interval_in_seconds);
+}
+
+void Instance::setUserEventsPollInterval(u32 interval_in_seconds)
+{
+  modioSetUserEventsPollInterval(interval_in_seconds);
 }
 
 void Instance::sleep(u32 milliseconds)

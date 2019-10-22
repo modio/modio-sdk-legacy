@@ -91,7 +91,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
     return;
 
   std::ofstream log_file(getModIODirectory() + "log", std::ios::app);
-  log_file << "[" << modio::getCurrentTime() << "] ";
+  log_file << "[" << modio::getCurrentTimeSeconds() << "] ";
   if (debug_level == MODIO_DEBUGLEVEL_ERROR)
   {
     log_file << "[Error] ";
@@ -116,7 +116,7 @@ void clearLog()
 
 // Time methods
 
-u32 getCurrentTime()
+u32 getCurrentTimeSeconds()
 {
   return (u32)std::time(nullptr);
 }
@@ -124,7 +124,7 @@ u32 getCurrentTime()
 double getCurrentTimeMillis()
 {
   std::chrono::milliseconds current_time =
-      std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+  std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
   return (double)current_time.count();
 }
 
@@ -235,8 +235,14 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
   {
     do
     {
-      if (FileInformation.cFileName[0] != '.')
+      if ( wcscmp (FileInformation.cFileName, L".") != 0
+          && wcscmp (FileInformation.cFileName, L"..") != 0)
       {
+        std::wstring ws_filename(FileInformation.cFileName);
+        std::string str_filename(ws_filename.begin(), ws_filename.end());
+
+        writeLogLine("Deleting file: " + str_filename, MODIO_DEBUGLEVEL_LOG);
+
         strFilePath.erase();
         strFilePath = refcstrRootDirectory + "\\" + StringFromWideChar(FileInformation.cFileName);
 
@@ -304,6 +310,23 @@ std::string getModIODirectory()
   return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
 }
 
+std::string getFilename(std::string file_path)
+{
+  size_t last_slash = file_path.find_last_of("/\\");
+  if (last_slash == std::string::npos)
+    return file_path;
+  std::string filename = file_path.substr(last_slash + 1);
+  return filename;
+}
+
+std::string getFileExtension(std::string path)
+{
+  size_t last_point = path.find_last_of(".");
+  if (last_point == std::string::npos)
+    return "";
+  return path.substr(last_point + 1);
+}
+
 bool isDirectory(const std::string &directory)
 {
   DIR *dir;
@@ -365,6 +388,32 @@ std::vector<std::string> getFilenames(const std::string &directory)
         }
       }
       else if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
+      {
+        filenames.push_back(ent->d_name);
+      }
+      if (current_dir)
+        closedir(current_dir);
+    }
+    closedir(dir);
+  }
+  return filenames;
+}
+
+std::vector<std::string> getDirectoryNames(const std::string &root_directory)
+{
+  std::string directory_with_slash = modio::addSlashIfNeeded(root_directory);
+
+  std::vector<std::string> filenames;
+
+  struct dirent *ent;
+  DIR *dir;
+  if ((dir = opendir(directory_with_slash.c_str())) != NULL)
+  {
+    while ((ent = readdir(dir)) != NULL)
+    {
+      DIR *current_dir = NULL;
+      std::string current_file_path = directory_with_slash + ent->d_name;
+      if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
       {
         filenames.push_back(ent->d_name);
       }

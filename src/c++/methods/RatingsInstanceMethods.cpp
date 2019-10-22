@@ -11,4 +11,9 @@ void Instance::addModRating(u32 mod_id, bool vote_up, const std::function<void(c
 
   current_call_id++;
 }
+
+u32 Instance::getCurrentUserModRating(u32 mod_id)
+{
+  return modioGetCurrentUserModRating(mod_id);
+}
 } // namespace modio

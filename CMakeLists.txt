@@ -35,6 +35,8 @@ ENDIF()
 
 IF (UNIX AND NOT APPLE)
   add_definitions(-D_LARGEFILE64_SOURCE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
   target_link_libraries (modio curl)
 ENDIF ()
 

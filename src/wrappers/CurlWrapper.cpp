@@ -419,12 +419,11 @@ static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json 
 
     if (g_current_mod_download->queued_mod_download == NULL)
     {
-      modioFreeMod(&modio_mod);
-      writeLogLine("Could not find mod " + modio::toString(modio_mod.id) + "on the download queue. It won't be downloaded.", MODIO_DEBUGLEVEL_LOG);
+      writeLogLine("Could not find mod " + modio::toString(modio_mod.id) + "on the download queue. It won't be downloaded.", MODIO_DEBUGLEVEL_ERROR);
+      handleOnGetDownloadModError(&modio_mod);
       return;
     }
 
-    //TODO: Return a download listener error if mod has no modfile
     if (modio_mod.modfile.download.binary_url == NULL)
     {
       modio::writeLogLine("The mod " + modio::toString(modio_mod.id) + " has no modfile to be downloaded", MODIO_DEBUGLEVEL_ERROR);
@@ -552,12 +551,21 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 
   if (modio::isDirectory(modfile_path))
   {
+    writeLogLine("Directory detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
     modio::minizipwrapper::compressDirectory(modfile_path, modfile_zip_path);
   }
-  else if (modio::fileExists(modfile_path))
+  else if (modio::fileExists(modfile_path) && modio::getFileExtension(modfile_path) == "zip")
   {
+    writeLogLine("Zip file detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modfile_path;
+  }else if(modio::fileExists(modfile_path))
+  {
+    writeLogLine("File detected " + modfile_path, MODIO_DEBUGLEVEL_LOG);
+    modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
+    std::vector<std::string> filenames;
+    filenames.push_back(modio::getFilename(modfile_path));
+    modio::minizipwrapper::compressFiles(modio::getDirectoryPath(modfile_path), filenames, modfile_zip_path);
   }
   else
   {

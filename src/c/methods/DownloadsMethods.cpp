@@ -77,6 +77,28 @@ u32 modioGetModfileUploadQueueCount()
   return (u32)modio::curlwrapper::getModfileUploadQueue().size();
 }
 
+void modioGetInstalledMod(u32 mod_id, ModioInstalledMod *installed_mods)
+{
+  u32 i = 0;
+  for(auto installed_mod_json : modio::installed_mods)
+  {
+		if (modio::hasKey(installed_mod_json, "mod_id")
+        && mod_id == installed_mod_json["mod_id"])
+    {
+      modioInitInstalledMod(installed_mods, installed_mod_json);
+      return;
+    }
+    i++;
+  }
+  nlohmann::json empty_json;
+  modioInitInstalledMod(installed_mods, empty_json);
+}
+
+u32 modioGetAllInstalledModsCount()
+{
+  return (u32)modio::installed_mods.size();
+}
+
 void modioGetAllInstalledMods(ModioInstalledMod *installed_mods)
 {
   u32 i = 0;
@@ -87,9 +109,17 @@ void modioGetAllInstalledMods(ModioInstalledMod *installed_mods)
   }
 }
 
-u32 modioGetAllInstalledModsCount()
+u32 modioGetAllDownloadedModsCount()
 {
-  return (u32)modio::installed_mods.size();
+  return (u32)modio::downloaded_mods.size();
+}
+
+void modioGetAllDownloadedMods(u32* downloaded_mods)
+{
+  for(size_t i=0; i<(u32)modio::downloaded_mods.size(); i++)
+  {
+    downloaded_mods[i] = modio::downloaded_mods[i];
+  }
 }
 
 u32 modioGetModState(u32 mod_id)

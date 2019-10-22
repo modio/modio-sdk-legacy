@@ -34,6 +34,11 @@ extern "C"
     modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnEmailExchanged);
   }
 
+  void modioAuthenticateViaToken(char const* access_token)
+  {
+    modio::updateAuthenticatedUser(access_token);
+  }
+
   bool modioIsLoggedIn()
   {
     return modio::IS_LOGGED_IN;

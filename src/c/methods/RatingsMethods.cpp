@@ -8,9 +8,11 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    add_mod_rating_callbacks[call_number] = new GenericRequestParams;
+    add_mod_rating_callbacks[call_number] = new AddModRatingRequestParams;
     add_mod_rating_callbacks[call_number]->callback = callback;
     add_mod_rating_callbacks[call_number]->object = object;
+    add_mod_rating_callbacks[call_number]->mod_id = mod_id;
+    add_mod_rating_callbacks[call_number]->vote_up = vote_up;
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods/" + modio::toString(mod_id) + "/ratings";
 
@@ -23,5 +25,12 @@ extern "C"
     }
 
     modio::curlwrapper::post(call_number, url, modio::getUrlEncodedHeaders(), data, &modioOnAddModRating);
+  }
+
+  u32 modioGetCurrentUserModRating(u32 mod_id)
+  {
+    if ( modio::current_user_ratings.find(mod_id) == modio::current_user_ratings.end() )
+      return MODIO_RATING_UNDEFINED;
+    return modio::current_user_ratings[mod_id];
   }
 }
