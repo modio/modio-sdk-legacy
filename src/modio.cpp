@@ -74,7 +74,7 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modio::writeLogLine(".modio/ directory created at current workspace.", MODIO_DEBUGLEVEL_LOG);
   }
   
-  modio::writeLogLine("v0.11.5 DEV", MODIO_DEBUGLEVEL_LOG);
+  modio::writeLogLine("v0.12.1 DEV", MODIO_DEBUGLEVEL_LOG);
 
   if (environment == MODIO_ENVIRONMENT_TEST)
     modio::MODIO_URL = "https://api.test.mod.io/";
