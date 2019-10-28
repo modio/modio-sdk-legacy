@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 project(modio)
-set(CMAKE_BUILD_TYPE Release)
 set (CMAKE_CXX_STANDARD 11)
 
-# set the mode flag as static to compile statically, for example:
-# cmake -D mode=static .
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# set BUILD_SHARED_LIBs to OFF to compile statically, for example:
+# cmake -D BUILD_SHARED_LIBS=OFF .
+option(BUILD_SHARED_LIBS "Build Shared Libraries" ON)
 
 # MSVC: set the crtmode flag to 'static' to include the Visual C++
 # runtime statically. Requires libcurl to be built with /MT as well.
@@ -14,15 +18,14 @@ include_directories(include additional_dependencies include/dependencies/miniz)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 
-if( mode AND mode STREQUAL "static" )
+add_library(modio ${SOURCES})
+if( BUILD_SHARED_LIBS )
+  message("Building mod.io SDK dynamically")
+  add_definitions(-DMODIO_DYNAMICLIB -DCURL_STATICLIB)
+else()
   message("Building mod.io SDK statically")
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
   add_definitions(-DMODIO_STATICLIB -DCURL_STATICLIB)
-  add_library(modio STATIC ${SOURCES})
-else()
-  message("Building mod.io SDK dynamically")
-  add_definitions(-DMODIO_DYNAMICLIB -DCURL_STATICLIB)
-  add_library(modio SHARED ${SOURCES})
 endif()
 
 IF (APPLE)

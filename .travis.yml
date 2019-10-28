@@ -15,8 +15,8 @@ script:
     fi
   - make -j2
   - if [[ "$TRAVIS_TAG" ]]; then
-      cmake -D mode=static . ;
-      make -j2 ; 
+      cmake -D BUILD_SHARED_LIBS=OFF . ;
+      make -j2 ;
     fi
   - if [ "$TRAVIS_TAG" ]; then
       if [ "$TRAVIS_OS_NAME" == "osx" ]; then

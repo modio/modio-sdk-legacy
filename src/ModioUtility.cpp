@@ -108,8 +108,6 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
   if (response.code == 200)
   {
     modio::writeLogLine("Mod events polled", MODIO_DEBUGLEVEL_LOG);
-    if (modio::event_listener_callback && events_array_size > 0)
-      modio::event_listener_callback(response, events_array, events_array_size);
 
     std::vector<u32> mod_edited_ids;
     std::vector<u32> mod_to_download_queue_ids;
@@ -133,6 +131,7 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
         {
           if (modio::hasKey(installed_mod, "mod_id") && modio::hasKey(installed_mod, "date_updated") && installed_mod["mod_id"] == events_array[i].mod_id && installed_mod["date_updated"] >= events_array[i].date_added)
           {
+            reinstall = false;
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
           }
         }
@@ -170,6 +169,12 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
     nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
     event_polling_json["last_mod_event_poll_id"] = modio::LAST_MOD_EVENT_POLL_ID;
     modio::writeJson(modio::getModIODirectory() + "event_polling.json", event_polling_json);
+
+    if (modio::event_listener_callback && events_array_size > 0)
+    {
+      modio::writeLogLine("Triggering user callback listener", MODIO_DEBUGLEVEL_LOG);
+      modio::event_listener_callback(response, events_array, events_array_size);
+    }
   }
   else
   {
@@ -181,27 +186,6 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
 {
   if (response.code == 200)
   {
-    if (modio::event_listener_callback && events_array_size > 0)
-    {
-      ModioModEvent *mod_events_array = new ModioModEvent[events_array_size];
-      for(u32 i=0; i < events_array_size; i++)
-      {
-        mod_events_array[i].id = events_array[i].id;
-        mod_events_array[i].mod_id = events_array[i].mod_id;
-        mod_events_array[i].user_id = events_array[i].user_id;
-        mod_events_array[i].event_type = events_array[i].event_type;
-        mod_events_array[i].date_added = events_array[i].date_added;
-      }
-
-      modio::event_listener_callback(response, mod_events_array, events_array_size);
-
-      for(u32 i=0; i < events_array_size; i++)
-      {
-        modioFreeModEvent(&mod_events_array[i]);
-      }
-      delete[] mod_events_array;
-    }
-
     modio::writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
 
     std::vector<u32> mod_to_download_queue_ids;
@@ -254,6 +238,29 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
     nlohmann::json token_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
     token_json["last_user_event_poll_id"] = modio::LAST_USER_EVENT_POLL_ID;
     modio::writeJson(modio::getModIODirectory() + "authentication.json", token_json);
+
+    if (modio::event_listener_callback && events_array_size > 0)
+    {
+      modio::writeLogLine("Triggering event callback listener", MODIO_DEBUGLEVEL_LOG);
+
+      ModioModEvent *mod_events_array = new ModioModEvent[events_array_size];
+      for(u32 i=0; i < events_array_size; i++)
+      {
+        mod_events_array[i].id = events_array[i].id;
+        mod_events_array[i].mod_id = events_array[i].mod_id;
+        mod_events_array[i].user_id = events_array[i].user_id;
+        mod_events_array[i].event_type = events_array[i].event_type;
+        mod_events_array[i].date_added = events_array[i].date_added;
+      }
+
+      modio::event_listener_callback(response, mod_events_array, events_array_size);
+
+      for(u32 i=0; i < events_array_size; i++)
+      {
+        modioFreeModEvent(&mod_events_array[i]);
+      }
+      delete[] mod_events_array;
+    }
   }
   else
   {
