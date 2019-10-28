@@ -684,7 +684,7 @@ extern "C"
   void MODIO_DLL modioGetModDownloadQueue(ModioQueuedModDownload* download_queue);
   u32 MODIO_DLL modioGetModfileUploadQueueCount(void);
   void MODIO_DLL modioGetModfileUploadQueue(ModioQueuedModfileUpload* upload_queue);
-  void MODIO_DLL modioGetInstalledMod(u32 mod_id, ModioInstalledMod *installed_mods);
+  void MODIO_DLL modioGetInstalledMod(u32 mod_id, ModioInstalledMod *installed_mod);
   u32 MODIO_DLL modioGetAllInstalledModsCount(void);
   void MODIO_DLL modioGetAllInstalledMods(ModioInstalledMod* installed_mods);
   u32 MODIO_DLL modioGetAllDownloadedModsCount(void);
