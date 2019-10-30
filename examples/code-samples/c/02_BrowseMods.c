@@ -37,6 +37,7 @@ int main(void)
   ModioFilterCreator filter;
   modioInitFilter(&filter);
   modioSetFilterLimit(&filter, 3);
+  modioSetFilterSort(&filter, "popular", false);
 
   printf("Getting mods...\n");
 
