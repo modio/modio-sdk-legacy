@@ -90,7 +90,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
   if (DEBUG_LEVEL < debug_level)
     return;
 
-  std::ofstream log_file(getModIODirectory() + "log", std::ios::app);
+  std::ofstream log_file(getModIODirectory() + "log.txt", std::ios::app);
   log_file << "[" << modio::getCurrentTimeSeconds() << "] ";
   if (debug_level == MODIO_DEBUGLEVEL_ERROR)
   {
@@ -110,7 +110,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
 
 void clearLog()
 {
-  std::ofstream log_file(getModIODirectory() + "log");
+  std::ofstream log_file(getModIODirectory() + "log.txt");
   log_file.close();
 }
 
