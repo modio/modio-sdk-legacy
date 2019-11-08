@@ -74,7 +74,7 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modio::writeLogLine(".modio/ directory created at current workspace.", MODIO_DEBUGLEVEL_LOG);
   }
   
-  modio::writeLogLine("v0.12.1 DEV", MODIO_DEBUGLEVEL_LOG);
+  modio::writeLogLine("v0.12.3 DEV", MODIO_DEBUGLEVEL_LOG);
 
   if (environment == MODIO_ENVIRONMENT_TEST)
     modio::MODIO_URL = "https://api.test.mod.io/";
@@ -114,12 +114,12 @@ void modioSetDebugLevel(u32 debug_level)
   modio::DEBUG_LEVEL = debug_level;
 }
 
-void MODIO_DLL modioSetModEventsPollInterval(u32 interval_in_seconds)
+void modioSetModEventsPollInterval(u32 interval_in_seconds)
 {
   modio::MOD_EVENT_POLL_INTERVAL = interval_in_seconds;
 }
 
-void MODIO_DLL modioSetUserEventsPollInterval(u32 interval_in_seconds)
+void modioSetUserEventsPollInterval(u32 interval_in_seconds)
 {
   modio::USER_EVENT_POLL_INTERVAL = interval_in_seconds;
 }

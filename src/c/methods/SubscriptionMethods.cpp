@@ -36,8 +36,8 @@ extern "C"
   bool modioIsCurrentUserSubscribed(u32 mod_id)
   {
     if ( modio::current_user_subscriptions.find(mod_id) == modio::current_user_subscriptions.end() )
-      return true;
-    return false;
+      return false;
+    return true;
   }
 
   u32 modioGetCurrentUserSubscriptionsCount()
