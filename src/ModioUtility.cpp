@@ -17,7 +17,9 @@ void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user)
 
 void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRating *ratings_array, u32 ratings_array_size)
 {
-  modio::current_user_ratings.clear();
+  if(response.result_offset == 0) /* Clear only if is first result page */
+    modio::current_user_ratings.clear();
+
   if (response.code >= 200 && response.code < 300)
   {
     modio::writeLogLine("Current user ratings retrieved sucessfully.", MODIO_DEBUGLEVEL_LOG);
@@ -49,7 +51,9 @@ void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRatin
 
 void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
-  modio::current_user_subscriptions.clear();
+  if(response.result_offset == 0) /* Clear only if is first result page */
+    modio::current_user_subscriptions.clear();
+  
   if (response.code >= 200 && response.code < 300)
   {
     modio::writeLogLine("Current user subscriptions retrieved sucessfully.", MODIO_DEBUGLEVEL_LOG);
