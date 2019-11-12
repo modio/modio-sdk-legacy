@@ -129,8 +129,15 @@ void onModfileUploadFinished(CURL *curl)
 
   if (g_current_modfile_upload->queued_modfile_upload->state == MODIO_MOD_UPLOADING)
   {
+    if(g_current_modfile_upload->is_temporary_zip_modfile)
+    {
+      writeLogLine("Deleting temporary modfile " + g_current_modfile_upload->zip_modfile_path, MODIO_DEBUGLEVEL_LOG);
+      modio::removeFile(g_current_modfile_upload->zip_modfile_path);
+    }
+
     if (modio::upload_callback)
     {
+      writeLogLine("Triggering upload callback listener", MODIO_DEBUGLEVEL_LOG);
       modio::upload_callback(response_code, g_current_modfile_upload->queued_modfile_upload->mod_id);
     }
 
@@ -142,7 +149,12 @@ void onModfileUploadFinished(CURL *curl)
     
     updateModUploadQueueFile();
     uploadNextQueuedModfile();
+  }else
+  {
+    writeLogLine("Unhandled error the upload that just finished has the wrong flag: " + modio::toString(g_current_modfile_upload->queued_modfile_upload->state), MODIO_DEBUGLEVEL_ERROR);
   }
+  
+  writeLogLine("Finished handling the modfile upload termination.", MODIO_DEBUGLEVEL_LOG);
   updateModUploadQueueFile();
 }
 } // namespace curlwrapper

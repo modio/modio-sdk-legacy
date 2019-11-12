@@ -546,6 +546,7 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   std::string modfile_path = queued_modfile_upload->modfile_creator.getModioModfileCreator()->path;
 
   std::string modfile_zip_path = "";
+  bool is_temporary_zip_modfile = true;
 
   writeLogLine("Uploading mod: " + toString(queued_modfile_upload->mod_id) + " located at path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
 
@@ -559,6 +560,7 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   {
     writeLogLine("Zip file detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modfile_path;
+    is_temporary_zip_modfile = false;
   }else if(modio::fileExists(modfile_path))
   {
     writeLogLine("File detected " + modfile_path, MODIO_DEBUGLEVEL_LOG);
@@ -621,6 +623,8 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 
     queued_modfile_upload->state = MODIO_MOD_STARTING_UPLOAD;
     g_current_modfile_upload->curl_handle = curl;
+    g_current_modfile_upload->is_temporary_zip_modfile = is_temporary_zip_modfile;
+    g_current_modfile_upload->zip_modfile_path = modfile_zip_path;
     g_current_modfile_upload->queued_modfile_upload = queued_modfile_upload;
 
     for (u32 i = 0; i < modio::getHeaders().size(); i++)
