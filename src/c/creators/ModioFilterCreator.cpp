@@ -74,12 +74,19 @@ extern "C"
     filter->cache_max_age_seconds = 1;
   }
 
+  bool shouldAppendMinusToSort(std::string field, bool ascending)
+  {
+    if(field == "popular" || field == "downloads" || field == "rating" || field == "subscribers")
+      return ascending;
+    return !ascending;
+  }
+
   void modioSetFilterSort(ModioFilterCreator* filter, char const* field, bool ascending)
   {
     if(filter->sort)
       delete[] filter->sort;
     std::string ascending_str = "";
-    if(!ascending)
+    if(shouldAppendMinusToSort(field, ascending))
       ascending_str = "-";
     std::string sort_str = std::string("_sort=") + ascending_str + field;
     filter->sort = new char[sort_str.size() + 1];

@@ -90,7 +90,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
   if (DEBUG_LEVEL < debug_level)
     return;
 
-  std::ofstream log_file(getModIODirectory() + "log", std::ios::app);
+  std::ofstream log_file(getModIODirectory() + "log.txt", std::ios::app);
   log_file << "[" << modio::getCurrentTimeSeconds() << "] ";
   if (debug_level == MODIO_DEBUGLEVEL_ERROR)
   {
@@ -110,7 +110,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
 
 void clearLog()
 {
-  std::ofstream log_file(getModIODirectory() + "log");
+  std::ofstream log_file(getModIODirectory() + "log.txt");
   log_file.close();
 }
 
@@ -530,14 +530,23 @@ void createPath(const std::string &path)
 std::vector<std::string> getHeaders()
 {
   std::vector<std::string> headers;
+  headers.push_back("User-Agent: Modio-SDK-" + modio::VERSION);
   if (modio::ACCESS_TOKEN != "")
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+  return headers;
+}
+
+std::vector<std::string> getHeadersNoToken()
+{
+  std::vector<std::string> headers;
+  headers.push_back("User-Agent: Modio-SDK-" + modio::VERSION);
   return headers;
 }
 
 std::vector<std::string> getUrlEncodedHeaders()
 {
   std::vector<std::string> headers;
+  headers.push_back("User-Agent: Modio-SDK-" + modio::VERSION);
   if (modio::ACCESS_TOKEN != "")
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
   headers.push_back("Content-Type: application/x-www-form-urlencoded");

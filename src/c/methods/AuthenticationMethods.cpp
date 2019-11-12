@@ -31,7 +31,7 @@ extern "C"
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "oauth/emailexchange";
     url += "?api_key=" + modio::API_KEY;
     url += "&security_code=" + std::string(security_code);
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnEmailExchanged);
+    modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnEmailExchanged);
   }
 
   void modioAuthenticateViaToken(char const* access_token)

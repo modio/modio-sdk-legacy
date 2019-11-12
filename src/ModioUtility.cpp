@@ -1,4 +1,5 @@
 #include "ModioUtility.h"
+#include "c/creators/ModioFilterCreator.h"
 
 namespace modio
 {
@@ -16,10 +17,12 @@ void onUpdateCurrentUser(void *object, ModioResponse response, ModioUser user)
 
 void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRating *ratings_array, u32 ratings_array_size)
 {
-  modio::current_user_ratings.clear();
+  if(response.result_offset == 0) /* Clear only if is first result page */
+    modio::current_user_ratings.clear();
+
   if (response.code >= 200 && response.code < 300)
   {
-    modio::writeLogLine("Current user ratings updated sucessfully.", MODIO_DEBUGLEVEL_LOG);
+    modio::writeLogLine("Current user ratings retrieved sucessfully.", MODIO_DEBUGLEVEL_LOG);
     for(u32 i=0; i<ratings_array_size; i++)
     {
       if(ratings_array[i].rating == 1)
@@ -28,6 +31,16 @@ void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRatin
         modio::current_user_ratings[ratings_array[i].mod_id] = MODIO_RATING_NEGATIVE;
       else
         modio::current_user_ratings[ratings_array[i].mod_id] = MODIO_RATING_UNDEFINED;
+    }
+
+    if(response.result_offset + response.result_count < response.result_total)
+    {
+      modio::writeLogLine("Paginated response, retrieving next page...", MODIO_DEBUGLEVEL_LOG);
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      modioSetFilterOffset(&filter, response.result_offset + response.result_count);
+      modioGetUserRatings(NULL, filter, &modio::onUpdateCurrentUserRatings);
+      modioFreeFilter(&filter);
     }
   }
   else
@@ -38,13 +51,30 @@ void onUpdateCurrentUserRatings(void *object, ModioResponse response, ModioRatin
 
 void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
-  modio::current_user_subscriptions.clear();
+  if(response.result_offset == 0) /* Clear only if is first result page */
+    modio::current_user_subscriptions.clear();
+  
   if (response.code >= 200 && response.code < 300)
   {
-    modio::writeLogLine("Current user subscriptions updated sucessfully.", MODIO_DEBUGLEVEL_LOG);
+    modio::writeLogLine("Current user subscriptions retrieved sucessfully.", MODIO_DEBUGLEVEL_LOG);
+
+    std::string subscription_logs = "";
     for(u32 i=0; i<mods_size; i++)
     {
       modio::current_user_subscriptions.insert(mods[i].id);
+      subscription_logs += modio::toString(mods[i].id) + ",";
+    }
+
+    modio::writeLogLine("You are subscribed to the following mods: " + subscription_logs, MODIO_DEBUGLEVEL_LOG);
+
+    if(response.result_offset + response.result_count < response.result_total)
+    {
+      modio::writeLogLine("Paginated response, retrieving next page...", MODIO_DEBUGLEVEL_LOG);
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      modioSetFilterOffset(&filter, response.result_offset + response.result_count);
+      modioGetUserSubscriptions(NULL, filter, &modio::onUpdateCurrentUserSubscriptions);
+      modioFreeFilter(&filter);
     }
   }
   else
@@ -55,19 +85,45 @@ void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, Modi
 
 static void onAddModsToDownloadQueue(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
+  std::vector<int>* ptr_mod_ids = (std::vector<int>*)object;
   if (response.code == 200)
   {
+    modio::writeLogLine("Mod queue data retrived successfully", MODIO_DEBUGLEVEL_LOG);
+
     for (u32 i = 0; i < mods_size; i++)
     {
       modio::curlwrapper::queueModDownload(mods[i]);
     }
+
+    if(response.result_offset + response.result_count < response.result_total)
+    {
+      modio::writeLogLine("Paginated response, retrieving next page...", MODIO_DEBUGLEVEL_LOG);
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      for (auto &mod_id : *ptr_mod_ids)
+      {
+        modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
+      }
+      modioSetFilterOffset(&filter, response.result_offset + response.result_count);
+      modioGetAllMods(ptr_mod_ids, filter, &modio::onAddModsToDownloadQueue);
+      modioFreeFilter(&filter);
+    }else
+    {
+      delete ptr_mod_ids;
+    }
+  }else
+  {
+    modio::writeLogLine("Error retrieving mod queue data", MODIO_DEBUGLEVEL_ERROR);
+    delete ptr_mod_ids;
   }
 }
 
 static void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
+  std::vector<int>* ptr_mod_ids = (std::vector<int>*)object;
   if (response.code == 200)
   {
+    modio::writeLogLine("Updated mods data retrived successfully", MODIO_DEBUGLEVEL_LOG);
     for (u32 i = 0; i < mods_size; i++)
     {
       modio::Mod mod;
@@ -76,6 +132,27 @@ static void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mo
       modio::writeJson(mod_path_str, modio::toJson(mod));
       modio::writeLogLine("Mod updated", MODIO_DEBUGLEVEL_LOG);
     }
+
+    if(response.result_offset + response.result_count < response.result_total)
+    {
+      modio::writeLogLine("Paginated response, retrieving next page...", MODIO_DEBUGLEVEL_LOG);
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      for (auto &mod_id : *ptr_mod_ids)
+      {
+        modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
+      }
+      modioSetFilterOffset(&filter, response.result_offset + response.result_count);
+      modioGetAllMods(ptr_mod_ids, filter, &onModsUpdateEvent);
+      modioFreeFilter(&filter);
+    }else
+    {
+      delete ptr_mod_ids;
+    }
+  }else
+  {
+    modio::writeLogLine("Could not retrive updated mods data", MODIO_DEBUGLEVEL_ERROR);
+    delete ptr_mod_ids;
   }
 }
 
@@ -83,11 +160,16 @@ void updateModsCache(std::vector<u32> mod_ids)
 {
   ModioFilterCreator filter;
   modioInitFilter(&filter);
+
+  std::vector<int>* ptr_mod_ids = new std::vector<int>();
+  
   for (auto &mod_id : mod_ids)
   {
     modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
+    ptr_mod_ids->push_back(mod_id);
   }
-  modioGetAllMods(NULL, filter, &onModsUpdateEvent);
+
+  modioGetAllMods(ptr_mod_ids, filter, &onModsUpdateEvent);
   modioFreeFilter(&filter);
 }
 
@@ -95,16 +177,22 @@ void addModsToDownloadQueue(std::vector<u32> mod_ids)
 {
   ModioFilterCreator filter;
   modioInitFilter(&filter);
+  
+  std::vector<int>* ptr_mod_ids = new std::vector<int>();
+  
   for (auto &mod_id : mod_ids)
   {
     modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
+    ptr_mod_ids->push_back(mod_id);
   }
-  modioGetAllMods(NULL, filter, &modio::onAddModsToDownloadQueue);
+
+  modioGetAllMods(ptr_mod_ids, filter, &modio::onAddModsToDownloadQueue);
   modioFreeFilter(&filter);
 }
 
 static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEvent *events_array, u32 events_array_size)
 {
+  u32* last_mod_event_poll_id_ptr = (u32*)object;
   if (response.code == 200)
   {
     modio::writeLogLine("Mod events polled", MODIO_DEBUGLEVEL_LOG);
@@ -175,15 +263,37 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
       modio::writeLogLine("Triggering user callback listener", MODIO_DEBUGLEVEL_LOG);
       modio::event_listener_callback(response, events_array, events_array_size);
     }
+
+    if(response.result_offset + response.result_count < response.result_total)
+    {
+      modio::writeLogLine("Paginated response, retrieving next page...", MODIO_DEBUGLEVEL_LOG);
+      ModioFilterCreator filter;
+      modioInitFilter(&filter);
+      modioAddFilterGreaterThanField(&filter, "id", modio::toString(*last_mod_event_poll_id_ptr).c_str());
+
+      for (auto installed_mod : modio::installed_mods)
+      {
+        if (modio::hasKey(installed_mod, "mod_id"))
+          modioAddFilterInField(&filter, "mod_id", modio::toString((u32)installed_mod["mod_id"]).c_str());
+      }
+      modioSetFilterOffset(&filter, response.result_offset + response.result_count);
+      modioGetAllEvents(last_mod_event_poll_id_ptr, filter, &onGetAllEventsPoll);
+      modioFreeFilter(&filter);
+    }else
+    {
+      delete last_mod_event_poll_id_ptr;
+    }
   }
   else
   {
     modio::writeLogLine("Could not poll mod events. Error code: " + modio::toString(response.code), MODIO_DEBUGLEVEL_ERROR);
+    delete last_mod_event_poll_id_ptr;
   }
 }
 
 static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserEvent *events_array, u32 events_array_size)
 {
+  u32* last_user_event_poll_id_ptr = (u32*)object;
   if (response.code == 200)
   {
     modio::writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
@@ -261,10 +371,26 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
       }
       delete[] mod_events_array;
     }
+
+    if(response.result_offset + response.result_count < response.result_total)
+    {
+      modio::writeLogLine("Paginated response, retrieving next pagee...", MODIO_DEBUGLEVEL_LOG);
+      ModioFilterCreator filter;
+      modio::writeLogLine("Last id: " + modio::toString(*last_user_event_poll_id_ptr), MODIO_DEBUGLEVEL_LOG);
+      modioInitFilter(&filter);
+      modioAddFilterGreaterThanField(&filter, "id", modio::toString(*last_user_event_poll_id_ptr).c_str());
+      modioSetFilterOffset(&filter, response.result_offset + response.result_count);
+      modioGetUserEvents(last_user_event_poll_id_ptr, filter, &onGetUserEventsPoll);
+      modioFreeFilter(&filter);
+    }else
+    {
+      delete last_user_event_poll_id_ptr;
+    }
   }
   else
   {
     modio::writeLogLine("Could not poll user events. Error code: " + modio::toString(response.code), MODIO_DEBUGLEVEL_ERROR);
+    delete last_user_event_poll_id_ptr;
   }
 }
 
@@ -281,8 +407,6 @@ void pollEvents()
     ModioFilterCreator filter;
     modioInitFilter(&filter);
     modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_MOD_EVENT_POLL_ID).c_str());
-    //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_MOD_EVENT_POLL).c_str());
-    //modioAddFilterSmallerThanField(&filter, "date_added", modio::toString(current_time).c_str());
 
     for (auto installed_mod : modio::installed_mods)
     {
@@ -290,7 +414,10 @@ void pollEvents()
         modioAddFilterInField(&filter, "mod_id", modio::toString((u32)installed_mod["mod_id"]).c_str());
     }
 
-    modioGetAllEvents(NULL, filter, &onGetAllEventsPoll);
+    u32* last_mod_event_poll_id_ptr = new u32;
+    *last_mod_event_poll_id_ptr = modio::LAST_MOD_EVENT_POLL_ID;
+
+    modioGetAllEvents(last_mod_event_poll_id_ptr, filter, &onGetAllEventsPoll);
     modioFreeFilter(&filter);
 
     modio::LAST_MOD_EVENT_POLL_TIME = current_time;
@@ -313,7 +440,10 @@ void pollEvents()
     //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
     modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_USER_EVENT_POLL_ID).c_str());
 
-    modioGetUserEvents(NULL, filter, &onGetUserEventsPoll);
+    u32 *last_user_event_poll_id_ptr = new u32;
+    *last_user_event_poll_id_ptr = (u32)modio::LAST_USER_EVENT_POLL_ID;
+
+    modioGetUserEvents(last_user_event_poll_id_ptr, filter, &onGetUserEventsPoll);
     modioFreeFilter(&filter);
 
     modio::LAST_USER_EVENT_POLL_TIME = current_time;

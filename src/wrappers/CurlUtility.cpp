@@ -137,6 +137,7 @@ void updateModUploadQueueFile()
 
 void prioritizeModDownload(u32 mod_id)
 {
+  writeLogLine("Prioritizing mod " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
   nlohmann::json result_json;
   nlohmann::json mod_download_queue_json = openJson(modio::getModIODirectory() + "mod_download_queue.json");
 
@@ -146,6 +147,7 @@ void prioritizeModDownload(u32 mod_id)
         && modio::hasKey(queued_mod_download_json["mod"], "id")
         && queued_mod_download_json["mod"]["id"] == mod_id)
     {
+      writeLogLine("Mod found in the current download queue", MODIO_DEBUGLEVEL_LOG);
       result_json.push_back(queued_mod_download_json);
     }
   }
@@ -162,8 +164,13 @@ void prioritizeModDownload(u32 mod_id)
 
   writeJson(modio::getModIODirectory() + "mod_download_queue.json", result_json);
 
-  if (g_current_mod_download->queued_mod_download)
+  if (g_current_mod_download && g_current_mod_download->queued_mod_download)
+  {
+    writeLogLine("Current download detected, setting up prioritiztion", MODIO_DEBUGLEVEL_LOG);
     g_current_mod_download->queued_mod_download->state = MODIO_PRIORITIZING_OTHER_DOWNLOAD;
+  }
+
+  writeLogLine("Finished priorizing mod download", MODIO_DEBUGLEVEL_LOG);
 }
 
 void downloadNextQueuedMod()
