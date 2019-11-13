@@ -99,6 +99,7 @@ void removeFile(const std::string &filename);
 double getFileSize(const std::string &file_path);
 void createPath(const std::string &strPathAndFile);
 std::vector<std::string> getHeaders();
+std::vector<std::string> getHeadersNoToken();
 std::vector<std::string> getUrlEncodedHeaders();
 std::string base64Encode(unsigned char const* bytes_to_encode, unsigned int in_len);
 } // namespace modio

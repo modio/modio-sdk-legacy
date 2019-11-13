@@ -79,7 +79,7 @@ extern "C"
     modio::curlwrapper::put(call_number, url, modio::getHeaders(), modio::convertModfileEditorToMultimap(&modfile_editor), &modioOnModfileEdited);
   }
 
-  void MODIO_DLL modioDeleteModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response))
+  void modioDeleteModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 

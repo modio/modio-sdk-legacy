@@ -530,14 +530,23 @@ void createPath(const std::string &path)
 std::vector<std::string> getHeaders()
 {
   std::vector<std::string> headers;
+  headers.push_back("User-Agent: Modio-SDK-" + modio::VERSION);
   if (modio::ACCESS_TOKEN != "")
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
+  return headers;
+}
+
+std::vector<std::string> getHeadersNoToken()
+{
+  std::vector<std::string> headers;
+  headers.push_back("User-Agent: Modio-SDK-" + modio::VERSION);
   return headers;
 }
 
 std::vector<std::string> getUrlEncodedHeaders()
 {
   std::vector<std::string> headers;
+  headers.push_back("User-Agent: Modio-SDK-" + modio::VERSION);
   if (modio::ACCESS_TOKEN != "")
     headers.push_back("Authorization: Bearer " + modio::ACCESS_TOKEN);
   headers.push_back("Content-Type: application/x-www-form-urlencoded");

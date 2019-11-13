@@ -8,6 +8,7 @@
 
 namespace modio
 {
+  extern std::string VERSION;
   extern std::string API_KEY;
   extern std::string ACCESS_TOKEN;
   extern bool IS_LOGGED_IN;

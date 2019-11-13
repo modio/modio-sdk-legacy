@@ -16,31 +16,31 @@ extern "C"
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(appdata));
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnGalaxyAuth);
+    modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnGalaxyAuth);
   }
 
-    void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, u32 date_expires, void (*callback)(void* object, ModioResponse response))
-    {
-      u32 call_number = modio::curlwrapper::getCallNumber();
+  void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, u32 date_expires, void (*callback)(void* object, ModioResponse response))
+  {
+    u32 call_number = modio::curlwrapper::getCallNumber();
 
-      oculus_auth_params[call_number] = new GenericRequestParams;
-      oculus_auth_params[call_number]->callback = callback;
-      oculus_auth_params[call_number]->object = object;
+    oculus_auth_params[call_number] = new GenericRequestParams;
+    oculus_auth_params[call_number]->callback = callback;
+    oculus_auth_params[call_number]->object = object;
 
-      std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/oculusauth";
-      url += "?api_key=" + modio::API_KEY;    
+    std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/oculusauth";
+    url += "?api_key=" + modio::API_KEY;    
 
-      std::map<std::string, std::string> data;
-      data["nonce"] = modio::curlwrapper::dataURLEncode(std::string(nonce));
-      data["user_id"] = modio::curlwrapper::dataURLEncode(std::string(oculus_user_id));
-      data["access_token"] = modio::curlwrapper::dataURLEncode(std::string(access_token));
-      if(email)
-        data["email"] = modio::curlwrapper::dataURLEncode(std::string(email));
-      if(date_expires != 0)
-        data["date_expires"] = modio::curlwrapper::dataURLEncode(modio::toString(date_expires));
+    std::map<std::string, std::string> data;
+    data["nonce"] = modio::curlwrapper::dataURLEncode(std::string(nonce));
+    data["user_id"] = modio::curlwrapper::dataURLEncode(std::string(oculus_user_id));
+    data["access_token"] = modio::curlwrapper::dataURLEncode(std::string(access_token));
+    if(email)
+      data["email"] = modio::curlwrapper::dataURLEncode(std::string(email));
+    if(date_expires != 0)
+      data["date_expires"] = modio::curlwrapper::dataURLEncode(modio::toString(date_expires));
 
-      modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnOculusAuth);
-    }
+    modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnOculusAuth);
+  }
 
   void modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response))
   {
@@ -56,7 +56,7 @@ extern "C"
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(modio::base64Encode(rgubTicket, cubTicket));
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnSteamAuth);
+    modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnSteamAuth);
   }
 
   void modioSteamAuthEncoded(void* object, char const* base64_ticket, void (*callback)(void* object, ModioResponse response))
@@ -73,7 +73,7 @@ extern "C"
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(base64_ticket));
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnSteamAuthEncoded);
+    modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnSteamAuthEncoded);
   }
 
   void modioLinkExternalAccount(void* object, u32 service, char const* service_id, char const* email, void (*callback)(void* object, ModioResponse response))
@@ -101,6 +101,6 @@ extern "C"
 
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/link";
 
-    modio::curlwrapper::post(call_number, url, std::vector<std::string>(), data, &modioOnLinkExternalAccount);
+    modio::curlwrapper::post(call_number, url, modio::getHeaders(), data, &modioOnLinkExternalAccount);
   }
 }
