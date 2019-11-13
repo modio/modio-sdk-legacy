@@ -491,7 +491,10 @@ bool removeDirectory(const std::string &directory)
 void removeFile(const std::string &filename)
 {
   if (remove(filename.c_str()) != 0)
-    writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
+  {
+    writeLogLine("Could not remove: " + filename + " error code: " + modio::toString(errno), MODIO_DEBUGLEVEL_ERROR);
+    writeLogLine(std::strerror(errno), MODIO_DEBUGLEVEL_ERROR);
+  }
   else
     writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
 }
