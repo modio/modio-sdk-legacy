@@ -87,6 +87,8 @@ public:
   CURL *curl_handle;
   struct curl_slist *slist;
   struct curl_httppost *httppost;
+  bool is_temporary_zip_modfile;
+  std::string zip_modfile_path;
 
   CurrentModfileUpload();
   ~CurrentModfileUpload();
