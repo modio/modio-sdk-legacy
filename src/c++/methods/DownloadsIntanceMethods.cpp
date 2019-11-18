@@ -1,4 +1,9 @@
 #include "c++/ModIOInstance.h"
+#include "Globals.h"
+#include "ModioUtility.h"
+#include "ModUtility.h"
+#include "c++/methods/callbacks/DownloadsInstanceCallbacks.h"
+#include "wrappers/CurlUtility.h"
 
 namespace modio
 {

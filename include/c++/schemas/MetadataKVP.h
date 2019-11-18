@@ -1,8 +1,9 @@
 #ifndef MODIO_METADATAKVP_H
 #define MODIO_METADATAKVP_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioMetadataKVP.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for MetadataKVP
 
 namespace modio
 {

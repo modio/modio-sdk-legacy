@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIOIMAGE_H
 #define MODIO_MODIOIMAGE_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioImage
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

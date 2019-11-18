@@ -1,4 +1,5 @@
-#include "c/methods/callbacks/SubscriptionCallbacks.h"
+#include "c/methods/callbacks/SubscriptionsCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, SubscribeToModParams *> subscribe_to_mod_callbacks;
 std::map<u32, UnsubscribeFromModParams *> unsubscribe_from_mod_callbacks;
@@ -46,7 +47,7 @@ void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::jso
   modioFreeResponse(&response);
 }
 
-void clearSubscriptionCallbackParams()
+void clearSubscriptionsCallbackParams()
 {
   for (auto subscribe_to_mod_callback : subscribe_to_mod_callbacks)
     delete subscribe_to_mod_callback.second;

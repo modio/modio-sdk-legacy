@@ -1,4 +1,7 @@
 #include "ModUtility.h"
+#include "Globals.h"                  // for installed_mods, downloaded_mods
+#include "Utility.h"                  // for hasKey, getModIODirectory, writ...
+#include "wrappers/MinizipWrapper.h"  // for extract
 
 namespace modio
 {

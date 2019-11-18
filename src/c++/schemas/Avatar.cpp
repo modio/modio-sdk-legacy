@@ -1,4 +1,6 @@
 #include "c++/schemas/Avatar.h"
+#include "c/ModioC.h"                      // for ModioAvatar
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

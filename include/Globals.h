@@ -1,10 +1,12 @@
 #ifndef MODIO_GLOBALS_H
 #define MODIO_GLOBALS_H
 
-#include <iostream>
-#include <set>
-
-#include "Utility.h"
+#include <map>                             // for map
+#include <set>                             // for set
+#include <string>                          // for string
+#include <vector>                          // for vector
+#include "c/ModioC.h"                      // for u32, ModioModEvent, ModioR...
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

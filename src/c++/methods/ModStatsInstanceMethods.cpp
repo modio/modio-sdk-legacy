@@ -1,4 +1,7 @@
 #include "c++/ModIOInstance.h"
+#include "ModioUtility.h"
+#include "c++/methods/callbacks/ModStatsInstanceCallbacks.h"
+#include "c++/creators/FilterCreator.h"
 
 namespace modio
 {

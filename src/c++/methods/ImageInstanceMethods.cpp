@@ -1,4 +1,6 @@
 #include "c++/ModIOInstance.h"
+#include "ModioUtility.h"
+#include "c++/methods/callbacks/ImageInstanceCallbacks.h"
 
 namespace modio
 {

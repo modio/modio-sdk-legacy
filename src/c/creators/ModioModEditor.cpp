@@ -1,4 +1,7 @@
 #include "c/creators/ModioModEditor.h"
+#include <string.h>                    // for strcpy, strlen, NULL
+#include <utility>                     // for pair
+#include "Utility.h"                   // for toString
 
 extern "C"
 {

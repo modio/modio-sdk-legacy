@@ -1,4 +1,6 @@
 #include "c++/schemas/Media.h"
+#include "c/ModioC.h"                      // for ModioMedia
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

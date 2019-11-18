@@ -1,4 +1,7 @@
 #include "c/schemas/ModioResponse.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
+#include "c/schemas/ModioError.h" // for modioInitError ...
 
 extern "C"
 {

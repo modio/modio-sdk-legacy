@@ -1,4 +1,7 @@
 #include "c/schemas/ModioQueuedModfileUpload.h"
+#include "Utility.h"                        // for hasKey
+#include "c/ModioC.h"                       // for ModioDownload
+#include "c/creators/ModioModfileCreator.h" // for modioInitModfileCreatorFromJson ...
 
 extern "C"
 {

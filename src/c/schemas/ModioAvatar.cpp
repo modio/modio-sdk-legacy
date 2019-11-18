@@ -1,4 +1,8 @@
 #include "c/schemas/ModioAvatar.h"
+#include <string.h>                 // for strcpy, NULL
+#include <string>                   // for string
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioAvatar
 
 extern "C"
 {

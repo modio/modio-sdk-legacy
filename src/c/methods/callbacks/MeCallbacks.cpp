@@ -1,4 +1,6 @@
 #include "c/methods/callbacks/MeCallbacks.h"
+#include "Utility.h"                // for hasKey
+#include "c/schemas/ModioModfile.h" // for modioInitModfile ...
 
 std::map<u32, GetAuthenticatedUserParams *> get_authenticated_user_callbacks;
 std::map<u32, GetUserSubscriptionsParams *> get_user_subscriptions_callbacks;

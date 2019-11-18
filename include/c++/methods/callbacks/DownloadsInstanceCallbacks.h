@@ -1,3 +1,5 @@
+#include "../../ModioUtility.h"
+
 namespace modio
 {
 struct SetDownloadListenerCall

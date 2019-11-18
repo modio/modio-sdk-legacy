@@ -1,4 +1,6 @@
 #include "c/schemas/ModioListNode.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
 
 extern "C"
 {

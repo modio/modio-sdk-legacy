@@ -1,4 +1,7 @@
 #include "c/schemas/ModioMedia.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
+#include "c/schemas/ModioImage.h"   // for modioInitImage ...
 
 extern "C"
 {

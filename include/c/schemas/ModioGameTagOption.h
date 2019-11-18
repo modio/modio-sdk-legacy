@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIOGAMETAGOPTION_H
 #define MODIO_MODIOGAMETAGOPTION_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioGameTagOption
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

@@ -1,4 +1,6 @@
 #include "c++/schemas/Comment.h"
+#include "c/ModioC.h"                      // for ModioComment
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

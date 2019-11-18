@@ -1,8 +1,16 @@
 #ifndef MODIO_CURL_WRAPPER_H
 #define MODIO_CURL_WRAPPER_H
 
-#include "CurlUtility.h"
-#include "CurlCallbacks.h"
+#include <stdio.h>                                               // for FILE
+#include <functional>                                            // for func...
+#include <map>                                                   // for map
+#include <string>                                                // for string
+#include <vector>                                                // for vector
+#include "c++/schemas/../../dependencies/nlohmann/json.hpp"      // for json
+#include "c++/schemas/../creators/../../c/creators/../ModioC.h"  // for u32
+namespace modio { class QueuedModDownload; }
+namespace modio { class QueuedModfileUpload; }
+
 
 #ifdef MODIO_WINDOWS_DETECTED
 #  pragma comment(lib, "ws2_32.lib")

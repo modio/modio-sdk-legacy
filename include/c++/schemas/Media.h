@@ -1,9 +1,11 @@
 #ifndef MODIO_MEDIA_H
 #define MODIO_MEDIA_H
 
-#include "../../c/schemas/ModioMedia.h"
+#include <string>                                 // for string
+#include <vector>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioMedia
 #include "Image.h"
-#include "../../Globals.h"
 
 namespace modio
 {

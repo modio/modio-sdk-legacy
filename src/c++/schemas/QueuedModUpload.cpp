@@ -1,4 +1,6 @@
 #include "c++/schemas/QueuedModfileUpload.h"
+#include "c/ModioC.h"                      // for ModioQueuedModfileUpload
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

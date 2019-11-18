@@ -1,4 +1,8 @@
 #include "c/schemas/ModioModfile.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
+#include "c/schemas/ModioFilehash.h" // for modioInitFilehash ...
+#include "c/schemas/ModioDownload.h" // for modioInitDownload ...
 
 extern "C"
 {

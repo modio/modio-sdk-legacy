@@ -1,4 +1,6 @@
 #include "c++/schemas/Header.h"
+#include "c/ModioC.h"                      // for ModioHeader
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

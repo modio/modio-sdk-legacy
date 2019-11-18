@@ -1,4 +1,25 @@
 #include "wrappers/CurlWrapper.h"
+#include <curl/curl.h>
+#include <string.h>
+#include <list>
+#include <memory>
+#include <utility>
+#include "Globals.h"
+#include "c/creators/ModioModfileCreator.h"
+#include "c++/creators/ModfileCreator.h"
+#include "c++/schemas/Mod.h"
+#include "c++/schemas/QueuedModDownload.h"
+#include "c++/schemas/QueuedModfileUpload.h"
+#include "c/schemas/ModioMod.h"
+#include "curl/curl.h"
+#include "curl/system.h"
+#include "Utility.h"
+#include "wrappers/CurlCallbacks.h"
+#include "wrappers/CurlProgressFunctions.h"
+#include "wrappers/CurlUtility.h"
+#include "wrappers/CurlWriteFunctions.h"
+#include "wrappers/MinizipWrapper.h"
+
 
 namespace modio
 {

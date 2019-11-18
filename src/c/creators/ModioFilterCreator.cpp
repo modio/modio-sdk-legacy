@@ -1,5 +1,7 @@
 #include "c/creators/ModioFilterCreator.h"
-
+#include <string.h>                   // for strcpy, NULL
+#include "Utility.h"                  // for toString
+#include "c/schemas/ModioListNode.h"  // for modioFreeNodeList
 
 namespace modio
 {

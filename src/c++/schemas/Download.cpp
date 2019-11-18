@@ -1,4 +1,6 @@
 #include "c++/schemas/Download.h"
+#include "c/ModioC.h"                      // for ModioDownload
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

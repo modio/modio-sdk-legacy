@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIOERROR_H
 #define MODIO_MODIOERROR_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioError
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

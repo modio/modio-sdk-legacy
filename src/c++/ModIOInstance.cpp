@@ -1,4 +1,23 @@
 #include "c++/ModIOInstance.h"
+#include <stddef.h>
+#include "c++/methods/callbacks/AuthenticationInstanceCallbacks.h"
+#include "c++/methods/callbacks/CommentsInstanceCallbacks.h"
+#include "c++/methods/callbacks/DependenciesInstanceCallbacks.h"
+#include "c++/methods/callbacks/DownloadsInstanceCallbacks.h"
+#include "c++/methods/callbacks/ImageInstanceCallbacks.h"
+#include "c++/methods/callbacks/MeInstanceCallbacks.h"
+#include "c++/methods/callbacks/MediaInstanceCallbacks.h"
+#include "c++/methods/callbacks/MetadataKVPInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModEventsInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModStatsInstanceCallbacks.h"
+#include "c++/methods/callbacks/ModfileInstanceCallbacks.h"
+#include "c++/methods/callbacks/RatingsInstanceCallbacks.h"
+#include "c++/methods/callbacks/ReportsInstanceCallbacks.h"
+#include "c++/methods/callbacks/SubscriptionsInstanceCallbacks.h"
+#include "c++/methods/callbacks/TagsInstanceCallbacks.h"
+#include "c/methods/callbacks/../../../wrappers/MinizipWrapper.h"
+#include "Utility.h"
 
 namespace modio
 {

@@ -1,4 +1,12 @@
-#include "c/methods/ImageMethods.h"
+#include <stdio.h>                                 // for fopen, FILE
+#include <map>                                     // for map
+#include <string>                                  // for string, operator+
+#include "ModioUtility.h"          // for handleDownloadImag...
+#include "Utility.h"   // for getDirectoryPath
+#include "wrappers/CurlWrapper.h"  // for download, getCallN...
+#include "c/ModioC.h"                   // for u32, MODIO_DEBUGLE...
+#include "c/methods/callbacks/ImageCallbacks.h"    // for DownloadImageParams
+
 
 extern "C"
 {

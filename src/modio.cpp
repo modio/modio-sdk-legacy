@@ -1,4 +1,29 @@
 #include "modio.h"
+#include "c/methods/callbacks/AuthenticationCallbacks.h"
+#include "c/schemas/ModioUser.h"
+#include "c/methods/callbacks/CommentsCallbacks.h"
+#include "c/methods/callbacks/DependenciesCallbacks.h"
+#include "c/methods/callbacks/ImageCallbacks.h"
+#include "c/methods/callbacks/MediaCallbacks.h"
+#include "c/methods/callbacks/MeCallbacks.h"
+#include "c/methods/callbacks/MetadataKVPCallbacks.h"
+#include "c/methods/callbacks/ModEventCallbacks.h"
+#include "c/methods/callbacks/ModfileCallbacks.h"
+#include "c/methods/callbacks/ModCallbacks.h"
+#include "c/methods/callbacks/ModStatsCallbacks.h"
+#include "c/methods/callbacks/RatingsCallbacks.h"
+#include "c/methods/callbacks/ReportsCallbacks.h"
+#include "c/methods/callbacks/SubscriptionsCallbacks.h"
+#include "c/methods/callbacks/TagCallbacks.h"
+
+#ifdef MODIO_LINUX_DETECTED
+#include <unistd.h>
+#endif
+
+#ifdef MODIO_OSX_DETECTED
+#include <sys/stat.h>
+#include <dirent.h>
+#endif
 
 static void loadEventPollingFile()
 {
@@ -143,7 +168,7 @@ void modioShutdown()
   clearModStatsCallbackParams();
   clearRatingsCallbackParams();
   clearReportsCallbackParams();
-  clearSubscriptionCallbackParams();
+  clearSubscriptionsCallbackParams();
   clearTagCallbackParams();
 
   modioFreeUser(&modio::current_user);

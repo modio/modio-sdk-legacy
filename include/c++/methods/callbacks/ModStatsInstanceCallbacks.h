@@ -1,3 +1,7 @@
+#include "../../ModioUtility.h"
+#include <map>
+#include "../../schemas/Stats.h"
+
 namespace modio
 {
 struct GetModStatsCall

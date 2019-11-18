@@ -1,8 +1,8 @@
 #ifndef MODIO_MODEVENT_H
 #define MODIO_MODEVENT_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioModEvent.h"
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioModEvent
 
 namespace modio
 {

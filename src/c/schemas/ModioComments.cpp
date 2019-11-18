@@ -1,4 +1,9 @@
 #include "c/schemas/ModioComment.h"
+#include <string.h>                 // for strcpy, NULL
+#include <string>                   // for string
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioComment
+#include "c/schemas/ModioUser.h"    // for modioInitUser
 
 extern "C"
 {

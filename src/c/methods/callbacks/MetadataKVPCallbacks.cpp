@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/MetadataKVPCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map< u32, GetAllMetadataKVPParams* > get_all_metadata_kvp_callbacks;
 std::map< u32, GenericRequestParams* > add_metadata_kvp_callbacks;

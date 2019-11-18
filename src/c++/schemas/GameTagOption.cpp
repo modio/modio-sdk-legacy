@@ -1,4 +1,6 @@
 #include "c++/schemas/GameTagOption.h"
+#include "c/ModioC.h"                      // for ModioGameTagOption
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

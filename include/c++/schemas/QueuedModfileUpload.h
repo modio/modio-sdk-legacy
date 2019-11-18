@@ -1,8 +1,9 @@
 #ifndef MODIO_QUEUEDMODFILEUPLOAD_H
 #define MODIO_QUEUEDMODFILEUPLOAD_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioQueuedModfileUpload.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioQueuedModfileUpload
 #include "../creators/ModfileCreator.h"
 
 class ModfileCreator;

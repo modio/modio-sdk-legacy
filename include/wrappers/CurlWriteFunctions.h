@@ -1,7 +1,7 @@
 #ifndef MODIO_CURL_WRITE_FUNCTIONS_H
 #define MODIO_CURL_WRITE_FUNCTIONS_H
 
-#include "CurlUtility.h"
+#include <stddef.h>  // for size_t
 
 namespace modio
 {

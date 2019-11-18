@@ -1,4 +1,12 @@
-#include "c/methods/TagMethods.h"
+#include <map>                                            // for map
+#include <string>                                         // for string, all...
+#include "Utility.h"          // for toString
+#include "wrappers/CurlWrapper.h"         // for getCallNumber
+#include "Globals.h"         // for MODIO_URL
+#include "ModioUtility.h"    // for GenericRequ...
+#include "c/ModioC.h"  // for u32, ModioR...
+#include "c/methods/callbacks/TagCallbacks.h"             // for get_mod_tags...
+#include "dependencies/nlohmann/json.hpp"                 // for json
 
 extern "C"
 {

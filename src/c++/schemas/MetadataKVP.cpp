@@ -1,4 +1,6 @@
 #include "c++/schemas/MetadataKVP.h"
+#include "c/ModioC.h"                      // for ModioMetadataKVP
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

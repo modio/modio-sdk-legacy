@@ -1,8 +1,9 @@
 #ifndef MODIO_FILEHASH_H
 #define MODIO_FILEHASH_H
 
-#include "../../c/schemas/ModioFilehash.h"
-#include "../../Globals.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioFilehash
 
 namespace modio
 {

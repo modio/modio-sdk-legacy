@@ -1,4 +1,44 @@
 #include "Utility.h"
+#include <dirent.h>                              // for closedir, opendir
+#include <errno.h>                               // for errno
+#include <ext/alloc_traits.h>                    // for __alloc_traits<>::va...
+#include <fcntl.h>                               // for SEEK_END
+#include <limits.h>                              // for PATH_MAX
+#include <stdio.h>                               // for remove, fclose, fopen
+#include <string.h>                              // for strcmp, NULL, size_t
+#include <sys/stat.h>                            // for mkdir, S_IROTH, S_IRWXG
+#include <array>                                 // for array
+#include <chrono>                                // for milliseconds, durati...
+#include <ctime>                                 // for time
+#include <fstream>                               // for operator<<, ofstream
+#include <iomanip>                               // for operator<<, setw
+#include <string>                                // for string, operator+
+#include <vector>                                // for allocator, vector
+#include "Globals.h"                             // for ACCESS_TOKEN, VERSION
+#include "c/ModioC.h"                            // for MODIO_DEBUGLEVEL_LOG
+#include "dependencies/minizip/minizip.h"        // for check_file_exists
+
+#ifdef MODIO_LINUX_DETECTED
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+#endif
+
+#ifdef MODIO_WINDOWS_DETECTED
+#  ifdef MODIO_UE4_DETECTED 
+#    include <Windows/MinWindows.h>
+#  else
+#    include <windows.h>
+#  endif
+#  include <strsafe.h>
+#  include "dependencies/dirent/dirent.h"
+//#include "vld.h"
+#endif
+
+#ifdef MODIO_OSX_DETECTED
+#include <sys/stat.h>
+#include <dirent.h>
+#endif
 
 namespace modio
 {

@@ -1,4 +1,6 @@
 #include "c++/schemas/Error.h"
+#include "c/ModioC.h"                      // for ModioError
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/TagCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, GetModTagsParams *> get_mod_tags_callbacks;
 std::map<u32, GenericRequestParams *> add_mod_tags_callbacks;

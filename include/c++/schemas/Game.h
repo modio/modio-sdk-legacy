@@ -1,8 +1,10 @@
 #ifndef MODIO_GAME_H
 #define MODIO_GAME_H
 
-#include "../../c/schemas/ModioGame.h"
-#include "../../Globals.h"
+#include <string>                                 // for string
+#include <vector>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioGame
 #include "User.h"
 #include "Icon.h"
 #include "Logo.h"
