@@ -1,5 +1,4 @@
 #include "wrappers/MinizipWrapper.h"
-#include <ext/alloc_traits.h>                          // for __alloc_traits...
 #include <stdio.h>                                     // for NULL, fclose
 #include <stdlib.h>                                    // for free, malloc
 #include <string.h>                                    // for strcat, strcpy

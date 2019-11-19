@@ -1,7 +1,6 @@
 #include "Utility.h"
 #include <dirent.h>                              // for closedir, opendir
 #include <errno.h>                               // for errno
-#include <ext/alloc_traits.h>                    // for __alloc_traits<>::va...
 #include <fcntl.h>                               // for SEEK_END
 #include <limits.h>                              // for PATH_MAX
 #include <stdio.h>                               // for remove, fclose, fopen
@@ -22,6 +21,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <ext/alloc_traits.h>                    // for __alloc_traits<>::va...
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
