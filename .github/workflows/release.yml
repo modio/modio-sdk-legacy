@@ -111,6 +111,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v1
+
+      - name: Checkout wiki
+        uses: actions/checkout@v1
         with:
           repository: modio/SDK.wiki
           ref: master
@@ -120,18 +123,7 @@ jobs:
           mkdir -p docs
           rename.ul '::' '__' ../SDK.wiki/*
 
-          for file in ../SDK.wiki/*.md; do
-            filename=$(basename "$file" .md)
-            grip "$file" --no-inline --export docs/"$filename.html" --pass=${{ secrets.GITHUB_TOKEN }}
-
-            for file2 in ../SDK.wiki/*.md; do
-              filename2=$(basename "$file2" .md)
-
-              filename_with_spaces=${filename2//-/ }
-
-              sed -i -e "s/\[\[$filename_with_spaces]]/<a href='$filename2.html'>$filename_with_spaces<\/a>/g" docs/"$filename.html"
-            done
-          done
+          ./.github/workflows/convert-docs.sh ../SDK.wiki ./docs ${{ secrets.GITHUB_TOKEN }}
 
           zip docs.zip docs/*
 
