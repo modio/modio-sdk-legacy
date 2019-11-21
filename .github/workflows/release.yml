@@ -233,7 +233,7 @@ jobs:
           mv additional_dependencies "$package"
           mv include "$package"
           mv LICENSE "$package/License.txt"
-          touch "$package/Readme.txt"
+          cp .github/workflows/readme.txt "$package/Readme.txt"
 
           zip -r "$package.zip" "$package"/*
 
