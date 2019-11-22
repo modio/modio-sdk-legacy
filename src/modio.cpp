@@ -23,6 +23,7 @@
 #ifdef MODIO_OSX_DETECTED
 #include <sys/stat.h>
 #include <dirent.h>
+#include <unistd.h>
 #endif
 
 static void loadEventPollingFile()
