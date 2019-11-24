@@ -1,5 +1,4 @@
 #include "Utility.h"
-#include <dirent.h>                              // for closedir, opendir
 #include <errno.h>                               // for errno
 #include <fcntl.h>                               // for SEEK_END
 #include <limits.h>                              // for PATH_MAX
