@@ -1,4 +1,7 @@
 #include "c/schemas/ModioQueuedModDownload.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
+#include "c/schemas/ModioMod.h"     // for modioInitMod ...
 
 extern "C"
 {

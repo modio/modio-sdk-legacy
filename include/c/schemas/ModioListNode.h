@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIOLISTNODE_H
 #define MODIO_MODIOLISTNODE_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioListNode
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

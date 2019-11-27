@@ -1,9 +1,8 @@
 #ifndef MODIO_MODIOUSER_H
 #define MODIO_MODIOUSER_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
-#include "ModioAvatar.h"
+#include "../ModioC.h"                     // for ModioUser
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

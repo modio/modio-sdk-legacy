@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/ReportsCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, GenericRequestParams *> submit_report_callbacks;
 

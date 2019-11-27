@@ -1,14 +1,11 @@
 #ifndef MODIO_MODIOUTILITY_H
 #define MODIO_MODIOUTILITY_H
 
-#include "Utility.h"
-#include "Globals.h"
-#include "wrappers/CurlWrapper.h"
-#include "c/ModioC.h"
-#include "c++/schemas/Mod.h"
-#include "c++/schemas/Response.h"
-#include "c/schemas/ModioUserEvent.h"
-#include "c/schemas/ModioModEvent.h"
+#include <functional>  // for function
+#include <string>      // for string
+#include <vector>      // for vector
+#include "c/ModioC.h"  // for ModioResponse, u32, ModioFilterCreator, ModioMod
+namespace modio { class Response; }
 
 struct GenericRequestParams
 {

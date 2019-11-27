@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/ModCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, GetModParams *> get_mod_callbacks;
 std::map<u32, AddModParams *> add_mod_callbacks;

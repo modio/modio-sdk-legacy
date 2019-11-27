@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include <stddef.h>  // for NULL
 
 namespace modio
 {

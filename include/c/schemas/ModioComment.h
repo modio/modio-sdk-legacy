@@ -1,9 +1,8 @@
 #ifndef MODIO_MODIOCOMMENT_H
 #define MODIO_MODIOCOMMENT_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
-#include "ModioUser.h"
+#include "../ModioC.h"                     // for ModioComment
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

@@ -1,8 +1,10 @@
 #ifndef MODIO_ERROR_H
 #define MODIO_ERROR_H
 
-#include "../../c/schemas/ModioError.h"
-#include "../../Globals.h"
+#include <string>                                 // for string
+#include <vector>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioError
 
 namespace modio
 {

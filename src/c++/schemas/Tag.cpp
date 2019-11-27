@@ -1,4 +1,6 @@
 #include "c++/schemas/Tag.h"
+#include "c/ModioC.h"                      // for ModioTag
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

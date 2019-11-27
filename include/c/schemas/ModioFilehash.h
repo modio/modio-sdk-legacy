@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIOFILEHASH_H
 #define MODIO_MODIOFILEHASH_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioFilehash
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

@@ -1,3 +1,6 @@
+#include "../../ModioUtility.h"
+#include <map>
+#include "../../schemas/Modfile.h"
 
 namespace modio
 {

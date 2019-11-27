@@ -1,4 +1,13 @@
-#include "c/methods/ExternalAuthenticationMethods.h"
+#include <map>
+#include <string>
+#include "Utility.h"
+#include "c/ModioC.h"
+#include "dependencies/nlohmann/json.hpp"
+#include "wrappers/CurlWrapper.h"
+#include "Globals.h"
+#include "ModioUtility.h"
+#include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
+#include "wrappers/CurlUtility.h"
 
 extern "C"
 {

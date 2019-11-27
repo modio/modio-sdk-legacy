@@ -1,9 +1,8 @@
 #ifndef MODIO_MODIORESPONSE_H
 #define MODIO_MODIORESPONSE_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
-#include "ModioError.h"
+#include "../ModioC.h"                     // for ModioResponse
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

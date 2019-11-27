@@ -1,13 +1,8 @@
 #ifndef MODIO_MODIOGAME_H
 #define MODIO_MODIOGAME_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
-#include "ModioUser.h"
-#include "ModioIcon.h"
-#include "ModioLogo.h"
-#include "ModioHeader.h"
-#include "ModioGameTagOption.h"
+#include "../ModioC.h"                     // for ModioGame
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

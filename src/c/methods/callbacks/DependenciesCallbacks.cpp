@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/DependenciesCallbacks.h"
+#include "Utility.h" // for hasKey
 
 std::map<u32, GetAllModDependenciesParams *> get_all_mod_dependencies_callbacks;
 std::map<u32, GenericRequestParams *> add_mod_dependencies_callbacks;

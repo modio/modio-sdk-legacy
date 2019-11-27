@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIOICON_H
 #define MODIO_MODIOICON_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioIcon
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

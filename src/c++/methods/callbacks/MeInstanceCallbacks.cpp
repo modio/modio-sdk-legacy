@@ -1,4 +1,5 @@
-#include "c++/ModIOInstance.h"
+#include "c++/methods/callbacks/MeInstanceCallbacks.h"
+#include "c++/schemas/Response.h"
 
 namespace modio
 {

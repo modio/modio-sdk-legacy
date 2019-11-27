@@ -1,9 +1,10 @@
 #ifndef MODIO_MOD_H
 #define MODIO_MOD_H
 
-#include "../../Utility.h"
-#include "../../Globals.h"
-#include "../../ModUtility.h"
+#include <string>                                 // for string
+#include <vector>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioMod
 #include "Logo.h"
 #include "User.h"
 #include "Media.h"
@@ -11,7 +12,6 @@
 #include "Stats.h"
 #include "Tag.h"
 #include "MetadataKVP.h"
-#include "../../c/schemas/ModioMod.h"
 
 namespace modio
 {

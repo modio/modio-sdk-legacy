@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIOTAG_H
 #define MODIO_MODIOTAG_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioTag
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

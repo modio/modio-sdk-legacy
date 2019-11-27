@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/AuthenticationCallbacks.h"
+#include "Utility.h" // for hasKey
 
 std::map<u32, GenericRequestParams *> email_request_params;
 std::map<u32, GenericRequestParams *> email_exchange_params;

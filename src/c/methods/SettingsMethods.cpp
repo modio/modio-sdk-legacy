@@ -1,4 +1,5 @@
-#include "c/methods/SettingsMethods.h"
+#include "Utility.h"
+#include "Globals.h"
 
 extern "C"
 {

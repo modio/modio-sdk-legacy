@@ -1,4 +1,11 @@
 #include "wrappers/CurlWriteFunctions.h"
+#include <stdio.h>                 // for size_t, fwrite, FILE
+#include <map>                     // for map, map<>::mapped_type
+#include <string>                  // for string, basic_string, operator+
+#include "curl/curl.h"             // for CURL
+#include "wrappers/../Utility.h"   // for writeLogLine
+#include "wrappers/../c/ModioC.h"  // for u32, MODIO_DEBUGLEVEL_LOG
+#include "wrappers/CurlUtility.h"  // for JsonResponseHandler, g_ongoing_calls
 
 namespace modio
 {

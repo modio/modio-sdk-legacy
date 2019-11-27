@@ -1,4 +1,6 @@
 #include "c++/schemas/Game.h"
+#include "c/ModioC.h"                      // for ModioGame
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

@@ -1,8 +1,8 @@
 #ifndef MODIO_MODSTATS_H
 #define MODIO_MODSTATS_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioStats.h"
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioStats
 
 namespace modio
 {

@@ -1,4 +1,20 @@
-#include "c/methods/DownloadsMethods.h"
+#include <stddef.h>
+#include <list>
+#include <string>
+#include <vector>
+#include "ModUtility.h"
+#include "Globals.h"
+#include "c++/schemas/QueuedModDownload.h"
+#include "c++/schemas/QueuedModfileUpload.h"
+#include "ModioUtility.h"
+#include "Utility.h"
+#include "c/ModioC.h"
+#include "dependencies/nlohmann/json.hpp"
+#include "wrappers/CurlWrapper.h"
+#include "c/schemas/ModioInstalledMod.h"
+#include "c/schemas/ModioQueuedModDownload.h"
+#include "c/schemas/ModioQueuedModfileUpload.h"
+#include "wrappers/CurlUtility.h"
 
 extern "C" {
 void modioDownloadMod(u32 mod_id)

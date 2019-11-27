@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/ModStatsCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, GetModStatsParams *> get_mod_stats_callbacks;
 std::map<u32, GetAllModStatsParams *> get_all_mod_stats_callbacks;

@@ -1,4 +1,13 @@
-#include "c/methods/AuthenticationMethods.h"
+#include <map>
+#include <string>
+#include "Utility.h"
+#include "c/ModioC.h"
+#include "dependencies/nlohmann/json.hpp"
+#include "wrappers/CurlWrapper.h"
+#include "Globals.h"
+#include "ModioUtility.h"
+#include "c/methods/callbacks/AuthenticationCallbacks.h"
+#include "wrappers/CurlUtility.h" // for modio::curlwrapper...
 
 extern "C"
 {

@@ -1,5 +1,16 @@
 #include "ModioUtility.h"
-#include "c/creators/ModioFilterCreator.h"
+#include <stddef.h>
+#include <map>
+#include <set>
+#include "c++/schemas/Mod.h"
+#include "c/schemas/ModioModEvent.h"
+#include "dependencies/nlohmann/json.hpp"
+#include "wrappers/../ModUtility.h"
+#include "Globals.h"
+#include "Utility.h"
+#include "c/ModioC.h"
+#include "c/schemas/ModioResponse.h"
+#include "wrappers/CurlWrapper.h"
 
 namespace modio
 {

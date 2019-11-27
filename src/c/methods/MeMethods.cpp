@@ -1,5 +1,14 @@
-#include "c/methods/MeMethods.h"
-#include "ModioUtility.h"
+#include <map>                                         // for map
+#include <string>                                      // for operator+, string
+#include "ModUtility.h"                                // for getCallFileFro...
+#include "ModioUtility.h"                              // for addGameIdFilter
+#include "wrappers/CurlWrapper.h"      // for get, getCallNu...
+#include "c/ModioC.h"                       // for u32, ModioResp...
+#include "Utility.h"       // for getHeaders
+#include "c/creators/ModioFilterCreator.h"  // for getFilterString
+#include "Globals.h"      // for API_KEY, MODIO...
+#include "c/methods/callbacks/MeCallbacks.h"           // for GetUserGamesPa...
+#include "dependencies/nlohmann/json.hpp"              // for json
 
 extern "C"
 {

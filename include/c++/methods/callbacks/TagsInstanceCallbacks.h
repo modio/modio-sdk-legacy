@@ -1,3 +1,6 @@
+#include "../../ModioUtility.h"
+#include <map>
+#include "../../schemas/Tag.h"
 
 namespace modio
 {

@@ -1,9 +1,10 @@
 #ifndef MODIO_MODUTILITY_H
 #define MODIO_MODUTILITY_H
 
-#include "Utility.h"
-#include "Globals.h"
-#include "wrappers/MinizipWrapper.h"
+#include <string>                          // for string
+#include <vector>                          // for vector
+#include "c/ModioC.h"                      // for u32
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

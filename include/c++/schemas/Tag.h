@@ -1,8 +1,9 @@
 #ifndef MODIO_TAG_H
 #define MODIO_TAG_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioTag.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioTag
 
 namespace modio
 {

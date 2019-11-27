@@ -1,8 +1,10 @@
 #ifndef MODIO_GAMETAGOPTION_H
 #define MODIO_GAMETAGOPTION_H
 
-#include "../../c/schemas/ModioGameTagOption.h"
-#include "../../Globals.h"
+#include <string>                                 // for string
+#include <vector>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioGameTagOption
 
 namespace modio
 {

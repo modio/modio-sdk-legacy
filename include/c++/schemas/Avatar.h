@@ -1,9 +1,9 @@
 #ifndef MODIO_AVATAR_H
 #define MODIO_AVATAR_H
 
-#include "../../c/schemas/ModioAvatar.h"
-#include "../../Globals.h"
-#include "../../Utility.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioAvatar
 
 namespace modio
 {

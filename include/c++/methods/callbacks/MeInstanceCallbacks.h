@@ -1,3 +1,12 @@
+#include "../../ModioUtility.h"
+#include <map>
+#include "../../schemas/User.h"
+#include "../../schemas/UserEvent.h"
+#include "../../schemas/Rating.h"
+#include "../../schemas/Mod.h"
+#include "../../schemas/Game.h"
+#include "../../schemas/Modfile.h"
+
 namespace modio
 {
 struct GetAuthenticatedUserCall

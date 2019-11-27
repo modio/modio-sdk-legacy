@@ -1,4 +1,6 @@
 #include "wrappers/CurlProgressFunctions.h"
+#include "c++/schemas/QueuedModDownload.h"
+#include "c++/schemas/QueuedModfileUpload.h"
 
 namespace modio
 {

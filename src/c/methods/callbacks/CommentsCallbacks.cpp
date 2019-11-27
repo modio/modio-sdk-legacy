@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/CommentsCallbacks.h"
+#include "Utility.h" // for hasKey
 
 std::map<u32, GetAllModCommentsParams *> get_all_mod_comments_callbacks;
 std::map<u32, GetModCommentParams *> get_mod_comment_callbacks;

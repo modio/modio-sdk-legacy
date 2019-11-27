@@ -1,5 +1,5 @@
-#ifndef MODIO_SUBSCRIPTIONCALLBACKS_H
-#define MODIO_SUBSCRIPTIONCALLBACKS_H
+#ifndef MODIO_SUBSCRIPTIONSCALLBACKS_H
+#define MODIO_SUBSCRIPTIONSCALLBACKS_H
 
 #include "../../../Globals.h"
 #include "../../../wrappers/MinizipWrapper.h"
@@ -29,6 +29,6 @@ extern std::map< u32, UnsubscribeFromModParams* > unsubscribe_from_mod_callbacks
 void modioOnSubscribeToMod(u32 call_number, u32 response_code, nlohmann::json response_json);
 void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::json response_json);
 
-void clearSubscriptionCallbackParams();
+void clearSubscriptionsCallbackParams();
 
 #endif

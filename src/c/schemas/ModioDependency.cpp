@@ -1,4 +1,6 @@
 #include "c/schemas/ModioDependency.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDependency
 
 extern "C"
 {

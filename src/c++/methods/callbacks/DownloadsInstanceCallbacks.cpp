@@ -1,4 +1,4 @@
-#include "c++/ModIOInstance.h"
+#include "c++/methods/callbacks/DownloadsInstanceCallbacks.h"
 
 namespace modio
 {

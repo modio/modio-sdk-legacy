@@ -1,9 +1,8 @@
 #ifndef MODIO_MODIOQUEUEDMODDOWNLOAD_H
 #define MODIO_MODIOQUEUEDMODDOWNLOAD_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
-#include "ModioMod.h"
+#include "../ModioC.h"                     // for ModioQueuedModDownload
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

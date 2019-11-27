@@ -1,4 +1,9 @@
 #include "wrappers/CurlCallbacks.h"
+#include "Globals.h"
+#include "ModUtility.h"
+#include "wrappers/CurlUtility.h"
+#include "c++/schemas/QueuedModDownload.h"
+#include "c++/schemas/QueuedModfileUpload.h"
 
 namespace modio
 {

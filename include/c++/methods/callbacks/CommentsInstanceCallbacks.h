@@ -1,3 +1,7 @@
+#include "../../ModioUtility.h"
+#include "../../schemas/Comment.h"
+#include <map>
+
 namespace modio
 {
 struct GetAllModCommentsCall

@@ -1,9 +1,10 @@
 #ifndef MODIO_QUEUEDMODDOWNLOAD_H
 #define MODIO_QUEUEDMODDOWNLOAD_H
 
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioQueuedModDownload
 #include "Mod.h"
-#include "../../Globals.h"
-#include "../../c/schemas/ModioQueuedModDownload.h"
 
 namespace modio
 {

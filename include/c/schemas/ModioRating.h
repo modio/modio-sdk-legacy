@@ -1,8 +1,8 @@
 #ifndef MODIO_MODIORATING_H
 #define MODIO_MODIORATING_H
 
-#include "../../Utility.h"
-#include "../ModioC.h"
+#include "../ModioC.h"                     // for ModioRating
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 extern "C"
 {

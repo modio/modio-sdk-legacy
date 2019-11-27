@@ -23,42 +23,12 @@
 #  define MODIO_UE4_DETECTED
 #endif
 
-#include <iostream>
-#include <vector>
-#include <string.h>
-#include <fstream>
-#include <chrono>
-
-#include "c/ModioC.h"
-#include "dependencies/nlohmann/json.hpp"
-#include "dependencies/minizip/minizip.h"
-#include "Globals.h"
-
-#ifdef MODIO_LINUX_DETECTED
-#include <sys/stat.h>
-#include <dirent.h>
-#include <unistd.h>
-#endif
-
-#ifdef MODIO_WINDOWS_DETECTED
-#  ifdef MODIO_UE4_DETECTED 
-#    include <Windows/MinWindows.h>
-#  else
-#    include <windows.h>
-#  endif
-#  include <strsafe.h>
-#  include "dependencies/dirent/dirent.h"
-//#include "vld.h"
-#endif
-
-#ifdef MODIO_OSX_DETECTED
-#include <sys/stat.h>
-#include <dirent.h>
-#endif
-
 #ifndef PATH_MAX
 #define PATH_MAX 260
 #endif
+
+#include "dependencies/nlohmann/json.hpp"        // for json, basic_json<>::...
+#include "c/ModioC.h"
 
 namespace modio
 {

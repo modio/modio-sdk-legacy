@@ -1,10 +1,9 @@
 #ifndef MODIO_MODIO_MOD_CREATOR_H
 #define MODIO_MODIO_MOD_CREATOR_H
 
-#include "../../Globals.h"
-#include "../../Utility.h"
-#include "../ModioC.h"
-#include "../schemas/ModioListNode.h"
+#include <map>          // for map, multimap
+#include <string>       // for string
+#include "../ModioC.h"  // for ModioModCreator
 
 namespace modio
 {

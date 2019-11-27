@@ -1,3 +1,7 @@
+#include "../../ModioUtility.h"
+#include <map>
+#include "../../schemas/Mod.h"
+
 namespace modio
 {
 struct SubscribeToModCall

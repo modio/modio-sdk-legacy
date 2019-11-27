@@ -1,9 +1,9 @@
 #ifndef MODIO_INSTALLEDMOD_H
 #define MODIO_INSTALLEDMOD_H
 
-#include "../../Utility.h"
-#include "../../Globals.h"
-#include "../../c/schemas/ModioInstalledMod.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioInstalledMod
 #include "Mod.h"
 
 namespace modio
