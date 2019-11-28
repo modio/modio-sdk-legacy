@@ -104,10 +104,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install packages
-        run: |
-          sudo apt-get install python3-pip
-          sudo pip install grip
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@v1
 
       - name: Checkout
         uses: actions/checkout@v1
@@ -120,12 +118,13 @@ jobs:
 
       - name: Build
         run: |
-          mkdir -p docs
-          rename.ul '::' '__' ../SDK.wiki/*
-
-          ./.github/workflows/convert-docs.sh ../SDK.wiki ./docs ${{ secrets.GITHUB_TOKEN }}
-
-          zip docs.zip docs/*
+          mkdir -p book/src
+          cp ../SDK.wiki/*.md book/src/
+          rename.ul '::' '__' book/src/*
+          cd book
+          cat src/_Sidebar.md | ./linkfix.py summary > src/SUMMARY.md
+          mdbook build -d docs
+          zip -r ../docs.zip docs/*
 
       - name: Upload
         uses: actions/upload-release-asset@v1.0.1
