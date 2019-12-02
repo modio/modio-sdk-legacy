@@ -10,13 +10,14 @@ void modioOnSubscribeToMod(u32 call_number, u32 response_code, nlohmann::json re
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
+  ModioMod mod;
+  modioInitMod(&mod, response_json);
+
   if(response_code >= 200 && response_code <300)
   {
     modio::current_user_subscriptions.insert(subscribe_to_mod_callbacks[call_number]->mod_id);
+    modio::curlwrapper::queueModDownload(mod);
   }
-
-  ModioMod mod;
-  modioInitMod(&mod, response_json);
 
   subscribe_to_mod_callbacks[call_number]->callback(subscribe_to_mod_callbacks[call_number]->object, response, mod);
 
