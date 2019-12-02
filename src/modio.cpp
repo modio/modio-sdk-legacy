@@ -26,6 +26,14 @@
 #include <unistd.h>
 #endif
 
+#ifdef MODIO_WINDOWS_DETECTED
+#  ifdef MODIO_UE4_DETECTED 
+#    include <Windows/MinWindows.h>
+#  else
+#    include <windows.h>
+#  endif
+#endif
+
 static void loadEventPollingFile()
 {
   modio::writeLogLine("Loading mod events data...", MODIO_DEBUGLEVEL_LOG);
