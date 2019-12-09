@@ -42,5 +42,9 @@ src/modio.lib
 src/modio.exp
 src/modio.a
 
+# mdBook for release workflow
+book/src
+book/docs
+
 !examples/c/mods_dir/readme.txt
 !examples/c++/mods_dir/readme.txt
