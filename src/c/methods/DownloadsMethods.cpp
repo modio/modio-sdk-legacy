@@ -31,8 +31,10 @@ void modioInstallDownloadedMods()
 
 bool modioUninstallMod(u32 mod_id)
 {
+  modio::writeLogLine("Uninstalling mod. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
   std::string mod_path = modio::getInstalledModPath(mod_id);
   bool result = mod_path != "" && modio::checkIfModIsStillInstalled(mod_path, mod_id) && modio::removeDirectory(mod_path);
+  modio::current_user_subscriptions.erase(mod_id);
   modio::updateInstalledModsJson();
   return result;
 }

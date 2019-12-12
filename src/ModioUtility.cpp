@@ -5,7 +5,7 @@
 #include "c++/schemas/Mod.h"
 #include "c/schemas/ModioModEvent.h"
 #include "dependencies/nlohmann/json.hpp"
-#include "wrappers/../ModUtility.h"
+#include "ModUtility.h"
 #include "Globals.h"
 #include "Utility.h"
 #include "c/ModioC.h"
@@ -347,8 +347,7 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
       }
       case MODIO_EVENT_USER_UNSUBSCRIBE:
       {
-        modio::writeLogLine("Current User unsubscribed from a Mod. Mod id: " + modio::toString(events_array[i].mod_id) + " Uninstalling...", MODIO_DEBUGLEVEL_LOG);
-        modio::current_user_subscriptions.erase(events_array[i].mod_id);
+        modio::writeLogLine("Mod unsubscription event detected. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
         modioUninstallMod(events_array[i].mod_id);
         break;
       }
