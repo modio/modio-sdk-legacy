@@ -150,11 +150,15 @@ void modioSetDebugLevel(u32 debug_level)
 
 void modioSetModEventsPollInterval(u32 interval_in_seconds)
 {
+  if(interval_in_seconds < modio::MOD_EVENT_MINIMUM_POLL_INTERVAL)
+    interval_in_seconds = modio::MOD_EVENT_MINIMUM_POLL_INTERVAL;
   modio::MOD_EVENT_POLL_INTERVAL = interval_in_seconds;
 }
 
 void modioSetUserEventsPollInterval(u32 interval_in_seconds)
 {
+  if(interval_in_seconds < modio::USER_EVENT_MINIMUM_POLL_INTERVAL)
+    interval_in_seconds = modio::USER_EVENT_MINIMUM_POLL_INTERVAL;
   modio::USER_EVENT_POLL_INTERVAL = interval_in_seconds;
 }
 
