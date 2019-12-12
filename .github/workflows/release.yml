@@ -1,0 +1,259 @@
+name: release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+
+    strategy:
+      matrix:
+        name:
+          - Ubuntu 18.04 GCC+libcurl-gnutls
+          - Ubuntu 18.04 GCC+libcurl-gnutls +static
+          - Windows 2019 MSVC win32
+          - Windows 2019 MSVC win32 +static
+          - Windows 2019 MSVC win64
+          - Windows 2019 MSVC win64 +static
+          - macOS 10.14 Clang
+          - macOS 10.14 Clang +static
+        include:
+          - name: Ubuntu 18.04 GCC+libcurl-gnutls
+            os: ubuntu-18.04
+            artifact-name: x86_64-linux-gnu
+
+          - name: Ubuntu 18.04 GCC+libcurl-gnutls +static
+            os: ubuntu-18.04
+            cmake-args: -DBUILD_SHARED_LIBS=OFF
+            artifact-name: x86_64-linux-gnu+static
+
+          - name: Windows 2019 MSVC win32
+            os: windows-2019
+            cmake-args: -A Win32
+            artifact-name: i686-windows-msvc
+
+          - name: Windows 2019 MSVC win32 +static
+            os: windows-2019
+            cmake-args: -A Win32 -DBUILD_SHARED_LIBS=OFF
+            artifact-name: i686-windows-msvc+static
+
+          - name: Windows 2019 MSVC win64
+            os: windows-2019
+            cmake-args: -A x64
+            artifact-name: x86_64-windows-msvc
+
+          - name: Windows 2019 MSVC win64 +static
+            os: windows-2019
+            cmake-args: -A x64 -DBUILD_SHARED_LIBS=OFF
+            artifact-name: x86_64-windows-msvc+static
+
+          - name: macOS 10.14 Clang
+            os: macOS-10.14
+            artifact-name: x86_64-apple-darwin
+
+          - name: macOS 10.14 Clang +static
+            os: macOS-10.14
+            cmake-args: -DBUILD_SHARED_LIBS=OFF
+            artifact-name: x86_64-apple-darwin+static
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Install packages (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install libcurl4-gnutls-dev
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Generate project files
+        run: |
+          mkdir ${{ matrix.build-dir || '.not-used' }}
+          cd ${{ matrix.build-dir || '.' }}
+          cmake ${{ matrix.build-src-dir || '.' }} ${{ matrix.cmake-args }}
+        env:
+          CC: ${{ matrix.compiler }}
+          CFLAGS: ${{ matrix.cflags }}
+          LDFLAGS: ${{ matrix.ldflags }}
+
+      - name: Compile source code
+        run: |
+          cd ${{ matrix.build-src-dir || '.' }}
+          cmake --build . --config ${{ matrix.build-config || 'Release' }}
+
+      - name: Prepare artifact
+        if: runner.os == 'Linux' || runner.os == 'macOS'
+        shell: bash
+        run: |
+          mkdir Release
+          mv libmodio* Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: Release
+
+  docs:
+    name: Generate docs.zip
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@v1
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Checkout wiki
+        uses: actions/checkout@v1
+        with:
+          repository: modio/SDK.wiki
+          ref: master
+
+      - name: Build
+        run: |
+          mkdir -p book/src
+          cp ../SDK.wiki/*.md book/src/
+          rename.ul '::' '__' book/src/*
+          cd book
+          cat src/_Sidebar.md | ./linkfix.py summary > src/SUMMARY.md
+          mdbook build -d docs
+          zip -r ../docs.zip docs/*
+
+      - name: Upload
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_name: docs.zip
+          asset_path: docs.zip
+          asset_content_type: application/zip
+
+  sdk:
+    name: Generate mod.io-sdk.zip
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Download Linux
+        uses: actions/download-artifact@v1
+        with:
+          name: x86_64-linux-gnu
+          path: artifacts/x86_64-linux-gnu
+
+      - name: Download Linux +static
+        uses: actions/download-artifact@v1
+        with:
+          name: x86_64-linux-gnu+static
+          path: artifacts/x86_64-linux-gnu+static
+
+      - name: Download Win32
+        uses: actions/download-artifact@v1
+        with:
+          name: i686-windows-msvc
+          path: artifacts/i686-windows-msvc
+
+      - name: Download Win32 +static
+        uses: actions/download-artifact@v1
+        with:
+          name: i686-windows-msvc+static
+          path: artifacts/i686-windows-msvc+static
+
+      - name: Download Win64
+        uses: actions/download-artifact@v1
+        with:
+          name: x86_64-windows-msvc
+          path: artifacts/x86_64-windows-msvc
+
+      - name: Download Win64 +static
+        uses: actions/download-artifact@v1
+        with:
+          name: x86_64-windows-msvc+static
+          path: artifacts/x86_64-windows-msvc+static
+
+      - name: Download macOS
+        uses: actions/download-artifact@v1
+        with:
+          name: x86_64-apple-darwin
+          path: artifacts/x86_64-apple-darwin
+
+      - name: Download macOS +static
+        uses: actions/download-artifact@v1
+        with:
+          name: x86_64-apple-darwin+static
+          path: artifacts/x86_64-apple-darwin+static
+
+      - name: Build
+        id: build
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+          package="mod.io-sdk-$tag"
+
+          # linux
+          mkdir -p "$package"/{lib,static}/linux/x64
+          mv artifacts/x86_64-linux-gnu/libmodio.so "$package/lib/linux/x64"
+          mv artifacts/x86_64-linux-gnu+static/libmodio.a "$package/static/linux/x64"
+
+          # win32 & win64
+          mkdir -p "$package"/{bin,lib,static}/msvc/{x86,x64}
+
+          mv artifacts/i686-windows-msvc/modio.dll "$package/bin/msvc/x86"
+          mv artifacts/i686-windows-msvc/modio.lib "$package/lib/msvc/x86"
+          mv artifacts/i686-windows-msvc+static/modio.lib "$package/static/msvc/x86"
+
+          mv artifacts/x86_64-windows-msvc/modio.dll "$package/bin/msvc/x64"
+          mv artifacts/x86_64-windows-msvc/modio.lib "$package/lib/msvc/x64"
+          mv artifacts/x86_64-windows-msvc+static/modio.lib "$package/static/msvc/x64"
+
+          # macOS
+          mkdir -p "$package"/{lib,static}/macOS/x64
+          mv artifacts/x86_64-apple-darwin/libmodio.dylib "$package/lib/macOS/x64"
+          mv artifacts/x86_64-apple-darwin+static/libmodio.a "$package/static/macOS/x64"
+
+          mv additional_dependencies "$package"
+          mv include "$package"
+          mv LICENSE "$package/License.txt"
+          cp .github/workflows/readme.txt "$package/Readme.txt"
+
+          zip -r "$package.zip" "$package"/*
+
+          echo "::set-output name=asset_name::$package.zip"
+          echo "::set-output name=asset_path::$package.zip"
+
+      - name: Checksum
+        run: |
+          checksum=$(shasum -ba 256 ${{ steps.build.outputs.asset_path }} | cut -d ' ' -f 1)
+
+          echo "Checksum for ${{ steps.build.outputs.asset_name }}: $checksum"
+          echo -n $checksum > ${{ steps.build.outputs.asset_path }}.sha256
+
+      - name: Upload
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_name: ${{ steps.build.outputs.asset_name }}
+          asset_path: ${{ steps.build.outputs.asset_path }}
+          asset_content_type: application/zip
+
+      - name: Upload checksum
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_name: ${{ steps.build.outputs.asset_name }}.sha256
+          asset_path: ${{ steps.build.outputs.asset_path }}.sha256
+          asset_content_type: text/plain

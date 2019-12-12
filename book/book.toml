@@ -1,0 +1,9 @@
+[book]
+authors = ["Ahmed Castro <ahmed.hn.43@gmail.com>"]
+language = "en"
+multilingual = false
+src = "src"
+title = "modio SDK"
+
+[preprocessor.linkfix]
+command = "./linkfix.py"

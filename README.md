@@ -4,6 +4,7 @@
 [![Discord](https://img.shields.io/discord/389039439487434752.svg?label=Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.mod.io)
 [![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/modio/SDK/wiki)
 [![Travis](https://img.shields.io/travis/modio/SDK.svg?logo=travis)](https://travis-ci.org/modio/SDK)
+[![GitHub Action](https://github.com/modio/SDK/workflows/ci/badge.svg)](https://github.com/modio/SDK/actions)
 
 Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
 
