@@ -189,10 +189,27 @@ void modioShutdown()
   modio::writeLogLine("mod.io C interface finished shutting down", MODIO_DEBUGLEVEL_LOG);
 }
 
+void modioPollEvents()
+{
+  u32 current_time = modio::getCurrentTimeSeconds();
+  modio::pollUserEvents(current_time);
+  modio::pollInstalledModsEvents(current_time);
+}
+
 void modioProcess()
 {
   if (modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
-    modio::pollEvents();
+  {
+    u32 current_time = modio::getCurrentTimeSeconds();
+    if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL_TIME > modio::USER_EVENT_POLL_INTERVAL)
+    {
+      modio::pollUserEvents(current_time);
+    }
+    if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL_TIME > modio::MOD_EVENT_POLL_INTERVAL)
+    {
+      modio::pollInstalledModsEvents(current_time);
+    }
+  }
   modio::curlwrapper::process();
 }
 

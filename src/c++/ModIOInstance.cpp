@@ -92,4 +92,9 @@ void Instance::process()
 {
   modioProcess();
 }
+
+void Instance::pollEvents()
+{
+  modioPollEvents();
+}
 } // namespace modio

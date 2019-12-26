@@ -404,61 +404,45 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
   }
 }
 
-void pollEvents()
+void pollUserEvents(u32 poll_time)
 {
-  u32 current_time = modio::getCurrentTimeSeconds();
+  modio::writeLogLine("Polling user events", MODIO_DEBUGLEVEL_LOG);
 
-  //if (current_time >= modio::RETRY_AFTER)
-  //{
-  if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL_TIME > modio::MOD_EVENT_POLL_INTERVAL)
+  ModioFilterCreator filter;
+  modioInitFilter(&filter);
+  //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
+  modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_USER_EVENT_POLL_ID).c_str());
+
+  u32 *last_user_event_poll_id_ptr = new u32;
+  *last_user_event_poll_id_ptr = (u32)modio::LAST_USER_EVENT_POLL_ID;
+
+  modioGetUserEvents(last_user_event_poll_id_ptr, filter, &onGetUserEventsPoll);
+  modioFreeFilter(&filter);
+
+  modio::LAST_USER_EVENT_POLL_TIME = poll_time;
+}
+
+void pollInstalledModsEvents(u32 poll_time)
+{
+  modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
+
+  ModioFilterCreator filter;
+  modioInitFilter(&filter);
+  modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_MOD_EVENT_POLL_ID).c_str());
+
+  for (auto installed_mod : modio::installed_mods)
   {
-    modio::writeLogLine("Polling mod events", MODIO_DEBUGLEVEL_LOG);
-
-    ModioFilterCreator filter;
-    modioInitFilter(&filter);
-    modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_MOD_EVENT_POLL_ID).c_str());
-
-    for (auto installed_mod : modio::installed_mods)
-    {
-      if (modio::hasKey(installed_mod, "mod_id"))
-        modioAddFilterInField(&filter, "mod_id", modio::toString((u32)installed_mod["mod_id"]).c_str());
-    }
-
-    u32* last_mod_event_poll_id_ptr = new u32;
-    *last_mod_event_poll_id_ptr = modio::LAST_MOD_EVENT_POLL_ID;
-
-    modioGetAllEvents(last_mod_event_poll_id_ptr, filter, &onGetAllEventsPoll);
-    modioFreeFilter(&filter);
-
-    modio::LAST_MOD_EVENT_POLL_TIME = current_time;
+    if (modio::hasKey(installed_mod, "mod_id"))
+      modioAddFilterInField(&filter, "mod_id", modio::toString((u32)installed_mod["mod_id"]).c_str());
   }
-  /*
-  else if (current_time - modio::LAST_MOD_EVENT_POLL > modio::MOD_EVENT_POLL_INTERVAL)
-  {
-    nlohmann::json event_polling_json = modio::openJson(modio::getModIODirectory() + "event_polling.json");
-    event_polling_json["last_mod_event_poll"] = current_time;
-    modio::writeJson(modio::getModIODirectory() + "event_polling.json", event_polling_json);
-  }
-  */
 
-  if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL_TIME > modio::USER_EVENT_POLL_INTERVAL)
-  {
-    modio::writeLogLine("Polling user events", MODIO_DEBUGLEVEL_LOG);
+  u32* last_mod_event_poll_id_ptr = new u32;
+  *last_mod_event_poll_id_ptr = modio::LAST_MOD_EVENT_POLL_ID;
 
-    ModioFilterCreator filter;
-    modioInitFilter(&filter);
-    //modioAddFilterMinField(&filter, "date_added", modio::toString(modio::LAST_USER_EVENT_POLL).c_str());
-    modioAddFilterGreaterThanField(&filter, "id", modio::toString(modio::LAST_USER_EVENT_POLL_ID).c_str());
+  modioGetAllEvents(last_mod_event_poll_id_ptr, filter, &onGetAllEventsPoll);
+  modioFreeFilter(&filter);
 
-    u32 *last_user_event_poll_id_ptr = new u32;
-    *last_user_event_poll_id_ptr = (u32)modio::LAST_USER_EVENT_POLL_ID;
-
-    modioGetUserEvents(last_user_event_poll_id_ptr, filter, &onGetUserEventsPoll);
-    modioFreeFilter(&filter);
-
-    modio::LAST_USER_EVENT_POLL_TIME = current_time;
-  }
-  //}
+  modio::LAST_MOD_EVENT_POLL_TIME = poll_time;
 }
 
 void updateAuthenticatedUser(std::string access_token)
