@@ -545,6 +545,7 @@ void queueModDownload(ModioMod &modio_mod)
           )
       {
         writeLogLine("Mod id: " + toString(modio_mod.id) + " is being downloaded but a newer version was detected, canceling download [TODO].", MODIO_DEBUGLEVEL_WARNING);
+        queued_mod_download->state = MODIO_MOD_CANCELLING;
       } else
       {
         writeLogLine("Could not queue the mod: " + toString(modio_mod.id) + ". It's already queued.", MODIO_DEBUGLEVEL_WARNING);

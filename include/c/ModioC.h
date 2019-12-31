@@ -103,6 +103,7 @@ typedef int i32;
 #define MODIO_MOD_STARTING_UPLOAD         9
 #define MODIO_MOD_UPLOADING               10
 #define MODIO_MOD_DOWNLOADED              11
+#define MODIO_MOD_CANCELLING              12
 
 // Maturity options
 #define MODIO_MATURITY_NONE     0

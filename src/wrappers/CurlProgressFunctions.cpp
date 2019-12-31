@@ -20,6 +20,13 @@ i32 onModDownloadProgress(void *clientp, double dltotal, double dlnow, double ul
     return -1;
   }
 
+  if(queued_mod_download->state == MODIO_MOD_CANCELLING)
+  {
+    writeLogLine("Download cancelled at " + toString(dlnow), MODIO_DEBUGLEVEL_LOG);      
+    updateModDownloadQueueFile();
+    return -1;
+  }
+
   if(queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
   {
     writeLogLine("Download paused at " + toString(dlnow) + " in order to prioritize other download.", MODIO_DEBUGLEVEL_LOG);      
