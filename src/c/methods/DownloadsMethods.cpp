@@ -44,6 +44,36 @@ void modioPauseDownloads()
   modio::curlwrapper::pauseModDownloads();
 }
 
+void MODIO_DLL modioCancelModDownload(u32 mod_id)
+{
+  bool mod_found = false;
+  for (auto &queued_mod_download : modio::curlwrapper::g_mod_download_queue)
+  {
+    if (queued_mod_download->mod_id == mod_id)
+    {
+      if(queued_mod_download->state == MODIO_MOD_STARTING_DOWNLOAD
+          && queued_mod_download->state == MODIO_MOD_DOWNLOADING
+          && queued_mod_download->state == MODIO_MOD_PAUSING
+          && queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD
+          )
+      {
+        modio::writeLogLine("Mod id: " + modio::toString(mod_id) + " is being downloaded, cancelling download...", MODIO_DEBUGLEVEL_LOG);
+        queued_mod_download->state = MODIO_MOD_CANCELLING;
+        mod_found = true;
+      } else
+      {
+        modio::writeLogLine("Mod id: " + modio::toString(mod_id) + " was removed from the download queue.", MODIO_DEBUGLEVEL_LOG);
+        modio::curlwrapper::g_mod_download_queue.remove(queued_mod_download);
+        delete queued_mod_download;
+        mod_found = true;
+        break;
+      }
+    }
+  }
+  if(mod_found)
+    modio::writeLogLine("Mod id: " + modio::toString(mod_id) + " was not found on the dowload queue.", MODIO_DEBUGLEVEL_WARNING);
+}
+
 void modioResumeDownloads()
 {
   modio::curlwrapper::resumeModDownloads();

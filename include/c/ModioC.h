@@ -685,6 +685,7 @@ extern "C"
   void MODIO_DLL modioInstallDownloadedMods(void);
   bool MODIO_DLL modioUninstallMod(u32 mod_id);
   void MODIO_DLL modioPauseDownloads(void);
+  void MODIO_DLL modioCancelModDownload(u32 mod_id);
   void MODIO_DLL modioResumeDownloads(void);
   void MODIO_DLL modioPrioritizeModDownload(u32 mod_id);
   void MODIO_DLL modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  

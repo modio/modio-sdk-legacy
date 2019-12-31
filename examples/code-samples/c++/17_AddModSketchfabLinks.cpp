@@ -1,4 +1,5 @@
 #include "modio.h"
+#include <iostream>
 
 int main(void)
 {
