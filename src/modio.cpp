@@ -193,7 +193,13 @@ void modioPollEvents()
 {
   u32 current_time = modio::getCurrentTimeSeconds();
   modio::pollUserEvents(current_time);
-  modio::pollInstalledModsEvents(current_time);
+  if(modioGetAllInstalledModsCount() > 0)
+  {
+    modio::pollInstalledModsEvents(current_time);
+  }else
+  {
+    modio::writeLogLine("No mods are installed, mod events won't be polled.", MODIO_DEBUGLEVEL_LOG);
+  }
 }
 
 void modioProcess()
