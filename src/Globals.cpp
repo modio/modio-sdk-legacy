@@ -25,7 +25,6 @@ namespace modio
   u32 RETRY_AFTER = 0;
   u32 MAX_CACHE_TIME_SECONDS = 120;
   ModioUser current_user;
-  std::vector<u32> downloaded_mods;
   std::map<u32,u32> current_user_ratings; // maps[mod_id, rating_type]
   std::set<u32> current_user_subscriptions; // set[mod_id]
   void (*event_listener_callback)(ModioResponse response, ModioModEvent* events_array, u32 events_array_size) = NULL;
@@ -34,4 +33,5 @@ namespace modio
   u32 AUTOMATIC_UPDATES = 0;
   u32 BACKGROUND_DOWNLOADS = 0;
   nlohmann::json installed_mods;
+  nlohmann::json g_downloaded_mods;
 }

@@ -83,7 +83,16 @@ const std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
 
 const std::vector<u32> Instance::getAllDownloadedMods()
 {
-  return modio::downloaded_mods;
+  std::vector<u32> downloaded_mods;
+  for (auto &downloaded_mod : modio::g_downloaded_mods)
+  {
+    if(modio::hasKey(downloaded_mod, "mod") &&
+        modio::hasKey(downloaded_mod["mod"], "id"))
+    {
+      downloaded_mods.push_back(downloaded_mod["mod"]["id"]);
+    }
+  }
+  return downloaded_mods;
 }
 
 void Instance::setDownloadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback)

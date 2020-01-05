@@ -228,10 +228,49 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
         bool reinstall = true;
         for (auto installed_mod : modio::installed_mods)
         {
-          if (modio::hasKey(installed_mod, "mod_id") && modio::hasKey(installed_mod, "date_updated") && installed_mod["mod_id"] == events_array[i].mod_id && installed_mod["date_updated"] >= events_array[i].date_added)
+          if (modio::hasKey(installed_mod, "mod_id") &&
+              modio::hasKey(installed_mod, "date_updated") &&
+              installed_mod["mod_id"] == events_array[i].mod_id &&
+              installed_mod["date_updated"] >= events_array[i].date_added)
           {
             reinstall = false;
             modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
+          }
+        }
+
+        for (auto &downloaded_mod_json : modio::g_downloaded_mods)
+        {
+          if (modio::hasKey(downloaded_mod_json, "mod") &&
+              modio::hasKey(downloaded_mod_json["mod"], "id") &&
+              downloaded_mod_json["mod"]["id"] == events_array[i].mod_id)
+          {
+            if (modio::hasKey(downloaded_mod_json["mod"], "date_updated") &&
+                downloaded_mod_json["mod"]["date_updated"] >= events_array[i].date_added)
+            {
+              reinstall = false;
+              modio::writeLogLine("Modfile changed event detected but you already have a newer version downloaded, the modfile will not be downloaded. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
+            }else
+            {
+              nlohmann::json downloaded_mods_json_temp;
+              for (auto &downloaded_mod_temp_json : modio::g_downloaded_mods)
+              {
+                if(modio::hasKey(downloaded_mod_temp_json, "mod") &&
+                    modio::hasKey(downloaded_mod_temp_json["mod"], "id") &&
+                    downloaded_mod_temp_json["mod"]["id"] != events_array[i].mod_id)
+                {
+                  downloaded_mods_json_temp.push_back(downloaded_mod_temp_json);
+                }
+              }
+              modio::g_downloaded_mods = downloaded_mods_json_temp;
+
+              if(modio::hasKey(downloaded_mod_json, "downloaded_zip_path"))
+              {
+                std::string downloaded_zip_path = downloaded_mod_json["downloaded_zip_path"];
+                modio::removeFile(downloaded_zip_path);
+              }
+              modio::writeLogLine("Modfile changed event detected and you have an older version downloaded, old modfile will be deleted. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
+              break;
+            }
           }
         }
 

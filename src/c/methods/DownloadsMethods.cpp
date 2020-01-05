@@ -159,14 +159,20 @@ void modioGetAllInstalledMods(ModioInstalledMod *installed_mods)
 
 u32 modioGetAllDownloadedModsCount()
 {
-  return (u32)modio::downloaded_mods.size();
+  return (u32)modio::g_downloaded_mods.size();
 }
 
 void modioGetAllDownloadedMods(u32* downloaded_mods)
 {
-  for(size_t i=0; i<(u32)modio::downloaded_mods.size(); i++)
+  u32 i = 0;
+  for (auto &downloaded_mod : modio::g_downloaded_mods)
   {
-    downloaded_mods[i] = modio::downloaded_mods[i];
+    if(modio::hasKey(downloaded_mod, "mod") &&
+        modio::hasKey(downloaded_mod["mod"], "id"))
+    {
+      downloaded_mods[i] = downloaded_mod["mod"]["id"];
+      i++;
+    }
   }
 }
 
@@ -178,10 +184,14 @@ u32 modioGetModState(u32 mod_id)
       return queued_mod_download->state;
   }
 
-  for(auto& downloaded_mod : modio::downloaded_mods)
+  for (auto &downloaded_mod : modio::g_downloaded_mods)
   {
-    if(downloaded_mod == mod_id)
+    if(modio::hasKey(downloaded_mod, "mod") &&
+        modio::hasKey(downloaded_mod["mod"], "id") &&
+        downloaded_mod["mod"]["id"] == mod_id)
+    {
       return MODIO_MOD_DOWNLOADED;
+    }
   }
 
   for(auto& installed_mod : modio::installed_mods)
