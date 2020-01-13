@@ -224,13 +224,18 @@ void writeJson(const std::string &file_path, nlohmann::json json_object)
 #ifdef MODIO_WINDOWS_DETECTED
 static void writeLastErrorLog(const std::string &error_function)
 {
+  std::cerr << "[mod.io] Could not create directory on operating system Windows" << std::endl;
   //Get the error message, if any.
   DWORD errorMessageID = ::GetLastError();
   if (errorMessageID == 0)
+  {
+    std::cerr << "[mod.io] Error: No error message has been recorded" << std::endl;
     return; //No error message has been recorded
+  }
 
   if (errorMessageID == 183)
   {
+    std::cerr << "[mod.io] Error: The directory already exists" << std::endl;
     modio::writeLogLine("The directory already exists.", MODIO_DEBUGLEVEL_LOG);
     return;
   }
@@ -242,6 +247,7 @@ static void writeLastErrorLog(const std::string &error_function)
   std::string message(messageBuffer, size);
 
   modio::writeLogLine("Error while using " + error_function + ": " + message, MODIO_DEBUGLEVEL_ERROR);
+  std::cerr << "[mod.io] Error: while using " + error_function + ": " + message << std::endl;
 
   //Free the buffer.
   LocalFree(messageBuffer);
@@ -467,7 +473,10 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
 void createDirectory(const std::string &directory)
 {
   if (modio::directoryExists(directory))
+  {
+    std::clog << "[mod.io] Directory already exists:" + directory << std::endl;
     return;
+  }
 
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
@@ -477,7 +486,14 @@ void createDirectory(const std::string &directory)
 #ifdef MODIO_WINDOWS_DETECTED
   wchar_t *director_wc = WideCharFromString(directory);
   if (!CreateDirectory(director_wc, NULL))
+  {
+    std::cerr << "[mod.io] Error: Could not create directory" << std::endl;
     writeLastErrorLog("CreateDirectory");
+  }
+  else
+  {
+    std::clog << "[mod.io] Directory created:" + directory << std::endl;
+  }
   free(director_wc);
 #endif
 }

@@ -15,6 +15,7 @@
 #include "c/methods/callbacks/ReportsCallbacks.h"
 #include "c/methods/callbacks/SubscriptionsCallbacks.h"
 #include "c/methods/callbacks/TagCallbacks.h"
+#include <iostream>
 
 #ifdef MODIO_LINUX_DETECTED
 #include <unistd.h>
@@ -87,11 +88,15 @@ static void loadAuthenticationFile()
 
 void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const *api_key, char const *root_path)
 {
+  std::clog << "[mod.io] Initializing mod.io SDK\n";
+
   modio::RETRIEVE_MODS_FROM_OTHER_GAMES = retrieve_mods_from_other_games;
   
   if (root_path)
     modio::ROOT_PATH = root_path;
   
+  std::clog << "[mod.io] Creating directories\n";
+
   modio::createDirectory(modio::getModIODirectory());
   modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
@@ -193,18 +198,21 @@ void modioShutdown()
 void modioPollEvents()
 {
   u32 current_time = modio::getCurrentTimeSeconds();
-  modio::pollUserEvents(current_time);
+  
+  if(modioIsLoggedIn())
+    modio::pollUserEvents(current_time);
+  else
+    modio::writeLogLine("User is not logged in, user events won't be polled.", MODIO_DEBUGLEVEL_LOG);
+
   if(modioGetAllInstalledModsCount() > 0)
-  {
     modio::pollInstalledModsEvents(current_time);
-  }else
-  {
+  else
     modio::writeLogLine("No mods are installed, mod events won't be polled.", MODIO_DEBUGLEVEL_LOG);
-  }
 }
 
 void modioProcess()
-{
+{  
+  std::cerr << "[mod.io] process\n";
   if (modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
   {
     u32 current_time = modio::getCurrentTimeSeconds();

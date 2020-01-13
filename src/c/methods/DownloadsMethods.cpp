@@ -44,7 +44,7 @@ void modioPauseDownloads()
   modio::curlwrapper::pauseModDownloads();
 }
 
-void MODIO_DLL modioCancelModDownload(u32 mod_id)
+void modioCancelModDownload(u32 mod_id)
 {
   bool mod_found = false;
   for (auto &queued_mod_download : modio::curlwrapper::g_mod_download_queue)

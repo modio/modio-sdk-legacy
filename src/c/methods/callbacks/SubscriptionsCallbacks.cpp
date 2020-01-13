@@ -39,7 +39,7 @@ void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::jso
   {
     u32 mod_id = unsubscribe_from_mod_callbacks[call_number]->mod_id;
     modio::writeLogLine("Current User unsubscribed from a Mod. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
-    modioUninstallMod(mod_id);
+    modio::handleUnsubscription(mod_id);
   }
 
   unsubscribe_from_mod_callbacks[call_number]->callback(unsubscribe_from_mod_callbacks[call_number]->object, response);

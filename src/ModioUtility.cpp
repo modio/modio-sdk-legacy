@@ -167,6 +167,13 @@ static void onModsUpdateEvent(void *object, ModioResponse response, ModioMod *mo
   }
 }
 
+void handleUnsubscription(u32 mod_id)
+{
+  modioUninstallMod(mod_id);
+  modioCancelModDownload(mod_id);
+  modio::curlwrapper::removeDownloadedModfile(mod_id);
+}
+
 void updateModsCache(std::vector<u32> mod_ids)
 {
   ModioFilterCreator filter;
@@ -387,7 +394,7 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
       case MODIO_EVENT_USER_UNSUBSCRIBE:
       {
         modio::writeLogLine("Mod unsubscription event detected. Mod id: " + modio::toString(events_array[i].mod_id), MODIO_DEBUGLEVEL_LOG);
-        modioUninstallMod(events_array[i].mod_id);
+        handleUnsubscription(events_array[i].mod_id);
         break;
       }
       }
