@@ -211,8 +211,7 @@ void modioPollEvents()
 }
 
 void modioProcess()
-{  
-  std::cerr << "[mod.io] process\n";
+{
   if (modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
   {
     u32 current_time = modio::getCurrentTimeSeconds();

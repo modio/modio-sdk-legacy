@@ -563,7 +563,7 @@ void removeDownloadedModfile(nlohmann::json downloaded_mod)
 
 void cancelModDownload(QueuedModDownload* queued_mod_download)
 {
-  //writeLogLine("The mod: " + toString(modio_mod.id) + " is on the download queue in an older version. Will be canceled if download started...", MODIO_DEBUGLEVEL_WARNING);
+  writeLogLine("Trying to cancel mod: " + toString(queued_mod_download->mod_id), MODIO_DEBUGLEVEL_LOG);
   if(queued_mod_download->state == MODIO_MOD_STARTING_DOWNLOAD
       || queued_mod_download->state == MODIO_MOD_DOWNLOADING
       || queued_mod_download->state == MODIO_MOD_PAUSING
@@ -571,12 +571,12 @@ void cancelModDownload(QueuedModDownload* queued_mod_download)
       || queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD
       )
   {
-    //writeLogLine("Mod id: " + toString(modio_mod.id) + " is being downloaded but a newer version was detected, canceling download.", MODIO_DEBUGLEVEL_LOG);
+    writeLogLine("Mod found on the download queue, cancelling", MODIO_DEBUGLEVEL_LOG);
     queued_mod_download->state = MODIO_MOD_CANCELLING;
   } else
   {
-    writeLogLine("Download has not started yet, will replace mod profile data.", MODIO_DEBUGLEVEL_WARNING);
-    writeLogLine("The previous state was: " + toString(queued_mod_download->state), MODIO_DEBUGLEVEL_WARNING);
+    writeLogLine("Download has not started yet, will replace mod profile data.", MODIO_DEBUGLEVEL_LOG);
+    writeLogLine("The previous state was: " + toString(queued_mod_download->state), MODIO_DEBUGLEVEL_LOG);
 
     for (auto itr = g_mod_download_queue.begin(); 
           itr != g_mod_download_queue.end(); itr++)
@@ -584,9 +584,11 @@ void cancelModDownload(QueuedModDownload* queued_mod_download)
       if ((queued_mod_download)->mod_id == (*itr)->mod_id)
       {
         g_mod_download_queue.erase(itr);
+        break;
       }
     }
   }
+  writeLogLine("Finished cancel preprocess.", MODIO_DEBUGLEVEL_WARNING);
 }
 
 nlohmann::json getDownloadedModJson(u32 mod_id)
@@ -688,10 +690,13 @@ bool modEnqueuePreprocess(u32 mod_id, u32 modfile_date_added)
 
 void queueModDownload(ModioMod &modio_mod)
 {
+  writeLogLine("Adding to download queue mod: " + toString(modio_mod.id), MODIO_DEBUGLEVEL_LOG);
   if(!modEnqueuePreprocess(modio_mod.id, modio_mod.modfile.date_added))
   {
     return;
   }
+
+  writeLogLine("Preprocess finished, adding mod to the download queue.", MODIO_DEBUGLEVEL_WARNING);
 
   QueuedModDownload *new_queued_mod_download = new QueuedModDownload();
   new_queued_mod_download->state = MODIO_MOD_QUEUED;
