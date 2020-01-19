@@ -836,6 +836,7 @@ void queueModfileUpload(u32 mod_id, ModioModfileCreator *modio_modfile_creator)
   QueuedModfileUpload *queued_modfile_upload = new QueuedModfileUpload();
   queued_modfile_upload->state = MODIO_MOD_QUEUED;
   queued_modfile_upload->mod_id = mod_id;
+  queued_modfile_upload->path = modio_modfile_creator->path;
   queued_modfile_upload->current_progress = 0;
   queued_modfile_upload->total_size = 0;
   queued_modfile_upload->modfile_creator.initializeFromModioModfileCreator(*modio_modfile_creator);
