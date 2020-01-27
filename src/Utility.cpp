@@ -353,7 +353,7 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 
 std::string getModIODirectory()
 {
-  return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
+  return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/" + modio::addSlashIfNeeded(ADDITIONAL_GAMEDIR_PATH);
 }
 
 std::string getFilename(std::string file_path)

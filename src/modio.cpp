@@ -88,7 +88,7 @@ static void loadAuthenticationFile()
 
 void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const *api_key, char const *root_path)
 {
-  std::clog << "[mod.io] Initializing mod.io SDK" << std::endl;
+  std::clog << "[mod.io] Initializing mod.io SDK " << modio::VERSION << std::endl;
 
   modio::RETRIEVE_MODS_FROM_OTHER_GAMES = retrieve_mods_from_other_games;
   
@@ -101,6 +101,8 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
   {
     std::clog << "Could not create the .modio/ directory, retying with alternative path: " << modio::getMyDocumentsPath() << std::endl;
     modio::ROOT_PATH = modio::getMyDocumentsPath();
+    modio::createDirectory(modio::getModIODirectory());
+    modio::ADDITIONAL_GAMEDIR_PATH = "game_" + modio::toString(game_id);
     modio::createDirectory(modio::getModIODirectory());
   }
   modio::createDirectory(modio::getModIODirectory() + "mods/");
