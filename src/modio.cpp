@@ -104,7 +104,7 @@ void checkIfInstalledModsAreUpdated()
   u32 installed_mods_count = modioGetAllInstalledModsCount();
   if (installed_mods_count > 0)
   {
-    ModioInstalledMod installed_mods[installed_mods_count];
+    ModioInstalledMod *installed_mods = new ModioInstalledMod[installed_mods_count];
     modioGetAllInstalledMods(installed_mods);
 
     u32 *mod_id_array = new u32[installed_mods_count];
@@ -112,6 +112,9 @@ void checkIfInstalledModsAreUpdated()
 		  mod_id_array[i] = installed_mods[i].mod_id;
 
     modioCheckIfModsAreUpdated(NULL, mod_id_array, installed_mods_count, &onCheckIfInstalledModsAreUpdated);
+
+    delete[] installed_mods;
+    delete[] mod_id_array;
   }
   else
   {
