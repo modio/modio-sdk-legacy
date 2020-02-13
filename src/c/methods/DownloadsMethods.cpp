@@ -202,4 +202,56 @@ u32 modioGetModState(u32 mod_id)
 
   return MODIO_MOD_NOT_INSTALLED;
 }
+
+void onModioCheckIfModsAreUpdate(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
+{
+  modio::writeLogLine("onModioCheckIfModsAreUpdate was returned", MODIO_DEBUGLEVEL_ERROR);
+  if (response.code == 200)
+  {
+    std::vector<u32> mod_ids_that_need_update;
+    for (u32 i = 0; i < mods_size; i++)
+    {
+      ModioInstalledMod installed_mod;
+      modioGetInstalledMod(mods[i].id, &installed_mod);
+      if (installed_mod.mod_id != 0)
+      {
+        if(installed_mod.date_updated < mods[i].date_updated)
+        {
+          modio::writeLogLine("The following installed mod needs an update: " + modio::toString(mods[i].id), MODIO_DEBUGLEVEL_LOG);
+          mod_ids_that_need_update.push_back(mods[i].id);
+          modio::writeLogLine("Mod will be added to the download queue.", MODIO_DEBUGLEVEL_LOG);
+        }
+      }
+      else
+      {
+        modio::writeLogLine("Installed mod not found: " + modio::toString(mods[i].id), MODIO_DEBUGLEVEL_ERROR);
+      }
+    }
+    modio::addModsToDownloadQueue(mod_ids_that_need_update);
+  }else
+  {
+    modio::writeLogLine("Could not retrieve mods data error code: " + modio::toString(response.code), MODIO_DEBUGLEVEL_ERROR);
+  }
+  modio::writeLogLine("onModioCheckIfModsAreUpdate finished", MODIO_DEBUGLEVEL_LOG);
+}
+
+void modioCheckIfModsAreUpdated(void* object, u32 const* mod_id_array, u32 mod_id_array_size, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
+{
+  modio::writeLogLine("Checking is mods are updated...", MODIO_DEBUGLEVEL_ERROR);
+  int i = 0;
+  while(i < mod_id_array_size)
+  {
+    ModioFilterCreator filter;
+    modioInitFilter(&filter);
+    while (i < mod_id_array_size)
+    {
+      modioAddFilterInField(&filter, "id", modio::toString(mod_id_array[i]).c_str());
+      i++;
+      if(i%100 == 0)
+        break;
+    }
+    modioGetAllMods(NULL, filter, &onModioCheckIfModsAreUpdate);
+    modioFreeFilter(&filter);
+  }
+}
 }
