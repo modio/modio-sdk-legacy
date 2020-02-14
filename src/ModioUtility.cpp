@@ -193,6 +193,11 @@ void updateModsCache(std::vector<u32> mod_ids)
 
 void addModsToDownloadQueue(std::vector<u32> mod_ids)
 {
+  if(mod_ids.size() < 0)
+  {
+    modio::writeLogLine("Called addModsToDownloadQueue with an empty mod list", MODIO_DEBUGLEVEL_ERROR);
+    return;
+  }
   ModioFilterCreator filter;
   modioInitFilter(&filter);
   

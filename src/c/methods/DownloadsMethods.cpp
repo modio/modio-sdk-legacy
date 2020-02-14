@@ -205,7 +205,7 @@ u32 modioGetModState(u32 mod_id)
 
 void onModioCheckIfModsAreUpdate(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
 {
-  modio::writeLogLine("onModioCheckIfModsAreUpdate was returned", MODIO_DEBUGLEVEL_ERROR);
+  modio::writeLogLine("onModioCheckIfModsAreUpdate was returned", MODIO_DEBUGLEVEL_LOG);
   if (response.code == 200)
   {
     std::vector<u32> mod_ids_that_need_update;
@@ -227,7 +227,8 @@ void onModioCheckIfModsAreUpdate(void *object, ModioResponse response, ModioMod 
         modio::writeLogLine("Installed mod not found: " + modio::toString(mods[i].id), MODIO_DEBUGLEVEL_ERROR);
       }
     }
-    modio::addModsToDownloadQueue(mod_ids_that_need_update);
+    if(mod_ids_that_need_update.size() > 0)
+      modio::addModsToDownloadQueue(mod_ids_that_need_update);
   }else
   {
     modio::writeLogLine("Could not retrieve mods data error code: " + modio::toString(response.code), MODIO_DEBUGLEVEL_ERROR);
@@ -237,7 +238,7 @@ void onModioCheckIfModsAreUpdate(void *object, ModioResponse response, ModioMod 
 
 void modioCheckIfModsAreUpdated(void* object, u32 const* mod_id_array, u32 mod_id_array_size, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
 {
-  modio::writeLogLine("Checking is mods are updated...", MODIO_DEBUGLEVEL_ERROR);
+  modio::writeLogLine("Checking if mods are updated...", MODIO_DEBUGLEVEL_LOG);
   int i = 0;
   while(i < mod_id_array_size)
   {

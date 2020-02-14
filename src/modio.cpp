@@ -133,6 +133,8 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
   
   std::clog << "[mod.io] Creating directories" << std::endl;
 
+  modio::ADDITIONAL_GAMEDIR_PATH = "";
+
   if(!modio::createDirectory(modio::getModIODirectory()))
   {
     std::clog << "Could not create the .modio/ directory, retying with alternative path: " << modio::getMyDocumentsPath() << std::endl;
