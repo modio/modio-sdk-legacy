@@ -26,9 +26,10 @@ int main(void)
   char *nonce = "GALAXY NONCE PROOF HERE";
   char *oculus_user_id = "123123";
   char *access_token = "GALAXY AUTH TOKEN HERE";
+  char *device = "rift"; // rift and quest supported
   char *email = NULL; // Optional email param
   u32 date_expires = 0; // Optional expiration date param, 0 will be ignored
-  modioOculusAuth(&wait, nonce, oculus_user_id, access_token, email, date_expires, &onOculusAuth);
+  modioOculusAuth(&wait, nonce, oculus_user_id, access_token, email, device, date_expires, &onOculusAuth);
   
   while (wait)
   {
