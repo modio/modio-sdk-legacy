@@ -28,6 +28,7 @@
 #    include <Windows/MinWindows.h>
 #  else
 #    include <windows.h>
+#    include <shlobj.h>
 #  endif
 #  include <strsafe.h>
 #  include "dependencies/dirent/dirent.h"
@@ -352,7 +353,7 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 
 std::string getModIODirectory()
 {
-  return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
+  return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/" + modio::addSlashIfNeeded(ADDITIONAL_GAMEDIR_PATH);
 }
 
 std::string getFilename(std::string file_path)
@@ -470,12 +471,12 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
   return filenames;
 }
 
-void createDirectory(const std::string &directory)
+bool createDirectory(const std::string &directory)
 {
   if (modio::directoryExists(directory))
   {
     std::clog << "[mod.io] Directory already exists:" + directory << std::endl;
-    return;
+    return true;
   }
 
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
@@ -487,8 +488,9 @@ void createDirectory(const std::string &directory)
   wchar_t *director_wc = WideCharFromString(directory);
   if (!CreateDirectory(director_wc, NULL))
   {
-    std::cerr << "[mod.io] Error: Could not create directory" << std::endl;
+    std::cerr << "[mod.io] Error: Could not create directory: " << directory << std::endl;
     writeLastErrorLog("CreateDirectory");
+    return false;
   }
   else
   {
@@ -496,6 +498,7 @@ void createDirectory(const std::string &directory)
   }
   free(director_wc);
 #endif
+  return true;
 }
 
 bool removeDirectory(const std::string &directory)
@@ -656,6 +659,28 @@ std::string base64Encode(unsigned char const* bytes_to_encode, unsigned int in_l
   }
 
   return ret;
+}
+
+std::string getMyDocumentsPath()
+{
+#ifdef MODIO_WINDOWS_DETECTED
+  PWSTR   ppsz_path;
+  HRESULT handle = SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &ppsz_path);
+
+  std::wstring my_documents_path_wstring;
+  if (SUCCEEDED(handle)) {
+	  my_documents_path_wstring = ppsz_path;
+  }
+
+  CoTaskMemFree(ppsz_path);
+
+  std::string my_documents_path_string(my_documents_path_wstring.begin(), my_documents_path_wstring.end());
+
+  std::replace( my_documents_path_string.begin(), my_documents_path_string.end(), '\\', '/');
+
+  return my_documents_path_string;
+#endif
+  return "";
 }
 
 } // namespace modio

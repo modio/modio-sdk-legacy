@@ -86,18 +86,63 @@ static void loadAuthenticationFile()
   }
 }
 
+void onCheckIfInstalledModsAreUpdated(void* object, ModioResponse response, bool mods_are_updated)
+{
+  if(mods_are_updated)
+  {
+    modio::writeLogLine("All installed mods are updated.", MODIO_DEBUGLEVEL_LOG);
+  }else
+  {
+    modio::writeLogLine("Some installed mods are not updated, they were added to the download queue.", MODIO_DEBUGLEVEL_LOG);
+  }
+}
+
+void checkIfInstalledModsAreUpdated()
+{
+  modio::writeLogLine("Checking if all installed mods are updated...", MODIO_DEBUGLEVEL_LOG);
+
+  u32 installed_mods_count = modioGetAllInstalledModsCount();
+  if (installed_mods_count > 0)
+  {
+    ModioInstalledMod *installed_mods = new ModioInstalledMod[installed_mods_count];
+    modioGetAllInstalledMods(installed_mods);
+
+    u32 *mod_id_array = new u32[installed_mods_count];
+	  for (size_t i = 0; i < installed_mods_count; i++)
+		  mod_id_array[i] = installed_mods[i].mod_id;
+
+    modioCheckIfModsAreUpdated(NULL, mod_id_array, installed_mods_count, &onCheckIfInstalledModsAreUpdated);
+
+    delete[] installed_mods;
+    delete[] mod_id_array;
+  }
+  else
+  {
+    modio::writeLogLine("No mods installed. Skipping check.", MODIO_DEBUGLEVEL_LOG);
+  }
+}
+
 void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const *api_key, char const *root_path)
 {
-  std::clog << "[mod.io] Initializing mod.io SDK\n";
+  std::clog << "[mod.io] Initializing mod.io SDK " << modio::VERSION << std::endl;
 
   modio::RETRIEVE_MODS_FROM_OTHER_GAMES = retrieve_mods_from_other_games;
   
   if (root_path)
     modio::ROOT_PATH = root_path;
   
-  std::clog << "[mod.io] Creating directories\n";
+  std::clog << "[mod.io] Creating directories" << std::endl;
 
-  modio::createDirectory(modio::getModIODirectory());
+  modio::ADDITIONAL_GAMEDIR_PATH = "";
+
+  if(!modio::createDirectory(modio::getModIODirectory()))
+  {
+    std::clog << "Could not create the .modio/ directory, retying with alternative path: " << modio::getMyDocumentsPath() << std::endl;
+    modio::ROOT_PATH = modio::getMyDocumentsPath();
+    modio::createDirectory(modio::getModIODirectory());
+    modio::ADDITIONAL_GAMEDIR_PATH = "game_" + modio::toString(game_id);
+    modio::createDirectory(modio::getModIODirectory());
+  }
   modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
@@ -110,7 +155,7 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modio::writeLogLine(".modio/ directory created at " + std::string(root_path), MODIO_DEBUGLEVEL_LOG);
   }else
   {
-    modio::writeLogLine(".modio/ directory created at current workspace.", MODIO_DEBUGLEVEL_LOG);
+    modio::writeLogLine(".modio/ directory created at the game directory", MODIO_DEBUGLEVEL_LOG);
   }
   
   modio::writeLogLine(modio::VERSION, MODIO_DEBUGLEVEL_LOG);
@@ -145,6 +190,8 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modio::updateUserRatings();
     modio::updateUserSubscriptions();
   }
+
+  checkIfInstalledModsAreUpdated();
 
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }
@@ -211,7 +258,7 @@ void modioPollEvents()
 }
 
 void modioProcess()
-{  
+{
   if (modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
   {
     u32 current_time = modio::getCurrentTimeSeconds();

@@ -3,12 +3,13 @@
 
 namespace modio
 {
-  std::string VERSION = "v0.12.6 DEV";
+  std::string VERSION = "v0.12.9 DEV";
   std::string API_KEY;
   std::string ACCESS_TOKEN = "";
   bool IS_LOGGED_IN = false;
   u32 GAME_ID;
   std::string ROOT_PATH = "";
+  std::string ADDITIONAL_GAMEDIR_PATH = "";
   u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
   bool RETRIEVE_MODS_FROM_OTHER_GAMES = false;
   std::string MODIO_URL = "https://api.mod.io/";
