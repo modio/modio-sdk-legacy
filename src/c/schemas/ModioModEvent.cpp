@@ -46,6 +46,15 @@ extern "C"
       event->date_added = event_json["date_added"];
   }
 
+  void modioInitModEventCpp(ModioModEvent* modio_mod_event, modio::ModEvent* mod_event)
+  {
+    modio_mod_event->id = mod_event->id;
+    modio_mod_event->mod_id = mod_event->mod_id;
+    modio_mod_event->user_id = mod_event->user_id;
+    modio_mod_event->event_type = mod_event->event_type;
+    modio_mod_event->date_added = mod_event->date_added;
+  }
+
   void modioFreeModEvent(ModioModEvent* tag)
   {
     //No pointers

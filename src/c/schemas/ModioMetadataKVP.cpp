@@ -23,6 +23,15 @@ extern "C"
     }
   }
 
+  void modioInitMetadataKVPCpp(ModioMetadataKVP* modio_metadata_kvp, modio::MetadataKVP* metadata_kvp)
+  {
+    modio_metadata_kvp->metakey = new char[metadata_kvp->metakey.size() + 1];
+    strcpy(modio_metadata_kvp->metakey, metadata_kvp->metakey.c_str());
+
+    modio_metadata_kvp->metavalue = new char[metadata_kvp->metavalue.size() + 1];
+    strcpy(modio_metadata_kvp->metavalue, metadata_kvp->metavalue.c_str());
+  }
+
   void modioFreeMetadataKVP(ModioMetadataKVP* metadata_kvp)
   {
     if(metadata_kvp)

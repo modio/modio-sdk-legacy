@@ -159,6 +159,66 @@ extern "C"
     }
   }
 
+  void modioInitModCpp(ModioMod* modio_mod, modio::Mod* mod)
+  {
+    modio_mod->id = mod->id;
+    modio_mod->game_id = mod->game_id;
+    modio_mod->status = mod->status;
+    modio_mod->visible = mod->visible;
+    modio_mod->maturity_option = mod->maturity_option;
+    modio_mod->date_added = mod->date_added;
+    modio_mod->date_updated = mod->date_updated;
+    modio_mod->date_live = mod->date_live;
+
+    modio_mod->homepage_url = new char[mod->homepage_url.size() + 1];
+    strcpy(modio_mod->homepage_url, mod->homepage_url.c_str());
+
+    modio_mod->name = new char[mod->name.size() + 1];
+    strcpy(modio_mod->name, mod->name.c_str());
+
+    modio_mod->name_id = new char[mod->name_id.size() + 1];
+    strcpy(modio_mod->name_id, mod->name_id.c_str());
+
+    modio_mod->summary = new char[mod->summary.size() + 1];
+    strcpy(modio_mod->summary, mod->summary.c_str());
+
+    modio_mod->description = new char[mod->description.size() + 1];
+    strcpy(modio_mod->description, mod->description.c_str());
+
+    modio_mod->description_plaintext = new char[mod->description_plaintext.size() + 1];
+    strcpy(modio_mod->description_plaintext, mod->description_plaintext.c_str());
+
+    modio_mod->metadata_blob = new char[mod->metadata_blob.size() + 1];
+    strcpy(modio_mod->metadata_blob, mod->metadata_blob.c_str());
+
+    modio_mod->profile_url = new char[mod->profile_url.size() + 1];
+    strcpy(modio_mod->profile_url, mod->profile_url.c_str());
+
+    modioInitLogoCpp(&(modio_mod->logo), &(mod->logo));
+    modioInitUserCpp(&(modio_mod->submitted_by), &(mod->submitted_by));
+    modioInitModfileCpp(&(modio_mod->modfile), &(mod->modfile));
+    modioInitMediaCpp(&(modio_mod->media), &(mod->media));
+    modioInitStatsCpp(&(modio_mod->stats), &(mod->stats));
+
+    modio_mod->tags_array_size = (u32)mod->tags.size();
+    modio_mod->tags_array = new ModioTag[modio_mod->tags_array_size];
+    u32 i = 0;
+    for(auto tag : mod->tags)
+    {
+      modioInitTagCpp(&(modio_mod->tags_array[i]), &(tag));
+      i++;
+    }
+
+    modio_mod->metadata_kvp_array_size = (u32)mod->metadata_kvps.size();
+    modio_mod->metadata_kvp_array = new ModioMetadataKVP[modio_mod->metadata_kvp_array_size];
+    i = 0;
+    for(auto metadata_kvp : mod->metadata_kvps)
+    {
+      modioInitMetadataKVPCpp(&(modio_mod->metadata_kvp_array[i]), &(metadata_kvp));
+      i++;
+    }
+  }
+
   void modioFreeMod(ModioMod* mod)
   {
     if(mod)

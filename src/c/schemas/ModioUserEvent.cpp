@@ -50,6 +50,16 @@ extern "C"
       event->date_added = event_json["date_added"];
   }
 
+  void modioInitUserEventCpp(ModioUserEvent* modio_user_event, modio::UserEvent* user_event)
+  {
+    modio_user_event->id = user_event->id;
+    modio_user_event->game_id = user_event->game_id;
+    modio_user_event->mod_id = user_event->mod_id;
+    modio_user_event->user_id = user_event->user_id;
+    modio_user_event->event_type = user_event->event_type;
+    modio_user_event->date_added = user_event->date_added;
+  }
+
   void modioFreeUserEvent(ModioUserEvent* tag)
   {
     //No pointers

@@ -51,6 +51,36 @@ extern "C"
     }
   }
 
+  void modioInitMediaCpp(ModioMedia* modio_media, modio::Media* media)
+  {
+    modio_media->youtube_size = (u32)media->youtube.size();
+    modio_media->youtube_array = new char*[modio_media->youtube_size];
+    u32 i = 0;
+    for(auto youtube_str : media->youtube)
+    {
+      strcpy(modio_media->youtube_array[i], youtube_str.c_str());
+      i++;
+    }
+
+    modio_media->sketchfab_size = (u32)media->sketchfab.size();
+    modio_media->sketchfab_array = new char*[modio_media->sketchfab_size];
+    i = 0;
+    for(auto sketchfab_str : media->sketchfab)
+    {
+      strcpy(modio_media->sketchfab_array[i], sketchfab_str.c_str());
+      i++;
+    }
+
+    modio_media->images_size = (u32)media->images.size();
+    modio_media->images_array = new ModioImage[modio_media->images_size];
+    i = 0;
+    for(auto image : media->images)
+    {
+      modioInitImageCpp(&(modio_media->images_array[i]), &image);
+      i++;
+    }
+  }
+
   void modioFreeMedia(ModioMedia* media)
   {
     if(media)

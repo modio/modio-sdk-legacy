@@ -15,6 +15,12 @@ extern "C"
       dependency->date_added = dependency_json["date_added"];
   }
 
+  void modioInitDependencyCpp(ModioDependency* modio_dependency, modio::Dependency* dependency)
+  {
+    modio_dependency->mod_id = dependency->mod_id;
+    modio_dependency->date_added = dependency->date_added;
+  }
+
   void modioFreeDependency(ModioDependency* dependency)
   {
     if(dependency)

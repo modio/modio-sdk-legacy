@@ -41,6 +41,21 @@ extern "C"
     }
   }
 
+  void modioInitAvatarCpp(ModioAvatar* modio_avatar, modio::Avatar* avatar)
+  {
+    modio_avatar->filename = new char[avatar->filename.size() + 1];
+    strcpy(modio_avatar->filename, avatar->filename.c_str());
+
+    modio_avatar->original = new char[avatar->original.size() + 1];
+    strcpy(modio_avatar->original, avatar->original.c_str());
+
+    modio_avatar->thumb_50x50 = new char[avatar->thumb_50x50.size() + 1];
+    strcpy(modio_avatar->thumb_50x50, avatar->thumb_50x50.c_str());
+
+    modio_avatar->thumb_100x100 = new char[avatar->thumb_100x100.size() + 1];
+    strcpy(modio_avatar->thumb_100x100, avatar->thumb_100x100.c_str());
+  }
+
   void modioFreeAvatar(ModioAvatar* avatar)
   {
     if(avatar)

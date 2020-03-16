@@ -87,6 +87,35 @@ extern "C"
     modioInitDownload(&(modfile->download), download_json);
   }
 
+  void modioInitModfileCpp(ModioModfile* modio_modfile, modio::Modfile* modfile)
+  {
+    modio_modfile->id = modfile->id;
+    modio_modfile->mod_id = modfile->mod_id;
+    modio_modfile->virus_status = modfile->virus_status;
+    modio_modfile->virus_positive = modfile->virus_positive;
+    modio_modfile->date_added = modfile->date_added;
+    modio_modfile->date_scanned = modfile->date_scanned;
+    modio_modfile->filesize = modfile->filesize;
+
+    modio_modfile->filename = new char[modfile->filename.size() + 1];
+    strcpy(modio_modfile->filename, modfile->filename.c_str());
+
+    modio_modfile->version = new char[modfile->version.size() + 1];
+    strcpy(modio_modfile->version, modfile->version.c_str());
+
+    modio_modfile->virustotal_hash = new char[modfile->virustotal_hash.size() + 1];
+    strcpy(modio_modfile->virustotal_hash, modfile->virustotal_hash.c_str());
+
+    modio_modfile->changelog = new char[modfile->changelog.size() + 1];
+    strcpy(modio_modfile->changelog, modfile->changelog.c_str());
+
+    modio_modfile->metadata_blob = new char[modfile->metadata_blob.size() + 1];
+    strcpy(modio_modfile->metadata_blob, modfile->metadata_blob.c_str());
+
+    modioInitFilehashCpp(&(modio_modfile->filehash), &(modfile->filehash));
+    modioInitDownloadCpp(&(modio_modfile->download), &(modfile->download));
+  }
+
   void modioFreeModfile(ModioModfile* modfile)
   {
     if(modfile)

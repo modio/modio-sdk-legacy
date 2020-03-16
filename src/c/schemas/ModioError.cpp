@@ -41,6 +41,23 @@ extern "C"
     }
   }
 
+  void modioInitErrorCpp(ModioError* modio_error, modio::Error* error)
+  {
+    modio_error->code = error->code;
+
+    modio_error->message = new char[error->message.size() + 1];
+    strcpy(modio_error->message, error->message.c_str());
+
+    modio_error->errors_array_size = (u32)error->errors.size();
+    modio_error->errors_array = new char*[modio_error->errors_array_size];
+    u32 i = 0;
+    for(auto error_str : error->errors)
+    {
+      strcpy(modio_error->errors_array[i], error_str.c_str());
+      i++;
+    }
+  }
+
   void modioFreeError(ModioError* error)
   {
     if(error)

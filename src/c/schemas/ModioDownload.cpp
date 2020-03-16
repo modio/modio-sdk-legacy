@@ -19,6 +19,14 @@ extern "C"
     }
   }
 
+  void modioInitDownloadCpp(ModioDownload* modio_download, modio::Download* download)
+  {
+    modio_download->date_expires = download->date_expires;
+
+    modio_download->binary_url = new char[download->binary_url.size() + 1];
+    strcpy(modio_download->binary_url, download->binary_url.c_str());
+  }
+
   void modioFreeDownload(ModioDownload* download)
   {
     if(download)

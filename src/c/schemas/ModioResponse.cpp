@@ -29,8 +29,19 @@ extern "C"
     nlohmann::json error_json;
     if(modio::hasKey(response_json, "error"))
       error_json = response_json["error"];
-
     modioInitError(&(response->error), error_json);
+  }
+
+  void modioInitResponseCpp(ModioResponse* modio_response, modio::Response* response)
+  {
+    modio_response->code = response->code;
+    modio_response->result_cached = response->result_cached;
+    modio_response->result_count = response->result_count;
+    modio_response->result_limit = response->result_limit;
+    modio_response->result_offset = response->result_offset;
+    modio_response->result_total = response->result_total;
+
+    modioInitErrorCpp(&(modio_response->error), &(response->error));
   }
 
   void modioFreeResponse(ModioResponse* response)

@@ -15,6 +15,12 @@ extern "C"
     }
   }
 
+  void modioInitFilehashCpp(ModioFilehash* modio_filehash, modio::Filehash* filehash)
+  {
+    modio_filehash->md5 = new char[filehash->md5.size() + 1];
+    strcpy(modio_filehash->md5, filehash->md5.c_str());
+  }
+
   void modioFreeFilehash(ModioFilehash* filehash)
   {
     if(filehash)

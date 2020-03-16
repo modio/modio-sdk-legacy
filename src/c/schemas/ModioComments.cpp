@@ -55,6 +55,22 @@ extern "C"
     modioInitUser(&(comment->user), user_json);
   }
 
+  void modioInitCommentCpp(ModioComment* modio_comment, modio::Comment* comment)
+  {
+    modio_comment->id = comment->id;
+    modio_comment->mod_id = comment->mod_id;
+    modio_comment->date_added = comment->date_added;
+    modio_comment->reply_id = comment->reply_id;
+    modio_comment->karma = comment->karma;
+    modio_comment->karma_guest = comment->karma_guest;
+
+    modio_comment->thread_position = new char[comment->thread_position.size() + 1];
+    strcpy(modio_comment->thread_position, comment->thread_position.c_str());
+
+    modio_comment->content = new char[comment->content.size() + 1];
+    strcpy(modio_comment->content, comment->content.c_str());
+  }
+
   void modioFreeComment(ModioComment *comment)
   {
     if (comment)

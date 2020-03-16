@@ -47,6 +47,24 @@ extern "C"
     }
   }
 
+  void modioInitLogoCpp(ModioLogo* modio_logo, modio::Logo* logo)
+  {
+    modio_logo->filename = new char[logo->filename.size() + 1];
+    strcpy(modio_logo->filename, logo->filename.c_str());
+
+    modio_logo->original = new char[logo->original.size() + 1];
+    strcpy(modio_logo->original, logo->original.c_str());
+
+    modio_logo->thumb_320x180 = new char[logo->thumb_320x180.size() + 1];
+    strcpy(modio_logo->thumb_320x180, logo->thumb_320x180.c_str());
+
+    modio_logo->thumb_640x360 = new char[logo->thumb_640x360.size() + 1];
+    strcpy(modio_logo->thumb_640x360, logo->thumb_640x360.c_str());
+
+    modio_logo->thumb_1280x720 = new char[logo->thumb_1280x720.size() + 1];
+    strcpy(modio_logo->thumb_1280x720, logo->thumb_1280x720.c_str());
+  }
+
   void modioFreeLogo(ModioLogo* logo)
   {
     if(logo)
