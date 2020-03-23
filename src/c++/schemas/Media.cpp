@@ -19,9 +19,11 @@ void Media::initialize(ModioMedia modio_media)
   }
 
   images.resize(modio_media.images_size);
-  for (u32 i = 0; i < modio_media.images_size; i++)
+  u32 i = 0;
+  for(auto image : images)
   {
-    images[i].initialize(modio_media.images_array[i]);
+    image.initialize(modio_media.images_array[i]);
+    i++;
   }
 }
 
