@@ -3,7 +3,7 @@
 
 namespace modio
 {
-  std::string VERSION = "v0.12.9 DEV";
+  std::string VERSION = "v0.12.10 DEV";
   std::string API_KEY;
   std::string ACCESS_TOKEN = "";
   bool IS_LOGGED_IN = false;
