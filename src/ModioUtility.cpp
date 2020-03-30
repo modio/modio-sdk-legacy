@@ -88,7 +88,7 @@ void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, Modi
       modioFreeFilter(&filter);
     }
 
-    modioUpdateMods(NULL, &modio::onInitUpdateMods);
+    modioUpdateModfiles(NULL, &modio::onInitUpdateModfiles);
   }
   else
   {

@@ -235,7 +235,7 @@ void modioCheckIfModsAreUpdated(void* object, u32 const* mod_id_array, u32 mod_i
   }
 }
 
-void modioUpdateMods(void* object, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
+void modioUpdateModfiles(void* object, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
 {
   modio::writeLogLine("Updating mods...", MODIO_DEBUGLEVEL_LOG);
 
@@ -263,7 +263,7 @@ void modioUpdateMods(void* object, void(*callback)(void* object, ModioResponse r
       i++;
     }
 
-    modioCheckIfModsAreUpdated(NULL, mod_id_array, modio::current_user_subscriptions.size(), &onModioUpdateMods);
+    modioCheckIfModsAreUpdated(NULL, mod_id_array, modio::current_user_subscriptions.size(), &onModioUpdateModfiles);
 
     delete[] mod_id_array;
   } else

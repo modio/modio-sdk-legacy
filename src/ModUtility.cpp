@@ -243,7 +243,7 @@ void onCheckIfInstalledModsAreUpdated(void* object, ModioResponse response, bool
   }
 }
 
-void onInitUpdateMods(void* object, ModioResponse response, bool mods_are_updated)
+void onInitUpdateModfiles(void* object, ModioResponse response, bool mods_are_updated)
 {
   if(mods_are_updated)
   {

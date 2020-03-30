@@ -2,7 +2,7 @@
 #include "Utility.h" // for hasKey
 
 std::map<u32, CheckIfModsAreUpdatedParams *> check_if_mods_are_updated_callbacks;
-std::map<u32, UpdateModsParams *> update_mods_callbacks;
+std::map<u32, UpdateModfilesParams *> update_modfiles_callbacks;
 
 
 void onModioCheckIfModsAreUpdated(void *object, ModioResponse response, ModioMod *mods, u32 mods_size)
@@ -62,13 +62,13 @@ void onModioCheckIfModsAreUpdated(void *object, ModioResponse response, ModioMod
   }
 }
 
-void onModioUpdateMods(void* object, ModioResponse response, bool mods_are_updated)
+void onModioUpdateModfiles(void* object, ModioResponse response, bool mods_are_updated)
 {
   u32 call_number = *(u32*)object;
-  update_mods_callbacks[call_number]->callback(update_mods_callbacks[call_number]->object,
+  update_modfiles_callbacks[call_number]->callback(update_modfiles_callbacks[call_number]->object,
                                                               response,
                                                               mods_are_updated);
-  delete update_mods_callbacks[call_number];
+  delete update_modfiles_callbacks[call_number];
   delete (u32*)object;
     
 }

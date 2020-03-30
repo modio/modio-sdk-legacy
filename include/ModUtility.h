@@ -20,7 +20,7 @@ namespace modio
   std::string getInstalledModPath(u32 mod_id);
   void updateModsCache(std::vector<u32> mod_ids);
   void onCheckIfInstalledModsAreUpdated(void* object, ModioResponse response, bool mods_are_updated);
-  void onInitUpdateMods(void* object, ModioResponse response, bool mods_are_updated);
+  void onInitUpdateModfiles(void* object, ModioResponse response, bool mods_are_updated);
 }
 
 #endif
