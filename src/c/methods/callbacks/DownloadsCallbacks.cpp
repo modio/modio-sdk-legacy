@@ -19,7 +19,7 @@ void onModioCheckIfModsAreUpdated(void *object, ModioResponse response, ModioMod
       modioGetInstalledMod(mods[i].id, &installed_mod);
       if (installed_mod.mod_id != 0)
       {
-        if(installed_mod.date_updated < mods[i].date_updated)
+        if(installed_mod.mod.modfile.date_added < mods[i].modfile.date_added)
         {
           modio::writeLogLine("The following installed mod needs an update: " + modio::toString(mods[i].id), MODIO_DEBUGLEVEL_LOG);
           mod_ids_that_need_update.push_back(mods[i].id);
