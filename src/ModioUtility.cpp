@@ -90,7 +90,7 @@ void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, Modi
   }
   else
   {
-    modio::writeLogLine("Could not update current user ratings.", MODIO_DEBUGLEVEL_WARNING);
+    modio::writeLogLine("Could not update current user subscriptions.", MODIO_DEBUGLEVEL_WARNING);
   }
 }
 

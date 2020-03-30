@@ -122,11 +122,12 @@ void checkIfInstalledModsAreUpdated()
   }
 }
 
-void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const *api_key, char const *root_path)
+void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, bool polling_enabled, char const *api_key, char const *root_path)
 {
   std::clog << "[mod.io] Initializing mod.io SDK " << modio::VERSION << std::endl;
 
   modio::RETRIEVE_MODS_FROM_OTHER_GAMES = retrieve_mods_from_other_games;
+  modio::POLLING_ENABLED = polling_enabled;
   
   if (root_path)
     modio::ROOT_PATH = root_path;
@@ -259,7 +260,7 @@ void modioPollEvents()
 
 void modioProcess()
 {
-  if (modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+  if (modio::POLLING_ENABLED && modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
   {
     u32 current_time = modio::getCurrentTimeSeconds();
     if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL_TIME > modio::USER_EVENT_POLL_INTERVAL)

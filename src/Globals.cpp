@@ -3,7 +3,7 @@
 
 namespace modio
 {
-  std::string VERSION = "v0.12.9 DEV";
+  std::string VERSION = "v0.12.11 DEV";
   std::string API_KEY;
   std::string ACCESS_TOKEN = "";
   bool IS_LOGGED_IN = false;
@@ -12,6 +12,7 @@ namespace modio
   std::string ADDITIONAL_GAMEDIR_PATH = "";
   u32 DEBUG_LEVEL = MODIO_DEBUGLEVEL_LOG;
   bool RETRIEVE_MODS_FROM_OTHER_GAMES = false;
+  bool POLLING_ENABLED = false;
   std::string MODIO_URL = "https://api.mod.io/";
   std::string MODIO_VERSION_PATH = "v1/";
   u32 LAST_MOD_EVENT_POLL_ID = 0;
