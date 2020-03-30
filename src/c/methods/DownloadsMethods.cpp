@@ -208,6 +208,16 @@ void modioCheckIfModsAreUpdated(void* object, u32 const* mod_id_array, u32 mod_i
 {
   modio::writeLogLine("Checking if mods are updated...", MODIO_DEBUGLEVEL_LOG);
   u32 i = 0;
+
+  u32 *call_number = new u32;
+  *call_number = modio::curlwrapper::getCallNumber();
+
+  check_if_mods_are_updated_callbacks[*call_number] = new CheckIfModsAreUpdatedParams;
+  check_if_mods_are_updated_callbacks[*call_number]->callback = callback;
+  check_if_mods_are_updated_callbacks[*call_number]->call_count = mod_id_array_size/100 + 1;
+  check_if_mods_are_updated_callbacks[*call_number]->mods_are_updated = true;
+  check_if_mods_are_updated_callbacks[*call_number]->object = object;
+
   while(i < mod_id_array_size)
   {
     ModioFilterCreator filter;
@@ -219,16 +229,46 @@ void modioCheckIfModsAreUpdated(void* object, u32 const* mod_id_array, u32 mod_i
       if(i%100 == 0)
         break;
     }
-    
-    u32 *call_number = new u32;
-    *call_number = modio::curlwrapper::getCallNumber();
-
-		check_if_mods_are_updated_callbacks[*call_number] = new CheckIfModsAreUpdatedParams;
-		check_if_mods_are_updated_callbacks[*call_number]->callback = callback;
-		check_if_mods_are_updated_callbacks[*call_number]->object = object;
 
     modioGetAllMods(call_number, filter, &onModioCheckIfModsAreUpdated);
     modioFreeFilter(&filter);
+  }
+}
+
+void modioUpdateMods(void* object, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
+{
+  modio::writeLogLine("Updating mods...", MODIO_DEBUGLEVEL_LOG);
+
+  std::set<u32> mods_to_update;
+  for (u32 mod_id : modio::current_user_subscriptions)
+  {
+    mods_to_update.insert(mod_id);
+  }
+  modio::writeLogLine(modio::toString((u32)modio::current_user_subscriptions.size()) + " mod subscriptions found", MODIO_DEBUGLEVEL_LOG);
+
+  for(auto installed_mod_json : modio::installed_mods)
+  {
+    mods_to_update.insert((u32)installed_mod_json["mod_id"]);
+  }
+  modio::writeLogLine(modio::toString((u32)modio::installed_mods.size()) + " installed mods found", MODIO_DEBUGLEVEL_LOG);
+
+  if(modio::current_user_subscriptions.size() > 0)
+  {
+    u32 *mod_id_array = new u32[modio::current_user_subscriptions.size()];
+    u32 i = 0;
+	  for (u32 mod_id : modio::current_user_subscriptions)
+    {
+		  mod_id_array[i] = mod_id;
+      modio::writeLogLine(modio::toString(mod_id) + " will be checked", MODIO_DEBUGLEVEL_LOG);
+      i++;
+    }
+
+    modioCheckIfModsAreUpdated(NULL, mod_id_array, modio::current_user_subscriptions.size(), &onModioUpdateMods);
+
+    delete[] mod_id_array;
+  } else
+  {
+    modio::writeLogLine("No mod subscriptions found", MODIO_DEBUGLEVEL_LOG);
   }
 }
 }

@@ -86,17 +86,6 @@ static void loadAuthenticationFile()
   }
 }
 
-void onCheckIfInstalledModsAreUpdated(void* object, ModioResponse response, bool mods_are_updated)
-{
-  if(mods_are_updated)
-  {
-    modio::writeLogLine("All installed mods are updated.", MODIO_DEBUGLEVEL_LOG);
-  }else
-  {
-    modio::writeLogLine("Some installed mods are not updated, they were added to the download queue.", MODIO_DEBUGLEVEL_LOG);
-  }
-}
-
 void checkIfInstalledModsAreUpdated()
 {
   modio::writeLogLine("Checking if all installed mods are updated...", MODIO_DEBUGLEVEL_LOG);
@@ -111,7 +100,7 @@ void checkIfInstalledModsAreUpdated()
 	  for (size_t i = 0; i < installed_mods_count; i++)
 		  mod_id_array[i] = installed_mods[i].mod_id;
 
-    modioCheckIfModsAreUpdated(NULL, mod_id_array, installed_mods_count, &onCheckIfInstalledModsAreUpdated);
+    modioCheckIfModsAreUpdated(NULL, mod_id_array, installed_mods_count, &modio::onCheckIfInstalledModsAreUpdated);
 
     delete[] installed_mods;
     delete[] mod_id_array;

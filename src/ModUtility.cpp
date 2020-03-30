@@ -231,4 +231,26 @@ std::string getInstalledModPath(u32 mod_id)
   }
   return "";
 }
+
+void onCheckIfInstalledModsAreUpdated(void* object, ModioResponse response, bool mods_are_updated)
+{
+  if(mods_are_updated)
+  {
+    modio::writeLogLine("All installed mods are updated.", MODIO_DEBUGLEVEL_LOG);
+  }else
+  {
+    modio::writeLogLine("Some installed mods are not updated, they were added to the download queue.", MODIO_DEBUGLEVEL_LOG);
+  }
+}
+
+void onInitUpdateMods(void* object, ModioResponse response, bool mods_are_updated)
+{
+  if(mods_are_updated)
+  {
+    modio::writeLogLine("All mods are updated.", MODIO_DEBUGLEVEL_LOG);
+  }else
+  {
+    modio::writeLogLine("Some mods are not updated, they were added to the download queue.", MODIO_DEBUGLEVEL_LOG);
+  }
+}
 } // namespace modio
