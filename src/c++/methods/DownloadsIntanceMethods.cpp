@@ -112,16 +112,16 @@ u32 Instance::getModState(u32 mod_id)
   return modioGetModState(mod_id);
 }
 
-void Instance::checkIfModsAreUpdated(const std::vector<u32> mod_ids, const std::function<void(const modio::Response &, const bool mods_are_updated)> &callback)
+void Instance::downloadModfilesById(const std::vector<u32> mod_ids, const std::function<void(const modio::Response &, const bool mods_are_updated)> &callback)
 {
 	u32 *mod_id_array = new u32[mod_ids.size()];
 	for (size_t i = 0; i < mod_ids.size(); i++)
 		mod_id_array[i] = mod_ids[i];
 
-	struct GetBoolCall *check_if_mods_are_updated_call = new GetBoolCall{callback};
-	check_if_mods_are_updated_calls[current_call_id] = check_if_mods_are_updated_call;
+	struct GetBoolCall *download_modfiles_by_id_call = new GetBoolCall{callback};
+	download_modfiles_by_id_calls[current_call_id] = download_modfiles_by_id_call;
 
-	modioCheckIfModsAreUpdated((void*)((uintptr_t)current_call_id), mod_id_array, (u32)mod_ids.size(), &onCheckIfModsAreUpdated);
+	modioDownloadModfilesById((void*)((uintptr_t)current_call_id), mod_id_array, (u32)mod_ids.size(), &onDownloadModfilesById);
 	current_call_id++;
 
 	delete[] mod_id_array;

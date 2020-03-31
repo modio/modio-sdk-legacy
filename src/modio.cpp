@@ -100,7 +100,7 @@ void checkIfInstalledModsAreUpdated()
 	  for (size_t i = 0; i < installed_mods_count; i++)
 		  mod_id_array[i] = installed_mods[i].mod_id;
 
-    modioCheckIfModsAreUpdated(NULL, mod_id_array, installed_mods_count, &modio::onCheckIfInstalledModsAreUpdated);
+    modioDownloadModfilesById(NULL, mod_id_array, installed_mods_count, &modio::onCheckIfInstalledModsAreUpdated);
 
     delete[] installed_mods;
     delete[] mod_id_array;
