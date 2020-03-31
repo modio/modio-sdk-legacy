@@ -70,7 +70,7 @@ void onModioDownloadSubscribedModfiles(void* object, ModioResponse response, boo
   {
     for(auto installed_mod_json : modio::installed_mods)
     {
-      if(modio::current_user_subscriptions.find((u32)installed_mod_json["mod_id"]) != modio::current_user_subscriptions.end())
+      if(modio::current_user_subscriptions.find((u32)installed_mod_json["mod_id"]) == modio::current_user_subscriptions.end())
       {
         modioUninstallMod((u32)installed_mod_json["mod_id"]);
       }
