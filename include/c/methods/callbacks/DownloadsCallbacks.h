@@ -16,6 +16,8 @@ struct DownloadSubscribedModfilesParams
 {
 	void* object;
 	bool uninstall_unsubscribed;
+	std::vector<u32> mod_ids;
+	u32 pending_call_count;
 	void(*callback)(void* object, ModioResponse response, bool mods_are_updated);
 };
 

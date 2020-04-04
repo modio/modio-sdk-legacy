@@ -206,7 +206,7 @@ u32 modioGetModState(u32 mod_id)
 
 void modioDownloadModfilesById(void* object, u32 const* mod_id_array, u32 mod_id_array_size, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
 {
-  modio::writeLogLine("Checking if mods are updated...", MODIO_DEBUGLEVEL_LOG);
+  modio::writeLogLine("Downloading mods by id...", MODIO_DEBUGLEVEL_LOG);
   u32 i = 0;
 
   u32 *call_number = new u32;
@@ -224,12 +224,14 @@ void modioDownloadModfilesById(void* object, u32 const* mod_id_array, u32 mod_id
     modioInitFilter(&filter);
     while (i < mod_id_array_size)
     {
+      modio::writeLogLine("Mod " + modio::toString(mod_id_array[i]) + " will be downloaded.", MODIO_DEBUGLEVEL_LOG);
       modioAddFilterInField(&filter, "id", modio::toString(mod_id_array[i]).c_str());
       i++;
       if(i%100 == 0)
         break;
     }
 
+    modio::writeLogLine("Requesting mod data now", MODIO_DEBUGLEVEL_LOG);
     modioGetAllMods(call_number, filter, &onModioDownloadModfilesById);
     modioFreeFilter(&filter);
   }
@@ -237,34 +239,18 @@ void modioDownloadModfilesById(void* object, u32 const* mod_id_array, u32 mod_id
 
 void modioDownloadSubscribedModfiles(void* object, bool uninstall_unsubscribed, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
 {
-  modio::writeLogLine("Updating mods...", MODIO_DEBUGLEVEL_LOG);
-  modio::writeLogLine(modio::toString((u32)modio::installed_mods.size()) + " installed mods found", MODIO_DEBUGLEVEL_LOG);
- 
-  if(modio::current_user_subscriptions.size() > 0)
-  {
-    u32 *mod_id_array = new u32[modio::current_user_subscriptions.size()];
-    u32 i = 0;
-	  for (u32 mod_id : modio::current_user_subscriptions)
-    {
-		  mod_id_array[i] = mod_id;
-      modio::writeLogLine(modio::toString(mod_id) + " will be checked", MODIO_DEBUGLEVEL_LOG);
-      i++;
-    }
+  modio::writeLogLine("Downloading subscribed mods", MODIO_DEBUGLEVEL_LOG);
+  u32 *call_number = new u32;
+  *call_number = modio::curlwrapper::getCallNumber();
+  download_subscribed_modfiles_callbacks[*call_number] = new DownloadSubscribedModfilesParams;
+  download_subscribed_modfiles_callbacks[*call_number]->callback = callback;
+  download_subscribed_modfiles_callbacks[*call_number]->uninstall_unsubscribed = uninstall_unsubscribed;
+  download_subscribed_modfiles_callbacks[*call_number]->pending_call_count = 1;
+  download_subscribed_modfiles_callbacks[*call_number]->object = object;
 
-    u32 *call_number = new u32;
-    *call_number = modio::curlwrapper::getCallNumber();
-
-    download_subscribed_modfiles_callbacks[*call_number] = new DownloadSubscribedModfilesParams;
-    download_subscribed_modfiles_callbacks[*call_number]->callback = callback;
-    download_subscribed_modfiles_callbacks[*call_number]->uninstall_unsubscribed = uninstall_unsubscribed;
-    download_subscribed_modfiles_callbacks[*call_number]->object = object;
-
-    modioDownloadModfilesById(call_number, mod_id_array, modio::current_user_subscriptions.size(), &onModioDownloadSubscribedModfiles);
-
-    delete[] mod_id_array;
-  } else
-  {
-    modio::writeLogLine("No mod subscriptions found", MODIO_DEBUGLEVEL_LOG);
-  }
+  ModioFilterCreator filter;
+  modioInitFilter(&filter);
+  modioGetUserSubscriptions(call_number, filter, &modio::onUpdateCurrentUserSubscriptions);
+  modioFreeFilter(&filter);
 }
 }
