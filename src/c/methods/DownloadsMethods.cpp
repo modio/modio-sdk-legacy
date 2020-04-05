@@ -53,9 +53,9 @@ void modioCancelModDownload(u32 mod_id)
     if (queued_mod_download->mod_id == mod_id)
     {
       if(queued_mod_download->state == MODIO_MOD_STARTING_DOWNLOAD
-          && queued_mod_download->state == MODIO_MOD_DOWNLOADING
-          && queued_mod_download->state == MODIO_MOD_PAUSING
-          && queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD
+          || queued_mod_download->state == MODIO_MOD_DOWNLOADING
+          || queued_mod_download->state == MODIO_MOD_PAUSING
+          || queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD
           )
       {
         modio::writeLogLine("Mod id: " + modio::toString(mod_id) + " is being downloaded, cancelling download...", MODIO_DEBUGLEVEL_LOG);
