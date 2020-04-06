@@ -224,7 +224,7 @@ void modioDownloadModfilesById(void* object, u32 const* mod_id_array, u32 mod_id
     modioInitFilter(&filter);
     while (i < mod_id_array_size)
     {
-      modio::writeLogLine("Mod " + modio::toString(mod_id_array[i]) + " will be downloaded.", MODIO_DEBUGLEVEL_LOG);
+      modio::writeLogLine("Mod " + modio::toString(mod_id_array[i]) + " data will be checked", MODIO_DEBUGLEVEL_LOG);
       modioAddFilterInField(&filter, "id", modio::toString(mod_id_array[i]).c_str());
       i++;
       if(i%100 == 0)
@@ -250,7 +250,7 @@ void modioDownloadSubscribedModfiles(void* object, bool uninstall_unsubscribed, 
 
   ModioFilterCreator filter;
   modioInitFilter(&filter);
-  modioGetUserSubscriptions(call_number, filter, &modio::onUpdateCurrentUserSubscriptions);
+  modioGetUserSubscriptions(call_number, filter, &onModioDownloadSubscribedModfiles);
   modioFreeFilter(&filter);
 }
 }

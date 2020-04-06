@@ -26,23 +26,23 @@ void onModioDownloadModfilesById(void *object, ModioResponse response, ModioMod 
           download_modfiles_by_id_callbacks[call_number]->mods_are_updated = false;
         }else
         {
-          modio::writeLogLine(modio::toString(mods[i].id) + "is up to date.", MODIO_DEBUGLEVEL_LOG);
+          modio::writeLogLine(modio::toString(mods[i].id) + " is up to date. Won't be downloaded.", MODIO_DEBUGLEVEL_LOG);
         }
       }
       else
       {
-        modio::writeLogLine("Modfile is not installed, will be added to the download queue: " + modio::toString(mods[i].id), MODIO_DEBUGLEVEL_ERROR);
+        modio::writeLogLine("Modfile is not installed, will be added to the download queue: " + modio::toString(mods[i].id), MODIO_DEBUGLEVEL_LOG);
         mod_ids_that_need_update.push_back(mods[i].id);
         download_modfiles_by_id_callbacks[call_number]->mods_are_updated = false;
       }
     }
     if(mod_ids_that_need_update.size() > 0)
     {
-      modio::writeLogLine(modio::toString((u32)mod_ids_that_need_update.size()) + " mods will be added to the download queue", MODIO_DEBUGLEVEL_ERROR);
+      modio::writeLogLine(modio::toString((u32)mod_ids_that_need_update.size()) + " mods will be added to the download queue", MODIO_DEBUGLEVEL_LOG);
       modio::addModsToDownloadQueue(mod_ids_that_need_update);
     }else
     {
-      modio::writeLogLine("No mods will be added to the download queue", MODIO_DEBUGLEVEL_ERROR);
+      modio::writeLogLine("No mods will be added to the download queue", MODIO_DEBUGLEVEL_LOG);
     }
     
   }else
@@ -79,7 +79,7 @@ void onModioDownloadSubscribedModfiles(void* object, ModioResponse response, Mod
   {
     for(u32 i=0; i<mods_size; i++)
     {
-      modio::writeLogLine(modio::toString((u32)mods[i].id) + " mod will be downloaded", MODIO_DEBUGLEVEL_LOG);
+      modio::writeLogLine("User is subscribed to " + modio::toString((u32)mods[i].id), MODIO_DEBUGLEVEL_LOG);
       download_subscribed_modfiles_callbacks[call_number]->mod_ids.push_back(mods[i].id);
     }
 
@@ -91,7 +91,7 @@ void onModioDownloadSubscribedModfiles(void* object, ModioResponse response, Mod
       ModioFilterCreator filter;
       modioInitFilter(&filter);
       modioSetFilterOffset(&filter, response.result_offset + response.result_count);
-      modioGetUserSubscriptions(object, filter, &modio::onUpdateCurrentUserSubscriptions);
+      modioGetUserSubscriptions(object, filter, &onModioDownloadSubscribedModfiles);
       modioFreeFilter(&filter);
     }
     
@@ -126,7 +126,7 @@ void onModioDownloadSubscribedModfiles(void* object, ModioResponse response, Mod
 
       modioDownloadModfilesById(download_subscribed_modfiles_callbacks[call_number]->object,
                                   mod_ids,
-                                  download_subscribed_modfiles_callbacks[call_number]->mod_ids.size(),
+                                  (u32)download_subscribed_modfiles_callbacks[call_number]->mod_ids.size(),
                                   download_subscribed_modfiles_callbacks[call_number]->callback);
       
       modio::writeLogLine("cleanining up onModioDownloadSubscribedModfiles", MODIO_DEBUGLEVEL_LOG);

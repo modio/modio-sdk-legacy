@@ -696,7 +696,7 @@ void queueModDownload(ModioMod &modio_mod)
     return;
   }
 
-  writeLogLine("Preprocess finished, adding mod to the download queue.", MODIO_DEBUGLEVEL_WARNING);
+  writeLogLine("Preprocess finished, adding mod to the download queue.", MODIO_DEBUGLEVEL_LOG);
 
   QueuedModDownload *new_queued_mod_download = new QueuedModDownload();
   new_queued_mod_download->state = MODIO_MOD_QUEUED;

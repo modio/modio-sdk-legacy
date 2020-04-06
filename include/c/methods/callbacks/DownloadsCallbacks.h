@@ -25,7 +25,7 @@ extern std::map< u32, DownloadModfilesByIdParams* > download_modfiles_by_id_call
 extern std::map< u32, DownloadSubscribedModfilesParams* > download_subscribed_modfiles_callbacks;
 
 void onModioDownloadModfilesById(void *object, ModioResponse response, ModioMod *mods, u32 mods_size);
-void onModioDownloadSubscribedModfiles(void *object, ModioResponse response, bool mods_are_updated);
+void onModioDownloadSubscribedModfiles(void* object, ModioResponse response, ModioMod *mods, u32 mods_size);
 void clearDownloadsCallbackParams();
 
 #endif
