@@ -100,7 +100,7 @@ void modioGetModDownloadQueue(ModioQueuedModDownload* download_queue)
   u32 i = 0;
   for (auto &queued_mod_download : modio::curlwrapper::getModDownloadQueue())
   {
-    modioInitQueuedModDownloadCpp(&(download_queue[i]), queued_mod_download);
+    modioInitQueuedModDownloadCpp(&(download_queue[i]), queued_mod_download);    
     i++;
   }
 }

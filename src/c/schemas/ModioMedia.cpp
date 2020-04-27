@@ -58,6 +58,7 @@ extern "C"
     u32 i = 0;
     for(auto youtube_str : media->youtube)
     {
+      modio_media->youtube_array[i] = new char[youtube_str.size() + 1];
       strcpy(modio_media->youtube_array[i], youtube_str.c_str());
       i++;
     }
@@ -67,6 +68,7 @@ extern "C"
     i = 0;
     for(auto sketchfab_str : media->sketchfab)
     {
+      modio_media->sketchfab_array[i] = new char[sketchfab_str.size() + 1];
       strcpy(modio_media->sketchfab_array[i], sketchfab_str.c_str());
       i++;
     }
