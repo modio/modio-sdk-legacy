@@ -7,9 +7,10 @@ namespace modio
 {
 void addCallToCache(std::string url, nlohmann::json response_json)
 {
+  modio::writeLogLine("Adding to cache:" + url, MODIO_DEBUGLEVEL_LOG);
   u32 current_time_seconds = modio::getCurrentTimeSeconds();
   std::string current_time_string = modio::toString(current_time_seconds);
-  std::string filename = current_time_string + ".json";
+  std::string filename = modio::randomString(50) + ".json";
   modio::writeJson(modio::getModIODirectory() + "cache/" + filename, response_json);
   nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache.json");
   // TODO: Restore automatic cache removal?

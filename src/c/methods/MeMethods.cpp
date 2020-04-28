@@ -41,6 +41,7 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url_without_api_key, cache_max_age_seconds);
     if(cache_filename != "")
     {
+      modio::writeLogLine("Cache file found: " + cache_filename, MODIO_DEBUGLEVEL_LOG);
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
       if(!cache_file_json.empty())
       {
@@ -48,6 +49,9 @@ extern "C"
         modioOnGetUserSubscriptions(call_number, 200, cache_file_json);
         return;
       }
+    }else
+    {
+      modio::writeLogLine("No cache found", MODIO_DEBUGLEVEL_LOG);
     }
 
     modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetUserSubscriptions);

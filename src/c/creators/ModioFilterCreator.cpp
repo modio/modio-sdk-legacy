@@ -73,7 +73,7 @@ extern "C"
     filter->smaller_than_list = NULL;
     filter->greater_than_list = NULL;
     filter->not_equal_list = NULL;
-    filter->cache_max_age_seconds = 1;
+    filter->cache_max_age_seconds = 300;
   }
 
   bool shouldAppendMinusToSort(std::string field, bool ascending)
