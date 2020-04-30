@@ -67,6 +67,7 @@ extern "C"
 
   void modioGetUserEventsFilterString(void* object, char const* filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
   {
+    cache_max_age_seconds = 14;
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/events?" + (filter_string ? filter_string : "") + "&api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
