@@ -14,7 +14,12 @@ extern "C"
 {
   void modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user))
   {
-    
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestUserParam(object, callback);
+      return;
+    }
+
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/?api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
@@ -60,6 +65,12 @@ extern "C"
 
   void modioGetUserSubscriptions(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModsParam(object, callback);
+      return;
+    }
+
     modio::addGameIdFilter(filter);
 
     std::string filter_string = modio::getFilterString(&filter);
@@ -82,6 +93,12 @@ extern "C"
 
   void modioGetUserEvents(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestUserEventsParam(object, callback);
+      return;
+    }
+
     modio::addGameIdFilter(filter);
     
     std::string filter_string = modio::getFilterString(&filter);
@@ -118,6 +135,12 @@ extern "C"
 
   void modioGetUserGames(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioGame games[], u32 games_size))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestGamesParam(object, callback);
+      return;
+    }
+
     std::string filter_string = modio::getFilterString(&filter);
     modioGetUserGamesFilterString(object, filter_string.c_str(), filter.cache_max_age_seconds, callback);
   }
@@ -152,6 +175,12 @@ extern "C"
 
   void modioGetUserMods(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModsParam(object, callback);
+      return;
+    }
+
     modio::addGameIdFilter(filter);
     
     std::string filter_string = modio::getFilterString(&filter);
@@ -188,6 +217,12 @@ extern "C"
 
   void modioGetUserModfiles(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModfilesParam(object, callback);
+      return;
+    }
+
     modio::addGameIdFilter(filter);
     
     std::string filter_string = modio::getFilterString(&filter);
@@ -224,6 +259,12 @@ extern "C"
 
   void modioGetUserRatings(void* object, ModioFilterCreator filter, void (*callback)(void* object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestRatingsParam(object, callback);
+      return;
+    }
+
     modio::addGameIdFilter(filter);
     
     std::string filter_string = modio::getFilterString(&filter);

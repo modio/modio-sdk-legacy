@@ -55,6 +55,7 @@ extern "C"
 
   void modioLogout()
   {
+    modio::writeLogLine("Logging out...", MODIO_DEBUGLEVEL_LOG);
     modio::ACCESS_TOKEN = "";
     modio::writeJson(modio::getModIODirectory() + "authentication.json", nlohmann::json({}));
   }

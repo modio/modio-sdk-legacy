@@ -550,6 +550,8 @@ void handleDownloadImageError(void *object, void (*callback)(void *object, Modio
 
 void processGenericLocalUnauthorizedRequest(void* object, void(*callback)(void* object, ModioResponse response))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+  
   ModioResponse response;
   nlohmann::json empty_json;
   modioInitResponse(&response, empty_json);
@@ -560,6 +562,8 @@ void processGenericLocalUnauthorizedRequest(void* object, void(*callback)(void* 
 
 void processLocalUnauthorizedRequestModParam(void* object, void (*callback)(void *object, ModioResponse response, ModioMod mod))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   ModioMod mod;
   nlohmann::json empty_json;
@@ -576,6 +580,8 @@ void processLocalUnauthorizedRequestModParam(void* object, void (*callback)(void
 
 void processLocalUnauthorizedRequestModfileParam(void* object, void (*callback)(void *object, ModioResponse response, ModioModfile modfile))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   ModioModfile modfile;
   nlohmann::json empty_json;
@@ -592,6 +598,8 @@ void processLocalUnauthorizedRequestModfileParam(void* object, void (*callback)(
 
 void processLocalUnauthorizedRequestBoolParam(void* object, void (*callback)(void *object, ModioResponse response, bool))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   nlohmann::json empty_json;
   response.code = 401;
@@ -605,6 +613,8 @@ void processLocalUnauthorizedRequestBoolParam(void* object, void (*callback)(voi
 
 void processLocalUnauthorizedRequestUserParam(void* object, void (*callback)(void *object, ModioResponse response, ModioUser user))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   ModioUser user;
   nlohmann::json empty_json;
@@ -621,6 +631,8 @@ void processLocalUnauthorizedRequestUserParam(void* object, void (*callback)(voi
 
 void processLocalUnauthorizedRequestModsParam(void* object, void (*callback)(void *object, ModioResponse response, ModioMod mods[], u32 mods_size))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   nlohmann::json empty_json;
   response.code = 401;
@@ -634,6 +646,8 @@ void processLocalUnauthorizedRequestModsParam(void* object, void (*callback)(voi
 
 void processLocalUnauthorizedRequestUserEventsParam(void* object, void (*callback)(void *object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   nlohmann::json empty_json;
   response.code = 401;
@@ -647,6 +661,8 @@ void processLocalUnauthorizedRequestUserEventsParam(void* object, void (*callbac
 
 void processLocalUnauthorizedRequestGamesParam(void* object, void (*callback)(void *object, ModioResponse response, ModioGame games[], u32 games_size))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   nlohmann::json empty_json;
   response.code = 401;
@@ -660,6 +676,8 @@ void processLocalUnauthorizedRequestGamesParam(void* object, void (*callback)(vo
 
 void processLocalUnauthorizedRequestModfilesParam(void* object, void (*callback)(void *object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   nlohmann::json empty_json;
   response.code = 401;
@@ -673,6 +691,8 @@ void processLocalUnauthorizedRequestModfilesParam(void* object, void (*callback)
 
 void processLocalUnauthorizedRequestRatingsParam(void* object, void (*callback)(void *object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
 {
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
   ModioResponse response;
   nlohmann::json empty_json;
   response.code = 401;
