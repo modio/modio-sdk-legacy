@@ -12,6 +12,12 @@ extern "C"
 {
   void modioSubscribeToMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModParam(object, callback);
+      return;
+    }
+    modio::clearCache();
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
@@ -28,6 +34,12 @@ extern "C"
 
   void modioUnsubscribeFromMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    modio::clearCache();
     std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
 

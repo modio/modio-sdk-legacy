@@ -14,6 +14,7 @@ extern "C"
 {
   void modioGetAuthenticatedUser(void* object, void (*callback)(void* object, ModioResponse response, ModioUser user))
   {
+    
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "me/?api_key=" + modio::API_KEY;
 
     u32 call_number = modio::curlwrapper::getCallNumber();

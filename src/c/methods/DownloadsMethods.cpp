@@ -239,6 +239,12 @@ void modioDownloadModfilesById(void* object, u32 const* mod_id_array, u32 mod_id
 
 void modioDownloadSubscribedModfiles(void* object, bool uninstall_unsubscribed, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processLocalUnauthorizedRequestBoolParam(object, callback);
+    return;
+  }
+
   modio::writeLogLine("Downloading subscribed mods", MODIO_DEBUGLEVEL_LOG);
   u32 *call_number = new u32;
   *call_number = modio::curlwrapper::getCallNumber();

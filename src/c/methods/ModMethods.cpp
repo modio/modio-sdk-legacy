@@ -65,6 +65,12 @@ extern "C"
 
   void modioEditMod(void *object, u32 mod_id, ModioModEditor mod_editor, void (*callback)(void *object, ModioResponse response, ModioMod mod))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModParam(object, callback);
+      return;
+    }
+    
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_mod_callbacks[call_number] = new AddModParams;

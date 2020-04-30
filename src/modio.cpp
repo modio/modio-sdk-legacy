@@ -168,7 +168,7 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
   modio::updateInstalledModsJson();
   modio::updateDownloadedModsJson();
 
-  modio::clearOldCache();
+  modio::clearCache();
 
   nlohmann::json authentication_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
   if (modio::hasKey(authentication_json, "user"))
@@ -231,6 +231,11 @@ void modioShutdown()
   modioFreeUser(&modio::current_user);
 
   modio::writeLogLine("mod.io C interface finished shutting down", MODIO_DEBUGLEVEL_LOG);
+}
+
+void modioClearCache()
+{
+  modio::clearCache();
 }
 
 void modioPollEvents()

@@ -25,6 +25,12 @@ extern "C"
 
   void modioAddModTags(void* object, u32 mod_id, char const* const* tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
@@ -49,6 +55,12 @@ extern "C"
 
   void modioDeleteModTags(void* object, u32 mod_id, char const* const* tags_array, u32 tags_array_size, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();

@@ -50,7 +50,7 @@ extern "C"
 
   bool modioIsLoggedIn()
   {
-    return modio::IS_LOGGED_IN;
+    return modio::ACCESS_TOKEN != "";
   }
 
   void modioLogout()

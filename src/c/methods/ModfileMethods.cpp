@@ -65,11 +65,22 @@ extern "C"
 
   void modioAddModfile(u32 mod_id, ModioModfileCreator modfile_creator)
   {
+    if(!modioIsLoggedIn())
+    {
+      return;
+    }
+
     modio::curlwrapper::queueModfileUpload(mod_id, &modfile_creator);
   }
 
   void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_editor, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModfileParam(object, callback);
+      return;
+    }
+    
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     edit_modfile_callbacks[call_number] = new EditModfileParams;
@@ -94,6 +105,12 @@ extern "C"
 
   void modioDeleteModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     delete_modfile_callbacks[call_number] = new GenericRequestParams;

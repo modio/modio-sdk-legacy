@@ -13,6 +13,12 @@ extern "C"
 
 void modioAddModLogo(void* object, u32 mod_id, char const* logo_path, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+
   u32 call_number = modio::curlwrapper::getCallNumber();
 
   add_mod_logo_callbacks[call_number] = new GenericRequestParams;
@@ -30,6 +36,11 @@ void modioAddModLogo(void* object, u32 mod_id, char const* logo_path, void (*cal
 
 void modioAddModImages(void* object, u32 mod_id, char const* const* image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
   u32 call_number = modio::curlwrapper::getCallNumber();
 
   add_mod_images_callbacks[call_number] = new GenericRequestParams;
@@ -51,6 +62,12 @@ void modioAddModImages(void* object, u32 mod_id, char const* const* image_paths_
 
 void modioAddModYoutubeLinks(void* object, u32 mod_id, char const* const* youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -70,6 +87,12 @@ void modioAddModYoutubeLinks(void* object, u32 mod_id, char const* const* youtub
 
 void modioAddModSketchfabLinks(void* object, u32 mod_id, char const* const* sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+  
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -89,6 +112,11 @@ void modioAddModSketchfabLinks(void* object, u32 mod_id, char const* const* sket
 
 void modioDeleteModImages(void* object, u32 mod_id, char const* const* image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -108,6 +136,12 @@ void modioDeleteModImages(void* object, u32 mod_id, char const* const* image_pat
 
 void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char const* const* youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -127,6 +161,12 @@ void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char const* const* you
 
 void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char const* const* sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+  
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 

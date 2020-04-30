@@ -4,6 +4,9 @@
 #include <set>
 #include "c++/schemas/Mod.h"
 #include "c/schemas/ModioModEvent.h"
+#include "c/schemas/ModioMod.h"
+#include "c/schemas/ModioModfile.h"
+#include "c/schemas/ModioUser.h"
 #include "dependencies/nlohmann/json.hpp"
 #include "ModUtility.h"
 #include "Globals.h"
@@ -224,6 +227,8 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
 
     std::vector<u32> mod_edited_ids;
     std::vector<u32> mod_to_download_queue_ids;
+    if(events_array_size > 0)
+      modio::clearCache();
     for (size_t i = 0; i < events_array_size; i++)
     {
       if(events_array[i].id > modio::LAST_MOD_EVENT_POLL_ID)
@@ -363,6 +368,8 @@ static void onGetUserEventsPoll(void *object, ModioResponse response, ModioUserE
     modio::writeLogLine("User events polled ", MODIO_DEBUGLEVEL_LOG);
 
     std::vector<u32> mod_to_download_queue_ids;
+    if(events_array_size > 0)
+      modio::clearCache();
     for (size_t i = 0; i < events_array_size; i++)
     {
       if(events_array[i].id > modio::LAST_USER_EVENT_POLL_ID)
@@ -538,6 +545,142 @@ void handleDownloadImageError(void *object, void (*callback)(void *object, Modio
   nlohmann::json empty_json;
   modioInitResponse(&response, empty_json);
   callback(object, response);
+  modioFreeResponse(&response);
+}
+
+void processGenericLocalUnauthorizedRequest(void* object, void(*callback)(void* object, ModioResponse response))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  modioInitResponse(&response, empty_json);
+  response.code = 401;
+  callback(object, response);
+  modioFreeResponse(&response);
+}
+
+void processLocalUnauthorizedRequestModParam(void* object, void (*callback)(void *object, ModioResponse response, ModioMod mod))
+{
+  ModioResponse response;
+  ModioMod mod;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+  modioInitMod(&mod, empty_json);
+
+  callback(object, response, mod);
+  
+  modioFreeResponse(&response);
+  modioFreeMod(&mod);
+}
+
+void processLocalUnauthorizedRequestModfileParam(void* object, void (*callback)(void *object, ModioResponse response, ModioModfile modfile))
+{
+  ModioResponse response;
+  ModioModfile modfile;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+  modioInitModfile(&modfile, empty_json);
+
+  callback(object, response, modfile);
+  
+  modioFreeResponse(&response);
+  modioFreeModfile(&modfile);
+}
+
+void processLocalUnauthorizedRequestBoolParam(void* object, void (*callback)(void *object, ModioResponse response, bool))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+
+  callback(object, response, false);
+  
+  modioFreeResponse(&response);
+}
+
+void processLocalUnauthorizedRequestUserParam(void* object, void (*callback)(void *object, ModioResponse response, ModioUser user))
+{
+  ModioResponse response;
+  ModioUser user;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+  modioInitUser(&user, empty_json);
+
+  callback(object, response, user);
+  
+  modioFreeResponse(&response);
+  modioFreeUser(&user);
+}
+
+void processLocalUnauthorizedRequestModsParam(void* object, void (*callback)(void *object, ModioResponse response, ModioMod mods[], u32 mods_size))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+
+  callback(object, response, NULL, 0);
+  
+  modioFreeResponse(&response);
+}
+
+void processLocalUnauthorizedRequestUserEventsParam(void* object, void (*callback)(void *object, ModioResponse response, ModioUserEvent* events_array, u32 events_array_size))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+
+  callback(object, response, NULL, 0);
+  
+  modioFreeResponse(&response);
+}
+
+void processLocalUnauthorizedRequestGamesParam(void* object, void (*callback)(void *object, ModioResponse response, ModioGame games[], u32 games_size))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+
+  callback(object, response, NULL, 0);
+  
+  modioFreeResponse(&response);
+}
+
+void processLocalUnauthorizedRequestModfilesParam(void* object, void (*callback)(void *object, ModioResponse response, ModioModfile modfiles[], u32 modfiles_size))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+
+  callback(object, response, NULL, 0);
+  
+  modioFreeResponse(&response);
+}
+
+void processLocalUnauthorizedRequestRatingsParam(void* object, void (*callback)(void *object, ModioResponse response, ModioRating ratings[], u32 ratings_size))
+{
+  ModioResponse response;
+  nlohmann::json empty_json;
+  response.code = 401;
+
+  modioInitResponse(&response, empty_json);
+
+  callback(object, response, NULL, 0);
+  
   modioFreeResponse(&response);
 }
 

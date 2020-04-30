@@ -25,6 +25,12 @@ extern "C"
 
   void modioAddMetadataKVP(void* object, u32 mod_id, char const* const* metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
@@ -49,6 +55,12 @@ extern "C"
 
   void modioDeleteMetadataKVP(void* object, u32 mod_id, char const* const* metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();

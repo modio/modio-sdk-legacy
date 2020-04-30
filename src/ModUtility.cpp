@@ -54,6 +54,52 @@ std::string getCallFileFromCache(std::string url, u32 max_age_seconds)
   return "";
 }
 
+void clearOldCache()
+{
+  modio::writeLogLine("Clearing old cache files...", MODIO_DEBUGLEVEL_LOG);
+  u32 current_time = modio::getCurrentTimeSeconds();
+  nlohmann::json cache_json = modio::openJson(modio::getModIODirectory() + "cache.json");
+  nlohmann::json resulting_cache_json;
+  for (auto cache_file_json : cache_json)
+  {
+    if (modio::hasKey(cache_file_json, "datetime") && modio::hasKey(cache_file_json, "file"))
+    {
+      u32 cache_time = cache_file_json["datetime"];
+      u32 time_difference = current_time - cache_time;
+
+      if (time_difference > MAX_CACHE_TIME_SECONDS)
+      {
+        std::string cache_file_to_delete_path = modio::getModIODirectory() + "cache/";
+        std::string cache_filename = cache_file_json["file"];
+        cache_file_to_delete_path += cache_filename;
+        modio::removeFile(cache_file_to_delete_path);
+      }
+      else
+      {
+        resulting_cache_json.push_back(cache_file_json);
+      }
+    }
+  }
+  modio::writeJson(modio::getModIODirectory() + "cache.json", resulting_cache_json);
+  modio::writeLogLine("Finished clearing old cache files.", MODIO_DEBUGLEVEL_LOG);
+}
+
+void clearCache()
+{
+  modio::writeLogLine("Clearing all cache...", MODIO_DEBUGLEVEL_LOG);
+  nlohmann::json cache_json = modio::openJson(modio::getModIODirectory() + "cache.json");
+  for (auto cache_file_json : cache_json)
+  {
+    std::string cache_file_to_delete_path = modio::getModIODirectory() + "cache/";
+    std::string cache_filename = cache_file_json["file"];
+    cache_file_to_delete_path += cache_filename;
+    modio::removeFile(cache_file_to_delete_path);
+  }
+  nlohmann::json empty_json;
+  modio::writeJson(modio::getModIODirectory() + "cache.json", empty_json);
+  modio::writeLogLine("Finished clearing al cache files.", MODIO_DEBUGLEVEL_LOG);
+}
+
 void installDownloadedMods()
 {
   modio::writeLogLine("Installing downloaded mods...", MODIO_DEBUGLEVEL_LOG);
@@ -189,36 +235,6 @@ void updateDownloadedModsJson()
   
   modio::writeJson(modio::getModIODirectory() + "downloaded_mods.json", modio::g_downloaded_mods);
   modio::writeLogLine("Finished checking downloaded mods data...", MODIO_DEBUGLEVEL_LOG);
-}
-
-void clearOldCache()
-{
-  modio::writeLogLine("Clearing old cache files...", MODIO_DEBUGLEVEL_LOG);
-  u32 current_time = modio::getCurrentTimeSeconds();
-  nlohmann::json cache_json = modio::openJson(modio::getModIODirectory() + "cache.json");
-  nlohmann::json resulting_cache_json;
-  for (auto cache_file_json : cache_json)
-  {
-    if (modio::hasKey(cache_file_json, "datetime") && modio::hasKey(cache_file_json, "file"))
-    {
-      u32 cache_time = cache_file_json["datetime"];
-      u32 time_difference = current_time - cache_time;
-
-      if (time_difference > MAX_CACHE_TIME_SECONDS)
-      {
-        std::string cache_file_to_delete_path = modio::getModIODirectory() + "cache/";
-        std::string cache_filename = cache_file_json["file"];
-        cache_file_to_delete_path += cache_filename;
-        modio::removeFile(cache_file_to_delete_path);
-      }
-      else
-      {
-        resulting_cache_json.push_back(cache_file_json);
-      }
-    }
-  }
-  modio::writeJson(modio::getModIODirectory() + "cache.json", resulting_cache_json);
-  modio::writeLogLine("Finished clearing old cache files.", MODIO_DEBUGLEVEL_LOG);
 }
 
 std::string getInstalledModPath(u32 mod_id)

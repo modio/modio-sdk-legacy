@@ -17,6 +17,11 @@ void onJsonRequestFinished(CURL *curl)
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
   nlohmann::json response_json = modio::toJson(ongoing_call->response);
 
+  if(response_code == 401)
+  {
+    modioLogout();
+  }
+
   if (ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
   {
     u32 x_ratelimit_retryafter = atoi(ongoing_call->headers["X-Ratelimit-RetryAfter"].c_str());
