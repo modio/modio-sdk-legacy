@@ -1,6 +1,7 @@
 #include <map>
 #include <string>
 #include "Utility.h"
+#include "ModUtility.h"
 #include "c/ModioC.h"
 #include "dependencies/nlohmann/json.hpp"
 #include "wrappers/CurlWrapper.h"
