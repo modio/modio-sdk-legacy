@@ -3,10 +3,8 @@
 
 #include <map>
 
-#include "../../Globals.h"
-#include "../../Utility.h"
-#include "../ModioC.h"
-#include "../schemas/ModioListNode.h"
+#include <string>                             // for string
+#include "../ModioC.h"  // for ModioFilterCreator
 
 namespace modio
 {

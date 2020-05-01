@@ -1,9 +1,9 @@
 #ifndef MODIO_HEADER_H
 #define MODIO_HEADER_H
 
-#include "../../c/schemas/ModioHeader.h"
-#include "../../Globals.h"
-#include "../../Utility.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioHeader
 
 namespace modio
 {

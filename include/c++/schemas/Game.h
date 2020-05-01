@@ -1,8 +1,10 @@
 #ifndef MODIO_GAME_H
 #define MODIO_GAME_H
 
-#include "../../c/schemas/ModioGame.h"
-#include "../../Globals.h"
+#include <string>                                 // for string
+#include <list>                                   // for list
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioGame
 #include "User.h"
 #include "Icon.h"
 #include "Logo.h"
@@ -37,7 +39,7 @@ public:
   Icon icon;
   Logo logo;
   Header header;
-  std::vector<GameTagOption> game_tag_options;
+  std::list<GameTagOption> game_tag_options;
 
   void initialize(ModioGame game);
 };

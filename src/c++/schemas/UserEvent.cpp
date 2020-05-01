@@ -1,4 +1,6 @@
 #include "c++/schemas/UserEvent.h"
+#include "c/ModioC.h"                      // for ModioUserEvent
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

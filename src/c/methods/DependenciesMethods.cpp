@@ -1,4 +1,13 @@
-#include "c/methods/DependenciesMethods.h"
+#include <map>                                          // for map
+#include <string>                                       // for string, opera...
+#include "Utility.h"        // for toString, get...
+#include "wrappers/CurlWrapper.h"       // for getCallNumber
+#include "c/ModioC.h"                        // for u32, ModioRes...
+#include "Globals.h"       // for GAME_ID, MODI...
+#include "ModioUtility.h"  // for GenericReques...
+#include "c/methods/callbacks/DependenciesCallbacks.h"  // for GetAllModDepe...
+#include "dependencies/nlohmann/json.hpp"               // for json
+
 
 extern "C"
 {
@@ -16,6 +25,12 @@ extern "C"
 
 	void modioAddModDependencies(void* object, u32 mod_id, u32 const* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response))
 	{
+		if(!modioIsLoggedIn())
+		{
+			modio::processGenericLocalUnauthorizedRequest(object, callback);
+			return;
+		}
+
 		std::map<std::string, std::string> data;
 
 		u32 call_number = modio::curlwrapper::getCallNumber();
@@ -40,6 +55,12 @@ extern "C"
 
 	void modioDeleteModDependencies(void* object, u32 mod_id, u32 const* dependencies_array, u32 dependencies_array_size, void(*callback)(void* object, ModioResponse response))
 	{
+		if(!modioIsLoggedIn())
+		{
+			modio::processGenericLocalUnauthorizedRequest(object, callback);
+			return;
+		}
+		
 		std::map<std::string, std::string> data;
 		u32 call_number = modio::curlwrapper::getCallNumber();
 

@@ -1,4 +1,6 @@
 #include "c++/schemas/QueuedModfileUpload.h"
+#include "c/ModioC.h"                      // for ModioQueuedModfileUpload
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {
@@ -21,6 +23,7 @@ nlohmann::json toJson(QueuedModfileUpload &queued_modfile_upload)
   queued_modfile_upload_json["state"] = queued_modfile_upload.state;
   queued_modfile_upload_json["current_progress"] = queued_modfile_upload.current_progress;
   queued_modfile_upload_json["total_size"] = queued_modfile_upload.total_size;
+  queued_modfile_upload_json["mod_id"] = queued_modfile_upload.mod_id;
   queued_modfile_upload_json["path"] = queued_modfile_upload.path;
 
   queued_modfile_upload_json["modfile_creator"] = modio::toJson(queued_modfile_upload.modfile_creator);

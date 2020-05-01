@@ -1,9 +1,9 @@
 #ifndef MODIO_IMAGE_H
 #define MODIO_IMAGE_H
 
-#include "../../c/schemas/ModioImage.h"
-#include "../../Globals.h"
-#include "../../Utility.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioImage
 
 namespace modio
 {

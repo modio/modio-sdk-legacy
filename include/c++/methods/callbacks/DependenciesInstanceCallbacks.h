@@ -1,3 +1,7 @@
+#include "../../ModioUtility.h"
+#include <map>
+#include "../../schemas/Dependency.h"
+
 namespace modio
 {
 struct GetAllModDependenciesCall

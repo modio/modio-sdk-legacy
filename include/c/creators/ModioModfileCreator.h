@@ -1,8 +1,10 @@
 #ifndef MODIO_MODIO_MODFILE_CREATOR_H
 #define MODIO_MODIO_MODFILE_CREATOR_H
 
-#include "../../Globals.h"
-#include "../ModioC.h"
+#include <map>                             // for multimap
+#include <string>                          // for string
+#include "../ModioC.h"                     // for ModioModfileCreator
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

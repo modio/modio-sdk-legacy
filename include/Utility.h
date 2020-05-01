@@ -23,42 +23,12 @@
 #  define MODIO_UE4_DETECTED
 #endif
 
-#include <iostream>
-#include <vector>
-#include <string.h>
-#include <fstream>
-#include <chrono>
-
-#include "c/ModioC.h"
-#include "dependencies/nlohmann/json.hpp"
-#include "dependencies/minizip/minizip.h"
-#include "Globals.h"
-
-#ifdef MODIO_LINUX_DETECTED
-#include <sys/stat.h>
-#include <dirent.h>
-#include <unistd.h>
-#endif
-
-#ifdef MODIO_WINDOWS_DETECTED
-#  ifdef MODIO_UE4_DETECTED 
-#    include <Windows/MinWindows.h>
-#  else
-#    include <windows.h>
-#  endif
-#  include <strsafe.h>
-#  include "dependencies/dirent/dirent.h"
-//#include "vld.h"
-#endif
-
-#ifdef MODIO_OSX_DETECTED
-#include <sys/stat.h>
-#include <dirent.h>
-#endif
-
 #ifndef PATH_MAX
 #define PATH_MAX 260
 #endif
+
+#include "dependencies/nlohmann/json.hpp"        // for json, basic_json<>::...
+#include "c/ModioC.h"
 
 namespace modio
 {
@@ -93,7 +63,7 @@ bool isDirectory(const std::string &directory);
 bool directoryExists(const std::string &path);
 bool fileExists(const std::string &directory);
 std::string getDirectoryPath(const std::string &filename);
-void createDirectory(const std::string &directory);
+bool createDirectory(const std::string &directory);
 bool removeDirectory(const std::string &directory);
 void removeFile(const std::string &filename);
 double getFileSize(const std::string &file_path);
@@ -102,6 +72,8 @@ std::vector<std::string> getHeaders();
 std::vector<std::string> getHeadersNoToken();
 std::vector<std::string> getUrlEncodedHeaders();
 std::string base64Encode(unsigned char const* bytes_to_encode, unsigned int in_len);
+std::string getMyDocumentsPath();
+std::string randomString(u32 length);
 } // namespace modio
 
 #endif

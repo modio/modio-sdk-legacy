@@ -1,8 +1,10 @@
 #ifndef MODIO_DOWNLOAD_H
 #define MODIO_DOWNLOAD_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioDownload.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioDownload
+#include "User.h"
 
 namespace modio
 {

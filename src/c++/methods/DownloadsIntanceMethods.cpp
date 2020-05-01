@@ -1,4 +1,9 @@
 #include "c++/ModIOInstance.h"
+#include "Globals.h"
+#include "ModioUtility.h"
+#include "ModUtility.h"
+#include "c++/methods/callbacks/DownloadsInstanceCallbacks.h"
+#include "wrappers/CurlUtility.h"
 
 namespace modio
 {
@@ -78,7 +83,16 @@ const std::vector<modio::InstalledMod> Instance::getAllInstalledMods()
 
 const std::vector<u32> Instance::getAllDownloadedMods()
 {
-  return modio::downloaded_mods;
+  std::vector<u32> downloaded_mods;
+  for (auto &downloaded_mod : modio::g_downloaded_mods)
+  {
+    if(modio::hasKey(downloaded_mod, "mod") &&
+        modio::hasKey(downloaded_mod["mod"], "id"))
+    {
+      downloaded_mods.push_back(downloaded_mod["mod"]["id"]);
+    }
+  }
+  return downloaded_mods;
 }
 
 void Instance::setDownloadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback)
@@ -96,5 +110,20 @@ void Instance::setUploadListener(const std::function<void(u32 response_code, u32
 u32 Instance::getModState(u32 mod_id)
 {
   return modioGetModState(mod_id);
+}
+
+void Instance::downloadModfilesById(const std::vector<u32> mod_ids, const std::function<void(const modio::Response &, const bool mods_are_updated)> &callback)
+{
+	u32 *mod_id_array = new u32[mod_ids.size()];
+	for (size_t i = 0; i < mod_ids.size(); i++)
+		mod_id_array[i] = mod_ids[i];
+
+	struct GetBoolCall *download_modfiles_by_id_call = new GetBoolCall{callback};
+	download_modfiles_by_id_calls[current_call_id] = download_modfiles_by_id_call;
+
+	modioDownloadModfilesById((void*)((uintptr_t)current_call_id), mod_id_array, (u32)mod_ids.size(), &onDownloadModfilesById);
+	current_call_id++;
+
+	delete[] mod_id_array;
 }
 } // namespace modio

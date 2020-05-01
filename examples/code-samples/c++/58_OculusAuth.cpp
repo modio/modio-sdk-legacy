@@ -1,4 +1,5 @@
 #include "modio.h"
+#include <iostream>
 
 int main()
 {
@@ -24,8 +25,9 @@ int main()
   std::string oculus_user_id = "123123";
   std::string access_token = "GALAXY AUTH TOKEN HERE";
   std::string email = ""; // Optional email param, "" will be ignored
+  std::string device = "rift"; // rift and quest supported
   u32 date_expires = 0; // Optional expiration date param, 0 will be ignored
-  modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, date_expires, [&](const modio::Response &response) {
+  modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, device, date_expires, [&](const modio::Response &response) {
     std::cout << "Response code: " << response.code << std::endl;
 
     if (response.code == 200)

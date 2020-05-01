@@ -1,49 +1,33 @@
 #ifndef MODIO_INSTANCE_H
 #define MODIO_INSTANCE_H
 
-#include "../modio.h"
-#include "creators/FilterCreator.h"
-#include "creators/ModCreator.h"
-#include "creators/ModEditor.h"
-#include "creators/ModfileCreator.h"
-#include "creators/ModfileEditor.h"
-#include "schemas/Comment.h"
-#include "schemas/Dependency.h"
-#include "schemas/Filehash.h"
-#include "schemas/Game.h"
-#include "schemas/GameTagOption.h"
-#include "schemas/Image.h"
-#include "schemas/InstalledMod.h"
-#include "schemas/Media.h"
-#include "schemas/MetadataKVP.h"
-#include "schemas/Mod.h"
-#include "schemas/ModEvent.h"
-#include "schemas/Modfile.h"
-#include "schemas/Rating.h"
-#include "schemas/Stats.h"
-#include "schemas/QueuedModDownload.h"
-#include "schemas/Stats.h"
-#include "schemas/Response.h"
-#include "schemas/Tag.h"
-#include "schemas/User.h"
-#include "schemas/UserEvent.h"
-#include "methods/callbacks/AuthenticationInstanceCallbacks.h"
-#include "methods/callbacks/CommentsInstanceCallbacks.h"
-#include "methods/callbacks/DependenciesInstanceCallbacks.h"
-#include "methods/callbacks/DownloadsInstanceCallbacks.h"
-#include "methods/callbacks/ExternalAuthenticationInstanceCallbacks.h"
-#include "methods/callbacks/ImageInstanceCallbacks.h"
-#include "methods/callbacks/MediaInstanceCallbacks.h"
-#include "methods/callbacks/MeInstanceCallbacks.h"
-#include "methods/callbacks/MetadataKVPInstanceCallbacks.h"
-#include "methods/callbacks/ModfileInstanceCallbacks.h"
-#include "methods/callbacks/ModInstanceCallbacks.h"
-#include "methods/callbacks/ModEventsInstanceCallbacks.h"
-#include "methods/callbacks/TagsInstanceCallbacks.h"
-#include "methods/callbacks/SubscriptionInstanceCallbacks.h"
-#include "methods/callbacks/RatingsInstanceCallbacks.h"
-#include "methods/callbacks/ReportsInstanceCallbacks.h"
-#include "methods/callbacks/ModStatsInstanceCallbacks.h"
+#include <functional>              // for function
+#include <list>                    // for list
+#include <map>                     // for map
+#include <string>                  // for string
+#include <vector>                  // for vector
+#include "c/ModioC.h"              // for u32, MODIO_DLL
+#include "schemas/InstalledMod.h"  // for InstalledMod
+#include "schemas/User.h"          // for User
+namespace modio { class Comment; }
+namespace modio { class Dependency; }
+namespace modio { class FilterCreator; }
+namespace modio { class Game; }
+namespace modio { class MetadataKVP; }
+namespace modio { class Mod; }
+namespace modio { class ModCreator; }
+namespace modio { class ModEditor; }
+namespace modio { class ModEvent; }
+namespace modio { class Modfile; }
+namespace modio { class ModfileCreator; }
+namespace modio { class ModfileEditor; }
+namespace modio { class QueuedModDownload; }
+namespace modio { class QueuedModfileUpload; }
+namespace modio { class Rating; }
+namespace modio { class Response; }
+namespace modio { class Stats; }
+namespace modio { class Tag; }
+namespace modio { class UserEvent; }
 
 namespace modio
 {
@@ -55,11 +39,12 @@ class MODIO_DLL Instance
   Instance& operator=(const Instance&) = delete;
 public:
   Instance(u32 environment, u32 game_id, const std::string &api_key);
-  Instance(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, const std::string &api_key, const std::string &root_path);
+  Instance(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, bool polling_enabled, const std::string &api_key, const std::string &root_path);
   ~Instance();
 
   //General Methods
   void process();
+  void pollEvents();
   void setDebugLevel(u32 debug_level);
   void setModEventsPollInterval(u32 interval_in_seconds);
   void setUserEventsPollInterval(u32 interval_in_seconds);
@@ -81,7 +66,7 @@ public:
 
   //External Authentication Methods
   void galaxyAuth(const std::string &appdata, const std::function<void(const modio::Response &)> &callback);
-  void oculusAuth(const std::string &nonce, const std::string &oculus_user_id, const std::string &access_token, const std::string &email, u32 date_expires, const std::function<void(const modio::Response &)> &callback);
+  void oculusAuth(const std::string &nonce, const std::string &oculus_user_id, const std::string &access_token, const std::string &email, const std::string &device, u32 date_expires, const std::function<void(const modio::Response &)> &callback);
   void steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const std::function<void(const modio::Response &)> &callback);
   void steamAuthEncoded(const std::string &base64_token, const std::function<void(const modio::Response &)> &callback);
   void linkExternalAccount(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback);
@@ -150,6 +135,7 @@ public:
   void prioritizeModDownload(u32 mod_id);  
   void setDownloadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback);
   void setUploadListener(const std::function<void(u32 response_code, u32 mod_id)> &callback);
+  void downloadModfilesById(const std::vector<u32> mod_ids, const std::function<void(const modio::Response &, const bool mods_are_updated)> &callback);
   const std::list<QueuedModDownload *> getModDownloadQueue();
   const std::list<QueuedModfileUpload *> getModfileUploadQueue();
   const modio::InstalledMod getInstalledMod(u32 mod_id);

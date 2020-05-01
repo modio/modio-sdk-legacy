@@ -1,4 +1,6 @@
 #include "c/schemas/ModioDependency.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDependency
 
 extern "C"
 {
@@ -11,6 +13,12 @@ extern "C"
     dependency->date_added = 0;
     if(modio::hasKey(dependency_json, "date_added"))
       dependency->date_added = dependency_json["date_added"];
+  }
+
+  void modioInitDependencyCpp(ModioDependency* modio_dependency, modio::Dependency* dependency)
+  {
+    modio_dependency->mod_id = dependency->mod_id;
+    modio_dependency->date_added = dependency->date_added;
   }
 
   void modioFreeDependency(ModioDependency* dependency)

@@ -1,4 +1,6 @@
 #include "c/schemas/ModioDownload.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
 
 extern "C"
 {
@@ -15,6 +17,14 @@ extern "C"
       download->binary_url = new char[binary_url_str.size() + 1];
       strcpy(download->binary_url, binary_url_str.c_str());
     }
+  }
+
+  void modioInitDownloadCpp(ModioDownload* modio_download, modio::Download* download)
+  {
+    modio_download->date_expires = download->date_expires;
+
+    modio_download->binary_url = new char[download->binary_url.size() + 1];
+    strcpy(modio_download->binary_url, download->binary_url.c_str());
   }
 
   void modioFreeDownload(ModioDownload* download)

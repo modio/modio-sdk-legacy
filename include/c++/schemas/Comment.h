@@ -1,10 +1,10 @@
 #ifndef MODIO_COMMENT_H
 #define MODIO_COMMENT_H
 
-#include "../../c/schemas/ModioComment.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioComment
 #include "User.h"
-#include "../../Globals.h"
-#include "../../Utility.h"
 
 namespace modio
 {

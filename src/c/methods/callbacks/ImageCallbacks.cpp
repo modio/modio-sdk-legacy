@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/ImageCallbacks.h"
+#include "Utility.h" // for hasKey
 
 std::map<u32, DownloadImageParams *> download_image_callbacks;
 

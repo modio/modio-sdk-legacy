@@ -1,4 +1,6 @@
 #include "c++/ModIOInstance.h"
+#include "ModioUtility.h"
+#include "c++/methods/callbacks/ExternalAuthenticationInstanceCallbacks.h"
 
 namespace modio
 {
@@ -13,7 +15,7 @@ void Instance::galaxyAuth(const std::string &appdata, const std::function<void(c
   current_call_id++;
 }
 
-void Instance::oculusAuth(const std::string &nonce, const std::string &oculus_user_id, const std::string &access_token, const std::string &email, u32 date_expires, const std::function<void(const modio::Response &)> &callback)
+void Instance::oculusAuth(const std::string &nonce, const std::string &oculus_user_id, const std::string &access_token, const std::string &email, const std::string &device, u32 date_expires, const std::function<void(const modio::Response &)> &callback)
 {
   struct GenericCall *oculus_auth_call = new GenericCall{callback};
   oculus_auth_calls[current_call_id] = oculus_auth_call;
@@ -22,7 +24,7 @@ void Instance::oculusAuth(const std::string &nonce, const std::string &oculus_us
   if(email != "")
     email_c = (char*)email.c_str();
 
-  modioOculusAuth((void*)((uintptr_t)current_call_id), nonce.c_str(), oculus_user_id.c_str(), access_token.c_str(), email_c, date_expires, &onOculusAuth);
+  modioOculusAuth((void*)((uintptr_t)current_call_id), nonce.c_str(), oculus_user_id.c_str(), access_token.c_str(), email_c, device.c_str(), date_expires, &onOculusAuth);
 
   current_call_id++;
 }

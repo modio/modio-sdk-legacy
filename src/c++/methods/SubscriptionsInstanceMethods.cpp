@@ -1,4 +1,7 @@
 #include "c++/ModIOInstance.h"
+#include "Globals.h"
+#include "ModioUtility.h"
+#include "c++/methods/callbacks/SubscriptionsInstanceCallbacks.h"
 
 namespace modio
 {

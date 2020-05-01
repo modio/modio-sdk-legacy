@@ -1,4 +1,17 @@
-#include "c/methods/ModfileMethods.h"
+#include <map>                                          // for map, multimap
+#include <string>                                       // for operator+
+#include <utility>                                      // for pair
+#include "ModUtility.h"                                 // for getCallFileFr...
+#include "wrappers/CurlWrapper.h"       // for getCallNumber
+#include "c/ModioC.h"                        // for u32, ModioRes...
+#include "Utility.h"        // for toString, get...
+#include "c/creators/ModioFilterCreator.h"   // for getFilterString
+#include "c/creators/ModioModfileEditor.h"   // for convertModfil...
+#include "Globals.h"       // for GAME_ID, MODI...
+#include "ModioUtility.h"  // for GenericReques...
+#include "c/methods/callbacks/ModfileCallbacks.h"       // for GetAllModfile...
+#include "dependencies/nlohmann/json.hpp"               // for json
+
 
 extern "C"
 {
@@ -52,11 +65,22 @@ extern "C"
 
   void modioAddModfile(u32 mod_id, ModioModfileCreator modfile_creator)
   {
+    if(!modioIsLoggedIn())
+    {
+      return;
+    }
+
     modio::curlwrapper::queueModfileUpload(mod_id, &modfile_creator);
   }
 
   void modioEditModfile(void* object, u32 mod_id, u32 modfile_id, ModioModfileEditor modfile_editor, void (*callback)(void* object, ModioResponse response, ModioModfile modfile))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModfileParam(object, callback);
+      return;
+    }
+    
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     edit_modfile_callbacks[call_number] = new EditModfileParams;
@@ -81,6 +105,12 @@ extern "C"
 
   void modioDeleteModfile(void* object, u32 mod_id, u32 modfile_id, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     delete_modfile_callbacks[call_number] = new GenericRequestParams;

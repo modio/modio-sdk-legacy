@@ -1,22 +1,18 @@
 #ifndef MODIO_CURL_UTILITY_H
 #define MODIO_CURL_UTILITY_H
 
-#include <stdio.h>
-#include <iostream>
-#include <map>
-#include <list>
-
 #include <curl/curl.h>
+#include <stdio.h>
+#include <functional>
+#include <list>
+#include <map>
+#include <string>
+#include <vector>
+#include "../dependencies/nlohmann/json.hpp"
 #include "../Utility.h"
-#include "../Globals.h"
-#include "CurlProgressFunctions.h"
-#include "CurlWriteFunctions.h"
-#include "../c++/schemas/QueuedModDownload.h"
-#include "../c++/schemas/QueuedModfileUpload.h"
-#include "../c/schemas/ModioQueuedModDownload.h"
-#include "../c/schemas/ModioQueuedModfileUpload.h"
-#include "../ModUtility.h"
-#include "CurlWrapper.h"
+#include "../c/ModioC.h"
+namespace modio { class QueuedModDownload; }
+namespace modio { class QueuedModfileUpload; }
 
 #define SKIP_PEER_VERIFICATION
 #define SKIP_HOSTNAME_VERIFICATION

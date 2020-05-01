@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/MediaCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map< u32, GenericRequestParams* > add_mod_logo_callbacks;
 std::map< u32, GenericRequestParams* > add_mod_images_callbacks;

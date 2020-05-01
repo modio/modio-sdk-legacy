@@ -1,4 +1,6 @@
 #include "c++/schemas/QueuedModDownload.h"
+#include "c/ModioC.h"                      // for ModioQueuedModDownload
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

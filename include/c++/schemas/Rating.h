@@ -1,8 +1,8 @@
 #ifndef MODIO_RATING_H
 #define MODIO_RATING_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioRating.h"
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioRating
 
 namespace modio
 {

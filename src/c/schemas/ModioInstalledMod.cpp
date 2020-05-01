@@ -1,4 +1,7 @@
 #include "c/schemas/ModioInstalledMod.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
+#include "c/schemas/ModioMod.h" 	// for modioInitMod ...
 
 extern "C"
 {
@@ -35,6 +38,18 @@ extern "C"
 		}
 		modioInitMod(&(installed_mod->mod), mod_cache_json);
 	}
+
+  void modioInitInstalledModCpp(ModioInstalledMod* modio_installed_mod, modio::InstalledMod* installed_mod)
+  {
+    modio_installed_mod->mod_id = installed_mod->mod_id;
+    modio_installed_mod->modfile_id = installed_mod->modfile_id;
+    modio_installed_mod->date_updated = installed_mod->date_updated;
+
+    modio_installed_mod->path = new char[installed_mod->path.size() + 1];
+    strcpy(modio_installed_mod->path, installed_mod->path.c_str());
+
+    modioInitModCpp(&(modio_installed_mod->mod), &(installed_mod->mod));
+  }
 
 	void modioFreeInstalledMod(ModioInstalledMod* installed_mod)
 	{

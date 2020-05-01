@@ -1,8 +1,9 @@
 #ifndef MODIO_MODIO_MODFILE_EDITOR_H
 #define MODIO_MODIO_MODFILE_EDITOR_H
 
-#include "../../Globals.h"
-#include "../ModioC.h"
+#include <map>          // for multimap
+#include <string>       // for string
+#include "../ModioC.h"  // for ModioModfileEditor
 
 namespace modio
 {

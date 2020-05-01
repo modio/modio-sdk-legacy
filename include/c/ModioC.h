@@ -1,6 +1,13 @@
 #ifndef MODIO_MODIO_C_H
 #define MODIO_MODIO_C_H
 
+#ifdef _WIN32
+#define MODIO_WINDOWS_DETECTED
+#endif
+#ifdef _WIN64
+#define MODIO_WINDOWS_DETECTED
+#endif
+
 #ifdef MODIO_STATICLIB
 #  define MODIO_DLL
 #elif defined(MODIO_WINDOWS_DETECTED)
@@ -96,6 +103,7 @@ typedef int i32;
 #define MODIO_MOD_STARTING_UPLOAD         9
 #define MODIO_MOD_UPLOADING               10
 #define MODIO_MOD_DOWNLOADED              11
+#define MODIO_MOD_CANCELLING              12
 
 // Maturity options
 #define MODIO_MATURITY_NONE     0
@@ -505,12 +513,14 @@ extern "C"
   };
 
   //General Methods
-  void MODIO_DLL modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const* api_key, char const* root_path);
+  void MODIO_DLL modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, bool polling_enabled, char const* api_key, char const* root_path);
   void MODIO_DLL modioShutdown(void);
+  void MODIO_DLL modioClearCache(void);
   void MODIO_DLL modioSetDebugLevel(u32 debug_level);
   void MODIO_DLL modioSetModEventsPollInterval(u32 interval_in_seconds);
   void MODIO_DLL modioSetUserEventsPollInterval(u32 interval_in_seconds);
   void MODIO_DLL modioProcess(void);
+  void MODIO_DLL modioPollEvents(void);
   void MODIO_DLL modioSleep(u32 milliseconds);
 
   //Events
@@ -530,7 +540,7 @@ extern "C"
 
   //External Authentication Methods
   void MODIO_DLL modioGalaxyAuth(void* object, char const* appdata, void (*callback)(void* object, ModioResponse response));
-  void MODIO_DLL modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, u32 date_expires, void (*callback)(void* object, ModioResponse response));
+  void MODIO_DLL modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, char const* device, u32 date_expires, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioSteamAuthEncoded(void* object, char const* base64_ticket, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioLinkExternalAccount(void* object, u32 service, char const* service_id, char const* email, void (*callback)(void* object, ModioResponse response));
@@ -676,6 +686,7 @@ extern "C"
   void MODIO_DLL modioInstallDownloadedMods(void);
   bool MODIO_DLL modioUninstallMod(u32 mod_id);
   void MODIO_DLL modioPauseDownloads(void);
+  void MODIO_DLL modioCancelModDownload(u32 mod_id);
   void MODIO_DLL modioResumeDownloads(void);
   void MODIO_DLL modioPrioritizeModDownload(u32 mod_id);
   void MODIO_DLL modioSetDownloadListener(void (*callback)(u32 response_code, u32 mod_id));  
@@ -690,6 +701,8 @@ extern "C"
   u32 MODIO_DLL modioGetAllDownloadedModsCount(void);
   void MODIO_DLL modioGetAllDownloadedMods(u32* downloaded_mods);
   u32 MODIO_DLL modioGetModState(u32 mod_id);
+  void MODIO_DLL modioDownloadModfilesById(void* object, u32 const* mod_id_array, u32 mod_id_array_size, void(*callback)(void* object, ModioResponse response, bool mods_are_updated));
+  void MODIO_DLL modioDownloadSubscribedModfiles(void* object, bool uninstall_unsubscribed, void(*callback)(void* object, ModioResponse response, bool mods_are_updated));
 
   //Dependencies Methods
   void MODIO_DLL modioGetAllModDependencies(void* object, u32 mod_id, void(*callback)(void* object, ModioResponse response, ModioDependency* dependencies_array, u32 dependencies_array_size));

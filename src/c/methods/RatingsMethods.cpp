@@ -1,9 +1,22 @@
-#include "c/methods/RatingsMethods.h"
+#include <map>                                                  // for map
+#include <string>                                               // for string
+#include "dependencies/nlohmann/json.hpp"     // for json
+#include "c/ModioC.h"                                // for u32
+#include "Globals.h"               // for curre...
+#include "Utility.h"   // for toString
+#include "wrappers/CurlWrapper.h"  // for getCa...
+#include "c/methods/callbacks/RatingsCallbacks.h"               // for AddMo...
 
 extern "C"
 {
   void modioAddModRating(void* object, u32 mod_id, bool vote_up, void (*callback)(void *object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();

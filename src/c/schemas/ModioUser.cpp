@@ -1,4 +1,7 @@
 #include "c/schemas/ModioUser.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
+#include "c/schemas/ModioAvatar.h" // for modioInitAvatar ...
 
 extern "C"
 {
@@ -56,6 +59,29 @@ extern "C"
     if(modio::hasKey(user_json, "avatar"))
       avatar_json = user_json["avatar"];
     modioInitAvatar(&(user->avatar), avatar_json);
+  }
+
+  void modioInitUserCpp(ModioUser* modio_user, modio::User* user)
+  {
+    modio_user->id = user->id;
+    modio_user->date_online = user->date_online;
+
+    modio_user->username = new char[user->username.size() + 1];
+    strcpy(modio_user->username, user->username.c_str());
+
+    modio_user->name_id = new char[user->name_id.size() + 1];
+    strcpy(modio_user->name_id, user->name_id.c_str());
+
+    modio_user->timezone = new char[user->timezone.size() + 1];
+    strcpy(modio_user->timezone, user->timezone.c_str());
+
+    modio_user->language = new char[user->language.size() + 1];
+    strcpy(modio_user->language, user->language.c_str());
+
+    modio_user->profile_url = new char[user->profile_url.size() + 1];
+    strcpy(modio_user->profile_url, user->profile_url.c_str());
+
+    modioInitAvatarCpp(&(modio_user->avatar), &(user->avatar));
   }
 
   void modioFreeUser(ModioUser* user)

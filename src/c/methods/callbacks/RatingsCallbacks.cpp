@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/RatingsCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, AddModRatingRequestParams *> add_mod_rating_callbacks;
 

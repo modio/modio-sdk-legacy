@@ -1,9 +1,10 @@
 #ifndef MODIO_MOD_H
 #define MODIO_MOD_H
 
-#include "../../Utility.h"
-#include "../../Globals.h"
-#include "../../ModUtility.h"
+#include <string>                                 // for string
+#include <list>                                   // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioMod
 #include "Logo.h"
 #include "User.h"
 #include "Media.h"
@@ -11,7 +12,6 @@
 #include "Stats.h"
 #include "Tag.h"
 #include "MetadataKVP.h"
-#include "../../c/schemas/ModioMod.h"
 
 namespace modio
 {
@@ -39,8 +39,8 @@ public:
   Modfile modfile;
   Media media;
   Stats stats;
-  std::vector<Tag> tags;
-  std::vector<MetadataKVP> metadata_kvps;
+  std::list<Tag> tags;
+  std::list<MetadataKVP> metadata_kvps;
 
   void initialize(ModioMod mod);
 };

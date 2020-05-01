@@ -1,4 +1,6 @@
 #include "c++/schemas/Filehash.h"
+#include "c/ModioC.h"                      // for ModioFilehash
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

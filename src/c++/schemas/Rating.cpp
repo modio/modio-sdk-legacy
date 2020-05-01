@@ -1,4 +1,6 @@
 #include "c++/schemas/Rating.h"
+#include "c/ModioC.h"                      // for ModioRating
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

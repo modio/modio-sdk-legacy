@@ -1,4 +1,6 @@
 #include "c/schemas/ModioImage.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
 
 extern "C"
 {
@@ -27,6 +29,18 @@ extern "C"
       image->thumb_320x180 = new char[thumb_320x180_str.size() + 1];
       strcpy(image->thumb_320x180, thumb_320x180_str.c_str());
     }
+  }
+
+  void modioInitImageCpp(ModioImage* modio_image, modio::Image* image)
+  {
+    modio_image->filename = new char[image->filename.size() + 1];
+    strcpy(modio_image->filename, image->filename.c_str());
+
+    modio_image->original = new char[image->original.size() + 1];
+    strcpy(modio_image->original, image->original.c_str());
+
+    modio_image->thumb_320x180 = new char[image->thumb_320x180.size() + 1];
+    strcpy(modio_image->thumb_320x180, image->thumb_320x180.c_str());
   }
 
   void modioFreeImage(ModioImage* image)

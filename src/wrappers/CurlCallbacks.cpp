@@ -1,4 +1,9 @@
 #include "wrappers/CurlCallbacks.h"
+#include "Globals.h"
+#include "ModUtility.h"
+#include "wrappers/CurlUtility.h"
+#include "c++/schemas/QueuedModDownload.h"
+#include "c++/schemas/QueuedModfileUpload.h"
 
 namespace modio
 {
@@ -11,6 +16,11 @@ void onJsonRequestFinished(CURL *curl)
   u32 response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
   nlohmann::json response_json = modio::toJson(ongoing_call->response);
+
+  if(response_code == 401)
+  {
+    modioLogout();
+  }
 
   if (ongoing_call->headers.find("X-Ratelimit-RetryAfter") != ongoing_call->headers.end())
   {
@@ -60,6 +70,18 @@ void onDownloadFinished(CURL *curl)
   delete ongoing_download;
 }
 
+void removeCurrentDownloadFromQueue()
+{
+  g_mod_download_queue.remove(g_current_mod_download->queued_mod_download);
+  delete g_current_mod_download->queued_mod_download;
+
+  delete g_current_mod_download;
+  g_current_mod_download = NULL;
+  
+  updateModDownloadQueueFile();
+  downloadNextQueuedMod();
+}
+
 void onModDownloadFinished(CURL *curl)
 {
   writeLogLine("Mod download finished", MODIO_DEBUGLEVEL_LOG);
@@ -95,19 +117,19 @@ void onModDownloadFinished(CURL *curl)
       modio::download_callback(response_code,  g_current_mod_download->queued_mod_download->mod.id);
     }
 
-    g_mod_download_queue.remove(g_current_mod_download->queued_mod_download);
-    delete g_current_mod_download->queued_mod_download;
-
-    delete g_current_mod_download;
-    g_current_mod_download = NULL;
-    
-    updateModDownloadQueueFile();
-    downloadNextQueuedMod();
+    removeCurrentDownloadFromQueue();
   }
   else if (g_current_mod_download->queued_mod_download->state == MODIO_MOD_PAUSING)
   {
     modio::writeLogLine("Mod " + modio::toString(g_current_mod_download->queued_mod_download->mod_id) + " download paused", MODIO_DEBUGLEVEL_LOG);
     g_current_mod_download->queued_mod_download->state = MODIO_MOD_PAUSED;
+  }
+  else if (g_current_mod_download->queued_mod_download->state == MODIO_MOD_CANCELLING)
+  {
+    modio::writeLogLine("Mod " + modio::toString(g_current_mod_download->queued_mod_download->mod_id) + " download canceled", MODIO_DEBUGLEVEL_LOG);
+    std::string cancelled_zip_path = g_current_mod_download->queued_mod_download->path;
+    modio::removeFile(cancelled_zip_path);
+    removeCurrentDownloadFromQueue();
   }
   else if (g_current_mod_download->queued_mod_download->state == MODIO_PRIORITIZING_OTHER_DOWNLOAD)
   {

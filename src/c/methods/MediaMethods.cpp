@@ -1,10 +1,24 @@
-#include "c/methods/MediaMethods.h"
+#include <map>                                            // for map, map<>:...
+#include <string>                                         // for string, ope...
+#include "Utility.h"          // for toString
+#include "wrappers/CurlWrapper.h"         // for getCallNumber
+#include "Globals.h"         // for GAME_ID
+#include "ModioUtility.h"    // for GenericRequ...
+#include "c/ModioC.h"  // for u32, ModioR...
+#include "c/methods/callbacks/MediaCallbacks.h"           // for add_mod_ima...
+#include "dependencies/nlohmann/json.hpp"                 // for json
 
 extern "C"
 {
 
 void modioAddModLogo(void* object, u32 mod_id, char const* logo_path, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+
   u32 call_number = modio::curlwrapper::getCallNumber();
 
   add_mod_logo_callbacks[call_number] = new GenericRequestParams;
@@ -22,6 +36,11 @@ void modioAddModLogo(void* object, u32 mod_id, char const* logo_path, void (*cal
 
 void modioAddModImages(void* object, u32 mod_id, char const* const* image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
   u32 call_number = modio::curlwrapper::getCallNumber();
 
   add_mod_images_callbacks[call_number] = new GenericRequestParams;
@@ -43,6 +62,12 @@ void modioAddModImages(void* object, u32 mod_id, char const* const* image_paths_
 
 void modioAddModYoutubeLinks(void* object, u32 mod_id, char const* const* youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -62,6 +87,12 @@ void modioAddModYoutubeLinks(void* object, u32 mod_id, char const* const* youtub
 
 void modioAddModSketchfabLinks(void* object, u32 mod_id, char const* const* sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+  
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -81,6 +112,11 @@ void modioAddModSketchfabLinks(void* object, u32 mod_id, char const* const* sket
 
 void modioDeleteModImages(void* object, u32 mod_id, char const* const* image_paths_array, u32 image_paths_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -100,6 +136,12 @@ void modioDeleteModImages(void* object, u32 mod_id, char const* const* image_pat
 
 void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char const* const* youtube_links_array, u32 youtube_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -119,6 +161,12 @@ void modioDeleteModYoutubeLinks(void* object, u32 mod_id, char const* const* you
 
 void modioDeleteModSketchfabLinks(void* object, u32 mod_id, char const* const* sketchfab_links_array, u32 sketchfab_links_array_size, void (*callback)(void* object, ModioResponse response))
 {
+  if(!modioIsLoggedIn())
+  {
+    modio::processGenericLocalUnauthorizedRequest(object, callback);
+    return;
+  }
+  
   std::map<std::string, std::string> data;
   u32 call_number = modio::curlwrapper::getCallNumber();
 

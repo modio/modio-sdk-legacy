@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
+#include "Utility.h" // for hasKey
 
 std::map< u32,GenericRequestParams* > galaxy_auth_params;
 std::map< u32,GenericRequestParams* > oculus_auth_params;

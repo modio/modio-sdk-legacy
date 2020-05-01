@@ -1,3 +1,6 @@
+#include "../../ModioUtility.h"
+#include <map>
+
 namespace modio
 {
 extern std::map<u32, GenericCall *> galaxy_auth_calls;

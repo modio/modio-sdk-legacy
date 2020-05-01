@@ -1,4 +1,14 @@
 #include "wrappers/MinizipWrapper.h"
+#include <stdio.h>                                     // for NULL, fclose
+#include <stdlib.h>                                    // for free, malloc
+#include <string.h>                                    // for strcat, strcpy
+#include <iostream>                                    // for char_traits
+#include "c/ModioC.h"                                  // for MODIO_DEBUGLEV...
+#include "miniz.h"                                     // for MAX_WBITS, Z_D...
+#include "Utility.h"                       // for writeLogLine
+#include "dependencies/minizip/minizip.h"  // for filetime, is_l...
+#include "dependencies/minizip/unzip.h"    // for unzClose, unzC...
+#include "dependencies/minizip/zip.h"      // for ZIP_OK, zipClose
 
 namespace modio
 {

@@ -1,8 +1,9 @@
 #ifndef MODIO_MODFILE_H
 #define MODIO_MODFILE_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioModfile.h"
+#include <string>                                 // for string
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioModfile
 #include "Filehash.h"
 #include "Download.h"
 

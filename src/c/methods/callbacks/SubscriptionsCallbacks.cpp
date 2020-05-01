@@ -1,4 +1,5 @@
-#include "c/methods/callbacks/SubscriptionCallbacks.h"
+#include "c/methods/callbacks/SubscriptionsCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, SubscribeToModParams *> subscribe_to_mod_callbacks;
 std::map<u32, UnsubscribeFromModParams *> unsubscribe_from_mod_callbacks;
@@ -9,13 +10,14 @@ void modioOnSubscribeToMod(u32 call_number, u32 response_code, nlohmann::json re
   modioInitResponse(&response, response_json);
   response.code = response_code;
 
+  ModioMod mod;
+  modioInitMod(&mod, response_json);
+
   if(response_code >= 200 && response_code <300)
   {
     modio::current_user_subscriptions.insert(subscribe_to_mod_callbacks[call_number]->mod_id);
+    modio::curlwrapper::queueModDownload(mod);
   }
-
-  ModioMod mod;
-  modioInitMod(&mod, response_json);
 
   subscribe_to_mod_callbacks[call_number]->callback(subscribe_to_mod_callbacks[call_number]->object, response, mod);
 
@@ -35,7 +37,9 @@ void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::jso
 
   if(response_code >= 200 && response_code <300)
   {
-    modio::current_user_subscriptions.erase(unsubscribe_from_mod_callbacks[call_number]->mod_id);
+    u32 mod_id = unsubscribe_from_mod_callbacks[call_number]->mod_id;
+    modio::writeLogLine("Current User unsubscribed from a Mod. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+    modio::handleUnsubscription(mod_id);
   }
 
   unsubscribe_from_mod_callbacks[call_number]->callback(unsubscribe_from_mod_callbacks[call_number]->object, response);
@@ -46,7 +50,7 @@ void modioOnUnsubscribeFromMod(u32 call_number, u32 response_code, nlohmann::jso
   modioFreeResponse(&response);
 }
 
-void clearSubscriptionCallbackParams()
+void clearSubscriptionsCallbackParams()
 {
   for (auto subscribe_to_mod_callback : subscribe_to_mod_callbacks)
     delete subscribe_to_mod_callback.second;

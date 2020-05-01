@@ -1,4 +1,6 @@
 #include "c++/schemas/Mod.h"
+#include "c/ModioC.h"                      // for ModioMod
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {
@@ -34,14 +36,16 @@ void Mod::initialize(ModioMod modio_mod)
   media.initialize(modio_mod.media);
   stats.initialize(modio_mod.stats);
   tags.resize(modio_mod.tags_array_size);
-  for (u32 i = 0; i < modio_mod.tags_array_size; i++)
+  u32 i = 0;
+  for(auto tag : tags)
   {
-    tags[i].initialize(modio_mod.tags_array[i]);
+    tag.initialize(modio_mod.tags_array[i]);
   }
+  i = 0;
   metadata_kvps.resize(modio_mod.metadata_kvp_array_size);
-  for (u32 i = 0; i < modio_mod.metadata_kvp_array_size; i++)
+  for (auto metadata_kvp : metadata_kvps)
   {
-    metadata_kvps[i].initialize(modio_mod.metadata_kvp_array[i]);
+    metadata_kvp.initialize(modio_mod.metadata_kvp_array[i]);
   }
 }
 

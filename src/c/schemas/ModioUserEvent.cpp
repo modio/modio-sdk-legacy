@@ -1,4 +1,6 @@
 #include "c/schemas/ModioUserEvent.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
 
 extern "C"
 {
@@ -46,6 +48,16 @@ extern "C"
     event->date_added = 0;
     if(modio::hasKey(event_json, "date_added"))
       event->date_added = event_json["date_added"];
+  }
+
+  void modioInitUserEventCpp(ModioUserEvent* modio_user_event, modio::UserEvent* user_event)
+  {
+    modio_user_event->id = user_event->id;
+    modio_user_event->game_id = user_event->game_id;
+    modio_user_event->mod_id = user_event->mod_id;
+    modio_user_event->user_id = user_event->user_id;
+    modio_user_event->event_type = user_event->event_type;
+    modio_user_event->date_added = user_event->date_added;
   }
 
   void modioFreeUserEvent(ModioUserEvent* tag)

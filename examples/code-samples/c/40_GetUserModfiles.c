@@ -24,7 +24,7 @@ void onGetUserModfiles(void *object, ModioResponse response, ModioModfile *modfi
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, false, "e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, false, true, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 

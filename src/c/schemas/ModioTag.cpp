@@ -1,4 +1,6 @@
 #include "c/schemas/ModioTag.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
 
 extern "C"
 {
@@ -15,6 +17,14 @@ extern "C"
       tag->name = new char[name_str.size() + 1];
       strcpy(tag->name, name_str.c_str());
     }
+  }
+
+  void modioInitTagCpp(ModioTag* modio_tag, modio::Tag* tag)
+  {
+    modio_tag->date_added = tag->date_added;
+
+    modio_tag->name = new char[tag->name.size() + 1];
+    strcpy(modio_tag->name, tag->name.c_str());
   }
 
   void modioFreeTag(ModioTag* tag)

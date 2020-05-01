@@ -1,4 +1,13 @@
-#include "c/methods/ExternalAuthenticationMethods.h"
+#include <map>
+#include <string>
+#include "Utility.h"
+#include "c/ModioC.h"
+#include "dependencies/nlohmann/json.hpp"
+#include "wrappers/CurlWrapper.h"
+#include "Globals.h"
+#include "ModioUtility.h"
+#include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
+#include "wrappers/CurlUtility.h"
 
 extern "C"
 {
@@ -19,7 +28,7 @@ extern "C"
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnGalaxyAuth);
   }
 
-  void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, u32 date_expires, void (*callback)(void* object, ModioResponse response))
+  void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, char const* device, u32 date_expires, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -38,6 +47,7 @@ extern "C"
       data["email"] = modio::curlwrapper::dataURLEncode(std::string(email));
     if(date_expires != 0)
       data["date_expires"] = modio::curlwrapper::dataURLEncode(modio::toString(date_expires));
+    data["device"] = modio::curlwrapper::dataURLEncode(std::string(device));
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnOculusAuth);
   }

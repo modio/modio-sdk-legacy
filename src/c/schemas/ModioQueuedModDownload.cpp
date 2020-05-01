@@ -1,4 +1,7 @@
 #include "c/schemas/ModioQueuedModDownload.h"
+#include "Utility.h"                        // for hasKey
+#include "c/ModioC.h"                       // for ModioDownload
+#include "c/schemas/ModioMod.h"             // for modioInitMod ...
 
 extern "C"
 {
@@ -40,6 +43,25 @@ extern "C"
     if(modio::hasKey(queued_mod_download_json, "mod"))
       mod_json = queued_mod_download_json["mod"];
     modioInitMod(&(queued_mod_download->mod), mod_json);
+  }
+
+  void modioInitQueuedModDownloadCpp(ModioQueuedModDownload* modio_queued_mod_download, modio::QueuedModDownload* queued_mod_download)
+  {
+    modio_queued_mod_download->mod_id = queued_mod_download->mod_id;
+    modio_queued_mod_download->state = queued_mod_download->state;
+    modio_queued_mod_download->current_progress = queued_mod_download->current_progress;
+    modio_queued_mod_download->total_size = queued_mod_download->total_size;
+
+    modio_queued_mod_download->url = new char[queued_mod_download->url.size() + 1];
+    strcpy(modio_queued_mod_download->url, queued_mod_download->url.c_str());
+
+    modio_queued_mod_download->path = new char[queued_mod_download->path.size() + 1];
+    strcpy(modio_queued_mod_download->path, queued_mod_download->path.c_str());
+
+    modio_queued_mod_download->path = new char[queued_mod_download->path.size() + 1];
+    strcpy(modio_queued_mod_download->path, queued_mod_download->path.c_str());
+
+    modioInitModCpp(&modio_queued_mod_download->mod, &queued_mod_download->mod);
   }
 
   void modioFreeQueuedModDownload(ModioQueuedModDownload* queued_mod_download)

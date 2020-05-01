@@ -1,5 +1,7 @@
 #include "c/creators/ModioFilterCreator.h"
-
+#include <string.h>                   // for strcpy, NULL
+#include "Utility.h"                  // for toString
+#include "c/schemas/ModioListNode.h"  // for modioFreeNodeList
 
 namespace modio
 {
@@ -71,7 +73,7 @@ extern "C"
     filter->smaller_than_list = NULL;
     filter->greater_than_list = NULL;
     filter->not_equal_list = NULL;
-    filter->cache_max_age_seconds = 1;
+    filter->cache_max_age_seconds = 300;
   }
 
   bool shouldAppendMinusToSort(std::string field, bool ascending)

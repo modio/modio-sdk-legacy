@@ -1,4 +1,13 @@
-#include "c/methods/ModStatsMethods.h"
+#include <map>                                                  // for map
+#include <string>                                               // for alloc...
+#include "ModUtility.h"                                         // for getCa...
+#include "dependencies/nlohmann/json.hpp"     // for json
+#include "c/ModioC.h"                                // for u32
+#include "c/creators/ModioFilterCreator.h"           // for getFi...
+#include "Globals.h"               // for API_KEY
+#include "Utility.h"   // for toString
+#include "wrappers/CurlWrapper.h"  // for get
+#include "c/methods/callbacks/ModStatsCallbacks.h"              // for GetAl...
 
 extern "C"
 {

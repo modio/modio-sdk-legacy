@@ -1,4 +1,12 @@
-#include "c/methods/MetadataKVPMethods.h"
+#include <map>                                          // for map
+#include <string>                                       // for string, opera...
+#include "Utility.h"        // for toString, get...
+#include "wrappers/CurlWrapper.h"       // for getCallNumber
+#include "c/ModioC.h"                        // for u32, ModioRes...
+#include "Globals.h"       // for GAME_ID, MODI...
+#include "ModioUtility.h"  // for GenericReques...
+#include "c/methods/callbacks/MetadataKVPCallbacks.h"   // for GetAllMetadat...
+#include "dependencies/nlohmann/json.hpp"               // for json
 
 extern "C"
 {
@@ -17,6 +25,12 @@ extern "C"
 
   void modioAddMetadataKVP(void* object, u32 mod_id, char const* const* metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
@@ -41,6 +55,12 @@ extern "C"
 
   void modioDeleteMetadataKVP(void* object, u32 mod_id, char const* const* metadata_kvp_array, u32 metadata_kvp_array_size, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();

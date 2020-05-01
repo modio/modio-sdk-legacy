@@ -1,4 +1,8 @@
 #include "c/creators/ModioModCreator.h"
+#include <string.h>                               // for strcpy, strlen, NULL
+#include <utility>                                // for pair
+#include "Utility.h"                              // for toString
+#include "c/schemas/ModioListNode.h"             // for modioFreeNodeList
 
 extern "C"
 {

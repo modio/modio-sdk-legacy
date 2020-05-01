@@ -1,4 +1,6 @@
 #include "c++/schemas/Icon.h"
+#include "c/ModioC.h"                      // for ModioIcon
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

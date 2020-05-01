@@ -1,4 +1,6 @@
 #include "c/methods/callbacks/MeCallbacks.h"
+#include "Utility.h"                // for hasKey
+#include "c/schemas/ModioModfile.h" // for modioInitModfile ...
 
 std::map<u32, GetAuthenticatedUserParams *> get_authenticated_user_callbacks;
 std::map<u32, GetUserSubscriptionsParams *> get_user_subscriptions_callbacks;
@@ -16,17 +18,14 @@ void modioOnGetAuthenticatedUser(u32 call_number, u32 response_code, nlohmann::j
 
   modioInitUser(&modio::current_user, response_json);
 
-  modio::IS_LOGGED_IN = false;
   if(response_code >= 200 && response_code < 300)
   {
     nlohmann::json authentication_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
     authentication_json["user"] = response_json;
     modio::writeJson(modio::getModIODirectory() + "authentication.json", authentication_json);
-    modio::IS_LOGGED_IN = true;
   }else if(response_code >= 401)
   {
-    nlohmann::json blank_json;
-    modio::writeJson(modio::getModIODirectory() + "authentication.json", blank_json);
+    modioLogout();
   }
   
 

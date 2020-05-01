@@ -1,4 +1,7 @@
 #include "c/creators/ModioModfileEditor.h"
+#include <string.h>                // for strcpy, strlen, NULL
+#include <utility>                 // for pair
+#include "c/ModioC.h"  // for ModioModfileEditor, modioFreeModfi...
 
 extern "C"
 {

@@ -1,9 +1,23 @@
-#include "c/methods/SubscriptionMethods.h"
+#include <map>                                            // for map
+#include <string>                                         // for string, all...
+#include "Utility.h"          // for toString
+#include "wrappers/CurlWrapper.h"         // for getCallNumber
+#include "Globals.h"         // for MODIO_URL
+#include "ModioUtility.h"    // for GenericRequ...
+#include "c/ModioC.h"  // for u32, ModioR...
+#include "c/methods/callbacks/SubscriptionsCallbacks.h"   // for subscribe_to...
+#include "dependencies/nlohmann/json.hpp"                 // for json
 
 extern "C"
 {
   void modioSubscribeToMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response, ModioMod mod))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModParam(object, callback);
+      return;
+    }
+    modio::clearCache();
     std::map<std::string, std::string> data;
 
     u32 call_number = modio::curlwrapper::getCallNumber();
@@ -20,6 +34,12 @@ extern "C"
 
   void modioUnsubscribeFromMod(void* object, u32 mod_id, void (*callback)(void* object, ModioResponse response))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processGenericLocalUnauthorizedRequest(object, callback);
+      return;
+    }
+    modio::clearCache();
     std::map<std::string, std::string> data;
     u32 call_number = modio::curlwrapper::getCallNumber();
 

@@ -1,4 +1,6 @@
 #include "c/schemas/ModioHeader.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
 
 extern "C"
 {
@@ -19,6 +21,15 @@ extern "C"
       header->original = new char[original_str.size() + 1];
       strcpy(header->original, original_str.c_str());
     }
+  }
+
+  void modioInitHeaderCpp(ModioHeader* modio_header, modio::Header* header)
+  {
+    modio_header->filename = new char[header->filename.size() + 1];
+    strcpy(modio_header->filename, header->filename.c_str());
+
+    modio_header->original = new char[header->original.size() + 1];
+    strcpy(modio_header->original, header->original.c_str());
   }
 
   void modioFreeHeader(ModioHeader* header)

@@ -1,4 +1,11 @@
 #include "c/schemas/ModioGame.h"
+#include "Utility.h"                      // for hasKey
+#include "c/ModioC.h"                     // for ModioDownload ...
+#include "c/schemas/ModioUser.h"          // for modioInitUser ...
+#include "c/schemas/ModioIcon.h"          // for modioInitIcon ...
+#include "c/schemas/ModioLogo.h"          // for modioInitLogo ...
+#include "c/schemas/ModioHeader.h"        // for modioInitHeader ...
+#include "c/schemas/ModioGameTagOption.h" // for modioInitGameTagOption ...
 
 extern "C"
 {
@@ -20,6 +27,7 @@ extern "C"
     if(modio::hasKey(game_json, "date_added"))
       game->date_added = game_json["date_added"];
 
+    game->date_updated = 0;
     if(modio::hasKey(game_json, "date_updated"))
       game->date_updated = game_json["date_updated"];
 
@@ -139,6 +147,48 @@ extern "C"
         modioInitGameTagOption(&(game->game_tag_option_array[i]), game_json["tag_options"][i]);
       }
     }
+  }
+
+  void modioInitGameCpp(ModioGame* modio_game, modio::Game* game)
+  {
+    modio_game->id = game->id;
+    modio_game->status = game->status;
+    modio_game->maturity_options = game->maturity_options;
+    modio_game->date_added = game->date_added;
+    modio_game->date_updated = game->date_updated;
+    modio_game->presentation_option = game->presentation_option;
+    modio_game->date_live = game->date_live;
+    modio_game->community_options = game->community_options;
+    modio_game->submission_option = game->submission_option;
+    modio_game->curation_option = game->curation_option;
+    modio_game->revenue_options = game->revenue_options;
+    modio_game->api_access_options = game->api_access_options;
+
+    modio_game->ugc_name = new char[game->ugc_name.size() + 1];
+    strcpy(modio_game->ugc_name, game->ugc_name.c_str());
+
+    modio_game->instructions_url = new char[game->instructions_url.size() + 1];
+    strcpy(modio_game->instructions_url, game->instructions_url.c_str());
+
+    modio_game->name = new char[game->name.size() + 1];
+    strcpy(modio_game->name, game->name.c_str());
+
+    modio_game->name_id = new char[game->name_id.size() + 1];
+    strcpy(modio_game->name_id, game->name_id.c_str());
+
+    modio_game->summary = new char[game->summary.size() + 1];
+    strcpy(modio_game->summary, game->summary.c_str());
+
+    modio_game->instructions = new char[game->instructions.size() + 1];
+    strcpy(modio_game->instructions, game->instructions.c_str());
+    
+    modio_game->profile_url = new char[game->profile_url.size() + 1];
+    strcpy(modio_game->profile_url, game->profile_url.c_str());
+
+    modioInitUserCpp(&(modio_game->submitted_by), &(game->submitted_by));
+    modioInitIconCpp(&(modio_game->icon), &(game->icon));
+    modioInitLogoCpp(&(modio_game->logo), &(game->logo));
+    modioInitHeaderCpp(&(modio_game->header), &(game->header));
   }
 
   void modioFreeGame(ModioGame* game)

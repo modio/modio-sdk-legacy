@@ -1,8 +1,8 @@
 #ifndef MODIO_RESPONSE_H
 #define MODIO_RESPONSE_H
 
-#include "../../Globals.h"
-#include "../../c/schemas/ModioResponse.h"
+#include "../../dependencies/nlohmann/json.hpp"   // for json
+#include "../../c/ModioC.h"                       // for ModioResponse
 #include "Error.h"
 
 namespace modio

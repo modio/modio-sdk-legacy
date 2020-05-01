@@ -1,4 +1,6 @@
 #include "c/schemas/ModioIcon.h"
+#include "Utility.h"                // for hasKey
+#include "c/ModioC.h"               // for ModioDownload
 
 extern "C"
 {
@@ -43,6 +45,24 @@ extern "C"
       icon->thumb_256x256 = new char[thumb_256x256_str.size() + 1];
       strcpy(icon->thumb_256x256, thumb_256x256_str.c_str());
     }
+  }
+
+  void modioInitIconCpp(ModioIcon* modio_icon, modio::Icon* icon)
+  {
+    modio_icon->filename = new char[icon->filename.size() + 1];
+    strcpy(modio_icon->filename, icon->filename.c_str());
+
+    modio_icon->original = new char[icon->original.size() + 1];
+    strcpy(modio_icon->original, icon->original.c_str());
+
+    modio_icon->thumb_64x64 = new char[icon->thumb_64x64.size() + 1];
+    strcpy(modio_icon->thumb_64x64, icon->thumb_64x64.c_str());
+
+    modio_icon->thumb_128x128 = new char[icon->thumb_128x128.size() + 1];
+    strcpy(modio_icon->thumb_128x128, icon->thumb_128x128.c_str());
+
+    modio_icon->thumb_256x256 = new char[icon->thumb_256x256.size() + 1];
+    strcpy(modio_icon->thumb_256x256, icon->thumb_256x256.c_str());
   }
 
   void modioFreeIcon(ModioIcon* icon)

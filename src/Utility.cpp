@@ -1,4 +1,44 @@
 #include "Utility.h"
+#include <errno.h>                               // for errno
+#include <fcntl.h>                               // for SEEK_END
+#include <limits.h>                              // for PATH_MAX
+#include <stdio.h>                               // for remove, fclose, fopen
+#include <string.h>                              // for strcmp, NULL, size_t
+#include <sys/stat.h>                            // for mkdir, S_IROTH, S_IRWXG
+#include <array>                                 // for array
+#include <chrono>                                // for milliseconds, durati...
+#include <ctime>                                 // for time
+#include <fstream>                               // for operator<<, ofstream
+#include <iomanip>                               // for operator<<, setw
+#include <string>                                // for string, operator+
+#include <vector>                                // for allocator, vector
+#include "Globals.h"                             // for ACCESS_TOKEN, VERSION
+#include "c/ModioC.h"                            // for MODIO_DEBUGLEVEL_LOG
+#include "dependencies/minizip/minizip.h"        // for check_file_exists
+
+#ifdef MODIO_LINUX_DETECTED
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <ext/alloc_traits.h>                    // for __alloc_traits<>::va...
+#endif
+
+#ifdef MODIO_WINDOWS_DETECTED
+#  ifdef MODIO_UE4_DETECTED 
+#    include <Windows/MinWindows.h>
+#  else
+#    include <windows.h>
+#    include <shlobj.h>
+#  endif
+#  include <strsafe.h>
+#  include "dependencies/dirent/dirent.h"
+//#include "vld.h"
+#endif
+
+#ifdef MODIO_OSX_DETECTED
+#include <sys/stat.h>
+#include <dirent.h>
+#endif
 
 namespace modio
 {
@@ -185,13 +225,18 @@ void writeJson(const std::string &file_path, nlohmann::json json_object)
 #ifdef MODIO_WINDOWS_DETECTED
 static void writeLastErrorLog(const std::string &error_function)
 {
+  std::cerr << "[mod.io] Could not create directory on operating system Windows" << std::endl;
   //Get the error message, if any.
   DWORD errorMessageID = ::GetLastError();
   if (errorMessageID == 0)
+  {
+    std::cerr << "[mod.io] Error: No error message has been recorded" << std::endl;
     return; //No error message has been recorded
+  }
 
   if (errorMessageID == 183)
   {
+    std::cerr << "[mod.io] Error: The directory already exists" << std::endl;
     modio::writeLogLine("The directory already exists.", MODIO_DEBUGLEVEL_LOG);
     return;
   }
@@ -203,6 +248,7 @@ static void writeLastErrorLog(const std::string &error_function)
   std::string message(messageBuffer, size);
 
   modio::writeLogLine("Error while using " + error_function + ": " + message, MODIO_DEBUGLEVEL_ERROR);
+  std::cerr << "[mod.io] Error: while using " + error_function + ": " + message << std::endl;
 
   //Free the buffer.
   LocalFree(messageBuffer);
@@ -307,7 +353,7 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 
 std::string getModIODirectory()
 {
-  return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/";
+  return modio::addSlashIfNeeded(ROOT_PATH) + ".modio/" + modio::addSlashIfNeeded(ADDITIONAL_GAMEDIR_PATH);
 }
 
 std::string getFilename(std::string file_path)
@@ -425,10 +471,13 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
   return filenames;
 }
 
-void createDirectory(const std::string &directory)
+bool createDirectory(const std::string &directory)
 {
   if (modio::directoryExists(directory))
-    return;
+  {
+    std::clog << "[mod.io] Directory already exists:" + directory << std::endl;
+    return true;
+  }
 
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
@@ -438,9 +487,18 @@ void createDirectory(const std::string &directory)
 #ifdef MODIO_WINDOWS_DETECTED
   wchar_t *director_wc = WideCharFromString(directory);
   if (!CreateDirectory(director_wc, NULL))
+  {
+    std::cerr << "[mod.io] Error: Could not create directory: " << directory << std::endl;
     writeLastErrorLog("CreateDirectory");
+    return false;
+  }
+  else
+  {
+    std::clog << "[mod.io] Directory created:" + directory << std::endl;
+  }
   free(director_wc);
 #endif
+  return true;
 }
 
 bool removeDirectory(const std::string &directory)
@@ -491,7 +549,10 @@ bool removeDirectory(const std::string &directory)
 void removeFile(const std::string &filename)
 {
   if (remove(filename.c_str()) != 0)
-    writeLogLine("Could not remove " + filename, MODIO_DEBUGLEVEL_ERROR);
+  {
+    writeLogLine("Could not remove: " + filename + " error code: " + modio::toString(errno), MODIO_DEBUGLEVEL_ERROR);
+    writeLogLine(std::strerror(errno), MODIO_DEBUGLEVEL_ERROR);
+  }
   else
     writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
 }
@@ -598,6 +659,44 @@ std::string base64Encode(unsigned char const* bytes_to_encode, unsigned int in_l
   }
 
   return ret;
+}
+
+std::string getMyDocumentsPath()
+{
+#ifdef MODIO_WINDOWS_DETECTED
+  PWSTR   ppsz_path;
+  HRESULT handle = SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &ppsz_path);
+
+  std::wstring my_documents_path_wstring;
+  if (SUCCEEDED(handle)) {
+	  my_documents_path_wstring = ppsz_path;
+  }
+
+  CoTaskMemFree(ppsz_path);
+
+  std::string my_documents_path_string(my_documents_path_wstring.begin(), my_documents_path_wstring.end());
+
+  std::replace( my_documents_path_string.begin(), my_documents_path_string.end(), '\\', '/');
+
+  return my_documents_path_string;
+#endif
+  return "";
+}
+
+std::string randomString(u32 length)
+{
+  auto randchar = []() -> char
+  {
+    const char charset[] =
+    "0123456789"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz";
+    const size_t max_index = (sizeof(charset) - 1);
+    return charset[ rand() % max_index ];
+  };
+  std::string str(length,0);
+  std::generate_n( str.begin(), length, randchar );
+  return str;
 }
 
 } // namespace modio

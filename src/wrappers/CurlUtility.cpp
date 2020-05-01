@@ -1,4 +1,15 @@
 #include "wrappers/CurlUtility.h"
+#include <iostream>
+#include <memory>
+#include <utility>
+#include "curl/curl.h"
+#include "Globals.h"
+#include "c++/schemas/QueuedModDownload.h"
+#include "c++/schemas/QueuedModfileUpload.h"
+#include "c/schemas/ModioMod.h"
+#include "c/schemas/ModioQueuedModDownload.h"
+#include "wrappers/CurlWrapper.h"
+#include "wrappers/CurlWriteFunctions.h"
 
 namespace modio
 {

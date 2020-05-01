@@ -1,4 +1,5 @@
 #include "c/methods/callbacks/ModEventCallbacks.h"
+#include "Utility.h"                // for hasKey
 
 std::map<u32, GetEventsParams *> get_events_callbacks;
 std::map<u32, GetAllEventsParams *> get_all_events_callbacks;

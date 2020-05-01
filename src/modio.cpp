@@ -1,4 +1,39 @@
 #include "modio.h"
+#include "c/methods/callbacks/AuthenticationCallbacks.h"
+#include "c/schemas/ModioUser.h"
+#include "c/methods/callbacks/CommentsCallbacks.h"
+#include "c/methods/callbacks/DependenciesCallbacks.h"
+#include "c/methods/callbacks/ImageCallbacks.h"
+#include "c/methods/callbacks/MediaCallbacks.h"
+#include "c/methods/callbacks/MeCallbacks.h"
+#include "c/methods/callbacks/MetadataKVPCallbacks.h"
+#include "c/methods/callbacks/ModEventCallbacks.h"
+#include "c/methods/callbacks/ModfileCallbacks.h"
+#include "c/methods/callbacks/ModCallbacks.h"
+#include "c/methods/callbacks/ModStatsCallbacks.h"
+#include "c/methods/callbacks/RatingsCallbacks.h"
+#include "c/methods/callbacks/ReportsCallbacks.h"
+#include "c/methods/callbacks/SubscriptionsCallbacks.h"
+#include "c/methods/callbacks/TagCallbacks.h"
+#include <iostream>
+
+#ifdef MODIO_LINUX_DETECTED
+#include <unistd.h>
+#endif
+
+#ifdef MODIO_OSX_DETECTED
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+#endif
+
+#ifdef MODIO_WINDOWS_DETECTED
+#  ifdef MODIO_UE4_DETECTED 
+#    include <Windows/MinWindows.h>
+#  else
+#    include <windows.h>
+#  endif
+#endif
 
 static void loadEventPollingFile()
 {
@@ -24,6 +59,7 @@ static void loadAuthenticationFile()
   modio::writeLogLine("Loading authentication data...", MODIO_DEBUGLEVEL_LOG);
 
   modio::ACCESS_TOKEN = "";
+  modio::clearCache();
   modio::LAST_USER_EVENT_POLL_ID = 0;
 
   nlohmann::json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
@@ -51,14 +87,54 @@ static void loadAuthenticationFile()
   }
 }
 
-void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, char const *api_key, char const *root_path)
+void checkIfInstalledModsAreUpdated()
 {
+  modio::writeLogLine("Checking if all installed mods are updated...", MODIO_DEBUGLEVEL_LOG);
+
+  u32 installed_mods_count = modioGetAllInstalledModsCount();
+  if (installed_mods_count > 0)
+  {
+    ModioInstalledMod *installed_mods = new ModioInstalledMod[installed_mods_count];
+    modioGetAllInstalledMods(installed_mods);
+
+    u32 *mod_id_array = new u32[installed_mods_count];
+	  for (size_t i = 0; i < installed_mods_count; i++)
+		  mod_id_array[i] = installed_mods[i].mod_id;
+
+    modioDownloadModfilesById(NULL, mod_id_array, installed_mods_count, &modio::onCheckIfInstalledModsAreUpdated);
+
+    delete[] installed_mods;
+    delete[] mod_id_array;
+  }
+  else
+  {
+    modio::writeLogLine("No mods installed. Skipping check.", MODIO_DEBUGLEVEL_LOG);
+  }
+}
+
+void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, bool polling_enabled, char const *api_key, char const *root_path)
+{
+  std::clog << "[mod.io] Initializing mod.io SDK " << modio::VERSION << std::endl;
+  srand (time(NULL));
+
   modio::RETRIEVE_MODS_FROM_OTHER_GAMES = retrieve_mods_from_other_games;
+  modio::POLLING_ENABLED = polling_enabled;
   
   if (root_path)
     modio::ROOT_PATH = root_path;
   
-  modio::createDirectory(modio::getModIODirectory());
+  std::clog << "[mod.io] Creating directories" << std::endl;
+
+  modio::ADDITIONAL_GAMEDIR_PATH = "";
+
+  if(!modio::createDirectory(modio::getModIODirectory()))
+  {
+    std::clog << "Could not create the .modio/ directory, retying with alternative path: " << modio::getMyDocumentsPath() << std::endl;
+    modio::ROOT_PATH = modio::getMyDocumentsPath();
+    modio::createDirectory(modio::getModIODirectory());
+    modio::ADDITIONAL_GAMEDIR_PATH = "game_" + modio::toString(game_id);
+    modio::createDirectory(modio::getModIODirectory());
+  }
   modio::createDirectory(modio::getModIODirectory() + "mods/");
   modio::createDirectory(modio::getModIODirectory() + "cache/");
   modio::createDirectory(modio::getModIODirectory() + "tmp/");
@@ -71,7 +147,7 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modio::writeLogLine(".modio/ directory created at " + std::string(root_path), MODIO_DEBUGLEVEL_LOG);
   }else
   {
-    modio::writeLogLine(".modio/ directory created at current workspace.", MODIO_DEBUGLEVEL_LOG);
+    modio::writeLogLine(".modio/ directory created at the game directory", MODIO_DEBUGLEVEL_LOG);
   }
   
   modio::writeLogLine(modio::VERSION, MODIO_DEBUGLEVEL_LOG);
@@ -91,8 +167,9 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
   modioInitConfig();
 
   modio::updateInstalledModsJson();
+  modio::updateDownloadedModsJson();
 
-  modio::clearOldCache();
+  modio::clearCache();
 
   nlohmann::json authentication_json = modio::openJson(modio::getModIODirectory() + "authentication.json");
   if (modio::hasKey(authentication_json, "user"))
@@ -106,6 +183,8 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modio::updateUserSubscriptions();
   }
 
+  checkIfInstalledModsAreUpdated();
+
   modio::writeLogLine("SDK Initialized", MODIO_DEBUGLEVEL_LOG);
 }
 
@@ -116,11 +195,15 @@ void modioSetDebugLevel(u32 debug_level)
 
 void modioSetModEventsPollInterval(u32 interval_in_seconds)
 {
+  if(interval_in_seconds < modio::MOD_EVENT_MINIMUM_POLL_INTERVAL)
+    interval_in_seconds = modio::MOD_EVENT_MINIMUM_POLL_INTERVAL;
   modio::MOD_EVENT_POLL_INTERVAL = interval_in_seconds;
 }
 
 void modioSetUserEventsPollInterval(u32 interval_in_seconds)
 {
+  if(interval_in_seconds < modio::USER_EVENT_MINIMUM_POLL_INTERVAL)
+    interval_in_seconds = modio::USER_EVENT_MINIMUM_POLL_INTERVAL;
   modio::USER_EVENT_POLL_INTERVAL = interval_in_seconds;
 }
 
@@ -143,7 +226,7 @@ void modioShutdown()
   clearModStatsCallbackParams();
   clearRatingsCallbackParams();
   clearReportsCallbackParams();
-  clearSubscriptionCallbackParams();
+  clearSubscriptionsCallbackParams();
   clearTagCallbackParams();
 
   modioFreeUser(&modio::current_user);
@@ -151,10 +234,40 @@ void modioShutdown()
   modio::writeLogLine("mod.io C interface finished shutting down", MODIO_DEBUGLEVEL_LOG);
 }
 
+void modioClearCache()
+{
+  modio::clearCache();
+}
+
+void modioPollEvents()
+{
+  u32 current_time = modio::getCurrentTimeSeconds();
+  
+  if(modioIsLoggedIn())
+    modio::pollUserEvents(current_time);
+  else
+    modio::writeLogLine("User is not logged in, user events won't be polled.", MODIO_DEBUGLEVEL_LOG);
+
+  if(modioGetAllInstalledModsCount() > 0)
+    modio::pollInstalledModsEvents(current_time);
+  else
+    modio::writeLogLine("No mods are installed, mod events won't be polled.", MODIO_DEBUGLEVEL_LOG);
+}
+
 void modioProcess()
 {
-  if (modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
-    modio::pollEvents();
+  if (modio::POLLING_ENABLED && modio::AUTOMATIC_UPDATES == MODIO_UPDATES_ENABLED)
+  {
+    u32 current_time = modio::getCurrentTimeSeconds();
+    if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL_TIME > modio::USER_EVENT_POLL_INTERVAL)
+    {
+      modio::pollUserEvents(current_time);
+    }
+    if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL_TIME > modio::MOD_EVENT_POLL_INTERVAL)
+    {
+      modio::pollInstalledModsEvents(current_time);
+    }
+  }
   modio::curlwrapper::process();
 }
 

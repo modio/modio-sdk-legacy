@@ -1,4 +1,6 @@
 #include "c++/schemas/Response.h"
+#include "c/ModioC.h"                      // for ModioResponse
+#include "dependencies/nlohmann/json.hpp"  // for json
 
 namespace modio
 {

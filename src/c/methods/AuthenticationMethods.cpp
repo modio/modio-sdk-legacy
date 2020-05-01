@@ -1,4 +1,14 @@
-#include "c/methods/AuthenticationMethods.h"
+#include <map>
+#include <string>
+#include "Utility.h"
+#include "ModUtility.h"
+#include "c/ModioC.h"
+#include "dependencies/nlohmann/json.hpp"
+#include "wrappers/CurlWrapper.h"
+#include "Globals.h"
+#include "ModioUtility.h"
+#include "c/methods/callbacks/AuthenticationCallbacks.h"
+#include "wrappers/CurlUtility.h" // for modio::curlwrapper...
 
 extern "C"
 {
@@ -41,11 +51,13 @@ extern "C"
 
   bool modioIsLoggedIn()
   {
-    return modio::IS_LOGGED_IN;
+    return modio::ACCESS_TOKEN != "";
   }
 
   void modioLogout()
   {
+    modio::clearCache();
+    modio::writeLogLine("Logging out...", MODIO_DEBUGLEVEL_LOG);
     modio::ACCESS_TOKEN = "";
     modio::writeJson(modio::getModIODirectory() + "authentication.json", nlohmann::json({}));
   }

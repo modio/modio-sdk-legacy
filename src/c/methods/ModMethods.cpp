@@ -1,4 +1,17 @@
-#include "c/methods/ModMethods.h"
+#include <map>                                                  // for map
+#include <string>                                               // for string
+#include <utility>                                              // for pair
+#include "ModUtility.h"                                         // for getCa...
+#include "dependencies/nlohmann/json.hpp"     // for json
+#include "c/ModioC.h"                                // for u32
+#include "c/creators/ModioFilterCreator.h"           // for getFi...
+#include "c/creators/ModioModCreator.h"              // for getMo...
+#include "c/creators/ModioModEditor.h"               // for getMo...
+#include "Globals.h"               // for GAME_ID
+#include "ModioUtility.h"          // for Gener...
+#include "Utility.h"   // for toString
+#include "wrappers/CurlWrapper.h"  // for getCa...
+#include "c/methods/callbacks/ModCallbacks.h"                   // for AddMo...
 
 extern "C"
 {
@@ -52,6 +65,12 @@ extern "C"
 
   void modioEditMod(void *object, u32 mod_id, ModioModEditor mod_editor, void (*callback)(void *object, ModioResponse response, ModioMod mod))
   {
+    if(!modioIsLoggedIn())
+    {
+      modio::processLocalUnauthorizedRequestModParam(object, callback);
+      return;
+    }
+    
     u32 call_number = modio::curlwrapper::getCallNumber();
 
     add_mod_callbacks[call_number] = new AddModParams;
