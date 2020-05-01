@@ -59,6 +59,7 @@ static void loadAuthenticationFile()
   modio::writeLogLine("Loading authentication data...", MODIO_DEBUGLEVEL_LOG);
 
   modio::ACCESS_TOKEN = "";
+  modio::clearCache();
   modio::LAST_USER_EVENT_POLL_ID = 0;
 
   nlohmann::json token_file_json = modio::openJson(modio::getModIODirectory() + "authentication.json");

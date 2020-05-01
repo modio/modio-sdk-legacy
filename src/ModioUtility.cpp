@@ -508,6 +508,7 @@ void pollInstalledModsEvents(u32 poll_time)
 void updateAuthenticatedUser(std::string access_token)
 {
   modio::writeLogLine("Updating authenticated user.", MODIO_DEBUGLEVEL_LOG);
+  modio::clearCache();
   modio::ACCESS_TOKEN = access_token;
   nlohmann::json authentication_json;
   authentication_json["access_token"] = access_token;
