@@ -38,7 +38,11 @@ extern "C"
       else if(event_json["event_type"] == "USER_UNSUBSCRIBE")
         event->event_type = MODIO_EVENT_USER_UNSUBSCRIBE;
       else
+      {
+        std::string event_type_string = event_json["event_type"];
+        modio::writeLogLine(std::string("Unhandled event: ") + event_type_string, MODIO_DEBUGLEVEL_ERROR);
         event->event_type = MODIO_EVENT_UNDEFINED;
+      }
     }
 
     event->date_added = 0;

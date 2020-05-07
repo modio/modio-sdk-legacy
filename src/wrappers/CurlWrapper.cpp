@@ -618,16 +618,17 @@ QueuedModDownload* getQueuedModJson(u32 mod_id)
   return NULL;
 }
 
-bool isDownloadedModfileUpdated(nlohmann::json downloaded_mod, u32 date)
+bool isDownloadedModfileUpdated(nlohmann::json downloaded_mod, u32 new_modfile_date)
 {
   if (modio::hasKey(downloaded_mod, "mod") &&
       modio::hasKey(downloaded_mod["mod"], "modfile") &&
       modio::hasKey(downloaded_mod["mod"]["modfile"], "date_added") &&
-      downloaded_mod["mod"]["date_added"] >= date)
+      downloaded_mod["mod"]["date_added"] >= new_modfile_date)
   {
-    modio::writeLogLine("Downloaded mod is not updated " + modio::toString(date), MODIO_DEBUGLEVEL_LOG);
+    modio::writeLogLine("Downloaded mod is updated " + modio::toString(new_modfile_date), MODIO_DEBUGLEVEL_LOG);
     return true;
   }
+  modio::writeLogLine("Downloaded mod is not updated " + modio::toString(new_modfile_date), MODIO_DEBUGLEVEL_LOG);
   return false;
 }
 
@@ -640,6 +641,8 @@ bool isInstalledModfileUpdated(u32 mod_id, u32 date_updated)
         installed_mod["mod_id"] == mod_id &&
         installed_mod["date_updated"] >= date_updated)
     {
+      u32 installed_mod_updated_at = installed_mod["date_updated"];
+      writeLogLine(std::string("Installed mod found: " + modio::toString(installed_mod_updated_at)), MODIO_DEBUGLEVEL_LOG);
       modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
       return true;
     }
@@ -661,6 +664,8 @@ bool modEnqueuePreprocess(u32 mod_id, u32 modfile_date_added)
   nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
   if(!downloaded_mod.empty())
   {
+    writeLogLine(std::string("Downloaded mod found: "), MODIO_DEBUGLEVEL_LOG);
+    writeLogLine(downloaded_mod, MODIO_DEBUGLEVEL_LOG);
     if(isDownloadedModfileUpdated(downloaded_mod, modfile_date_added))
       return false;
     else

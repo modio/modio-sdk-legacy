@@ -318,8 +318,9 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
       }
       }
     }
-    if (mod_edited_ids.size() > 0)
-      updateModsCache(mod_edited_ids);
+    /* TODO: Re-enable mod profile update? */
+    //if (mod_edited_ids.size() > 0)
+    //  updateModsCache(mod_edited_ids);
     if (mod_to_download_queue_ids.size() > 0)
       addModsToDownloadQueue(mod_to_download_queue_ids);
 
