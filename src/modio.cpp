@@ -156,8 +156,6 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
     modio::MODIO_URL = "https://api.test.mod.io/";
   modio::GAME_ID = game_id;
   modio::API_KEY = api_key;
-  
-  modio::installDownloadedMods();
 
   loadEventPollingFile();
   loadAuthenticationFile();
@@ -168,6 +166,7 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
 
   modio::updateInstalledModsJson();
   modio::updateDownloadedModsJson();
+  modio::installDownloadedMods();
 
   modio::clearCache();
 
@@ -261,10 +260,12 @@ void modioProcess()
     u32 current_time = modio::getCurrentTimeSeconds();
     if (modioIsLoggedIn() && current_time - modio::LAST_USER_EVENT_POLL_TIME > modio::USER_EVENT_POLL_INTERVAL)
     {
+      modio::clearCache();
       modio::pollUserEvents(current_time);
     }
     if (modioGetAllInstalledModsCount() > 0 && current_time - modio::LAST_MOD_EVENT_POLL_TIME > modio::MOD_EVENT_POLL_INTERVAL)
     {
+      modio::clearCache();
       modio::pollInstalledModsEvents(current_time);
     }
   }
