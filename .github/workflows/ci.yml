@@ -100,3 +100,31 @@ jobs:
         run: |
           cd ${{ matrix.build-dir || '.' }}
           ctest -C ${{ matrix.build-config || 'Release' }} --output-on-failure
+
+  docs:
+    name: Build docs
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install mdBook
+        uses: peaceiris/actions-mdbook@v1
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout wiki
+        uses: actions/checkout@v2
+        with:
+          repository: modio/SDK.wiki
+          path: wiki
+
+      - name: Build
+        run: |
+          mkdir -p book/src
+          cp wiki/*.md book/src/
+          rename.ul '::' '__' book/src/*
+          cd book
+          cat src/_Sidebar.md | ./linkfix.py summary > src/SUMMARY.md
+          mdbook build -d docs
+          zip -r ../docs.zip docs/*
