@@ -35,11 +35,27 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    get_all_mods_callbacks[call_number] = new GetAllModsParams;
-    get_all_mods_callbacks[call_number]->callback = callback;
-    get_all_mods_callbacks[call_number]->object = object;
-    get_all_mods_callbacks[call_number]->url = url_without_api_key;
-    get_all_mods_callbacks[call_number]->is_cache = false;
+    GetAllModsParams* get_all_mods_params = NULL;
+    for(auto get_all_mods_callbacks_iterator : get_all_mods_callbacks)
+    {
+      if(get_all_mods_callbacks_iterator.second->url == url)
+      {
+        modio::writeLogLine("Avoiding paralel call...", MODIO_DEBUGLEVEL_LOG);
+        get_all_mods_params = get_all_mods_callbacks_iterator.second;
+        break;
+      }
+    }
+
+    if(get_all_mods_params == NULL)
+    {
+      get_all_mods_params = new GetAllModsParams;
+      get_all_mods_callbacks[call_number] = get_all_mods_params;
+    }
+
+    get_all_mods_params->url = url_without_api_key;
+    get_all_mods_params->is_cache = false;
+    get_all_mods_params->callbacks.push_back(callback);
+    get_all_mods_params->objects.push_back(object);
 
     std::string cache_filename = modio::getCallFileFromCache(url_without_api_key, cache_max_age_seconds);
     if (cache_filename != "")
@@ -48,7 +64,7 @@ extern "C"
       nlohmann::json empty_json = {};
       if (!cache_file_json.empty())
       {
-        get_all_mods_callbacks[call_number]->is_cache = true;
+        get_all_mods_params->is_cache = true;
         modioOnGetAllMods(call_number, 200, cache_file_json);
         return;
       }
