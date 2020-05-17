@@ -512,6 +512,8 @@ static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json 
         curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, g_current_mod_download->queued_mod_download);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
+        curl_easy_setopt(curl, CURLOPT_BUFFERSIZE, 120000L);
+
         curl_multi_add_handle(g_curl_multi_handle, curl);
       }
     }
