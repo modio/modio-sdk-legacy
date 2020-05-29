@@ -35,27 +35,24 @@ extern "C"
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    GetAllModsParams* get_all_mods_params = NULL;
     for(auto get_all_mods_callbacks_iterator : get_all_mods_callbacks)
     {
-      if(get_all_mods_callbacks_iterator.second->url == url)
+      if(get_all_mods_callbacks_iterator.second->url == url_without_api_key)
       {
         modio::writeLogLine("Avoiding paralel call...", MODIO_DEBUGLEVEL_LOG);
-        get_all_mods_params = get_all_mods_callbacks_iterator.second;
-        break;
+        GetAllModsParams* existing_get_all_mods_params = get_all_mods_callbacks_iterator.second;
+        existing_get_all_mods_params->callbacks.push_back(callback);
+        existing_get_all_mods_params->objects.push_back(object);
+        return;
       }
     }
 
-    if(get_all_mods_params == NULL)
-    {
-      get_all_mods_params = new GetAllModsParams;
-      get_all_mods_callbacks[call_number] = get_all_mods_params;
-    }
-
-    get_all_mods_params->url = url_without_api_key;
-    get_all_mods_params->is_cache = false;
-    get_all_mods_params->callbacks.push_back(callback);
-    get_all_mods_params->objects.push_back(object);
+    GetAllModsParams* new_get_all_mods_params = new GetAllModsParams;
+    get_all_mods_callbacks[call_number] = new_get_all_mods_params;
+    new_get_all_mods_params->url = url_without_api_key;
+    new_get_all_mods_params->is_cache = false;
+    new_get_all_mods_params->callbacks.push_back(callback);
+    new_get_all_mods_params->objects.push_back(object);
 
     std::string cache_filename = modio::getCallFileFromCache(url_without_api_key, cache_max_age_seconds);
     if (cache_filename != "")
@@ -64,7 +61,7 @@ extern "C"
       nlohmann::json empty_json = {};
       if (!cache_file_json.empty())
       {
-        get_all_mods_params->is_cache = true;
+        new_get_all_mods_params->is_cache = true;
         modioOnGetAllMods(call_number, 200, cache_file_json);
         return;
       }
