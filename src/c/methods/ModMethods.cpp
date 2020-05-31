@@ -30,6 +30,12 @@ extern "C"
 
   void modioGetAllModsFilterString(void* object, char const *filter_string, u32 cache_max_age_seconds, void (*callback)(void* object, ModioResponse response, ModioMod mods[], u32 mods_size))
   {
+    if(!callback)
+    {
+      modio::writeLogLine("NULL callback detected", MODIO_DEBUGLEVEL_ERROR);
+      return;
+    }
+
     std::string url_without_api_key = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + (filter_string ? filter_string : "");
     std::string url = url_without_api_key + "&api_key=" + modio::API_KEY;
 
