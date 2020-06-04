@@ -52,7 +52,10 @@ void modioOnGetAllMods(u32 call_number, u32 response_code, nlohmann::json respon
     }
   }
 
-  get_all_mods_callbacks[call_number]->callback(get_all_mods_callbacks[call_number]->object, response, mods, mods_size);
+  for(int i=0; i<get_all_mods_callbacks[call_number]->callbacks.size(); i++)
+  {
+    get_all_mods_callbacks[call_number]->callbacks[i](get_all_mods_callbacks[call_number]->objects[i], response, mods, mods_size);
+  }
 
   delete get_all_mods_callbacks[call_number];
   get_all_mods_callbacks.erase(call_number);
