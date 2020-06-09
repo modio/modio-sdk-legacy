@@ -67,7 +67,7 @@ void onUpdateCurrentUserSubscriptions(void* object, ModioResponse response, Modi
 {
   if(response.result_offset == 0) /* Clear only if is first result page */
     modio::current_user_subscriptions.clear();
-  
+
   if (response.code >= 200 && response.code < 300)
   {
     modio::writeLogLine("Current user subscriptions retrieved sucessfully.", MODIO_DEBUGLEVEL_LOG);
@@ -185,7 +185,7 @@ void updateModsCache(std::vector<u32> mod_ids)
   modioInitFilter(&filter);
 
   std::vector<int>* ptr_mod_ids = new std::vector<int>();
-  
+
   for (auto &mod_id : mod_ids)
   {
     modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
@@ -205,9 +205,9 @@ void addModsToDownloadQueue(std::vector<u32> mod_ids)
   }
   ModioFilterCreator filter;
   modioInitFilter(&filter);
-  
+
   std::vector<int>* ptr_mod_ids = new std::vector<int>();
-  
+
   for (auto &mod_id : mod_ids)
   {
     modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
@@ -236,7 +236,7 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
         modio::writeLogLine("Mod event id polled: " + modio::toString(events_array[i].id), MODIO_DEBUGLEVEL_LOG);
         modio::LAST_MOD_EVENT_POLL_ID = events_array[i].id;
       }
-      
+
       switch (events_array[i].event_type)
       {
       case MODIO_EVENT_UNDEFINED:
@@ -553,7 +553,7 @@ void handleDownloadImageError(void *object, void (*callback)(void *object, Modio
 void processGenericLocalUnauthorizedRequest(void* object, void(*callback)(void* object, ModioResponse response))
 {
   modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
-  
+
   ModioResponse response;
   nlohmann::json empty_json;
   modioInitResponse(&response, empty_json);
@@ -575,7 +575,7 @@ void processLocalUnauthorizedRequestModParam(void* object, void (*callback)(void
   modioInitMod(&mod, empty_json);
 
   callback(object, response, mod);
-  
+
   modioFreeResponse(&response);
   modioFreeMod(&mod);
 }
@@ -593,7 +593,7 @@ void processLocalUnauthorizedRequestModfileParam(void* object, void (*callback)(
   modioInitModfile(&modfile, empty_json);
 
   callback(object, response, modfile);
-  
+
   modioFreeResponse(&response);
   modioFreeModfile(&modfile);
 }
@@ -609,7 +609,7 @@ void processLocalUnauthorizedRequestBoolParam(void* object, void (*callback)(voi
   modioInitResponse(&response, empty_json);
 
   callback(object, response, false);
-  
+
   modioFreeResponse(&response);
 }
 
@@ -626,7 +626,7 @@ void processLocalUnauthorizedRequestUserParam(void* object, void (*callback)(voi
   modioInitUser(&user, empty_json);
 
   callback(object, response, user);
-  
+
   modioFreeResponse(&response);
   modioFreeUser(&user);
 }
@@ -642,7 +642,7 @@ void processLocalUnauthorizedRequestModsParam(void* object, void (*callback)(voi
   modioInitResponse(&response, empty_json);
 
   callback(object, response, NULL, 0);
-  
+
   modioFreeResponse(&response);
 }
 
@@ -657,7 +657,7 @@ void processLocalUnauthorizedRequestUserEventsParam(void* object, void (*callbac
   modioInitResponse(&response, empty_json);
 
   callback(object, response, NULL, 0);
-  
+
   modioFreeResponse(&response);
 }
 
@@ -672,7 +672,7 @@ void processLocalUnauthorizedRequestGamesParam(void* object, void (*callback)(vo
   modioInitResponse(&response, empty_json);
 
   callback(object, response, NULL, 0);
-  
+
   modioFreeResponse(&response);
 }
 
@@ -687,7 +687,7 @@ void processLocalUnauthorizedRequestModfilesParam(void* object, void (*callback)
   modioInitResponse(&response, empty_json);
 
   callback(object, response, NULL, 0);
-  
+
   modioFreeResponse(&response);
 }
 
@@ -702,7 +702,7 @@ void processLocalUnauthorizedRequestRatingsParam(void* object, void (*callback)(
   modioInitResponse(&response, empty_json);
 
   callback(object, response, NULL, 0);
-  
+
   modioFreeResponse(&response);
 }
 
