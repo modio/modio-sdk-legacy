@@ -52,6 +52,7 @@ typedef int i32;
 #define MODIO_EVENT_USER_TEAM_LEAVE   6
 #define MODIO_EVENT_USER_SUBSCRIBE    7
 #define MODIO_EVENT_USER_UNSUBSCRIBE  8
+#define MODIO_EVENT_MOD_DELETED       9
 
 // Presentation Option Constants
 #define MODIO_GRID_VIEW   0
