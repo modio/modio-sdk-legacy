@@ -42,8 +42,8 @@ void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::j
   ModioResponse response;
   modioInitResponse(&response, response_json);
   response.code = response_code;
-  ModioMod *mods = NULL;
   u32 mods_size = 0;
+  ModioMod *mods = NULL;
 
   if (response.code == 200)
   {
@@ -64,7 +64,10 @@ void modioOnGetUserSubscriptions(u32 call_number, u32 response_code, nlohmann::j
     }
   }
 
-  get_user_subscriptions_callbacks[call_number]->callback(get_user_subscriptions_callbacks[call_number]->object, response, mods, mods_size);
+  for(int i=0; i<get_user_subscriptions_callbacks[call_number]->callbacks.size(); i++)
+  {
+    get_user_subscriptions_callbacks[call_number]->callbacks[i](get_user_subscriptions_callbacks[call_number]->objects[i], response, mods, mods_size);
+  }
 
   delete get_user_subscriptions_callbacks[call_number];
   get_user_subscriptions_callbacks.erase(call_number);
