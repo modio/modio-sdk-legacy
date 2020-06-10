@@ -227,6 +227,7 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
 
     std::vector<u32> mod_edited_ids;
     std::vector<u32> mod_to_download_queue_ids;
+    std::vector<u32> mod_deleted_ids;
     if(events_array_size > 0)
       modio::clearCache();
     for (size_t i = 0; i < events_array_size; i++)
@@ -316,11 +317,22 @@ static void onGetAllEventsPoll(void *object, ModioResponse response, ModioModEve
         mod_edited_ids.push_back(events_array[i].mod_id);
         break;
       }
+      case MODIO_EVENT_MOD_DELETED:
+      {
+        modio::writeLogLine("Mod deleted. Mod id: " + modio::toString(events_array[i].mod_id) + " Uninstalling...", MODIO_DEBUGLEVEL_LOG);
+        mod_deleted_ids.push_back(events_array[i].mod_id);
+      }
       }
     }
     /* TODO: Re-enable mod profile update? */
     //if (mod_edited_ids.size() > 0)
     //  updateModsCache(mod_edited_ids);
+    size_t deleted_mod_count = mod_deleted_ids.size();
+    for (size_t i = 0; i < deleted_mod_count; ++i)
+    {
+      modioUninstallMod(mod_deleted_ids[i]);
+    }
+
     if (mod_to_download_queue_ids.size() > 0)
       addModsToDownloadQueue(mod_to_download_queue_ids);
 
