@@ -550,6 +550,19 @@ void handleDownloadImageError(void *object, void (*callback)(void *object, Modio
   modioFreeResponse(&response);
 }
 
+ModioResponse createUnauthorizedResponse()
+{
+  modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
+
+  ModioResponse response;
+  nlohmann::json empty_json;
+
+  modioInitResponse(&response, empty_json);
+  response.code = 401;
+
+  return response;
+}
+
 void processGenericLocalUnauthorizedRequest(void* object, void(*callback)(void* object, ModioResponse response))
 {
   modio::writeLogLine("Unauthorized local request found. 401 will be returned", MODIO_DEBUGLEVEL_LOG);
