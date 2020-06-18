@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool wait = true;
+bool _wait = true;
 
 void onDownloadMod(u32 response_code, u32 mod_id)
 {
@@ -15,7 +15,7 @@ void onDownloadMod(u32 response_code, u32 mod_id)
     modioInstallDownloadedMods();
     printf("Finished installing mods\n");
   }
-  wait = false;
+  _wait = false;
 }
 
 int main(void)
@@ -34,7 +34,7 @@ int main(void)
   // To download the mod we only have to provide it's id
   modioDownloadMod(mod_id);
 
-  while (wait)
+  while (_wait)
   {
     // While a mod is being downloaded, we can track it's progress by using the mod download queue related functions
     u32 queue_size = modioGetModDownloadQueueCount();

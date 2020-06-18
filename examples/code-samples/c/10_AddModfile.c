@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-bool wait = true;
+bool _wait = true;
 
 void onAddModfile(u32 response_code, u32 mod_id)
 {
@@ -13,7 +13,7 @@ void onAddModfile(u32 response_code, u32 mod_id)
   {
     printf("Modfile added!\n");
   }
-  wait = false;
+  _wait = false;
 }
 
 int main(void)
@@ -49,7 +49,7 @@ int main(void)
   modioAddModfile(mod_id, modfile_creator);
   modioFreeModfileCreator(&modfile_creator);
 
-  while (wait)
+  while (_wait)
   {
     // While a mod is being uploaded, we can track it's progress by using the mod upload queue related functions
     u32 queue_size = modioGetModfileUploadQueueCount();
