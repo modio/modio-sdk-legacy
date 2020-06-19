@@ -645,7 +645,7 @@ bool isInstalledModfileUpdated(u32 mod_id, u32 modfile_id)
     {
       u32 modfile_id = installed_mod["modfile_id"];
       writeLogLine(std::string("Installed mod found with modifle id " + modio::toString(modfile_id)), MODIO_DEBUGLEVEL_LOG);
-      modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+      modio::writeLogLine("Modfile changed event detected but you already have it's new version installed, the modfile will not be downloaded. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
       return true;
     }
   }
@@ -676,16 +676,16 @@ bool modEnqueuePreprocess(u32 mod_id, u32 modfile_id)
 
   if(isInstalledModfileUpdated(mod_id, modfile_id))
   {
-    writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already installed in a more recent version.", MODIO_DEBUGLEVEL_WARNING);
+    writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already installed in it's new version.", MODIO_DEBUGLEVEL_WARNING);
     return false;
   }
 
   QueuedModDownload* queued_mod_download = getQueuedModJson(mod_id);
   if(queued_mod_download)
   {
-    if(queued_mod_download->mod.modfile.id != modfile_id)
+    if(queued_mod_download->mod.modfile.id == modfile_id)
     {
-      writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already on the download queue in a more recent version.", MODIO_DEBUGLEVEL_WARNING);
+      writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already on the download queue in it's new viersion.", MODIO_DEBUGLEVEL_WARNING);
       return false;
     }else
     {
