@@ -620,31 +620,31 @@ QueuedModDownload* getQueuedModJson(u32 mod_id)
   return NULL;
 }
 
-bool isDownloadedModfileUpdated(nlohmann::json downloaded_mod, u32 new_modfile_date)
+bool isDownloadedModfileUpdated(nlohmann::json downloaded_mod, u32 new_modfile_id)
 {
   if (modio::hasKey(downloaded_mod, "mod") &&
       modio::hasKey(downloaded_mod["mod"], "modfile") &&
-      modio::hasKey(downloaded_mod["mod"]["modfile"], "date_added") &&
-      downloaded_mod["mod"]["date_added"] >= new_modfile_date)
+      modio::hasKey(downloaded_mod["mod"]["modfile"], "id") &&
+      downloaded_mod["mod"]["modfile"]["id"] == new_modfile_id)
   {
-    modio::writeLogLine("Downloaded mod is updated " + modio::toString(new_modfile_date), MODIO_DEBUGLEVEL_LOG);
+    modio::writeLogLine("Downloaded mod is updated, modfile id:" + modio::toString(new_modfile_id), MODIO_DEBUGLEVEL_LOG);
     return true;
   }
-  modio::writeLogLine("Downloaded mod is not updated " + modio::toString(new_modfile_date), MODIO_DEBUGLEVEL_LOG);
+  modio::writeLogLine("Downloaded mod is not updated, modfile id:" + modio::toString(new_modfile_id), MODIO_DEBUGLEVEL_LOG);
   return false;
 }
 
-bool isInstalledModfileUpdated(u32 mod_id, u32 date_updated)
+bool isInstalledModfileUpdated(u32 mod_id, u32 modfile_id)
 {
   for (auto installed_mod : modio::installed_mods)
   {
     if (modio::hasKey(installed_mod, "mod_id") &&
-        modio::hasKey(installed_mod, "date_updated") &&
+        modio::hasKey(installed_mod, "modfile_id") &&
         installed_mod["mod_id"] == mod_id &&
-        installed_mod["date_updated"] >= date_updated)
+        installed_mod["modfile_id"] == modfile_id)
     {
-      u32 installed_mod_updated_at = installed_mod["date_updated"];
-      writeLogLine(std::string("Installed mod found: " + modio::toString(installed_mod_updated_at)), MODIO_DEBUGLEVEL_LOG);
+      u32 modfile_id = installed_mod["modfile_id"];
+      writeLogLine(std::string("Installed mod found with modifle id " + modio::toString(modfile_id)), MODIO_DEBUGLEVEL_LOG);
       modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
       return true;
     }
@@ -661,20 +661,20 @@ void removeDownloadedModfile(u32 mod_id)
   }
 }
 
-bool modEnqueuePreprocess(u32 mod_id, u32 modfile_date_added)
+bool modEnqueuePreprocess(u32 mod_id, u32 modfile_id)
 {
   nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
   if(!downloaded_mod.empty())
   {
     writeLogLine(std::string("Downloaded mod found: "), MODIO_DEBUGLEVEL_LOG);
     writeLogLine(downloaded_mod, MODIO_DEBUGLEVEL_LOG);
-    if(isDownloadedModfileUpdated(downloaded_mod, modfile_date_added))
+    if(isDownloadedModfileUpdated(downloaded_mod, modfile_id))
       return false;
     else
       removeDownloadedModfile(downloaded_mod);
   }
 
-  if(isInstalledModfileUpdated(mod_id, modfile_date_added))
+  if(isInstalledModfileUpdated(mod_id, modfile_id))
   {
     writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already installed in a more recent version.", MODIO_DEBUGLEVEL_WARNING);
     return false;
@@ -683,7 +683,7 @@ bool modEnqueuePreprocess(u32 mod_id, u32 modfile_date_added)
   QueuedModDownload* queued_mod_download = getQueuedModJson(mod_id);
   if(queued_mod_download)
   {
-    if(queued_mod_download->mod.modfile.date_added >= modfile_date_added)
+    if(queued_mod_download->mod.modfile.id != modfile_id)
     {
       writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already on the download queue in a more recent version.", MODIO_DEBUGLEVEL_WARNING);
       return false;
@@ -698,7 +698,7 @@ bool modEnqueuePreprocess(u32 mod_id, u32 modfile_date_added)
 void queueModDownload(ModioMod &modio_mod)
 {
   writeLogLine("Adding to download queue mod: " + toString(modio_mod.id), MODIO_DEBUGLEVEL_LOG);
-  if(!modEnqueuePreprocess(modio_mod.id, modio_mod.modfile.date_added))
+  if(!modEnqueuePreprocess(modio_mod.id, modio_mod.modfile.id))
   {
     return;
   }
