@@ -176,7 +176,7 @@ void handleUnsubscription(u32 mod_id)
 {
   modioUninstallMod(mod_id);
   modioCancelModDownload(mod_id);
-  modio::curlwrapper::removeDownloadedModfile(mod_id);
+  modio::curlwrapper::removeDownloadedMod(mod_id);
 }
 
 void updateModsCache(std::vector<u32> mod_ids)

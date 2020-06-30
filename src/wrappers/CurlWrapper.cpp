@@ -533,8 +533,31 @@ void downloadMod(QueuedModDownload *queued_mod_download)
   get(call_number, url, modio::getHeaders(), &onGetDownloadMod);
 }
 
-void removeDownloadedModfile(nlohmann::json downloaded_mod)
+nlohmann::json getDownloadedModJson(u32 mod_id)
 {
+  for (auto &downloaded_mod_json : modio::g_downloaded_mods)
+  {
+    if (modio::hasKey(downloaded_mod_json, "mod") &&
+        modio::hasKey(downloaded_mod_json["mod"], "id") &&
+        downloaded_mod_json["mod"]["id"] == mod_id)
+    {
+      return downloaded_mod_json;
+    }
+  }
+  nlohmann::json empty_json;
+  return empty_json;
+}
+
+void removeDownloadedMod(u32 mod_id)
+{
+  modio::writeLogLine("Removing mod: " + mod_id, MODIO_DEBUGLEVEL_ERROR);
+  nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
+  if(!downloaded_mod.empty())
+  {
+    modio::writeLogLine("Could not remove modfile. Empty downloaded mod json object.", MODIO_DEBUGLEVEL_ERROR);
+    return;
+  }
+
   if(!modio::hasKey(downloaded_mod, "downloaded_zip_path"))
   {
     modio::writeLogLine("Could not find the downloaded_zip_path attribute on to the mod download json.", MODIO_DEBUGLEVEL_ERROR);
@@ -593,21 +616,6 @@ void cancelModDownload(QueuedModDownload* queued_mod_download)
   writeLogLine("Finished cancel preprocess.", MODIO_DEBUGLEVEL_WARNING);
 }
 
-nlohmann::json getDownloadedModJson(u32 mod_id)
-{
-  for (auto &downloaded_mod_json : modio::g_downloaded_mods)
-  {
-    if (modio::hasKey(downloaded_mod_json, "mod") &&
-        modio::hasKey(downloaded_mod_json["mod"], "id") &&
-        downloaded_mod_json["mod"]["id"] == mod_id)
-    {
-      return downloaded_mod_json;
-    }
-  }
-  nlohmann::json empty_json;
-  return empty_json;
-}
-
 QueuedModDownload* getQueuedModJson(u32 mod_id)
 {
   for (auto &queued_mod_download : g_mod_download_queue)
@@ -620,86 +628,73 @@ QueuedModDownload* getQueuedModJson(u32 mod_id)
   return NULL;
 }
 
-bool isDownloadedModfileUpdated(nlohmann::json downloaded_mod, u32 new_modfile_date)
+bool isModDownloaded(u32 mod_id, u32 new_modfile_id)
 {
-  if (modio::hasKey(downloaded_mod, "mod") &&
-      modio::hasKey(downloaded_mod["mod"], "modfile") &&
-      modio::hasKey(downloaded_mod["mod"]["modfile"], "date_added") &&
-      downloaded_mod["mod"]["date_added"] >= new_modfile_date)
+  modio::writeLogLine("Checking if mod is downloaded...", MODIO_DEBUGLEVEL_LOG);
+  nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
+  if(!downloaded_mod.empty())
   {
-    modio::writeLogLine("Downloaded mod is updated " + modio::toString(new_modfile_date), MODIO_DEBUGLEVEL_LOG);
-    return true;
+    if (modio::hasKey(downloaded_mod, "mod") &&
+        modio::hasKey(downloaded_mod["mod"], "modfile") &&
+        modio::hasKey(downloaded_mod["mod"]["modfile"], "id") &&
+        downloaded_mod["mod"]["modfile"]["id"] == new_modfile_id)
+    {
+      modio::writeLogLine("Mod is already downloaded.", MODIO_DEBUGLEVEL_LOG);
+      return true;
+    }
+    removeDownloadedMod(downloaded_mod);
   }
-  modio::writeLogLine("Downloaded mod is not updated " + modio::toString(new_modfile_date), MODIO_DEBUGLEVEL_LOG);
+  modio::writeLogLine("Mod is not downloaded.", MODIO_DEBUGLEVEL_LOG);
   return false;
 }
 
-bool isInstalledModfileUpdated(u32 mod_id, u32 date_updated)
+bool isModInstalled(u32 mod_id, u32 modfile_id)
 {
+  modio::writeLogLine("Checking if mod is installed...", MODIO_DEBUGLEVEL_LOG);
   for (auto installed_mod : modio::installed_mods)
   {
     if (modio::hasKey(installed_mod, "mod_id") &&
-        modio::hasKey(installed_mod, "date_updated") &&
+        modio::hasKey(installed_mod, "modfile_id") &&
         installed_mod["mod_id"] == mod_id &&
-        installed_mod["date_updated"] >= date_updated)
+        installed_mod["modfile_id"] == modfile_id)
     {
-      u32 installed_mod_updated_at = installed_mod["date_updated"];
-      writeLogLine(std::string("Installed mod found: " + modio::toString(installed_mod_updated_at)), MODIO_DEBUGLEVEL_LOG);
-      modio::writeLogLine("Modfile changed event detected but you already have a newer version installed, the modfile will not be downloaded. Mod id: " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+      u32 modfile_id = installed_mod["modfile_id"];
+      modio::writeLogLine("Mod is already installed.", MODIO_DEBUGLEVEL_LOG);
       return true;
     }
   }
+  modio::writeLogLine("Mod is not installed.", MODIO_DEBUGLEVEL_LOG);
   return false;
 }
 
-void removeDownloadedModfile(u32 mod_id)
+bool isModQueued(u32 mod_id, u32 modfile_id)
 {
-  nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
-  if(!downloaded_mod.empty())
-  {
-    removeDownloadedModfile(downloaded_mod);
-  }
-}
-
-bool modEnqueuePreprocess(u32 mod_id, u32 modfile_date_added)
-{
-  nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
-  if(!downloaded_mod.empty())
-  {
-    writeLogLine(std::string("Downloaded mod found: "), MODIO_DEBUGLEVEL_LOG);
-    writeLogLine(downloaded_mod, MODIO_DEBUGLEVEL_LOG);
-    if(isDownloadedModfileUpdated(downloaded_mod, modfile_date_added))
-      return false;
-    else
-      removeDownloadedModfile(downloaded_mod);
-  }
-
-  if(isInstalledModfileUpdated(mod_id, modfile_date_added))
-  {
-    writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already installed in a more recent version.", MODIO_DEBUGLEVEL_WARNING);
-    return false;
-  }
-
+  modio::writeLogLine("Checking if mod is on the download queue...", MODIO_DEBUGLEVEL_LOG);
   QueuedModDownload* queued_mod_download = getQueuedModJson(mod_id);
   if(queued_mod_download)
   {
-    if(queued_mod_download->mod.modfile.date_added >= modfile_date_added)
+    if(queued_mod_download->mod.modfile.id == modfile_id)
     {
-      writeLogLine("Did not add the mod: " + toString(mod_id) + " to the mod download queue. It's already on the download queue in a more recent version.", MODIO_DEBUGLEVEL_WARNING);
-      return false;
+      modio::writeLogLine("Mod is already on the download queue.", MODIO_DEBUGLEVEL_LOG);
+      return true;
     }else
     {
       cancelModDownload(queued_mod_download);
     }
   }
-  return true;
+  modio::writeLogLine("Mod is not on the download queue.", MODIO_DEBUGLEVEL_LOG);
+  return false;
 }
 
 void queueModDownload(ModioMod &modio_mod)
 {
   writeLogLine("Adding to download queue mod: " + toString(modio_mod.id), MODIO_DEBUGLEVEL_LOG);
-  if(!modEnqueuePreprocess(modio_mod.id, modio_mod.modfile.date_added))
+
+  if(isModDownloaded(modio_mod.id, modio_mod.modfile.id)
+      || isModInstalled(modio_mod.id, modio_mod.modfile.id)
+      || isModQueued(modio_mod.id, modio_mod.modfile.id))
   {
+    writeLogLine("Mod is up to date, the mod won't be queued.", MODIO_DEBUGLEVEL_LOG);
     return;
   }
 
@@ -717,7 +712,7 @@ void queueModDownload(ModioMod &modio_mod)
 
   updateModDownloadQueueFile();
 
-  writeLogLine("Download queued. Mod id: " + toString(modio_mod.id), MODIO_DEBUGLEVEL_LOG);
+  writeLogLine("Download queued.", MODIO_DEBUGLEVEL_LOG);
 
   if (g_mod_download_queue.size() == 1)
   {
