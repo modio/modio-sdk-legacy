@@ -112,6 +112,12 @@ void onModDownloadFinished(CURL *curl)
       writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(g_current_mod_download->queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
     }
 
+    if (response_code >= 416)
+    {
+      writeLogLine("API returned 416, uninstalling mod id: " + toString(g_current_mod_download->queued_mod_download->mod.id), MODIO_DEBUGLEVEL_ERROR);
+      modioUninstallMod(g_current_mod_download->queued_mod_download->mod.id);
+    }
+
     if (modio::download_callback)
     {
       modio::download_callback(response_code,  g_current_mod_download->queued_mod_download->mod.id);
