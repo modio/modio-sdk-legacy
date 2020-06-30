@@ -7,6 +7,7 @@ namespace modio
 void Error::initialize(ModioError modio_error)
 {
   code = modio_error.code;
+  error_ref = modio_error.error_ref;
   if (modio_error.message)
     message = modio_error.message;
   errors.resize(modio_error.errors_array_size);
