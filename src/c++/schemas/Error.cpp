@@ -21,15 +21,16 @@ nlohmann::json toJson(Error &error)
   nlohmann::json error_json;
 
   error_json["code"] = error.code;
+  error_json["error_ref"] = error.error_ref;
   error_json["message"] = error.message;
 
   nlohmann::json errors_json;
-  
+
   for (u32 i = 0; i<error.errors.size(); i++)
   {
     errors_json.push_back(error.errors[i]);
   }
-  
+
   error_json["errors"] = errors_json;
 
   return error_json;
