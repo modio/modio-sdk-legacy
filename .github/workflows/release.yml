@@ -17,8 +17,8 @@ jobs:
           - Windows 2019 MSVC win32 +static
           - Windows 2019 MSVC win64
           - Windows 2019 MSVC win64 +static
-          - macOS 10.14 Clang
-          - macOS 10.14 Clang +static
+          - macOS 10.15 Clang
+          - macOS 10.15 Clang +static
         include:
           - name: Ubuntu 18.04 GCC+libcurl-gnutls
             os: ubuntu-18.04
@@ -49,12 +49,12 @@ jobs:
             cmake-args: -A x64 -DBUILD_SHARED_LIBS=OFF
             artifact-name: x86_64-windows-msvc+static
 
-          - name: macOS 10.14 Clang
-            os: macOS-10.14
+          - name: macOS 10.15 Clang
+            os: macOS-latest
             artifact-name: x86_64-apple-darwin
 
-          - name: macOS 10.14 Clang +static
-            os: macOS-10.14
+          - name: macOS 10.15 Clang +static
+            os: macOS-latest
             cmake-args: -DBUILD_SHARED_LIBS=OFF
             artifact-name: x86_64-apple-darwin+static
 
@@ -68,7 +68,7 @@ jobs:
           sudo apt-get install libcurl4-gnutls-dev
 
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Generate project files
         run: |
@@ -108,18 +108,18 @@ jobs:
         uses: peaceiris/actions-mdbook@v1
 
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Checkout wiki
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           repository: modio/SDK.wiki
-          ref: master
+          path: wiki
 
       - name: Build
         run: |
           mkdir -p book/src
-          cp ../SDK.wiki/*.md book/src/
+          cp wiki/*.md book/src/
           rename.ul '::' '__' book/src/*
           cd book
           cat src/_Sidebar.md | ./linkfix.py summary > src/SUMMARY.md
@@ -144,7 +144,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Download Linux
         uses: actions/download-artifact@v1
