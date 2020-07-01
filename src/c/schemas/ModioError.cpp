@@ -10,6 +10,10 @@ extern "C"
     if(modio::hasKey(error_json, "code"))
       error->code = error_json["code"];
 
+    error->error_ref = 0;
+    if(modio::hasKey(error_json, "error_ref"))
+      error->error_ref = error_json["error_ref"];
+
     error->message = NULL;
     if(modio::hasKey(error_json, "message"))
     {
@@ -44,6 +48,7 @@ extern "C"
   void modioInitErrorCpp(ModioError* modio_error, modio::Error* error)
   {
     modio_error->code = error->code;
+    modio_error->error_ref = error->error_ref;
 
     modio_error->message = new char[error->message.size() + 1];
     strcpy(modio_error->message, error->message.c_str());
