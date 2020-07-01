@@ -39,8 +39,6 @@ extern "C"
     std::string url_without_api_key = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "games/" + modio::toString(modio::GAME_ID) + "/mods?" + (filter_string ? filter_string : "");
     std::string url = url_without_api_key + "&api_key=" + modio::API_KEY;
 
-    u32 call_number = modio::curlwrapper::getCallNumber();
-
     for(auto get_all_mods_callbacks_iterator : get_all_mods_callbacks)
     {
       if(get_all_mods_callbacks_iterator.second->url == url_without_api_key)
@@ -53,6 +51,8 @@ extern "C"
       }
     }
 
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
     GetAllModsParams* new_get_all_mods_params = new GetAllModsParams;
     get_all_mods_callbacks[call_number] = new_get_all_mods_params;
     new_get_all_mods_params->url = url_without_api_key;
@@ -63,8 +63,8 @@ extern "C"
     std::string cache_filename = modio::getCallFileFromCache(url_without_api_key, cache_max_age_seconds);
     if (cache_filename != "")
     {
+      modio::writeLogLine("Cache file found: " + cache_filename, MODIO_DEBUGLEVEL_LOG);
       nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
-      nlohmann::json empty_json = {};
       if (!cache_file_json.empty())
       {
         new_get_all_mods_params->is_cache = true;
