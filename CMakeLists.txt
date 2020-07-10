@@ -40,15 +40,6 @@ IF (UNIX AND NOT APPLE)
   target_link_libraries (modio curl)
 ENDIF ()
 
-IF (MINGW)
-  target_link_libraries(modio
-    ${CMAKE_SOURCE_DIR}/lib/MinGW/libcurl.a
-    ${CMAKE_SOURCE_DIR}/lib/MinGW/libcrypto.dll.a
-    ${CMAKE_SOURCE_DIR}/lib/MinGW/libeay32.dll
-    ${CMAKE_SOURCE_DIR}/lib/MinGW/libssl.dll.a
-    wldap32 ws2_32)
-ENDIF()
-
 IF (MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -DUNICODE -D_UNICODE)
   target_link_libraries(modio ws2_32.lib wldap32.lib advapi32.lib kernel32.lib comdlg32.lib crypt32.lib normaliz.lib )
