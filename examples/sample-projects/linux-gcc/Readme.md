@@ -1,4 +1,4 @@
-This project contains the minimal setup required to add the mod.io functionality to your game using the GNU C++ compiler. The `Makefile` in this directory shows how to include the mod.io headers and link the `libmodio.so` library. The `libmodio.so` is not include by default, we recomend you to grab it from our [releases page](https://github.com/DBolical/modioSDK/releases) and adjust the `MODIO_LIB_DIR` on the `Makefile` but you can also build it yourself by [following our guide](https://github.com/DBolical/modioSDK/wiki/Building).
+This project contains the minimal setup required to add the mod.io functionality to your game using the GNU C++ compiler. The `Makefile` in this directory shows how to include the mod.io headers and link the `libmodio.so` library. The `libmodio.so` is not include by default, we recomend you to grab it from our [releases page](https://github.com/modio/SDK/releases) and adjust the `MODIO_LIB_DIR` on the `Makefile` but you can also build it yourself by [following our guide](https://github.com/modio/SDK/wiki/Building).
 
 # Dependencies
 
