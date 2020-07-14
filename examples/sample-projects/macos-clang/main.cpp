@@ -1,16 +1,20 @@
+#include <iostream>
 #include "modio.h"
 
 int main(void)
 {
-  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, "e91c01b8882f4affeddd56c96111977b");
+  // Retreive your game id and api key from the mod.io web to initialize mod.io
+  // First, experiment with the test environment under test.mod.io and once you're ready to launch, switch to the live environment by passing the MODIO_ENVIRONMENT_LIVE flag
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, YOUR_GAME_ID, "YOUR_API_KEY");
 
   volatile static bool finished = false;
 
-  auto wait = [&]()
+  auto _wait = [&]()
   {
     while (!finished)
     {
       modio_instance.sleep(10);
+      // Add the process funcion to your game loop to process mod.io funcionality asynchronously
       modioProcess();
     }
   };
@@ -22,8 +26,7 @@ int main(void)
 
   // Before requesting mods, let's define the query filters
   modio::FilterCreator filter;
-  filter.setLimit(7);
-  filter.setCacheMaxAgeSeconds(100);
+  filter.setLimit(5);
 
   std::cout <<"Getting mods..." << std::endl;
 
@@ -52,7 +55,7 @@ int main(void)
     finish();
   });
 
-  wait();
+  _wait();
 
   std::cout << "Process finished" << std::endl;
 
