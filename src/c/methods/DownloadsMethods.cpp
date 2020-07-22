@@ -207,6 +207,7 @@ u32 modioGetModState(u32 mod_id)
 void modioDownloadModfilesById(void* object, u32 const* mod_id_array, u32 mod_id_array_size, void(*callback)(void* object, ModioResponse response, bool mods_are_updated))
 {
   modio::writeLogLine("Downloading mods by id...", MODIO_DEBUGLEVEL_LOG);
+  modio::clearCache();
   u32 i = 0;
 
   u32 *call_number = new u32;
