@@ -14,6 +14,7 @@
 #include "c/methods/callbacks/RatingsCallbacks.h"
 #include "c/methods/callbacks/ReportsCallbacks.h"
 #include "c/methods/callbacks/SubscriptionsCallbacks.h"
+#include "c/methods/callbacks/GameCallbacks.h"
 #include "c/methods/callbacks/TagCallbacks.h"
 #include <iostream>
 
@@ -227,6 +228,7 @@ void modioShutdown()
   clearReportsCallbackParams();
   clearSubscriptionsCallbackParams();
   clearTagCallbackParams();
+  clearGameCallbackParams();
 
   modioFreeUser(&modio::current_user);
 
