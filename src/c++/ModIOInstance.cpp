@@ -16,6 +16,7 @@
 #include "c++/methods/callbacks/ReportsInstanceCallbacks.h"
 #include "c++/methods/callbacks/SubscriptionsInstanceCallbacks.h"
 #include "c++/methods/callbacks/TagsInstanceCallbacks.h"
+#include "c++/methods/callbacks/GameInstanceCallbacks.h"
 #include "c/methods/callbacks/../../../wrappers/MinizipWrapper.h"
 #include "Utility.h"
 
@@ -54,6 +55,7 @@ Instance::~Instance()
   clearModEventsRequestCalls();
   clearModfileRequestCalls();
   clearModRequestCalls();
+  clearGameRequestCalls();
   clearModStatsRequestCalls();
   clearRatingsRequestCalls();
   clearReportsRequestCalls();
