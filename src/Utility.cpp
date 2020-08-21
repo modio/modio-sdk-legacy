@@ -22,6 +22,8 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <ext/alloc_traits.h>                    // for __alloc_traits<>::va...
+#include <pwd.h>                                 // for getting the users home path (getpwuid/getuid)
+#include <errno.h>                               // for constants of errno
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
@@ -470,7 +472,24 @@ bool createDirectory(const std::string &directory)
 
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
-  mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  std::size_t current = directory.find( '/' );
+  
+  while( current != std::string::npos )
+  {
+    std::string subdir = directory.substr( 0, current );
+    errno = 0;
+    // Try to create part of the path, the only error we allow is that the folder already exist
+    // We don't check if the folder already exists as that might cause a race conditon (what if we get back that it
+    // exist, and then it's deleted while by another process in the time between the check and the time that mkdir executes)
+    if( mkdir( subdir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0 && errno != EEXIST )
+    {
+      writeLogLine("Failed to create directory [" + subdir + "] with error: " + strerror(errno), MODIO_DEBUGLEVEL_LOG);
+      return false;
+    }
+    current = directory.find( '/', current + 1 );
+  }
+  
+  return true;
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
@@ -655,16 +674,28 @@ std::string getMyDocumentsPath()
   PWSTR   ppsz_path;
   HRESULT handle = SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &ppsz_path);
 
-  std::wstring my_documents_path_wstring;
-  if (SUCCEEDED(handle)) {
-	  my_documents_path_wstring = ppsz_path;
+  if ( !SUCCEEDED(handle) ) {
+    // If we didn't succeed, ensure that we return a non null value
+    return "";
   }
 
+  std::wstring my_documents_path_wstring = ppsz_path;
   CoTaskMemFree(ppsz_path);
-
   std::replace(my_documents_path_wstring.begin(), my_documents_path_wstring.end(), '\\', '/');
 
+  // Convert to UTF-8
   return StringFromWideString(my_documents_path_wstring);
+#elif defined(MODIO_LINUX_DETECTED)
+  // @todo: This will most likely also work on mac, but I prefer of taking the safe path and introduce that codepath
+  // when I have been able to actually test that
+  const char *homedir = getenv("HOME");
+  if ( homedir == nullptr )
+  {
+    // check /etc/passwd for the homedir specified in there
+    homedir = getpwuid( getuid() )->pw_dir;
+  }
+  // std::string shouldn't be constructed with a nullptr
+  return homedir ? homedir : "";
 #endif
   return "";
 }
