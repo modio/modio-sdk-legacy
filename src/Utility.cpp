@@ -15,6 +15,7 @@
 #include "Globals.h"                             // for ACCESS_TOKEN, VERSION
 #include "c/ModioC.h"                            // for MODIO_DEBUGLEVEL_LOG
 #include "dependencies/minizip/minizip.h"        // for check_file_exists
+#include <codecvt>                               // for wstring_convert/codecvt_utf8
 
 #ifdef MODIO_LINUX_DETECTED
 #include <sys/stat.h>
@@ -44,24 +45,19 @@ namespace modio
 {
 
 #ifdef MODIO_WINDOWS_DETECTED
-static wchar_t *WideCharFromString(std::string const &str)
+static std::wstring WideCharFromString(std::string const &str)
 {
-  // returns the number of required wchar_t WITHOUT terminating NUL
-  size_t rl = mbstowcs(NULL, str.c_str(), 0);
-  wchar_t *wcstr = (wchar_t *)malloc((rl + 1) * sizeof *wcstr);
-  mbstowcs(wcstr, str.c_str(), INT_MAX);
-  return wcstr;
+  return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str);
 }
 
 static std::string StringFromWideChar(wchar_t const *str)
 {
-  // returns the number of required bytes WITHOUT terminating NUL
-  size_t rl = wcstombs(NULL, str, 0);
-  char *cstr = (char *)malloc(rl + 1);
-  wcstombs(cstr, str, INT_MAX);
-  std::string ret(cstr);
-  free(cstr);
-  return ret;
+  return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
+}
+
+static std::string StringFromWideString(const std::wstring& str)
+{
+  return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
 }
 #endif
 
@@ -225,7 +221,7 @@ void writeJson(const std::string &file_path, nlohmann::json json_object)
 #ifdef MODIO_WINDOWS_DETECTED
 static void writeLastErrorLog(const std::string &error_function)
 {
-  std::cerr << "[mod.io] Could not create directory on operating system Windows" << std::endl;
+  std::cerr << "[mod.io] Could not create directory on operating system Windows, test" << std::endl;
   //Get the error message, if any.
   DWORD errorMessageID = ::GetLastError();
   if (errorMessageID == 0)
@@ -273,10 +269,12 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
   std::string strPattern;          // Pattern
   WIN32_FIND_DATA FileInformation; // File information
 
+  std::locale loc(std::locale(), new std::codecvt_utf8<char16_t>);
+  std::cout.imbue(loc);
+  std::cout << "Deleting directory " << refcstrRootDirectory << std::endl;
+
   strPattern = refcstrRootDirectory + "\\*.*";
-  wchar_t *strPattern_wc = WideCharFromString(strPattern);
-  hFile = ::FindFirstFile(strPattern_wc, &FileInformation);
-  free(strPattern_wc);
+  hFile = ::FindFirstFile(WideCharFromString(strPattern).c_str(), &FileInformation);
   if (hFile != INVALID_HANDLE_VALUE)
   {
     do
@@ -285,9 +283,8 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
           && wcscmp (FileInformation.cFileName, L"..") != 0)
       {
         std::wstring ws_filename(FileInformation.cFileName);
-        std::string str_filename(ws_filename.begin(), ws_filename.end());
 
-        writeLogLine("Deleting file: " + str_filename, MODIO_DEBUGLEVEL_LOG);
+        writeLogLine("Deleting file: " + StringFromWideString(ws_filename), MODIO_DEBUGLEVEL_LOG);
 
         strFilePath.erase();
         strFilePath = refcstrRootDirectory + "\\" + StringFromWideChar(FileInformation.cFileName);
@@ -302,21 +299,17 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
         else
         {
           // Set file attributes
-          wchar_t *strFilePath_wc = WideCharFromString(strFilePath);
-          if (::SetFileAttributes(strFilePath_wc, FILE_ATTRIBUTE_NORMAL) == FALSE)
+          std::wstring strFilePath_w = WideCharFromString(strFilePath);
+          if (::SetFileAttributes(strFilePath_w.c_str(), FILE_ATTRIBUTE_NORMAL) == FALSE)
           {
-            free(strFilePath_wc);
             return ::GetLastError();
           }
 
           // Delete file
-          if (::DeleteFile(strFilePath_wc) == FALSE)
+          if (::DeleteFile(strFilePath_w.c_str()) == FALSE)
           {
-            free(strFilePath_wc);
             return ::GetLastError();
           }
-
-          free(strFilePath_wc);
         }
       }
     } while (::FindNextFile(hFile, &FileInformation) == TRUE);
@@ -330,21 +323,17 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
     else
     {
       // Set directory attributes
-      wchar_t *refcstrRootDirectory_wc = WideCharFromString(refcstrRootDirectory);
-      if (::SetFileAttributes(refcstrRootDirectory_wc, FILE_ATTRIBUTE_NORMAL) == FALSE)
+      std::wstring refcstrRootDirectory_w = WideCharFromString(refcstrRootDirectory);
+      if (::SetFileAttributes(refcstrRootDirectory_w.c_str(), FILE_ATTRIBUTE_NORMAL) == FALSE)
       {
-        free(refcstrRootDirectory_wc);
         return ::GetLastError();
       }
 
       // Delete directory
-      if (::RemoveDirectory(refcstrRootDirectory_wc) == FALSE)
+      if (::RemoveDirectory(refcstrRootDirectory_w.c_str()) == FALSE)
       {
-        free(refcstrRootDirectory_wc);
         return ::GetLastError();
       }
-
-      free(refcstrRootDirectory_wc);
     }
   }
   return 0;
@@ -485,8 +474,8 @@ bool createDirectory(const std::string &directory)
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
-  wchar_t *director_wc = WideCharFromString(directory);
-  if (!CreateDirectory(director_wc, NULL))
+  std::wstring director_w = WideCharFromString(directory);
+  if (!CreateDirectory(director_w.c_str(), NULL))
   {
     std::cerr << "[mod.io] Error: Could not create directory: " << directory << std::endl;
     writeLastErrorLog("CreateDirectory");
@@ -496,7 +485,6 @@ bool createDirectory(const std::string &directory)
   {
     std::clog << "[mod.io] Directory created:" + directory << std::endl;
   }
-  free(director_wc);
 #endif
   return true;
 }
@@ -674,11 +662,9 @@ std::string getMyDocumentsPath()
 
   CoTaskMemFree(ppsz_path);
 
-  std::string my_documents_path_string(my_documents_path_wstring.begin(), my_documents_path_wstring.end());
+  std::replace(my_documents_path_wstring.begin(), my_documents_path_wstring.end(), '\\', '/');
 
-  std::replace( my_documents_path_string.begin(), my_documents_path_string.end(), '\\', '/');
-
-  return my_documents_path_string;
+  return StringFromWideString(my_documents_path_wstring);
 #endif
   return "";
 }
