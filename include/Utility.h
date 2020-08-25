@@ -67,7 +67,7 @@ bool createDirectory(const std::string &directory);
 bool removeDirectory(const std::string &directory);
 void removeFile(const std::string &filename);
 double getFileSize(const std::string &file_path);
-void createPath(const std::string &strPathAndFile);
+bool createPath(const std::string &strPathAndFile);
 std::vector<std::string> getHeaders();
 std::vector<std::string> getHeadersNoToken();
 std::vector<std::string> getUrlEncodedHeaders();

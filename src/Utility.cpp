@@ -15,7 +15,7 @@
 #include "Globals.h"                             // for ACCESS_TOKEN, VERSION
 #include "c/ModioC.h"                            // for MODIO_DEBUGLEVEL_LOG
 #include "dependencies/minizip/minizip.h"        // for check_file_exists
-#include <codecvt>                               // for wstring_convert/codecvt_utf8
+#include "Filesystem.h"                          // for Filesystem::...
 
 #ifdef MODIO_LINUX_DETECTED
 #include <sys/stat.h>
@@ -45,23 +45,6 @@
 
 namespace modio
 {
-
-#ifdef MODIO_WINDOWS_DETECTED
-static std::wstring WideCharFromString(std::string const &str)
-{
-  return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str);
-}
-
-static std::string StringFromWideChar(wchar_t const *str)
-{
-  return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
-}
-
-static std::string StringFromWideString(const std::wstring& str)
-{
-  return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
-}
-#endif
 
 //String methods
 std::string toString(i32 number)
@@ -221,36 +204,7 @@ void writeJson(const std::string &file_path, nlohmann::json json_object)
 // Filesystem methods
 
 #ifdef MODIO_WINDOWS_DETECTED
-static void writeLastErrorLog(const std::string &error_function)
-{
-  std::cerr << "[mod.io] Could not create directory on operating system Windows, test" << std::endl;
-  //Get the error message, if any.
-  DWORD errorMessageID = ::GetLastError();
-  if (errorMessageID == 0)
-  {
-    std::cerr << "[mod.io] Error: No error message has been recorded" << std::endl;
-    return; //No error message has been recorded
-  }
 
-  if (errorMessageID == 183)
-  {
-    std::cerr << "[mod.io] Error: The directory already exists" << std::endl;
-    modio::writeLogLine("The directory already exists.", MODIO_DEBUGLEVEL_LOG);
-    return;
-  }
-
-  LPSTR messageBuffer = nullptr;
-  size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                               NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
-
-  std::string message(messageBuffer, size);
-
-  modio::writeLogLine("Error while using " + error_function + ": " + message, MODIO_DEBUGLEVEL_ERROR);
-  std::cerr << "[mod.io] Error: while using " + error_function + ": " + message << std::endl;
-
-  //Free the buffer.
-  LocalFree(messageBuffer);
-}
 #endif
 
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
@@ -270,10 +224,6 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
   std::string strFilePath;         // Filepath
   std::string strPattern;          // Pattern
   WIN32_FIND_DATA FileInformation; // File information
-
-  std::locale loc(std::locale(), new std::codecvt_utf8<char16_t>);
-  std::cout.imbue(loc);
-  std::cout << "Deleting directory " << refcstrRootDirectory << std::endl;
 
   strPattern = refcstrRootDirectory + "\\*.*";
   hFile = ::FindFirstFile(WideCharFromString(strPattern).c_str(), &FileInformation);
@@ -321,7 +271,9 @@ static DWORD deleteDirectoryWindows(const std::string &refcstrRootDirectory)
 
     DWORD dwError = ::GetLastError();
     if (dwError != ERROR_NO_MORE_FILES)
+    {
       return dwError;
+    }
     else
     {
       // Set directory attributes
@@ -377,15 +329,7 @@ bool isDirectory(const std::string &directory)
 
 bool directoryExists(const std::string &path)
 {
-  if (path == "")
-    return true;
-  DIR *dir = opendir(modio::addSlashIfNeeded(path).c_str());
-  if (dir)
-  {
-    closedir(dir);
-    return true;
-  }
-  return false;
+  return modio::Filesystem::DirExists(path);
 }
 
 std::string getDirectoryPath(const std::string &filename)
@@ -462,54 +406,20 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
   return filenames;
 }
 
+// Should we remove this function and favor Filesystem::CreateDirectory instead for all calling points?
 bool createDirectory(const std::string &directory)
 {
-  if (modio::directoryExists(directory))
-  {
-    std::clog << "[mod.io] Directory already exists:" + directory << std::endl;
-    return true;
-  }
-
   writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
-#if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
-  std::size_t current = directory.find( '/' );
-  
-  while( current != std::string::npos )
-  {
-    std::string subdir = directory.substr( 0, current );
-    errno = 0;
-    // Try to create part of the path, the only error we allow is that the folder already exist
-    // We don't check if the folder already exists as that might cause a race conditon (what if we get back that it
-    // exist, and then it's deleted while by another process in the time between the check and the time that mkdir executes)
-    if( mkdir( subdir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0 && errno != EEXIST )
-    {
-      writeLogLine("Failed to create directory [" + subdir + "] with error: " + strerror(errno), MODIO_DEBUGLEVEL_LOG);
-      return false;
-    }
-    current = directory.find( '/', current + 1 );
-  }
-  
-  return true;
-#endif
 
-#ifdef MODIO_WINDOWS_DETECTED
-  std::wstring director_w = WideCharFromString(directory);
-  if (!CreateDirectory(director_w.c_str(), NULL))
-  {
-    std::cerr << "[mod.io] Error: Could not create directory: " << directory << std::endl;
-    writeLastErrorLog("CreateDirectory");
-    return false;
-  }
-  else
-  {
-    std::clog << "[mod.io] Directory created:" + directory << std::endl;
-  }
-#endif
-  return true;
+  // We don't check if the folder already exists as that might cause a race condition (what if we get back that it
+  // exist, and then it's deleted while by another process in the time between the check and the time that mkdir executes)
+  return modio::Filesystem::CreateDir(directory);
 }
 
 bool removeDirectory(const std::string &directory)
 {
+  // @todonow: test this codepath on linux
+  // @todo migrate this codepath to Platform::DeleteDirectory
 #ifdef MODIO_WINDOWS_DETECTED
   DWORD error_code = deleteDirectoryWindows(directory);
   if (error_code != 0)
@@ -577,7 +487,7 @@ double getFileSize(const std::string &file_path)
   return file_size;
 }
 
-void createPath(const std::string &path)
+bool createPath(const std::string &path)
 {
   std::string current_path;
   std::string tokenized_path = path;
@@ -591,8 +501,13 @@ void createPath(const std::string &path)
     current_path += tokenized_path.substr(0, slash_position) + "/";
     tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
 
-    createDirectory(current_path);
+    if( !createDirectory(current_path) )
+    {
+      return false;
+    }
   }
+
+  return true;
 }
 
 std::vector<std::string> getHeaders()
