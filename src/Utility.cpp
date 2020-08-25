@@ -177,7 +177,7 @@ nlohmann::json toJson(const std::string &json_str)
 
 nlohmann::json openJson(const std::string &file_path)
 {
-  std::ifstream ifs(file_path);
+  std::ifstream ifs(WideCharFromString(file_path));
   nlohmann::json cache_file_json;
   if (ifs.is_open())
   {
