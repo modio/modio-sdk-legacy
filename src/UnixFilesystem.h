@@ -10,7 +10,7 @@ namespace modio
      */
     static bool DirExists(const std::string& directory);
 
-    static bool CreateDirectory(const std::string& directory);
+    static bool CreateDir(const std::string& directory);
   };
   typedef UnixFilesystem Filesystem;
 }

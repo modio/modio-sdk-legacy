@@ -3,7 +3,7 @@
 #if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
 namespace modio
 {
-  bool UnixFilesystem::DirectoryExists(const std::string& directory)
+  bool UnixFilesystem::DirExists(const std::string& directory)
   {
     if (path == "")
       return true;
@@ -17,8 +17,10 @@ namespace modio
     return false;
   }
 
-  bool UnixFilesystem::CreateDirectory(const std::string& directory)
+  bool UnixFilesystem::CreateDir(const std::string& directory)
   {
+    writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
+
     errno = 0;
     if (mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0))
     {

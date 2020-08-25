@@ -9,6 +9,7 @@
 #include "dependencies/minizip/minizip.h"  // for filetime, is_l...
 #include "dependencies/minizip/unzip.h"    // for unzClose, unzC...
 #include "dependencies/minizip/zip.h"      // for ZIP_OK, zipClose
+#include "../Filesystem.h"
 
 namespace modio
 {
@@ -60,7 +61,7 @@ void extract(std::string zip_path, std::string directory_path)
     
     if (filename[filename_length - 1] == dir_delimter)
     {
-      createDirectory(final_filename);
+      Filesystem::CreateDir(final_filename);
     }
     else
     {

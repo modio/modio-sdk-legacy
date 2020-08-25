@@ -327,11 +327,6 @@ bool isDirectory(const std::string &directory)
   return false;
 }
 
-bool directoryExists(const std::string &path)
-{
-  return modio::Filesystem::DirExists(path);
-}
-
 std::string getDirectoryPath(const std::string &filename)
 {
   size_t found;
@@ -404,16 +399,6 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
     closedir(dir);
   }
   return filenames;
-}
-
-// Should we remove this function and favor Filesystem::CreateDirectory instead for all calling points?
-bool createDirectory(const std::string &directory)
-{
-  writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
-
-  // We don't check if the folder already exists as that might cause a race condition (what if we get back that it
-  // exist, and then it's deleted while by another process in the time between the check and the time that mkdir executes)
-  return modio::Filesystem::CreateDir(directory);
 }
 
 bool removeDirectory(const std::string &directory)
@@ -501,7 +486,7 @@ bool createPath(const std::string &path)
     current_path += tokenized_path.substr(0, slash_position) + "/";
     tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
 
-    if( !createDirectory(current_path) )
+    if( !Filesystem::CreateDir(current_path) )
     {
       return false;
     }

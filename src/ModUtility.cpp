@@ -2,6 +2,7 @@
 #include "Globals.h"                  // for installed_mods, downloaded_mods
 #include "Utility.h"                  // for hasKey, getModIODirectory, writ...
 #include "wrappers/MinizipWrapper.h"  // for extract
+#include "Filesystem.h"
 
 namespace modio
 {
@@ -121,7 +122,7 @@ void installDownloadedMods()
 
       modio::writeLogLine("Installing mod " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
 
-      modio::createDirectory(installation_path);
+      modio::Filesystem::CreateDir(installation_path);
       modio::writeLogLine("Extracting...", MODIO_DEBUGLEVEL_LOG);
       modio::minizipwrapper::extract(downloaded_zip_path, installation_path);
       modio::writeLogLine("Removing temporary file...", MODIO_DEBUGLEVEL_LOG);

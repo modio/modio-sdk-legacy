@@ -27,6 +27,8 @@ namespace modio
 
   bool WindowsFilesystem::CreateDir(const std::string& directory)
   {
+    writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
+
     // Trying to Create a directory that is directly a drive won't return ERROR_ALREADY_EXISTS, but a 
     // ERROR_ACCESS_DENIED error that is a valid error
     if (WindowsFilesystem::IsDrive(directory))
