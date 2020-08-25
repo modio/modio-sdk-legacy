@@ -5,7 +5,7 @@
 
 namespace modio
 {
-  struct WindowsFilesystem
+  struct WindowsFilesystem : public GenericFilesystem
   {
     /**
      * Checks if a directory exists, if it's a file, it will return false

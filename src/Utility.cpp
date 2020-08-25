@@ -316,17 +316,6 @@ std::string getFileExtension(std::string path)
   return path.substr(last_point + 1);
 }
 
-bool isDirectory(const std::string &directory)
-{
-  DIR *dir;
-  if ((dir = opendir(modio::addSlashIfNeeded(directory).c_str())) != NULL)
-  {
-    closedir(dir);
-    return true;
-  }
-  return false;
-}
-
 std::string getDirectoryPath(const std::string &filename)
 {
   size_t found;
