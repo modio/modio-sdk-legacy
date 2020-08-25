@@ -1,4 +1,4 @@
-#include "Utility.h"
+﻿#include "Utility.h"
 #include <errno.h>                               // for errno
 #include <fcntl.h>                               // for SEEK_END
 #include <limits.h>                              // for PATH_MAX
@@ -111,7 +111,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
   if (DEBUG_LEVEL < debug_level)
     return;
 
-  std::ofstream log_file(getModIODirectory() + "log.txt", std::ios::app);
+  std::ofstream log_file(WideCharFromString(modio::getModIODirectory() + "log.txt"), std::ios::app);
   log_file << "[" << modio::getCurrentTimeSeconds() << "] ";
   if (debug_level == MODIO_DEBUGLEVEL_ERROR)
   {
@@ -131,7 +131,8 @@ void writeLogLine(const std::string &text, u32 debug_level)
 
 void clearLog()
 {
-  std::ofstream log_file(getModIODirectory() + "log.txt");
+  std::ofstream log_file(WideCharFromString(getModIODirectory() + "log.txt"));
+  assert(!log_file.fail());
   log_file.close();
 }
 
@@ -196,7 +197,7 @@ nlohmann::json openJson(const std::string &file_path)
 
 void writeJson(const std::string &file_path, nlohmann::json json_object)
 {
-  std::ofstream ofs(file_path);
+  std::ofstream ofs(WideCharFromString(file_path));
   ofs << std::setw(4) << json_object << std::endl;
   ofs.close();
 }
