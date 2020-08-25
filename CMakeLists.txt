@@ -10,6 +10,9 @@ endif()
 # cmake -D BUILD_SHARED_LIBS=OFF .
 option(BUILD_SHARED_LIBS "Build Shared Libraries" ON)
 
+# set INCLUDE_EXAMPLES to ON to include the examples in the project
+option(INCLUDE_EXAMPLES "Build examples" OFF)
+
 # MSVC: set the crtmode flag to 'static' to include the Visual C++
 # runtime statically. Requires libcurl to be built with /MT as well.
 # cmake -D crtmode=static .
@@ -19,6 +22,17 @@ include_directories(include additional_dependencies include/dependencies/miniz)
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 
 add_library(modio ${SOURCES})
+
+if( INCLUDE_EXAMPLES )
+  set(CPP_EXAMPLE_DIR "examples/code-samples/cpp")
+  add_subdirectory(${CPP_EXAMPLE_DIR})
+  add_custom_command(TARGET modio POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+    COMMENT "Copying test dependencies into binary dir..."
+    )
+endif()
+
 if( BUILD_SHARED_LIBS )
   message("Building mod.io SDK dynamically")
   add_definitions(-DMODIO_DYNAMICLIB -DCURL_STATICLIB)
