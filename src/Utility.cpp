@@ -466,10 +466,8 @@ bool createPath(const std::string &path)
     tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
 
     std::error_code ec;
-    bool result = ghc::filesystem::create_directory(current_path, ec);
-
     // Result will be false if the directory already existed, but there will be no error code
-    if( !result && ec )
+    if( !ghc::filesystem::create_directory(current_path, ec) && ec )
     {
       std::cout << "Failed to create path: [" << current_path << "] with errorCode: " << ec.value() << " and message " << ec.message() << std::endl;
       return false;
