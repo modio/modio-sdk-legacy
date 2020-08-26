@@ -465,11 +465,13 @@ static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json 
       if (progress != 0)
       {
         writeLogLine("Progress detected. Resuming download from " + toString((u32)progress), MODIO_DEBUGLEVEL_LOG);
-        file = fopen(g_current_mod_download->queued_mod_download->path.c_str(), "ab");
+        // @todonow: Verify that this works
+        file = _wfopen(WideCharFromString(g_current_mod_download->queued_mod_download->path).c_str(), L"ab");
       }
       else
       {
-        file = fopen(g_current_mod_download->queued_mod_download->path.c_str(), "wb");
+        // @todonow: Verify that this works
+        file = _wfopen(WideCharFromString(g_current_mod_download->queued_mod_download->path).c_str(), L"wb");
       }
 
       if(!file)

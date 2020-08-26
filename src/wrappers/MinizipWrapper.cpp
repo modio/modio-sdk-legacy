@@ -82,7 +82,8 @@ void extract(std::string zip_path, std::string directory_path)
 
       std::string new_file_path = filename;
       FILE *out;
-      out = fopen(final_filename, "wb");
+      // @todonow: Verify that this works
+      out = _wfopen(WideCharFromString(final_filename).c_str(), L"wb");
 
       if (!out)
       {
@@ -248,7 +249,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
         savefilenameinzip = lastslash + 1; /* base filename follows last slash. */
     }
 
-    // RannareM: Updated this call from zipOpenNewFileInZip3_64 for UTF-8 support, 36 and 1 << 11 comes from
+    // @MarkusR: Updated this call from zipOpenNewFileInZip3_64 for UTF-8 support, 36 and 1 << 11 comes from
     // https://stackoverflow.com/questions/14625784/how-to-convert-minizip-wrapper-to-unicode
     /* Add to zip file */
     err = zipOpenNewFileInZip4_64(zf, savefilenameinzip, &zi,
