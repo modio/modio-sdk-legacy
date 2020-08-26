@@ -355,28 +355,18 @@ std::vector<std::string> getFilenames(const std::string &directory)
 
 std::vector<std::string> getDirectoryNames(const std::string &root_directory)
 {
-  std::string directory_with_slash = modio::addSlashIfNeeded(root_directory);
+  std::vector<std::string> files;
 
-  std::vector<std::string> filenames;
-
-  struct dirent *ent;
-  DIR *dir;
-  if ((dir = opendir(directory_with_slash.c_str())) != NULL)
+  ghc::filesystem::path rootDirectoryPath(root_directory);
+  for (auto& p : ghc::filesystem::directory_iterator(rootDirectoryPath))
   {
-    while ((ent = readdir(dir)) != NULL)
+    if (p.is_directory())
     {
-      DIR *current_dir = NULL;
-      std::string current_file_path = directory_with_slash + ent->d_name;
-      if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
-      {
-        filenames.push_back(ent->d_name);
-      }
-      if (current_dir)
-        closedir(current_dir);
+      files.push_back(ghc::filesystem::relative(p.path(), rootDirectoryPath).generic_u8string());
     }
-    closedir(dir);
   }
-  return filenames;
+
+  return files;
 }
 
 bool removeDirectory(const std::string &directory)
