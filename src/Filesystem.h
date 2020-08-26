@@ -12,6 +12,8 @@ namespace modio
   struct GenericFilesystem
   {
     static bool IsDir(const std::string& dir);
+  protected:
+    static std::string StripTrailingSlash(const std::string& path);  
   };
 }
 

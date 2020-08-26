@@ -6,6 +6,12 @@
 #include "c/ModioC.h"                                  // for MODIO_DEBUGLEV...
 #include "miniz.h"                                     // for MAX_WBITS, Z_D...
 #include "Utility.h"                       // for writeLogLine
+#include "ghc/filesystem.hpp"
+
+#include "dependencies/minizip/iowin32.c"
+#ifdef MODIO_WINDOWS_DETECTED
+#define USEWIN32IOAPI
+#endif
 #include "dependencies/minizip/minizip.h"  // for filetime, is_l...
 #include "dependencies/minizip/unzip.h"    // for unzClose, unzC...
 #include "dependencies/minizip/zip.h"      // for ZIP_OK, zipClose
@@ -61,7 +67,8 @@ void extract(std::string zip_path, std::string directory_path)
     
     if (filename[filename_length - 1] == dir_delimter)
     {
-      Filesystem::CreateDir(final_filename);
+      // @todonow: Verify that this works
+      ghc::filesystem::create_directory(final_filename);
     }
     else
     {
@@ -126,16 +133,50 @@ void extract(std::string zip_path, std::string directory_path)
   writeLogLine(zip_path + " extracted", MODIO_DEBUGLEVEL_LOG);
 }
 
+void getFileTimeWrapper( const std::string& fileName, zip_fileinfo& out_fileInfo )
+{
+  std::error_code ec;
+  ghc::filesystem::directory_entry fileInfo(fileName, ec);
+  assert(!ec); // @todonow: Remove this
+
+  auto lastWriteTime = fileInfo.last_write_time();
+  std::time_t ctime = decltype(lastWriteTime)::clock::to_time_t(lastWriteTime);
+
+  struct tm* filedate = localtime(&ctime);
+
+  // @todonow: Make this more defensive
+
+  out_fileInfo.dosDate = 0;
+  out_fileInfo.tmz_date.tm_sec = filedate->tm_sec;
+  out_fileInfo.tmz_date.tm_min = filedate->tm_min;
+  out_fileInfo.tmz_date.tm_hour = filedate->tm_hour;
+  out_fileInfo.tmz_date.tm_mday = filedate->tm_mday;
+  out_fileInfo.tmz_date.tm_mon = filedate->tm_mon;
+  out_fileInfo.tmz_date.tm_year = filedate->tm_year;
+}
+
+bool getIsLargeFile( const std::string& fileName )
+{
+  // @todonow: Make this more defensive
+
+  std::error_code ec;
+  ghc::filesystem::directory_entry fileInfo(fileName, ec);
+  assert(!ec); // @todonow: Remove this
+
+  return fileInfo.file_size() > 0xffffffff;
+}
+
 void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path)
 {
+  // @todonow: Ensure that filenames are relative and not absolute
   writeLogLine("Compressing " + modio::toString((u32)filenames.size()) + " files", MODIO_DEBUGLEVEL_LOG);
 
   writeLogLine(std::string("Compressing ") + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
 
   zipFile zf = NULL;
-  //#ifdef USEWIN32IOAPI
-  //  zlib_filefunc64_def ffunc = {0};
-  //#endif
+  #ifdef USEWIN32IOAPI
+    zlib_filefunc64_def ffunc = {0};
+  #endif
   const char *zipfilename = zip_path.c_str();
   const char *password = NULL;
   void *buf = NULL;
@@ -152,12 +193,12 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
     writeLogLine("Error allocating memory", MODIO_DEBUGLEVEL_ERROR);
   }
 
-  //#ifdef USEWIN32IOAPI
-  //  fill_win32_filefunc64A(&ffunc);
-  //  zf = zipOpen2_64(zipfilename, opt_overwrite, NULL, &ffunc);
-  //#else
-  zf = zipOpen64(zipfilename, opt_overwrite);
-  //#endif
+  #ifdef USEWIN32IOAPI
+    fill_win32_filefunc64W(&ffunc);
+    zf = zipOpen2_64(WideCharFromString(zip_path).c_str(), opt_overwrite, NULL, &ffunc);
+  #else
+    zf = zipOpen64(zipfilename, opt_overwrite);
+  #endif
 
   if (zf == NULL)
   {
@@ -183,8 +224,8 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
     int zip64 = 0;
 
     /* Get information about the file on disk so we can store it in zip */
-    filetime(complete_file_path.c_str(), &zi.tmz_date, &zi.dosDate);
-    zip64 = is_large_file(complete_file_path.c_str());
+    getFileTimeWrapper(filename, zi);
+    zip64 = getIsLargeFile(filename);
 
     /* Construct the filename that our file will be stored in the zip as.
           The path name saved, should not include a leading slash.
@@ -221,7 +262,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
       writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
     else
     {
-      fin = fopen(complete_file_path.c_str(), "rb");
+      fin = _wfopen( WideCharFromString(filename).c_str(), L"rb");
       if (fin == NULL)
       {
         writeLogLine(std::string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);
@@ -243,7 +284,9 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
         {
           err = zipWriteInFileInZip(zf, buf, (unsigned int)size_read);
           if (err < 0)
+          {
             writeLogLine(std::string("Error in writing ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
+          }
         }
       } while ((err == ZIP_OK) && (size_read > 0));
     }

@@ -14,6 +14,11 @@
 #include <vector>                                // for allocator, vector
 #include "Globals.h"                             // for ACCESS_TOKEN, VERSION
 #include "c/ModioC.h"                            // for MODIO_DEBUGLEVEL_LOG
+#include "ghc/filesystem.hpp"
+
+#ifdef MODIO_WINDOWS_DETECTED
+#define USEWIN32IOAPI
+#endif
 #include "dependencies/minizip/minizip.h"        // for check_file_exists
 #include "Filesystem.h"                          // for Filesystem::...
 
@@ -328,12 +333,30 @@ std::string getDirectoryPath(const std::string &filename)
 
 bool fileExists(const std::string &directory)
 {
+  // @todonow: Check utf8 support
   return check_file_exists(directory.c_str());
 }
 
 std::vector<std::string> getFilenames(const std::string &directory)
 {
-  std::string directory_with_slash = modio::addSlashIfNeeded(directory);
+  std::vector<std::string> files;
+
+  std::vector<std::string> items = modio::Filesystem::GetItemsInDir(directory);
+  for( const std::string& item : items )
+  {
+    if( modio::Filesystem::IsDir(item) )
+    {
+      std::vector<std::string> subFilenames = modio::getFilenames(item);
+      files.insert( std::end(files), std::begin(subFilenames), std::end(subFilenames) );
+    }
+    else
+    {
+      files.push_back(item);
+    }
+  }
+
+  return files;
+/*  std::string directory_with_slash = modio::addSlashIfNeeded(directory);
 
   std::vector<std::string> filenames;
 
@@ -362,7 +385,7 @@ std::vector<std::string> getFilenames(const std::string &directory)
     }
     closedir(dir);
   }
-  return filenames;
+  return filenames;*/
 }
 
 std::vector<std::string> getDirectoryNames(const std::string &root_directory)
@@ -464,6 +487,7 @@ double getFileSize(const std::string &file_path)
 
 bool createPath(const std::string &path)
 {
+  // @todonow: Update this to consider using "ghc::filesystem::create_directories" instead
   std::string current_path;
   std::string tokenized_path = path;
   size_t slash_position;
@@ -476,8 +500,13 @@ bool createPath(const std::string &path)
     current_path += tokenized_path.substr(0, slash_position) + "/";
     tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
 
-    if( !Filesystem::CreateDir(current_path) )
+    std::error_code ec;
+    bool result = ghc::filesystem::create_directory(current_path, ec);
+
+    // Result will be false if the directory already existed, but there will be no error code
+    if( !result && ec )
     {
+      std::cout << "Failed to create path: [" << current_path << "] with errorCode: " << ec.value() << " and message " << ec.message() << std::endl;
       return false;
     }
   }

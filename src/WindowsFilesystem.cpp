@@ -25,7 +25,7 @@ namespace modio
     return false;
   }
 
-  bool WindowsFilesystem::CreateDir(const std::string& directory)
+  /*bool WindowsFilesystem::CreateDir(const std::string& directory)
   {
     writeLogLine("Creating directory " + directory, MODIO_DEBUGLEVEL_LOG);
 
@@ -51,7 +51,7 @@ namespace modio
     }
 
     return true;
-  }
+  }*/
 
   bool WindowsFilesystem::IsDrive(const std::string& path)
   {
@@ -63,6 +63,36 @@ namespace modio
       }
     }
     return false;
+  }
+
+  std::vector<std::string> WindowsFilesystem::GetItemsInDir(const std::string& dir)
+  {
+    std::vector<std::string> items;
+
+    std::string safeDir = modio::addSlashIfNeeded(dir) + "\\*.*";
+    std::replace(safeDir.begin(), safeDir.end(), '\\', '/');
+
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind = FindFirstFile( WideCharFromString(safeDir).c_str(), &findFileData);
+
+    if( hFind == INVALID_HANDLE_VALUE )
+    {
+      modio::writeLastErrorLog("GetItemsInDir");
+
+      return items;
+    }
+
+    do 
+    {
+      if( wcscmp(findFileData.cFileName, L"." ) != 0 && wcscmp(findFileData.cFileName, L"..") != 0 )
+      {
+        items.push_back( dir + "/" + StringFromWideChar(findFileData.cFileName));
+      }
+    } while ( FindNextFile( hFind, &findFileData ) != 0 );
+
+    FindClose(hFind);
+
+    return items;
   }
 
 
