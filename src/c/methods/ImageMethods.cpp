@@ -7,13 +7,16 @@
 #include "c/ModioC.h"                   // for u32, MODIO_DEBUGLE...
 #include "c/methods/callbacks/ImageCallbacks.h"    // for DownloadImageParams
 #include "../../Filesystem.h"
+#include "ghc/filesystem.hpp"
 
 
 extern "C"
 {
   void modioDownloadImage(void *object, char const *image_url, char const *path, void (*callback)(void *object, ModioResponse modioresponse))
   {
-    if (!modio::Filesystem::DirExists(modio::getDirectoryPath(path)))
+    // @todonow: Verify that this works
+    ghc::filesystem::directory_entry directory( ghc::filesystem::path(path).remove_filename());
+    if ( !directory.exists() || !ghc::filesystem::is_directory(directory) )
     {
       modio::writeLogLine("Could not open image directory: " + modio::getDirectoryPath(path), MODIO_DEBUGLEVEL_ERROR);
       modio::handleDownloadImageError(object, callback);

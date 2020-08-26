@@ -168,7 +168,6 @@ bool getIsLargeFile( const std::string& fileName )
 
 void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path)
 {
-  // @todonow: Ensure that filenames are relative and not absolute
   writeLogLine("Compressing " + modio::toString((u32)filenames.size()) + " files", MODIO_DEBUGLEVEL_LOG);
 
   writeLogLine(std::string("Compressing ") + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
@@ -224,8 +223,8 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
     int zip64 = 0;
 
     /* Get information about the file on disk so we can store it in zip */
-    getFileTimeWrapper(filename, zi);
-    zip64 = getIsLargeFile(filename);
+    getFileTimeWrapper(complete_file_path, zi);
+    zip64 = getIsLargeFile(complete_file_path);
 
     /* Construct the filename that our file will be stored in the zip as.
           The path name saved, should not include a leading slash.
@@ -249,20 +248,22 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
         savefilenameinzip = lastslash + 1; /* base filename follows last slash. */
     }
 
+    // RannareM: Updated this call from zipOpenNewFileInZip3_64 for UTF-8 support, 36 and 1 << 11 comes from
+    // https://stackoverflow.com/questions/14625784/how-to-convert-minizip-wrapper-to-unicode
     /* Add to zip file */
-    err = zipOpenNewFileInZip3_64(zf, savefilenameinzip, &zi,
+    err = zipOpenNewFileInZip4_64(zf, savefilenameinzip, &zi,
                                   NULL, 0, NULL, 0, NULL /* comment*/,
                                   (opt_compress_level != 0) ? Z_DEFLATED : 0,
                                   opt_compress_level, 0,
                                   /* -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, */
                                   -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-                                  password, crcFile, zip64);
+                                  password, crcFile, 36, 1<<11 ,zip64);
 
     if (err != ZIP_OK)
       writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
     else
     {
-      fin = _wfopen( WideCharFromString(filename).c_str(), L"rb");
+      fin = _wfopen( WideCharFromString(complete_file_path).c_str(), L"rb");
       if (fin == NULL)
       {
         writeLogLine(std::string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);

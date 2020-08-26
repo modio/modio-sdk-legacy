@@ -10,10 +10,7 @@
 namespace modio
 {
   struct GenericFilesystem
-  {
-    static bool IsDir(const std::string& dir);
-  protected:
-    static std::string StripTrailingSlash(const std::string& path);  
+  {  
   };
 }
 
@@ -37,9 +34,7 @@ namespace modio
     return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
   }
 }
-  #include "WindowsFilesystem.h"
 #elif defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
-  #include "UnixFilesystem.h"
 #endif
 
 #endif

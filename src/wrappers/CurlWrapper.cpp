@@ -20,6 +20,7 @@
 #include "wrappers/CurlWriteFunctions.h"
 #include "wrappers/MinizipWrapper.h"
 #include "../Filesystem.h"
+#include "ghc/filesystem.hpp"
 
 
 namespace modio
@@ -731,7 +732,8 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   writeLogLine("Uploading mod: " + toString(queued_modfile_upload->mod_id) + " located at path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
 
   // Check if the path is a directory
-  if (modio::Filesystem::IsDir(modfile_path))
+  // @todonow: Verify that this works
+  if ( ghc::filesystem::is_directory(modfile_path) )
   {
     writeLogLine("Directory detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";

@@ -341,51 +341,16 @@ std::vector<std::string> getFilenames(const std::string &directory)
 {
   std::vector<std::string> files;
 
-  std::vector<std::string> items = modio::Filesystem::GetItemsInDir(directory);
-  for( const std::string& item : items )
+  ghc::filesystem::path directoryPath( directory );
+  for( auto& p : ghc::filesystem::recursive_directory_iterator(directoryPath) )
   {
-    if( modio::Filesystem::IsDir(item) )
+    if( !p.is_directory() )
     {
-      std::vector<std::string> subFilenames = modio::getFilenames(item);
-      files.insert( std::end(files), std::begin(subFilenames), std::end(subFilenames) );
-    }
-    else
-    {
-      files.push_back(item);
+      files.push_back( ghc::filesystem::relative( p.path(), directoryPath ).generic_u8string() );
     }
   }
 
   return files;
-/*  std::string directory_with_slash = modio::addSlashIfNeeded(directory);
-
-  std::vector<std::string> filenames;
-
-  struct dirent *ent;
-  DIR *dir;
-  if ((dir = opendir(directory_with_slash.c_str())) != NULL)
-  {
-    while ((ent = readdir(dir)) != NULL)
-    {
-      DIR *current_dir = NULL;
-      std::string current_file_path = directory_with_slash + ent->d_name;
-      if ((current_dir = opendir(current_file_path.c_str())) != NULL && strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
-      {
-        std::vector<std::string> subdirectories_filenames = getFilenames(directory_with_slash + ent->d_name);
-        for (size_t i = 0; i < subdirectories_filenames.size(); i++)
-        {
-          filenames.push_back(std::string(ent->d_name) + "/" + subdirectories_filenames[i]);
-        }
-      }
-      else if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0)
-      {
-        filenames.push_back(ent->d_name);
-      }
-      if (current_dir)
-        closedir(current_dir);
-    }
-    closedir(dir);
-  }
-  return filenames;*/
 }
 
 std::vector<std::string> getDirectoryNames(const std::string &root_directory)
