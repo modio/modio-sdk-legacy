@@ -15,11 +15,11 @@
 #include "Globals.h"                             // for ACCESS_TOKEN, VERSION
 #include "c/ModioC.h"                            // for MODIO_DEBUGLEVEL_LOG
 #include "ghc/filesystem.hpp"
+#include <iostream>
 
 #ifdef MODIO_WINDOWS_DETECTED
 #define USEWIN32IOAPI
 #endif
-#include "dependencies/minizip/minizip.h"        // for check_file_exists
 #include "Filesystem.h"                          // for Filesystem::...
 
 #ifdef MODIO_LINUX_DETECTED
@@ -39,7 +39,6 @@
 #    include <shlobj.h>
 #  endif
 #  include <strsafe.h>
-#  include "dependencies/dirent/dirent.h"
 //#include "vld.h"
 #endif
 
@@ -333,8 +332,8 @@ std::string getDirectoryPath(const std::string &filename)
 
 bool fileExists(const std::string &directory)
 {
-  // @todonow: Check utf8 support
-  return check_file_exists(directory.c_str());
+  // @todonow: Verify that this works
+  return ghc::filesystem::is_regular_file(directory);
 }
 
 std::vector<std::string> getFilenames(const std::string &directory)
@@ -371,72 +370,36 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
 
 bool removeDirectory(const std::string &directory)
 {
-  // @todonow: test this codepath on linux
-  // @todo migrate this codepath to Platform::DeleteDirectory
-#ifdef MODIO_WINDOWS_DETECTED
-  DWORD error_code = deleteDirectoryWindows(directory);
-  if (error_code != 0)
-    modio::writeLogLine("Could not remove directory, error code: " + modio::toString((u32)error_code), MODIO_DEBUGLEVEL_ERROR);
-  return error_code == 0;
-#else
-
-  DIR *dir;
-  struct dirent *entry;
-  char path[PATH_MAX];
-
-  std::string directory_with_slash = modio::addSlashIfNeeded(directory);
-
-  dir = opendir(directory_with_slash.c_str());
-  if (dir == NULL)
-  {
-    writeLogLine("Error opendir()", MODIO_DEBUGLEVEL_LOG);
-    return false;
-  }
-
-  while ((entry = readdir(dir)) != NULL)
-  {
-    if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
-    {
-      snprintf(path, (size_t)PATH_MAX, "%s%s", directory_with_slash.c_str(), entry->d_name);
-      DIR *subdir = opendir(path);
-      if (subdir)
-      {
-        closedir(subdir);
-        removeDirectory(path);
-      }
-      writeLogLine("Deleting: " + std::string(path), MODIO_DEBUGLEVEL_LOG);
-      removeFile(path);
-    }
-  }
-  closedir(dir);
-  writeLogLine("Deleting: " + directory_with_slash, MODIO_DEBUGLEVEL_LOG);
-  removeEmptyDirectory(directory_with_slash);
-
-  return true;
-#endif
+  // @todonow: Verify that this works
+  std::error_code ec;
+  return ghc::filesystem::remove_all( directory, ec ) || !ec;
 }
 
 void removeFile(const std::string &filename)
 {
-  if (remove(filename.c_str()) != 0)
+  // @todonow: verify that this works
+  std::error_code ec;
+  if ( !ghc::filesystem::remove( filename, ec ) )
   {
-    writeLogLine("Could not remove: " + filename + " error code: " + modio::toString(errno), MODIO_DEBUGLEVEL_ERROR);
-    writeLogLine(std::strerror(errno), MODIO_DEBUGLEVEL_ERROR);
+    writeLogLine("Could not remove: " + filename + " error code: " + modio::toString(ec.value()), MODIO_DEBUGLEVEL_ERROR);
+    writeLogLine( ec.message(), MODIO_DEBUGLEVEL_ERROR);
   }
   else
+  {
     writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
+  }
 }
 
 double getFileSize(const std::string &file_path)
-{
+{ 
+  // @todonow: Verify if this works
   double file_size = 0;
-  FILE *fp = fopen(file_path.c_str(), "rb");
-  if (fp)
+  ghc::filesystem::directory_entry file(file_path);
+  if( ghc::filesystem::exists( file.status() ) )
   {
-    fseek(fp, 0, SEEK_END);
-    file_size = ftell(fp);
-    fclose(fp);
+    file_size = file.file_size();
   }
+
   return file_size;
 }
 
