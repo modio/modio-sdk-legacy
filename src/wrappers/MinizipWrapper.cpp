@@ -25,8 +25,17 @@ void extract(std::string zip_path, std::string directory_path)
 {
   directory_path = addSlashIfNeeded(directory_path);
   
+#ifdef USEWIN32IOAPI
+  zlib_filefunc64_def ffunc = { 0 };
+#endif
+
   writeLogLine(std::string("Extracting ") + zip_path, MODIO_DEBUGLEVEL_LOG);
+#ifdef USEWIN32IOAPI
+  fill_win32_filefunc64W(&ffunc);
+  unzFile zipfile = unzOpen2_64(WideCharFromString(zip_path).c_str(), &ffunc);
+#else
   unzFile zipfile = unzOpen(zip_path.c_str());
+#endif
 
   if (zipfile == NULL)
   {
@@ -67,7 +76,6 @@ void extract(std::string zip_path, std::string directory_path)
     
     if (filename[filename_length - 1] == dir_delimter)
     {
-      // @todonow: Verify that this works
       ghc::filesystem::create_directory(final_filename);
     }
     else
@@ -82,7 +90,6 @@ void extract(std::string zip_path, std::string directory_path)
 
       std::string new_file_path = filename;
       FILE *out;
-      // @todonow: Verify that this works
       out = _wfopen(WideCharFromString(final_filename).c_str(), L"wb");
 
       if (!out)

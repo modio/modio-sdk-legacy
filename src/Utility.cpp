@@ -315,10 +315,10 @@ void removeFile(const std::string &filename)
 
 double getFileSize(const std::string &file_path)
 { 
-  // @todonow: Verify if this works
   double file_size = 0;
-  ghc::filesystem::directory_entry file(file_path);
-  if( ghc::filesystem::exists( file.status() ) )
+  std::error_code ec;
+  ghc::filesystem::directory_entry file(file_path, ec);
+  if( !ec && ghc::filesystem::is_regular_file( file ) && ghc::filesystem::exists( file.status() ) )
   {
     file_size = file.file_size();
   }

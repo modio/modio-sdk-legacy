@@ -123,7 +123,6 @@ void installDownloadedMods()
 
       modio::writeLogLine("Installing mod " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
 
-      // @todonow: Verify that this works
       ghc::filesystem::create_directory(installation_path);
       modio::writeLogLine("Extracting...", MODIO_DEBUGLEVEL_LOG);
       modio::minizipwrapper::extract(downloaded_zip_path, installation_path);
