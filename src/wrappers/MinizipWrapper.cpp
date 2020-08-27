@@ -145,33 +145,33 @@ void getFileTimeWrapper( const std::string& fileName, zip_fileinfo& out_fileInfo
 {
   std::error_code ec;
   ghc::filesystem::directory_entry fileInfo(fileName, ec);
-  assert(!ec); // @todonow: Remove this
+  if( !ec )
+  {
+    auto lastWriteTime = fileInfo.last_write_time();
+    std::time_t ctime = decltype(lastWriteTime)::clock::to_time_t(lastWriteTime);
 
-  auto lastWriteTime = fileInfo.last_write_time();
-  std::time_t ctime = decltype(lastWriteTime)::clock::to_time_t(lastWriteTime);
+    struct tm* filedate = localtime(&ctime);
 
-  struct tm* filedate = localtime(&ctime);
-
-  // @todonow: Make this more defensive
-
-  out_fileInfo.dosDate = 0;
-  out_fileInfo.tmz_date.tm_sec = filedate->tm_sec;
-  out_fileInfo.tmz_date.tm_min = filedate->tm_min;
-  out_fileInfo.tmz_date.tm_hour = filedate->tm_hour;
-  out_fileInfo.tmz_date.tm_mday = filedate->tm_mday;
-  out_fileInfo.tmz_date.tm_mon = filedate->tm_mon;
-  out_fileInfo.tmz_date.tm_year = filedate->tm_year;
+    out_fileInfo.dosDate = 0;
+    out_fileInfo.tmz_date.tm_sec = filedate->tm_sec;
+    out_fileInfo.tmz_date.tm_min = filedate->tm_min;
+    out_fileInfo.tmz_date.tm_hour = filedate->tm_hour;
+    out_fileInfo.tmz_date.tm_mday = filedate->tm_mday;
+    out_fileInfo.tmz_date.tm_mon = filedate->tm_mon;
+    out_fileInfo.tmz_date.tm_year = filedate->tm_year;
+  }
 }
 
 bool getIsLargeFile( const std::string& fileName )
 {
-  // @todonow: Make this more defensive
-
   std::error_code ec;
   ghc::filesystem::directory_entry fileInfo(fileName, ec);
-  assert(!ec); // @todonow: Remove this
-
-  return fileInfo.file_size() > 0xffffffff;
+  if( !ec )
+  {
+    return fileInfo.file_size() > 0xffffffff;
+  }
+  // If the file doesn't exist, it's not a large file
+  return false;
 }
 
 void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path)

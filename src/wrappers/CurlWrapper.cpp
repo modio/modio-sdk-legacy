@@ -465,12 +465,10 @@ static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json 
       if (progress != 0)
       {
         writeLogLine("Progress detected. Resuming download from " + toString((u32)progress), MODIO_DEBUGLEVEL_LOG);
-        // @todonow: Verify that this works
         file = _wfopen(WideCharFromString(g_current_mod_download->queued_mod_download->path).c_str(), L"ab");
       }
       else
       {
-        // @todonow: Verify that this works
         file = _wfopen(WideCharFromString(g_current_mod_download->queued_mod_download->path).c_str(), L"wb");
       }
 
@@ -734,7 +732,6 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
   writeLogLine("Uploading mod: " + toString(queued_modfile_upload->mod_id) + " located at path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
 
   // Check if the path is a directory
-  // @todonow: Verify that this works
   if ( modio::isDirectory( modfile_path ) )
   {
     writeLogLine("Directory detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
