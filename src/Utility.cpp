@@ -349,28 +349,14 @@ double getFileSize(const std::string &file_path)
 
 bool createPath(const std::string &path)
 {
-  // @todonow: Update this to consider using "ghc::filesystem::create_directories" instead
-  std::string current_path;
-  std::string tokenized_path = path;
-  size_t slash_position;
+  std::error_code ec;
+  bool result = ghc::filesystem::create_directories( path, ec );
 
-  while (tokenized_path.length())
+  if( !result && ec )
   {
-    slash_position = tokenized_path.find('/');
-    if (slash_position == std::string::npos)
-      break;
-    current_path += tokenized_path.substr(0, slash_position) + "/";
-    tokenized_path.erase(tokenized_path.begin(), tokenized_path.begin() + slash_position + 1);
-
-    std::error_code ec;
-    // Result will be false if the directory already existed, but there will be no error code
-    if( !ghc::filesystem::create_directory(current_path, ec) && ec )
-    {
-      std::cout << "Failed to create path: [" << current_path << "] with errorCode: " << ec.value() << " and message " << ec.message() << std::endl;
-      return false;
-    }
+    writeLogLine( "Failed to create path: \"" + path + "\" with error: " + ec.message(), MODIO_DEBUGLEVEL_ERROR );
+    return false;
   }
-
   return true;
 }
 
