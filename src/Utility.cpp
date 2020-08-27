@@ -255,7 +255,6 @@ std::string getDirectoryPath(const std::string &filename)
 
 bool fileExists(const std::string &directory)
 {
-  // @todonow: Verify that this works
   return ghc::filesystem::is_regular_file(directory);
 }
 

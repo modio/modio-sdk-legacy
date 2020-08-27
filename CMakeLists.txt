@@ -17,7 +17,7 @@ option(INCLUDE_EXAMPLES "Build examples" OFF)
 # runtime statically. Requires libcurl to be built with /MT as well.
 # cmake -D crtmode=static .
 
-include_directories(include additional_dependencies include/dependencies/miniz)
+include_directories(include additional_dependencies include/dependencies/miniz include/dependencies/filesystem)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 
