@@ -25,10 +25,14 @@ add_library(modio ${SOURCES})
 
 if( INCLUDE_EXAMPLES )
   set(CPP_EXAMPLE_DIR "examples/code-samples/cpp")
+  set(C_EXAMPLE_DIR "examples/code-samples/c")
   add_subdirectory(${CPP_EXAMPLE_DIR})
+  add_subdirectory(${C_EXAMPLE_DIR})
   add_custom_command(TARGET modio POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
     COMMENT "Copying test dependencies into binary dir..."
     )
 endif()
