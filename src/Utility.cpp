@@ -244,6 +244,27 @@ std::string getFileExtension(std::string path)
   return path.substr(last_point + 1);
 }
 
+bool isDirectory(const std::string& directory)
+{
+  std::error_code ec;
+  ghc::filesystem::directory_entry directoryEntry(directory, ec);
+  modio::writeLogLine( "\"" + directory + "\" isDirectory " + ( (directoryEntry.exists() && ghc::filesystem::is_directory(directoryEntry)) ? "true" : "false" ), MODIO_DEBUGLEVEL_LOG );
+  return directoryEntry.exists() && ghc::filesystem::is_directory(directoryEntry);
+}
+
+bool directoryExists(const std::string& filename)
+{
+  if(filename == "")
+  {
+    modio::writeLogLine("\"" + filename + "\" exists true", MODIO_DEBUGLEVEL_LOG);
+    return true;
+  }
+
+  modio::writeLogLine("\"" + filename + "\" exists " + (isDirectory(filename) ? "true" : "false"), MODIO_DEBUGLEVEL_LOG);
+  return isDirectory(filename);
+}
+
+
 std::string getDirectoryPath(const std::string &filename)
 {
   size_t found;

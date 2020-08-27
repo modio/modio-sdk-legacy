@@ -59,6 +59,8 @@ void writeJson(const std::string &file_path, nlohmann::json json_object);
 std::string getModIODirectory();
 std::vector<std::string> getFilenames(const std::string &directory);
 std::vector<std::string> getDirectoryNames(const std::string &root_directory);
+bool isDirectory(const std::string& directory);
+bool directoryExists(const std::string& path);
 bool fileExists(const std::string &directory);
 std::string getDirectoryPath(const std::string &filename);
 bool removeDirectory(const std::string &directory);

@@ -735,7 +735,7 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 
   // Check if the path is a directory
   // @todonow: Verify that this works
-  if ( ghc::filesystem::is_directory(modfile_path) )
+  if ( modio::isDirectory( modfile_path ) )
   {
     writeLogLine("Directory detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";
