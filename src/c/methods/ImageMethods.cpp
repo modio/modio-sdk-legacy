@@ -20,7 +20,6 @@ extern "C"
       return;
     }
 
-    // @todonow: Verify that this works
     FILE *file = _wfopen(modio::WideCharFromString(path).c_str(), L"wb");
     if (!file)
     {
