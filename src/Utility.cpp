@@ -292,23 +292,27 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
 
 bool removeDirectory(const std::string &directory)
 {
-  // @todonow: Verify that this works
   std::error_code ec;
-  return ghc::filesystem::remove_all( directory, ec ) || !ec;
+  bool result = ghc::filesystem::remove_all( directory, ec ) != static_cast<std::uintmax_t>(-1) || !ec;
+  if( ec )
+  {
+    writeLogLine( "Failed to delete directory \"" + directory + "\" with error: " + ec.message(), MODIO_DEBUGLEVEL_WARNING );
+  }
+
+  return result;
 }
 
 void removeFile(const std::string &filename)
 {
-  // @todonow: verify that this works
   std::error_code ec;
-  if ( !ghc::filesystem::remove( filename, ec ) )
+  bool result = ghc::filesystem::remove(filename, ec);
+  if ( !result && ec )
   {
-    writeLogLine("Could not remove: " + filename + " error code: " + modio::toString(ec.value()), MODIO_DEBUGLEVEL_ERROR);
-    writeLogLine( ec.message(), MODIO_DEBUGLEVEL_ERROR);
+    writeLogLine("Could not remove file \"" + filename + "\" with error: " + ec.message(), MODIO_DEBUGLEVEL_ERROR);
   }
-  else
+  else if( result ) // Don't output anything if no file was deleted
   {
-    writeLogLine(filename + " removed", MODIO_DEBUGLEVEL_LOG);
+    writeLogLine("\"" + filename + "\" removed", MODIO_DEBUGLEVEL_LOG);
   }
 }
 
