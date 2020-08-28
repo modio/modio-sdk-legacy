@@ -31,8 +31,15 @@
 *.out
 *.app
 
+# Visual Studio
 .vs/
 .vscode/
+
+# KDevelop
+.kdev4/
+*.kdev4
+
+# 
 build/
 
 src/modio.so
