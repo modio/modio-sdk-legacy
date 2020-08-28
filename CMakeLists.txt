@@ -30,11 +30,18 @@ if( INCLUDE_EXAMPLES )
   add_subdirectory(${C_EXAMPLE_DIR})
   add_custom_command(TARGET modio POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
-    COMMENT "Copying example dependencies into binary dir..."
+    COMMENT "Copying library binaries into examples dir..."
     )
+
+  # Copy pdb's on platforms that support it
+  IF (MSVC)
+    add_custom_command(TARGET modio POST_BUILD 
+      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
+      COMMENT "Copying library pdbs into examples dir..."
+      )
+  ENDIF()
 endif()
 
 if( BUILD_SHARED_LIBS )
