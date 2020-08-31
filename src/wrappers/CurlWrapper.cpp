@@ -660,7 +660,6 @@ bool isModInstalled(u32 mod_id, u32 modfile_id)
         installed_mod["mod_id"] == mod_id &&
         installed_mod["modfile_id"] == modfile_id)
     {
-      u32 modfile_id = installed_mod["modfile_id"];
       modio::writeLogLine("Mod is already installed.", MODIO_DEBUGLEVEL_LOG);
       return true;
     }
