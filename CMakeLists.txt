@@ -22,7 +22,22 @@ option(INCLUDE_EXAMPLES "Build examples" OFF)
 
 include_directories(include additional_dependencies include/dependencies/miniz include/dependencies/filesystem)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE SOURCES
+    "src/*.cpp"
+    "src/*.c"
+    "src/*.h"
+    "include/*.h")
+
+message(${CMAKE_SOURCE_DIR})
+
+# Make pretty folders in visual studio/xcode
+foreach(source IN LISTS SOURCES)
+    get_filename_component(source_path "${source}" PATH)
+    string(REPLACE ${CMAKE_SOURCE_DIR} "" source_path_folder ${source_path} )
+    string(REPLACE "/" "\\" source_path_folder "${source_path_folder}")
+    string(REPLACE ${CMAKE_SOURCE_DIR} "" source_path_folder ${source_path_folder} )
+    source_group("${source_path_folder}" FILES "${source}")
+endforeach()
 
 add_library(modio ${SOURCES})
 
