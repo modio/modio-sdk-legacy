@@ -1,6 +1,6 @@
 #include "UnixFilesystem.h"
 
-#if defined(MODIO_LINUX_DETECTED)
+#if defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
 namespace modio
 {
   namespace unix_platform

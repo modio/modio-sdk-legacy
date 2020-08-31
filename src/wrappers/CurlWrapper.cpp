@@ -552,7 +552,7 @@ nlohmann::json getDownloadedModJson(u32 mod_id)
 
 void removeDownloadedMod(u32 mod_id)
 {
-  modio::writeLogLine("Removing mod: " + mod_id, MODIO_DEBUGLEVEL_ERROR);
+  modio::writeLogLine("Removing mod: " + std::to_string(mod_id), MODIO_DEBUGLEVEL_ERROR);
   nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
   if(!downloaded_mod.empty())
   {

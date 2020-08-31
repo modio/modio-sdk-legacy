@@ -118,10 +118,8 @@ void installDownloadedMods()
         modio::hasKey(mod_json, "date_updated"))
     {
       u32 mod_id = mod_json["id"];
-      u32 modfile_id = mod_json["modfile"]["id"];
-      u32 date_updated = mod_json["date_updated"];
 
-      modio::writeLogLine("Installing mod " + modio::toString(mod_id), MODIO_DEBUGLEVEL_LOG);
+      modio::writeLogLine("Installing mod " + std::to_string(mod_id), MODIO_DEBUGLEVEL_LOG);
 
       ghc::filesystem::create_directory(installation_path);
       modio::writeLogLine("Extracting...", MODIO_DEBUGLEVEL_LOG);

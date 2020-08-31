@@ -6,7 +6,7 @@
 
 #if defined(MODIO_WINDOWS_DETECTED)
 #include "WindowsFilesystem.h"
-#elif defined(MODIO_LINUX_DETECTED)
+#elif defined(MODIO_OSX_DETECTED) || defined(MODIO_LINUX_DETECTED)
 #include "UnixFilesystem.h"
 #else
 #error UNKNOWN PLATFORM
