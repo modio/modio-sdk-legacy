@@ -6,6 +6,9 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# Set this to ON if you want to enable testing
+option(TEST "Enable UNIT TESTING" OFF)
+
 # set BUILD_SHARED_LIBs to OFF to compile statically, for example:
 # cmake -D BUILD_SHARED_LIBS=OFF .
 option(BUILD_SHARED_LIBS "Build Shared Libraries" ON)
@@ -23,26 +26,10 @@ file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 
 add_library(modio ${SOURCES})
 
-if( INCLUDE_EXAMPLES )
-  set(CPP_EXAMPLE_DIR "examples/code-samples/cpp")
-  set(C_EXAMPLE_DIR "examples/code-samples/c")
-  add_subdirectory(${CPP_EXAMPLE_DIR})
-  add_subdirectory(${C_EXAMPLE_DIR})
-  add_custom_command(TARGET modio POST_BUILD 
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
-    COMMENT "Copying library binaries into examples dir..."
-    )
-
-  # Copy pdb's on platforms that support it
-  IF (MSVC)
-    add_custom_command(TARGET modio POST_BUILD 
-      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
-      COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
-      COMMENT "Copying library pdbs into examples dir..."
-      )
-  ENDIF()
-endif()
+# This needs to happen early, so that we force the build to be static
+IF(TEST)
+  SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared Libraries" FORCE)
+ENDIF()
 
 if( BUILD_SHARED_LIBS )
   message("Building mod.io SDK dynamically")
@@ -101,8 +88,9 @@ IF (MSVC)
 
 ENDIF()
 
-IF( test AND test STREQUAL "on" )
-  message("Testing enabled")
+IF(TEST)
+  message("Testing enabled, disabling shared libraries to be able to access internal functions")
+  SET( BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared Libraries" FORCE )
   file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
   add_subdirectory(ext/googletest-master)
   enable_testing()
@@ -111,3 +99,27 @@ IF( test AND test STREQUAL "on" )
   target_link_libraries(runUnitTests gtest gtest_main modio)
   add_test(UnitTests runUnitTests)
 ENDIF()
+
+
+if( INCLUDE_EXAMPLES )
+  set(CPP_EXAMPLE_DIR "examples/code-samples/cpp")
+  set(C_EXAMPLE_DIR "examples/code-samples/c")
+  add_subdirectory(${CPP_EXAMPLE_DIR})
+  add_subdirectory(${C_EXAMPLE_DIR})
+  add_custom_command(TARGET modio POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
+    COMMENT "Copying library binaries into examples dir..."
+    )
+
+  # Copy pdb's on platforms that support it
+  IF (MSVC)
+    IF(BUILD_SHARED_LIBS)
+        add_custom_command(TARGET modio POST_BUILD 
+          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
+          COMMENT "Copying library pdbs into examples dir..."
+          )
+    ENDIF()
+  ENDIF()
+endif()
