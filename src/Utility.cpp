@@ -8,7 +8,6 @@
 #include <array>                                 // for array
 #include <chrono>                                // for milliseconds, durati...
 #include <ctime>                                 // for time
-#include <fstream>                               // for operator<<, ofstream
 #include <iomanip>                               // for operator<<, setw
 #include <string>                                // for string, operator+
 #include <vector>                                // for allocator, vector
@@ -16,10 +15,8 @@
 #include "c/ModioC.h"                            // for MODIO_DEBUGLEVEL_LOG
 #include "ghc/filesystem.hpp"
 #include <iostream>
+#include "dependencies/nlohmann/json.hpp"
 
-#ifdef MODIO_WINDOWS_DETECTED
-#define USEWIN32IOAPI
-#endif
 #include "Filesystem.h"                          // for Filesystem::...
 
 #ifdef MODIO_LINUX_DETECTED
@@ -32,6 +29,7 @@
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
+#  define USEWIN32IOAPI
 #  ifdef MODIO_UE4_DETECTED 
 #    include <Windows/MinWindows.h>
 #  else
@@ -115,7 +113,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
   if (DEBUG_LEVEL < debug_level)
     return;
 
-  std::ofstream log_file(WideCharFromString(modio::getModIODirectory() + "log.txt"), std::ios::app);
+  std::ofstream log_file( modio::platform::ofstream(modio::getModIODirectory() + "log.txt", std::ios::app ) );
   log_file << "[" << modio::getCurrentTimeSeconds() << "] ";
   if (debug_level == MODIO_DEBUGLEVEL_ERROR)
   {
@@ -135,8 +133,7 @@ void writeLogLine(const std::string &text, u32 debug_level)
 
 void clearLog()
 {
-  std::ofstream log_file(WideCharFromString(getModIODirectory() + "log.txt"));
-  assert(!log_file.fail());
+  std::ofstream log_file( modio::platform::ofstream(getModIODirectory() + "log.txt") );
   log_file.close();
 }
 
@@ -181,7 +178,7 @@ nlohmann::json toJson(const std::string &json_str)
 
 nlohmann::json openJson(const std::string &file_path)
 {
-  std::ifstream ifs(WideCharFromString(file_path));
+  std::ifstream ifs( modio::platform::ifstream(file_path) );
   nlohmann::json cache_file_json;
   if (ifs.is_open())
   {
@@ -196,12 +193,13 @@ nlohmann::json openJson(const std::string &file_path)
     }
   }
   ifs.close();
+  
   return cache_file_json;
 }
 
 void writeJson(const std::string &file_path, nlohmann::json json_object)
 {
-  std::ofstream ofs(WideCharFromString(file_path));
+  std::ofstream ofs( modio::platform::ofstream(file_path) );
   ofs << std::setw(4) << json_object << std::endl;
   ofs.close();
 }
@@ -347,14 +345,16 @@ double getFileSize(const std::string &file_path)
   return file_size;
 }
 
-bool createPath(const std::string &path)
+bool createPath(const std::string &path_str)
 {
+  ghc::filesystem::path path( path_str );
+  
   std::error_code ec;
-  bool result = ghc::filesystem::create_directories( path, ec );
+  bool result = ghc::filesystem::create_directories( path.parent_path().native(), ec );
 
   if( !result && ec )
   {
-    writeLogLine( "Failed to create path: \"" + path + "\" with error: " + ec.message(), MODIO_DEBUGLEVEL_ERROR );
+    writeLogLine( "Failed to create path: \"" + path.parent_path().native() + "\" with error: " + ec.message(), MODIO_DEBUGLEVEL_ERROR );
     return false;
   }
   return true;

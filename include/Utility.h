@@ -66,6 +66,13 @@ std::string getDirectoryPath(const std::string &filename);
 bool removeDirectory(const std::string &directory);
 void removeFile(const std::string &filename);
 double getFileSize(const std::string &file_path);
+/**
+ * Creates the paths up to the file/folder. So if it's a folder name, ensure that you have a slash at end of the path
+ *
+ * Example: Sending in /home/cool_username/a/b creates the folder /home/cool_username/a as it expects that b is a file
+ * Example: Sending in /home/cool_username/a/b.txt creates the folder /home/cool_username/a as b is a file
+ * Example: Sending in /home/cool_username/a/b/ creates the folder /home/cool_username/a/b
+ */
 bool createPath(const std::string &strPathAndFile);
 std::vector<std::string> getHeaders();
 std::vector<std::string> getHeadersNoToken();

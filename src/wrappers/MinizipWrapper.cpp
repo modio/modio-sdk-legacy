@@ -8,9 +8,9 @@
 #include "Utility.h"                       // for writeLogLine
 #include "ghc/filesystem.hpp"
 
-#include "dependencies/minizip/iowin32.c"
 #ifdef MODIO_WINDOWS_DETECTED
 #define USEWIN32IOAPI
+#include "dependencies/minizip/iowin32.c"
 #endif
 #include "dependencies/minizip/minizip.h"  // for filetime, is_l...
 #include "dependencies/minizip/unzip.h"    // for unzClose, unzC...
@@ -90,7 +90,7 @@ void extract(std::string zip_path, std::string directory_path)
 
       std::string new_file_path = filename;
       FILE *out;
-      out = _wfopen(WideCharFromString(final_filename).c_str(), L"wb");
+      out = modio::platform::fopen(final_filename, "wb");
 
       if (!out)
       {
@@ -271,7 +271,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
       writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
     else
     {
-      fin = _wfopen( WideCharFromString(complete_file_path).c_str(), L"rb");
+      fin = modio::platform::fopen(complete_file_path.c_str(), "rb");
       if (fin == NULL)
       {
         writeLogLine(std::string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);

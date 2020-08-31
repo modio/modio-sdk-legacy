@@ -422,7 +422,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetFileData);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
-
+    
     g_ongoing_downloads[curl] = new OngoingDownload(call_number, url, slist, callback);
 
     curl_multi_add_handle(g_curl_multi_handle, curl);
@@ -465,11 +465,11 @@ static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json 
       if (progress != 0)
       {
         writeLogLine("Progress detected. Resuming download from " + toString((u32)progress), MODIO_DEBUGLEVEL_LOG);
-        file = _wfopen(WideCharFromString(g_current_mod_download->queued_mod_download->path).c_str(), L"ab");
+        file = modio::platform::fopen(g_current_mod_download->queued_mod_download->path.c_str(), "ab");
       }
       else
       {
-        file = _wfopen(WideCharFromString(g_current_mod_download->queued_mod_download->path).c_str(), L"wb");
+        file = modio::platform::fopen(g_current_mod_download->queued_mod_download->path.c_str(), "wb");
       }
 
       if(!file)

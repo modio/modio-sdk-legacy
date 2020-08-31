@@ -20,7 +20,7 @@ extern "C"
       return;
     }
 
-    FILE *file = _wfopen(modio::WideCharFromString(path).c_str(), L"wb");
+    FILE *file = modio::platform::fopen(path, "wb");
     if (!file)
     {
       modio::writeLogLine("Could not open image file: " + std::string(path), MODIO_DEBUGLEVEL_ERROR);
