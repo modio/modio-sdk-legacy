@@ -9,35 +9,30 @@
 namespace modio
 {
   namespace windows_platform
-  {
-    static std::wstring WideCharFromString(std::string const& str)
-    {
-      return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str);
-    }
-
-    static std::string StringFromWideChar(wchar_t const* str)
-    {
-      return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
-    }
-
-    static std::string StringFromWideString(const std::wstring& str)
-    {
-      return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(str);
-    }
-    
+  {    
     std::ofstream ofstream(const std::string& path, std::ios_base::openmode mode /*= std::ios_base::out*/ )
     {
-      return std::ofstream(WideCharFromString(path).c_str(), mode);
+      return std::ofstream(utf8ToWstr(path).c_str(), mode);
     }
     
-    std::ofstream ifstream(const std::string& path, std::ios_base::openmode mode /*= std::ios_base::in*/ )
+    std::ifstream ifstream(const std::string& path, std::ios_base::openmode mode /*= std::ios_base::in*/ )
     {
-      return std::ifstream(WideCharFromString(path).c_str(), mode);
+      return std::ifstream(utf8ToWstr(path).c_str(), mode);
     }
     
     FILE* fopen(const char* path, const char* mode)
     {
-      return _wfopen(WideCharFromString(path).c_str(), WideCharFromString(mode).c_str());
+      return _wfopen(utf8ToWstr(path).c_str(), utf8ToWstr(mode).c_str());
+    }
+
+    std::wstring utf8ToWstr(const std::string& utf8_str)
+    {
+      return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(utf8_str);
+    }
+
+    std::string wstrToUtf8(const std::wstring& wide_string)
+    {
+      return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(wide_string);
     }
   }
 }

@@ -37,6 +37,7 @@
 #    include <shlobj.h>
 #  endif
 #  include <strsafe.h>
+#  include "WindowsFilesystem.h"
 //#include "vld.h"
 #endif
 
@@ -449,7 +450,7 @@ std::string getMyDocumentsPath()
   std::replace(my_documents_path_wstring.begin(), my_documents_path_wstring.end(), '\\', '/');
 
   // Convert to UTF-8
-  return StringFromWideString(my_documents_path_wstring);
+  return modio::windows_platform::wstrToUtf8(my_documents_path_wstring);
 #elif defined(MODIO_LINUX_DETECTED)
   // @todo: This will most likely also work on mac, but I prefer of taking the safe path and introduce that codepath
   // when I have been able to actually test that

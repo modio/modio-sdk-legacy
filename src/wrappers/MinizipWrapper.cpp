@@ -11,6 +11,7 @@
 #ifdef MODIO_WINDOWS_DETECTED
 #define USEWIN32IOAPI
 #include "dependencies/minizip/iowin32.c"
+#include "../WindowsFilesystem.h"
 #endif
 #include "dependencies/minizip/minizip.h"  // for filetime, is_l...
 #include "dependencies/minizip/unzip.h"    // for unzClose, unzC...
@@ -32,7 +33,7 @@ void extract(std::string zip_path, std::string directory_path)
   writeLogLine(std::string("Extracting ") + zip_path, MODIO_DEBUGLEVEL_LOG);
 #ifdef USEWIN32IOAPI
   fill_win32_filefunc64W(&ffunc);
-  unzFile zipfile = unzOpen2_64(WideCharFromString(zip_path).c_str(), &ffunc);
+  unzFile zipfile = unzOpen2_64(modio::platform::utf8ToWstr(zip_path).c_str(), &ffunc);
 #else
   unzFile zipfile = unzOpen(zip_path.c_str());
 #endif
@@ -202,7 +203,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
 
   #ifdef USEWIN32IOAPI
     fill_win32_filefunc64W(&ffunc);
-    zf = zipOpen2_64(WideCharFromString(zip_path).c_str(), opt_overwrite, NULL, &ffunc);
+    zf = zipOpen2_64(modio::windows_platform::utf8ToWstr(zip_path).c_str(), opt_overwrite, NULL, &ffunc);
   #else
     zf = zipOpen64(zipfilename, opt_overwrite);
   #endif
