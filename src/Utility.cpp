@@ -451,9 +451,7 @@ std::string getMyDocumentsPath()
 
   // Convert to UTF-8
   return modio::windows_platform::wstrToUtf8(my_documents_path_wstring);
-#elif defined(MODIO_LINUX_DETECTED)
-  // @todo: This will most likely also work on mac, but I prefer of taking the safe path and introduce that codepath
-  // when I have been able to actually test that
+#elif defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
   const char *homedir = getenv("HOME");
   if ( homedir == nullptr )
   {
