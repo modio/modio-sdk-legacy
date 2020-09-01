@@ -16,6 +16,14 @@ option(BUILD_SHARED_LIBS "Build Shared Libraries" ON)
 # set INCLUDE_EXAMPLES to ON to include the examples in the project
 option(INCLUDE_EXAMPLES "Build examples" OFF)
 
+# This needs to happen early, so that we force the build to be static
+IF(TEST)
+  message("Testing enabled, disabling shared libraries to be able to access internal functions")
+  SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared Libraries" FORCE)
+  # To be able to link with google test suite
+  set(crtmode "static" CACHE STRING "" FORCE)
+ENDIF()
+
 # MSVC: set the crtmode flag to 'static' to include the Visual C++
 # runtime statically. Requires libcurl to be built with /MT as well.
 # cmake -D crtmode=static .
@@ -40,11 +48,6 @@ foreach(source IN LISTS SOURCES)
 endforeach()
 
 add_library(modio ${SOURCES})
-
-# This needs to happen early, so that we force the build to be static
-IF(TEST)
-  SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared Libraries" FORCE)
-ENDIF()
 
 if( BUILD_SHARED_LIBS )
   message("Building mod.io SDK dynamically")
@@ -104,8 +107,6 @@ IF (MSVC)
 ENDIF()
 
 IF(TEST)
-  message("Testing enabled, disabling shared libraries to be able to access internal functions")
-  SET( BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared Libraries" FORCE )
   file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
   add_subdirectory(ext/googletest-master)
   enable_testing()

@@ -309,7 +309,15 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
 
 bool createDirectory(const std::string& directory)
 {
-  return ghc::filesystem::create_directory(directory);
+  std::error_code ec;
+  bool result = ghc::filesystem::create_directory(directory, ec);
+  if( !result && ec )
+  {
+    writeLogLine("Failed to create directory \"" + directory + "\" with error: " + ec.message(), MODIO_DEBUGLEVEL_WARNING);
+    return false;
+  }
+
+  return true;
 }
 
 bool removeDirectory(const std::string &directory)
