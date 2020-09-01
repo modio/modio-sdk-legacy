@@ -77,7 +77,7 @@ void extract(std::string zip_path, std::string directory_path)
     
     if (filename[filename_length - 1] == dir_delimter)
     {
-      ghc::filesystem::create_directory(final_filename);
+      modio::createDirectory(final_filename);
     }
     else
     {

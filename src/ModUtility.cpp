@@ -121,7 +121,7 @@ void installDownloadedMods()
 
       modio::writeLogLine("Installing mod " + std::to_string(mod_id), MODIO_DEBUGLEVEL_LOG);
 
-      ghc::filesystem::create_directory(installation_path);
+      modio::createDirectory(installation_path);
       modio::writeLogLine("Extracting...", MODIO_DEBUGLEVEL_LOG);
       modio::minizipwrapper::extract(downloaded_zip_path, installation_path);
       modio::writeLogLine("Removing temporary file...", MODIO_DEBUGLEVEL_LOG);

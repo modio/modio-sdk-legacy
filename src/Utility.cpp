@@ -307,6 +307,11 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
   return files;
 }
 
+bool createDirectory(const std::string& directory)
+{
+  return ghc::filesystem::create_directory(directory);
+}
+
 bool removeDirectory(const std::string &directory)
 {
   std::error_code ec;
