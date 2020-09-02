@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "Fixture_CleanupFolders.h"
 #include "../src/WindowsFilesystem.h"
+#include "dependencies/minizip/minizip.h"
 
 class Modio : public Fixture_CleanupFolders{};
 
@@ -100,4 +101,117 @@ TEST_F(Modio, TestInitSubdirectoryNotWriteable)
 
   setFilePermission(u8"dir", true);
   modio::removeDirectory("dir");
+}
+
+static void onGetMod_TestGetMod(void* object, ModioResponse response, ModioMod mod)
+{
+  bool* wait = (bool*)object;
+  ASSERT_EQ(response.code, 200);
+  EXPECT_EQ(response.result_count, 0);
+  EXPECT_EQ(response.result_cached, 0);
+  EXPECT_EQ(response.result_limit, 0);
+  EXPECT_EQ(response.result_offset, -1);
+  EXPECT_EQ(response.result_total, 0);
+
+  EXPECT_EQ(mod.id, 865);
+  EXPECT_STRCASEEQ(mod.name, u8"Mod #8");
+  
+  *wait = false;
+}
+
+TEST_F(Modio, TestGetMod)
+{
+    modioInit(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", "");
+
+    bool wait = true;
+
+    modioGetMod(&wait, 865, &onGetMod_TestGetMod);
+
+    while (wait)
+    {
+      // @todo: A timeout would be great here
+      modioProcess();
+    }
+
+    modioShutdown();
+}
+
+static std::string downloadedImageFilename = u8"downloaded/logo_original.png";
+
+u32 calculateCRCOfFile( const std::string& file )
+{
+  static const uintmax_t READ_BUFFER_SIZE = 1024 * 64; // 64kb is the same a minizip read buffer
+
+  uintmax_t dataRemaining = ghc::filesystem::file_size( file );
+  char* readBuffer = new char[READ_BUFFER_SIZE];
+  if( !readBuffer )
+  {
+    return -1;
+  }
+
+  std::ifstream fileStream = modio::platform::ifstream(file, std::ios_base::binary);
+  if( !fileStream.is_open() )
+  {
+    delete[] readBuffer;
+    return -1;
+  }
+
+  u32 crcValue = MZ_CRC32_INIT;
+  while( dataRemaining )
+  {
+    uintmax_t readBytes = std::min<uintmax_t>( READ_BUFFER_SIZE, dataRemaining );
+
+    fileStream.read( readBuffer, readBytes );
+    crcValue = mz_crc32( crcValue, (const mz_uint8*)readBuffer, readBytes );
+
+    dataRemaining -= readBytes;
+  }
+
+  fileStream.close();
+  delete[] readBuffer;
+
+  return crcValue;
+}
+
+void onDownloadImage_TestDownloadImage(void* object, ModioResponse response)
+{
+  bool* wait = (bool*)object;
+
+  ASSERT_EQ(response.code, 200);
+  EXPECT_EQ(response.result_count, 0);
+  EXPECT_EQ(response.result_cached, 0);
+  EXPECT_EQ(response.result_limit, 0);
+  EXPECT_EQ(response.result_offset, -1);
+  EXPECT_EQ(response.result_total, 0);
+
+  EXPECT_TRUE(modio::fileExists(downloadedImageFilename));
+  EXPECT_EQ(calculateCRCOfFile(downloadedImageFilename), 1624551240); // CRC calculated off line and verified against https://simplycalc.com/crc32-file.php
+
+  *wait = false;
+}
+
+static void onGetMod_TestDownloadImage(void* object, ModioResponse response, ModioMod mod)
+{
+  ASSERT_EQ(response.code, 200);
+
+  // Ensure that the path to the filename exists before we try to download it
+  modio::createPath(downloadedImageFilename);
+  modioDownloadImage(object, mod.logo.original, downloadedImageFilename.c_str(), &onDownloadImage_TestDownloadImage);
+}
+
+TEST_F(Modio, TestDownloadImage)
+{
+  modioInit(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", "");
+
+  bool wait = true;
+
+  modioGetMod(&wait, 865, &onGetMod_TestDownloadImage);
+
+  while (wait)
+  {
+    // @todo: A timeout would be great here
+    modioProcess();
+  }
+
+  modioShutdown();
 }
