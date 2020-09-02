@@ -247,7 +247,11 @@ bool isDirectory(const std::string& directory)
 {
   std::error_code ec;
   ghc::filesystem::directory_entry directoryEntry(directory, ec);
-  return directoryEntry.exists() && ghc::filesystem::is_directory(directoryEntry);
+  if( directoryEntry.exists( ec ) && !ec )
+  {
+      return directoryEntry.is_directory( ec ) && !ec;
+  }
+  return false;
 }
 
 bool directoryExists(const std::string& filename)
