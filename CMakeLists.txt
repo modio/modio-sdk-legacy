@@ -107,8 +107,9 @@ IF (MSVC)
 ENDIF()
 
 IF(TEST)
-  # Right now test only works in debug, as somewhere in the google test suite, the library is marked as a multhreaded dynamic library instead of static library
   file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
+  # This is needed to get release compiling
+  SET(gtest_force_shared_crt ON)
   add_subdirectory(ext/googletest-master)
   enable_testing()
   include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
