@@ -177,6 +177,9 @@ bool getIsLargeFile( const std::string& fileName )
 
 void compressFiles(std::string root_directory, std::vector<std::string> filenames, std::string zip_path)
 {
+  // Users might pass in directories without slashes, and we use root_directory + filename in a few places
+  root_directory = modio::addSlashIfNeeded(root_directory);
+
   writeLogLine("Compressing " + modio::toString((u32)filenames.size()) + " files", MODIO_DEBUGLEVEL_LOG);
 
   writeLogLine(std::string("Compressing ") + " into " + zip_path, MODIO_DEBUGLEVEL_LOG);
