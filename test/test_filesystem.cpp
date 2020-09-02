@@ -78,7 +78,7 @@ TEST_F(FolderBase, CreateRelativeFolderFailure)
   
   createFolderTest(u8"модио");
   setFilePermission(u8"модио", false);
-  createFolderFailureTest("модио/shouldExist");
+  createFolderFailureTest(u8"модио/shouldExist");
 }
 
 TEST_F(FolderBase, CreateAbsoluteFolderSuccess)
