@@ -4,6 +4,9 @@
 #include "Fixture_CleanupFolders.h"
 #include "../src/WindowsFilesystem.h"
 #include "dependencies/minizip/minizip.h"
+#include "c++/schemas/Response.h"
+#include "c++/schemas/Mod.h"
+#include <algorithm>
 
 class Modio : public Fixture_CleanupFolders{};
 
@@ -305,3 +308,119 @@ TEST_F(Modio, TestInstallMods)
 
   wait();
 }
+
+// We can't test subscribing/unsubscribing without beeing part of the team for the game, so we would need to
+// provide a logged in user key
+#if 0
+TEST_F(Modio, TestSubscribeMod)
+{
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 171, "2f5a33fc9c1786d231ff60e2227fad03");
+
+  volatile static bool finished = false;
+
+  auto wait = [&]() {
+    while (!finished)
+    {
+      modio_instance.sleep(10);
+      modio_instance.process();
+    }
+  };
+
+  auto finish = [&]() {
+    finished = true;
+  };
+
+  modio_instance.subscribeToMod(864, [&](const modio::Response& response, const modio::Mod& mod) {
+    EXPECT_EQ(response.code, 401);
+    EXPECT_EQ(response.result_cached, 0);
+    EXPECT_EQ(response.result_count, 0);
+    EXPECT_EQ(response.result_limit, 0);
+    EXPECT_EQ(response.result_offset, 0);
+    EXPECT_EQ(response.result_total, 0);
+
+    EXPECT_EQ(response.result_cached, 0);
+    EXPECT_EQ(response.result_count, 0);
+    EXPECT_EQ(response.result_limit, 0);
+    EXPECT_EQ(response.result_offset, 0);
+    EXPECT_EQ(response.result_total, 0);
+
+    EXPECT_EQ(mod.date_added, 1516086822);
+    EXPECT_EQ(mod.date_live, 1516086822);
+    EXPECT_EQ(mod.date_updated, 1568712676);
+    EXPECT_EQ(mod.description, "");
+    EXPECT_EQ(mod.description_plaintext, "");
+    EXPECT_EQ(mod.game_id, 171);
+    EXPECT_EQ(mod.homepage_url, "");
+    EXPECT_EQ(mod.id, 864);
+    EXPECT_EQ(mod.logo.filename, "mod7.2.png");
+    EXPECT_EQ(mod.logo.original, "https://image.test.modcdn.io/mods/1fc2/864/mod7.2.png");
+    EXPECT_EQ(mod.logo.thumb_320x180, "https://thumb.test.modcdn.io/mods/1fc2/864/crop_320x180/mod7.2.png");
+    EXPECT_EQ(mod.logo.thumb_640x360, "https://thumb.test.modcdn.io/mods/1fc2/864/crop_640x360/mod7.2.png");
+    EXPECT_EQ(mod.logo.thumb_1280x720, "https://thumb.test.modcdn.io/mods/1fc2/864/crop_1280x720/mod7.2.png");
+    EXPECT_EQ(mod.maturity_option, 0);
+    EXPECT_EQ(mod.media.images.size(), 0);
+    EXPECT_EQ(mod.media.sketchfab.size(), 0);
+    EXPECT_EQ(mod.media.youtube.size(), 0);
+    EXPECT_EQ(mod.metadata_blob, "");
+    EXPECT_EQ(mod.metadata_kvps.size(), 0);
+
+    EXPECT_EQ(mod.modfile.changelog.c_str(), "");
+    EXPECT_EQ(mod.modfile.date_added, 1516086834);
+    EXPECT_EQ(mod.modfile.date_scanned, 0);
+    EXPECT_EQ(mod.modfile.download.binary_url, "https://test.mod.io/mods/file/865");
+    EXPECT_EQ(mod.modfile.download.date_expires, 1662113157);
+    EXPECT_EQ(mod.modfile.filehash.md5, "07eff700ac20d9d0ce27f7b9de4ba494");
+    EXPECT_EQ(mod.modfile.filename, "demo.zip");
+    EXPECT_EQ(mod.modfile.filesize, 589);
+    EXPECT_EQ(mod.modfile.id, 865);
+    EXPECT_EQ(mod.modfile.metadata_blob.size(), 0);
+    EXPECT_EQ(mod.modfile.mod_id, 864);
+    EXPECT_EQ(mod.modfile.version, "6.7.1");
+    EXPECT_EQ(mod.modfile.virus_positive, 0);
+    EXPECT_EQ(mod.modfile.virus_status, 0);
+    EXPECT_EQ(mod.modfile.virustotal_hash.c_str(), "");
+
+    EXPECT_EQ(mod.name, "Mod #7");
+    EXPECT_EQ(mod.name_id, "mod7");
+    EXPECT_EQ(mod.profile_url, "https://example.test.mod.io/mod7");
+
+    // We don't verify the stats fields, as they might be updated
+    
+    EXPECT_EQ(mod.submitted_by.avatar.filename, "avatar.png");
+    EXPECT_EQ(mod.submitted_by.avatar.original, "https://static.test.mod.io/v1/images/default/avatar.png");
+    EXPECT_EQ(mod.submitted_by.avatar.thumb_100x100, "https://static.test.mod.io/v1/images/default/avatar_100x100.png");
+    EXPECT_EQ(mod.submitted_by.avatar.thumb_50x50, "https://static.test.mod.io/v1/images/default/avatar_50x50.png");
+    EXPECT_EQ(mod.submitted_by.date_online, 1596004914); // Potentially exclude this as someone might log into the account
+    EXPECT_EQ(mod.submitted_by.id, 31591);
+    EXPECT_EQ(mod.submitted_by.language, "");
+    EXPECT_EQ(mod.submitted_by.name_id, "testuser");
+    EXPECT_EQ(mod.submitted_by.profile_url, "https://test.mod.io/members/testuser");
+    EXPECT_EQ(mod.submitted_by.timezone, "");
+    EXPECT_EQ(mod.submitted_by.username, "testuser");
+    
+    EXPECT_EQ(mod.summary, "This is a demonstration mod profile, to show how mod.io looks and feels.");
+    EXPECT_EQ(mod.visible, 1);
+
+    ASSERT_EQ(mod.tags.size(), 5);
+   
+    std::list<modio::Tag> expectedTags = { 
+      { 1516086822, "Autumn" }, 
+      { 1516086822, "Player" },
+      { 1516186765, "Prop" },
+      { 1516186765, "Script" },
+      { 1516186765, "Singleplayer" }
+    };
+
+    EXPECT_TRUE( std::equal( mod.tags.begin(), mod.tags.end(), expectedTags.begin(), []( auto&& l, auto&& r )
+      { return l.date_added == r.date_added && l.name == r.name; } ) );
+
+    finish();
+    });
+
+  wait();
+}
+
+TEST_F(Modio, TestUnsubscribeMod)
+{
+}
+#endif
