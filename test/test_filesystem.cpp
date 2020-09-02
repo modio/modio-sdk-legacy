@@ -1,59 +1,9 @@
 ﻿#include "Utility.h"
 #include "gtest/gtest.h"
 #include "ghc/filesystem.hpp"
+#include "Fixture_CleanupFolders.h"
 
-class FolderBase : public ::testing::Test
-{
-protected:
-  // Used for teardown to delete directories that we created
-  static bool isAllowedDirectory( const ghc::filesystem::path& path )
-  {
-    for( auto& allowedFolder : allowedFolders )
-    {
-      if( ghc::filesystem::current_path().append(allowedFolder) == path )
-      {
-        return true;
-      }
-    }
-    return false;
-  }
-  
-  virtual void TearDown() override
-  {
-    DeleteTransientDirectories();
-  }
-  
-  virtual void SetUp() override
-  {
-    DeleteTransientDirectories();
-  }
-
-  void SetupPermissions()
-  {
-    ghc::filesystem::permissions(".", ghc::filesystem::perms::none);
-  }
-
-  void DeleteTransientDirectories()
-  {
-    for (auto& it : ghc::filesystem::directory_iterator(ghc::filesystem::current_path()))
-    {
-      std::vector<ghc::filesystem::path> toDelete;
-      if (it.is_directory() && !isAllowedDirectory(it.path()))
-      {
-        toDelete.push_back(it.path());
-      }
-      for (auto& path : toDelete)
-      {
-        ghc::filesystem::permissions(path, ghc::filesystem::perms::all);
-        ghc::filesystem::remove_all(path);
-      }
-    }
-  }
-
-  static std::vector<std::string> allowedFolders;
-};
-std::vector<std::string> FolderBase::allowedFolders = { ".cmake", "bin", "CMakeFiles", "ext", "lib", "Testing", "kaka" };
-
+class FolderBase : public Fixture_CleanupFolders{};
 TEST_F(FolderBase, CreateRelativeSubfolderFailure)
 {
   bool result = modio::createDirectory("folder/subfolder");
