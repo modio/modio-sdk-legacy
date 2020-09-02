@@ -75,6 +75,7 @@ void Fixture_CleanupFolders::setFilePermission(std::string fileName, bool access
   if (pSD)
     LocalFree(pSD);
 #else
-  ghc::filesystem::permissions(fileName.c_str(), access ? ghc::filesystem::perms::all : ghc::filesystem::perms::none);
+  std::error_code ec; 
+  ghc::filesystem::permissions(fileName.c_str(), access ? ghc::filesystem::perms::all : ghc::filesystem::perms::none, ec);
 #endif
 }

@@ -1,4 +1,4 @@
-﻿#include "Utility.h"
+#include "Utility.h"
 #include <errno.h>                               // for errno
 #include <fcntl.h>                               // for SEEK_END
 #include <limits.h>                              // for PATH_MAX
@@ -24,8 +24,11 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <ext/alloc_traits.h>                    // for __alloc_traits<>::va...
-#include <pwd.h>                                 // for getting the users home path (getpwuid/getuid)
 #include <errno.h>                               // for constants of errno
+#endif
+
+#if defined(MODIO_LINUX_DETECTED) || defined(MODIO_OSX_DETECTED)
+#include <pwd.h>                                 // for getting the users home path (getpwuid/getuid)
 #endif
 
 #ifdef MODIO_WINDOWS_DETECTED
