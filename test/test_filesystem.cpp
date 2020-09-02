@@ -51,11 +51,6 @@ TEST_F(FolderBase, CreateRelativeFolderSuccess)
   result = modio::directoryExists(u8"чизкейк/");
   EXPECT_TRUE(result) << u8"Folder чизкейк/ should exists";
 }
-TEST_F(FolderBase, CreateRelativeFolderFailure)
-{
-  // Sadly, I can't manage to get ghc::filesystem::permissions to disallow folder creation in the executable folder, so I can't test
-  // that it works properly to not be able to create a relative folder. I will look into that later to ensure that it's working properly
-}
 
 static void createFolderTest( const std::string& subfolder, bool forwardSlash = true )
 {
@@ -65,6 +60,27 @@ static void createFolderTest( const std::string& subfolder, bool forwardSlash = 
   EXPECT_TRUE(result) << "Failed to create directory " << path;
   EXPECT_TRUE(modio::directoryExists(path)) << "Folder " << path << " should exist";
 }
+
+static void createFolderFailureTest( const std::string& subfolder, bool forwardSlash = true )
+{
+  ghc::filesystem::path wd = ghc::filesystem::current_path();
+  std::string path = wd.generic_u8string() + ( forwardSlash ? "/" : "\\" ) + subfolder;
+  bool result = modio::createDirectory(path);
+  EXPECT_FALSE(result) << "Failed to create directory " << path;
+  EXPECT_FALSE(modio::directoryExists(path)) << "Folder " << path << " should exist";
+}
+
+TEST_F(FolderBase, CreateRelativeFolderFailure)
+{
+  createFolderTest("directory");
+  setFilePermission("directory", false);
+  createFolderFailureTest("directory/subdirectry");
+  
+  createFolderTest(u8"модио");
+  setFilePermission(u8"модио", false);
+  createFolderFailureTest("модио/shouldExist");
+}
+
 TEST_F(FolderBase, CreateAbsoluteFolderSuccess)
 {
   // Create directories with forwardslashes in their paths
