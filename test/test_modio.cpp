@@ -215,3 +215,93 @@ TEST_F(Modio, TestDownloadImage)
 
   modioShutdown();
 }
+
+static std::string downloadedImageFilenameUnicode = u8"downloaded/логотип_оригинал.png";
+
+void onDownloadImage_TestDownloadImageUnicode(void* object, ModioResponse response)
+{
+  bool* wait = (bool*)object;
+
+  ASSERT_EQ(response.code, 200);
+  EXPECT_EQ(response.result_count, 0);
+  EXPECT_EQ(response.result_cached, 0);
+  EXPECT_EQ(response.result_limit, 0);
+  EXPECT_EQ(response.result_offset, -1);
+  EXPECT_EQ(response.result_total, 0);
+
+  EXPECT_TRUE(modio::fileExists(downloadedImageFilenameUnicode));
+  EXPECT_EQ(calculateCRCOfFile(downloadedImageFilenameUnicode), 1624551240); // CRC calculated off line and verified against https://simplycalc.com/crc32-file.php
+
+  *wait = false;
+}
+
+static void onGetMod_TestDownloadImageUnicode(void* object, ModioResponse response, ModioMod mod)
+{
+  ASSERT_EQ(response.code, 200);
+
+  // Ensure that the path to the filename exists before we try to download it
+  modio::createPath(downloadedImageFilenameUnicode);
+  modioDownloadImage(object, mod.logo.original, downloadedImageFilenameUnicode.c_str(), &onDownloadImage_TestDownloadImageUnicode);
+}
+
+TEST_F(Modio, TestDownloadImageUnicode)
+{
+  modioInit(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", "");
+
+  bool wait = true;
+
+  modioGetMod(&wait, 865, &onGetMod_TestDownloadImageUnicode);
+
+  while (wait)
+  {
+    // @todo: A timeout would be great here
+    modioProcess();
+  }
+
+  modioShutdown();
+}
+
+TEST_F(Modio, TestInstallMods)
+{
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", u8"огурец");
+
+  volatile static bool finished = false;
+
+  auto wait = [&]() {
+    while (!finished)
+    {
+      modio_instance.sleep(10);
+      modio_instance.process();
+    }
+  };
+
+  auto finish = [&]() {
+    finished = true;
+  };
+
+  modio_instance.downloadMod(865);
+  modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
+    ASSERT_EQ(response_code, 200);
+
+    std::string zipLocation = modio::getModIODirectory() + "tmp/865_modfile.zip";
+
+    ASSERT_TRUE( modio::fileExists(zipLocation) );
+    EXPECT_EQ( calculateCRCOfFile(zipLocation), 4070914100 );
+
+    modio_instance.installDownloadedMods();
+
+    std::string modFolder = modio::getModIODirectory() + "/mods/865";
+    ASSERT_TRUE(modio::directoryExists(modFolder));
+    EXPECT_TRUE(modio::fileExists(modFolder + "/demo.txt"));
+    EXPECT_TRUE(modio::fileExists(modFolder + "/modio.json"));
+    EXPECT_TRUE(modio::fileExists(modFolder + "/__MACOSX/._demo.txt"));
+
+    EXPECT_EQ(calculateCRCOfFile(modFolder + "/demo.txt"), 1873862126);
+    EXPECT_EQ(calculateCRCOfFile(modFolder + "/__MACOSX/._demo.txt"), 2818760342);
+    // @todo: Verify values in modio.json file
+
+    finish();
+  });
+
+  wait();
+}
