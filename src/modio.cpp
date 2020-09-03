@@ -128,17 +128,16 @@ void modioInit(u32 environment, u32 game_id, bool retrieve_mods_from_other_games
 
   modio::ADDITIONAL_GAMEDIR_PATH = "";
 
-  if(!modio::createDirectory(modio::getModIODirectory()))
+  if(!modio::createPath(modio::getModIODirectory()))
   {
     std::clog << "Could not create the .modio/ directory, retying with alternative path: " << modio::getMyDocumentsPath() << std::endl;
     modio::ROOT_PATH = modio::getMyDocumentsPath();
-    modio::createDirectory(modio::getModIODirectory());
     modio::ADDITIONAL_GAMEDIR_PATH = "game_" + modio::toString(game_id);
-    modio::createDirectory(modio::getModIODirectory());
+    modio::createPath(modio::getModIODirectory());
   }
-  modio::createDirectory(modio::getModIODirectory() + "mods/");
-  modio::createDirectory(modio::getModIODirectory() + "cache/");
-  modio::createDirectory(modio::getModIODirectory() + "tmp/");
+  modio::createPath(modio::getModIODirectory() + "mods/");
+  modio::createPath(modio::getModIODirectory() + "cache/");
+  modio::createPath(modio::getModIODirectory() + "tmp/");
 
   modio::clearLog();
 

@@ -6,19 +6,49 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# Set this to ON if you want to enable testing
+option(TEST "Enable UNIT TESTING" OFF)
+
 # set BUILD_SHARED_LIBs to OFF to compile statically, for example:
 # cmake -D BUILD_SHARED_LIBS=OFF .
 option(BUILD_SHARED_LIBS "Build Shared Libraries" ON)
+
+# set INCLUDE_EXAMPLES to ON to include the examples in the project
+option(INCLUDE_EXAMPLES "Build examples" OFF)
+
+# This needs to happen early, so that we force the build to be static
+IF(TEST)
+  message("Testing enabled, disabling shared libraries to be able to access internal functions")
+  SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Shared Libraries" FORCE)
+  # To be able to link with google test suite
+  set(crtmode "static" CACHE STRING "" FORCE)
+ENDIF()
 
 # MSVC: set the crtmode flag to 'static' to include the Visual C++
 # runtime statically. Requires libcurl to be built with /MT as well.
 # cmake -D crtmode=static .
 
-include_directories(include additional_dependencies include/dependencies/miniz)
+include_directories(include additional_dependencies include/dependencies/miniz include/dependencies/filesystem)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE SOURCES
+    "src/*.cpp"
+    "src/*.c"
+    "src/*.h"
+    "include/*.h")
+
+message(${CMAKE_SOURCE_DIR})
+
+# Make pretty folders in visual studio/xcode
+foreach(source IN LISTS SOURCES)
+    get_filename_component(source_path "${source}" PATH)
+    string(REPLACE ${CMAKE_SOURCE_DIR} "" source_path_folder ${source_path} )
+    string(REPLACE "/" "\\" source_path_folder "${source_path_folder}")
+    string(REPLACE ${CMAKE_SOURCE_DIR} "" source_path_folder ${source_path_folder} )
+    source_group("${source_path_folder}" FILES "${source}")
+endforeach()
 
 add_library(modio ${SOURCES})
+
 if( BUILD_SHARED_LIBS )
   message("Building mod.io SDK dynamically")
   add_definitions(-DMODIO_DYNAMICLIB -DCURL_STATICLIB)
@@ -76,9 +106,10 @@ IF (MSVC)
 
 ENDIF()
 
-IF( test AND test STREQUAL "on" )
-  message("Testing enabled")
+IF(TEST)
   file(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)
+  # This is needed to get release compiling
+  SET(gtest_force_shared_crt ON)
   add_subdirectory(ext/googletest-master)
   enable_testing()
   include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
@@ -86,3 +117,27 @@ IF( test AND test STREQUAL "on" )
   target_link_libraries(runUnitTests gtest gtest_main modio)
   add_test(UnitTests runUnitTests)
 ENDIF()
+
+
+if( INCLUDE_EXAMPLES )
+  set(CPP_EXAMPLE_DIR "examples/code-samples/cpp")
+  set(C_EXAMPLE_DIR "examples/code-samples/c")
+  add_subdirectory(${CPP_EXAMPLE_DIR})
+  add_subdirectory(${C_EXAMPLE_DIR})
+  add_custom_command(TARGET modio POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
+    COMMENT "Copying library binaries into examples dir..."
+    )
+
+  # Copy pdb's on platforms that support it
+  IF (MSVC)
+    IF(BUILD_SHARED_LIBS)
+        add_custom_command(TARGET modio POST_BUILD 
+          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${CPP_EXAMPLE_DIR}"
+          COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:modio> "${CMAKE_CURRENT_BINARY_DIR}/${C_EXAMPLE_DIR}"
+          COMMENT "Copying library pdbs into examples dir..."
+          )
+    ENDIF()
+  ENDIF()
+endif()

@@ -6,20 +6,21 @@
 #include "wrappers/CurlWrapper.h"  // for download, getCallN...
 #include "c/ModioC.h"                   // for u32, MODIO_DEBUGLE...
 #include "c/methods/callbacks/ImageCallbacks.h"    // for DownloadImageParams
+#include "../../Filesystem.h"
 
 
 extern "C"
 {
   void modioDownloadImage(void *object, char const *image_url, char const *path, void (*callback)(void *object, ModioResponse modioresponse))
   {
-    if (!modio::directoryExists(modio::getDirectoryPath(path)))
+    if ( !modio::directoryExists( modio::getDirectoryPath(path) ) )
     {
       modio::writeLogLine("Could not open image directory: " + modio::getDirectoryPath(path), MODIO_DEBUGLEVEL_ERROR);
       modio::handleDownloadImageError(object, callback);
       return;
     }
 
-    FILE *file = fopen(path, "wb");
+    FILE *file = modio::platform::fopen(path, "wb");
     if (!file)
     {
       modio::writeLogLine("Could not open image file: " + std::string(path), MODIO_DEBUGLEVEL_ERROR);

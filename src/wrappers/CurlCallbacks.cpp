@@ -13,7 +13,7 @@ namespace curlwrapper
 void onJsonRequestFinished(CURL *curl)
 {
   JsonResponseHandler *ongoing_call = g_ongoing_calls[curl];
-  u32 response_code;
+  long response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
   nlohmann::json response_json = modio::toJson(ongoing_call->response);
 
@@ -37,7 +37,7 @@ void onJsonRequestFinished(CURL *curl)
     writeLogLine("X-RateLimit-Remaining: " + x_rate_limit_remaining, MODIO_DEBUGLEVEL_LOG);
   }
 
-  writeLogLine("Json request Finished. Response code: " + toString(response_code), MODIO_DEBUGLEVEL_LOG);
+  writeLogLine("Json request Finished. Response code: " + std::to_string(response_code), MODIO_DEBUGLEVEL_LOG);
   if (response_code >= 400 && response_code <= 599)
   {
     writeLogLine(response_json.dump(), MODIO_DEBUGLEVEL_ERROR);
@@ -51,8 +51,8 @@ void onJsonRequestFinished(CURL *curl)
 void onDownloadFinished(CURL *curl)
 {
   OngoingDownload *ongoing_download = g_ongoing_downloads[curl];
-
-  u32 response_code;
+  
+  long response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
   if (response_code >= 200 || response_code < 300)
@@ -61,7 +61,7 @@ void onDownloadFinished(CURL *curl)
   }
   else
   {
-    writeLogLine("Response code: " + modio::toString(response_code) + " Could not download form: " + ongoing_download->url, MODIO_DEBUGLEVEL_LOG);
+    writeLogLine("Response code: " + std::to_string(response_code) + " Could not download form: " + ongoing_download->url, MODIO_DEBUGLEVEL_LOG);
   }
 
   ongoing_download->callback(ongoing_download->call_number, response_code);
@@ -89,7 +89,7 @@ void onModDownloadFinished(CURL *curl)
   g_current_mod_download->file = NULL;
   writeLogLine("File closed", MODIO_DEBUGLEVEL_LOG);
 
-  u32 response_code;
+  long response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
   if (g_current_mod_download->queued_mod_download->state == MODIO_MOD_DOWNLOADING)
@@ -109,7 +109,7 @@ void onModDownloadFinished(CURL *curl)
     }
     else
     {
-      writeLogLine("Response code: " + modio::toString(response_code) + " Mod id: " + modio::toString(g_current_mod_download->queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
+      writeLogLine("Response code: " + std::to_string(response_code) + " Mod id: " + modio::toString(g_current_mod_download->queued_mod_download->mod_id), MODIO_DEBUGLEVEL_ERROR);
     }
 
     if (response_code >= 416)
@@ -152,7 +152,7 @@ void onModfileUploadFinished(CURL *curl)
 {
   writeLogLine("Upload Finished. Mod id: " + toString(g_current_modfile_upload->queued_modfile_upload->mod_id) /*+ " Url: " + current_queued_modfile_upload->url*/, MODIO_DEBUGLEVEL_LOG);
 
-  u32 response_code;
+  long response_code;
   curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
   if (g_current_modfile_upload->queued_modfile_upload->state == MODIO_MOD_UPLOADING)

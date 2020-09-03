@@ -1,326 +1,426 @@
-#include <iostream>
+﻿#include "c++/ModIOInstance.h"
 #include "gtest/gtest.h"
-#include "c/ModioC.h"
-#include "c/schemas/ModioLogo.h"
-#include "c/schemas/ModioIcon.h"
-#include "c/schemas/ModioHeader.h"
-#include "c/schemas/ModioAvatar.h"
-#include "c/schemas/ModioImage.h"
-#include "c/schemas/ModioDependency.h"
-#include "c/schemas/ModioComment.h"
-#include "c/schemas/ModioGameTagOption.h"
-#include "c/schemas/ModioModfile.h"
-#include "c/schemas/ModioFilehash.h"
-#include "c/schemas/ModioDownload.h"
-#include "c/schemas/ModioGame.h"
-#include "c/schemas/ModioMedia.h"
-#include "c/schemas/ModioTag.h"
-#include "c/schemas/ModioMetadataKVP.h"
-#include "c/schemas/ModioRating.h"
-#include "c/schemas/ModioStats.h"
-#include "c/schemas/ModioUser.h"
-#include "json_examples.h"
+#include "Utility.h"
+#include "Fixture_CleanupFolders.h"
+#include "../src/WindowsFilesystem.h"
+#include "dependencies/minizip/minizip.h"
+#include "c++/schemas/Response.h"
+#include "c++/schemas/Mod.h"
+#include <algorithm>
 
-TEST(SchemaIntialization, TestModioLogoInitialization)
+class Modio : public Fixture_CleanupFolders{};
+
+static void expectDirectoryExists(const std::string& dir)
 {
-	ModioLogo logo;
-	modioInitLogo(&logo, logo_json);
-
-	EXPECT_STREQ(logo.filename, "modio-color-dark.png");
-	EXPECT_STREQ(logo.original, "https://static.mod.io/v1/images/branding/modio-color-dark.png");
-	EXPECT_STREQ(logo.thumb_320x180, "https://static.mod.io/v1/images/thumb_320x180.png");
-	EXPECT_STREQ(logo.thumb_640x360, "https://static.mod.io/v1/images/thumb_640x360.png");
-	EXPECT_STREQ(logo.thumb_1280x720, "https://static.mod.io/v1/images/thumb_1280x720.png");
-
-	modioFreeLogo(&logo);
+  bool exists = modio::directoryExists(dir);
+  EXPECT_TRUE(exists) << dir << " directory should have been created";
 }
 
-TEST(SchemaIntialization, TestModioIconInitialization)
+static void assertDirectoryExists(const std::string& dir)
 {
-	ModioIcon icon;
-	modioInitIcon(&icon, icon_json);
-
-	EXPECT_STREQ(icon.filename, "modio-color-dark.png");
-	EXPECT_STREQ(icon.original, "https://static.mod.io/v1/images/original.png");
-	EXPECT_STREQ(icon.thumb_64x64, "https://static.mod.io/v1/images/thumb_64x64.png");
-	EXPECT_STREQ(icon.thumb_128x128, "https://static.mod.io/v1/images/thumb_128x128.png");
-	EXPECT_STREQ(icon.thumb_256x256, "https://static.mod.io/v1/images/thumb_256x256.png");
-
-	modioFreeIcon(&icon);
+  bool exists = modio::directoryExists(dir);
+  ASSERT_TRUE(exists) << dir << " directory should have been created";
 }
 
-TEST(SchemaIntialization, TestModioHeaderImageInitialization)
+static void assertDirectoryDontExists(const std::string& dir)
 {
-	ModioHeader header;
-	modioInitHeader(&header, header_image_json);
-
-	EXPECT_STREQ(header.filename, "demo.png");
-	EXPECT_STREQ(header.original, "https://static.mod.io/v1/images/original.png");
-
-	modioFreeHeader(&header);
+  bool exists = modio::directoryExists(dir);
+  ASSERT_FALSE(exists) << dir << " directory should NOT have been created";
 }
 
-TEST(SchemaIntialization, TestModioAvatarInitialization)
+static void expectFileExists(const std::string& file)
 {
-	ModioAvatar avatar;
-	modioInitAvatar(&avatar, avatar_json);
-
-	EXPECT_STREQ(avatar.filename, "modio-color-dark.png");
-	EXPECT_STREQ(avatar.original, "https://static.mod.io/v1/images/original.png");
-	EXPECT_STREQ(avatar.thumb_50x50, "https://static.mod.io/v1/images/thumb_50x50.png");
-	EXPECT_STREQ(avatar.thumb_100x100, "https://static.mod.io/v1/images/thumb_100x100.png");
-
-	modioFreeAvatar(&avatar);
+  bool exists = modio::fileExists(file);
+  EXPECT_TRUE(exists) << file << " file should have been created";
 }
 
-TEST(SchemaIntialization, TestModioImageInitialization)
+TEST_F(Modio, TestInitStandard)
 {
-	ModioImage image;
-	modioInitImage(&image, image_json);
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, false, false, "e91c01b8882f4affeddd56c96111977b", "");
 
-	EXPECT_STREQ(image.filename, "modio-color-dark.png");
-	EXPECT_STREQ(image.original, "https://static.mod.io/v1/images/original.png");
-	EXPECT_STREQ(image.thumb_320x180, "https://static.mod.io/v1/images/thumb_320x180.png");
-
-	modioFreeImage(&image);
+  assertDirectoryExists(".modio");
+  expectDirectoryExists(".modio/cache");
+  expectDirectoryExists(".modio/mods");
+  expectDirectoryExists(".modio/tmp");
+  expectFileExists(u8".modio/log.txt");
 }
 
-TEST(SchemaIntialization, TestModioModEventInitialization)
+TEST_F(Modio, TestInitSubdirectory)
 {
-	ModioModEvent event;
-	modioInitModEvent(&event, event_json);
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, false, false, "e91c01b8882f4affeddd56c96111977b", "subdirInit");
 
-	EXPECT_EQ(event.id, 13);
-	EXPECT_EQ(event.mod_id, 14);
-	EXPECT_EQ(event.user_id, 15);
-	EXPECT_EQ(event.date_added, 1499846132);
-	EXPECT_EQ(event.event_type, MODIO_EVENT_MODFILE_CHANGED);
-
-	modioFreeModEvent(&event);
+  assertDirectoryExists("subdirInit/.modio");
+  expectDirectoryExists("subdirInit/.modio/cache");
+  expectDirectoryExists("subdirInit/.modio/mods");
+  expectDirectoryExists("subdirInit/.modio/tmp");
+  expectFileExists(u8"subdirInit/.modio/log.txt");
 }
 
-TEST(SchemaIntialization, TestModioCommentInitialization)
+TEST_F(Modio, TestInitSubdirectoryUnicode)
 {
-	ModioComment comment;
-	modioInitComment(&comment, comment_json);
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, false, false, "e91c01b8882f4affeddd56c96111977b", u8"модио");
 
-	EXPECT_EQ(comment.id, 2);
-	EXPECT_EQ(comment.mod_id, 3);
-	EXPECT_EQ(comment.date_added, 1499841487);
-	EXPECT_EQ(comment.reply_id, 1499);
-	EXPECT_STREQ(comment.thread_position, "01");
-	EXPECT_EQ(comment.karma, 1);
-	EXPECT_EQ(comment.karma_guest, 0);
-	EXPECT_STREQ(comment.content, "This mod is kickass! Great work!");
-
-	modioFreeComment(&comment);
+  assertDirectoryExists(u8"модио/.modio");
+  expectDirectoryExists(u8"модио/.modio/cache");
+  expectDirectoryExists(u8"модио/.modio/mods");
+  expectDirectoryExists(u8"модио/.modio/tmp");
+  expectFileExists(u8"модио/.modio/log.txt");
 }
 
-TEST(SchemaIntialization, TestModioDependencyInitialization)
+TEST_F(Modio, TestInitSubdirectoryAlreadyExists)
 {
-	ModioDependency dependency;
-	modioInitDependency(&dependency, mod_dependency_json);
+  ghc::filesystem::create_directory(u8"модио");
 
-	EXPECT_EQ(dependency.mod_id, 231);
-	EXPECT_EQ(dependency.date_added, 1499841487);
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, false, false, "e91c01b8882f4affeddd56c96111977b", u8"модио");
 
-	modioFreeDependency(&dependency);
+  assertDirectoryExists(u8"модио/.modio");
+  expectDirectoryExists(u8"модио/.modio/cache");
+  expectDirectoryExists(u8"модио/.modio/mods");
+  expectDirectoryExists(u8"модио/.modio/tmp");
+  expectFileExists(u8"модио/.modio/log.txt");
 }
 
-TEST(SchemaIntialization, TestModioGameTagOptionInitialization)
+TEST_F(Modio, TestInitSubdirectoryNotWriteable)
 {
-	ModioGameTagOption game_tag_option;
-	modioInitGameTagOption(&game_tag_option, game_tag_option_json);
+  // Ensure that we start off with a clean slate so we don't have a cached folder here
+  setFilePermission(modio::addSlashIfNeeded(modio::getMyDocumentsPath()) + ".modio/game_7", true);
+  modio::removeDirectory(modio::addSlashIfNeeded(modio::getMyDocumentsPath()) + ".modio/game_7");
 
-	EXPECT_STREQ(game_tag_option.name, "Theme");
-	EXPECT_STREQ(game_tag_option.type, "checkboxes");
-	EXPECT_EQ(game_tag_option.tags_array_size, 1);
-	EXPECT_STREQ(game_tag_option.tags_array[0], "Horror");
-	EXPECT_EQ(game_tag_option.hidden, false);
+  ghc::filesystem::create_directory(u8"dir");
+  setFilePermission( u8"dir", false );
 
-	modioFreeGameTagOption(&game_tag_option);
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 7, false, false, "e91c01b8882f4affeddd56c96111977b", u8"dir");
+
+  assertDirectoryDontExists(u8"dir/.modio");
+  assertDirectoryDontExists(u8"dir/.modio/cache");
+  assertDirectoryDontExists(u8"dir/.modio/mods");
+  assertDirectoryDontExists(u8"dir/.modio/tmp");
+
+  assertDirectoryExists(modio::addSlashIfNeeded(modio::getMyDocumentsPath()) + ".modio/game_7/");
+  expectDirectoryExists(modio::addSlashIfNeeded(modio::getMyDocumentsPath()) + ".modio/game_7/cache");
+  expectDirectoryExists(modio::addSlashIfNeeded(modio::getMyDocumentsPath()) + ".modio/game_7/mods");
+  expectDirectoryExists(modio::addSlashIfNeeded(modio::getMyDocumentsPath()) + ".modio/game_7/tmp");
+  expectFileExists(modio::addSlashIfNeeded(modio::getMyDocumentsPath()) + ".modio/game_7/log.txt");
+
+  setFilePermission(u8"dir", true);
+  modio::removeDirectory("dir");
 }
 
-TEST(SchemaIntialization, TestModioModfileInitialization)
+static void onGetMod_TestGetMod(void* object, ModioResponse response, ModioMod mod)
 {
-	ModioModfile modfile;
-	modioInitModfile(&modfile, modfile_json);
+  bool* wait = (bool*)object;
+  ASSERT_EQ(response.code, 200);
+  EXPECT_EQ(response.result_count, 0);
+  EXPECT_EQ(response.result_cached, 0);
+  EXPECT_EQ(response.result_limit, 0);
+  EXPECT_EQ(response.result_offset, -1);
+  EXPECT_EQ(response.result_total, 0);
 
-	EXPECT_EQ(modfile.id, 2);
-	EXPECT_EQ(modfile.mod_id, 3);
-	EXPECT_EQ(modfile.date_added, 1499841487);
-	EXPECT_EQ(modfile.date_scanned, 1499841487);
-	EXPECT_EQ(modfile.virus_status, 5);
-	EXPECT_EQ(modfile.virus_positive, 1);
-	EXPECT_STREQ(modfile.virustotal_hash, "f9a7bf4a95ce20787337b685a79677cae2281b83c63ab0a25f091407741692af-1508147401");
-	EXPECT_EQ(modfile.filesize, 15181);
-	EXPECT_STREQ(modfile.filename, "rogue-knight-v1.zip");
-	EXPECT_STREQ(modfile.version, "1.3");
-	EXPECT_STREQ(modfile.changelog, "VERSION 1.3 -- Changes -- Fixed critical castle floor bug.");
-	EXPECT_STREQ(modfile.metadata_blob, "rogue,hd,high-res,4k,hd textures");
-
-	modioFreeModfile(&modfile);
+  EXPECT_EQ(mod.id, 865);
+  EXPECT_STRCASEEQ(mod.name, u8"Mod #8");
+  
+  *wait = false;
 }
 
-TEST(SchemaIntialization, TestModioFilehashInitialization)
+TEST_F(Modio, TestGetMod)
 {
-	ModioFilehash filehash;
-	modioInitFilehash(&filehash, filehash_json);
+    modioInit(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", "");
 
-	EXPECT_STREQ(filehash.md5, "2d4a0e2d7273db6b0a94b0740a88ad0d");
+    bool wait = true;
 
-	modioFreeFilehash(&filehash);
+    modioGetMod(&wait, 865, &onGetMod_TestGetMod);
+
+    while (wait)
+    {
+      // @todo: A timeout would be great here
+      modioProcess();
+    }
+
+    modioShutdown();
 }
 
-TEST(SchemaIntialization, TestModioDownloadInitialization)
+static std::string downloadedImageFilename = u8"downloaded/logo_original.png";
+
+u32 calculateCRCOfFile( const std::string& file )
 {
-	ModioDownload download;
-	modioInitDownload(&download, download_json);
+  static const uintmax_t READ_BUFFER_SIZE = 1024 * 64; // 64kb is the same a minizip read buffer
 
-	EXPECT_STREQ(download.binary_url, "https://mod.io/mods/file/1/c489a0354111a4d76640d47f0cdcb294");
-	EXPECT_EQ(download.date_expires, 1579316848);
+  uintmax_t dataRemaining = ghc::filesystem::file_size( file );
+  char* readBuffer = new char[READ_BUFFER_SIZE];
+  if( !readBuffer )
+  {
+    return -1;
+  }
 
-	modioFreeDownload(&download);
+  std::ifstream fileStream = modio::platform::ifstream(file, std::ios_base::binary);
+  if( !fileStream.is_open() )
+  {
+    delete[] readBuffer;
+    return -1;
+  }
+
+  u32 crcValue = MZ_CRC32_INIT;
+  while( dataRemaining )
+  {
+    uintmax_t readBytes = std::min<uintmax_t>( READ_BUFFER_SIZE, dataRemaining );
+
+    fileStream.read( readBuffer, readBytes );
+    crcValue = mz_crc32( crcValue, (const mz_uint8*)readBuffer, readBytes );
+
+    dataRemaining -= readBytes;
+  }
+
+  fileStream.close();
+  delete[] readBuffer;
+
+  return crcValue;
 }
 
-TEST(SchemaIntialization, TestModioGameInitialization)
+void onDownloadImage_TestDownloadImage(void* object, ModioResponse response)
 {
-	ModioGame game;
-	modioInitGame(&game, game_json);
+  bool* wait = (bool*)object;
 
-	EXPECT_EQ(game.id, 2);
-	EXPECT_EQ(game.status, 1);
-	EXPECT_EQ(game.date_added, 1493702614);
-	EXPECT_EQ(game.date_updated, 1499410290);
-	EXPECT_EQ(game.date_live, 1499841403);
-	EXPECT_EQ(game.presentation_option, 1);
-	EXPECT_EQ(game.submission_option, 0);
-	EXPECT_EQ(game.curation_option, 0);
-	EXPECT_EQ(game.community_options, 3);
-	EXPECT_EQ(game.revenue_options, 1500);
-	EXPECT_EQ(game.api_access_options, 3);
-	EXPECT_EQ(game.maturity_options, 0);
-	EXPECT_STREQ(game.ugc_name, "map");
-	EXPECT_STREQ(game.name, "Rogue Knight");
-	EXPECT_STREQ(game.name_id, "rogue-knight");
-	EXPECT_STREQ(game.summary, "Rogue Knight is a brand new 2D pixel platformer.");
-	EXPECT_STREQ(game.instructions, "Instructions on the process to upload mods.");
-	EXPECT_STREQ(game.instructions_url, "https://www.rogue-knight-game.com/modding/getting-started");
-	EXPECT_STREQ(game.profile_url, "https://rogue-knight.mod.io");
+  ASSERT_EQ(response.code, 200);
+  EXPECT_EQ(response.result_count, 0);
+  EXPECT_EQ(response.result_cached, 0);
+  EXPECT_EQ(response.result_limit, 0);
+  EXPECT_EQ(response.result_offset, -1);
+  EXPECT_EQ(response.result_total, 0);
 
-	modioFreeGame(&game);
+  EXPECT_TRUE(modio::fileExists(downloadedImageFilename));
+  EXPECT_EQ(calculateCRCOfFile(downloadedImageFilename), 1624551240); // CRC calculated off line and verified against https://simplycalc.com/crc32-file.php
+
+  *wait = false;
 }
 
-TEST(SchemaIntialization, TestModioMediaInitialization)
+static void onGetMod_TestDownloadImage(void* object, ModioResponse response, ModioMod mod)
 {
-	ModioMedia media;
-	modioInitMedia(&media, mod_media_json);
+  ASSERT_EQ(response.code, 200);
 
-	EXPECT_EQ(media.youtube_size, 1);
-	EXPECT_STREQ(media.youtube_array[0], "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-	EXPECT_EQ(media.sketchfab_size, 1);
-	EXPECT_STREQ(media.sketchfab_array[0], "https://sketchfab.com/models/ef40b2d300334d009984c8865b2db1c8");
-	EXPECT_EQ(media.images_size, 1);
-	EXPECT_STREQ(media.images_array[0].filename, "modio-color-dark.png");
-	EXPECT_STREQ(media.images_array[0].original, "https://static.mod.io/v1/images/original.png");
-	EXPECT_STREQ(media.images_array[0].thumb_320x180, "https://static.mod.io/v1/images/thumb_320x180.png");
-
-	modioFreeMedia(&media);
+  // Ensure that the path to the filename exists before we try to download it
+  modio::createPath(downloadedImageFilename);
+  modioDownloadImage(object, mod.logo.original, downloadedImageFilename.c_str(), &onDownloadImage_TestDownloadImage);
 }
 
-TEST(SchemaIntialization, TestModioTagInitialization)
+TEST_F(Modio, TestDownloadImage)
 {
-	ModioTag tag;
-	modioInitTag(&tag, mod_tag_json);
+  modioInit(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", "");
 
-	EXPECT_STREQ(tag.name, "Unity");
-	EXPECT_EQ(tag.date_added, 1499841487);
+  bool wait = true;
 
-	modioFreeTag(&tag);
+  modioGetMod(&wait, 865, &onGetMod_TestDownloadImage);
+
+  while (wait)
+  {
+    // @todo: A timeout would be great here
+    modioProcess();
+  }
+
+  modioShutdown();
 }
 
-TEST(SchemaIntialization, TestModioModInitialization)
+static std::string downloadedImageFilenameUnicode = u8"downloaded/логотип_оригинал.png";
+
+void onDownloadImage_TestDownloadImageUnicode(void* object, ModioResponse response)
 {
-	ModioMod mod;
-	modioInitMod(&mod, mod_json);
+  bool* wait = (bool*)object;
 
-	EXPECT_EQ(mod.id, 2);
-	EXPECT_EQ(mod.game_id, 2);
-	EXPECT_EQ(mod.status, 1);
-	EXPECT_EQ(mod.visible, 1);
-	EXPECT_EQ(mod.date_added, 1492564103);
-	EXPECT_EQ(mod.date_updated, 1499841487);
-	EXPECT_EQ(mod.date_live, 1499841403);
-	EXPECT_EQ(mod.maturity_option, 0);
-	EXPECT_STREQ(mod.homepage_url, "https://www.rogue-hdpack.com/");
-	EXPECT_STREQ(mod.name, "Rogue Knight HD Pack");
-	EXPECT_STREQ(mod.name_id, "rogue-knight-hd-pack");
-	EXPECT_STREQ(mod.summary, "It's time to bask in the glory of beautiful 4k textures!");
-	EXPECT_STREQ(mod.description, "<p>Rogue HD Pack does exactly what you thi...");
-	EXPECT_STREQ(mod.description_plaintext, "Rogue HD Pack does exactly what you thi...");
-	EXPECT_STREQ(mod.metadata_blob, "rogue,hd,high-res,4k,hd textures");
-	EXPECT_STREQ(mod.profile_url, "https://rogue-knight.mod.io/rogue-knight-hd-pack");
+  ASSERT_EQ(response.code, 200);
+  EXPECT_EQ(response.result_count, 0);
+  EXPECT_EQ(response.result_cached, 0);
+  EXPECT_EQ(response.result_limit, 0);
+  EXPECT_EQ(response.result_offset, -1);
+  EXPECT_EQ(response.result_total, 0);
 
-	modioFreeMod(&mod);
+  EXPECT_TRUE(modio::fileExists(downloadedImageFilenameUnicode));
+  EXPECT_EQ(calculateCRCOfFile(downloadedImageFilenameUnicode), 1624551240); // CRC calculated off line and verified against https://simplycalc.com/crc32-file.php
+
+  *wait = false;
 }
 
-TEST(SchemaIntialization, TestModioMetadataKVPInitialization)
+static void onGetMod_TestDownloadImageUnicode(void* object, ModioResponse response, ModioMod mod)
 {
-	ModioMetadataKVP metadata_kvp;
-	modioInitMetadataKVP(&metadata_kvp, metadata_kvp_json);
+  ASSERT_EQ(response.code, 200);
 
-	EXPECT_STREQ(metadata_kvp.metakey, "pistol-dmg");
-	EXPECT_STREQ(metadata_kvp.metavalue, "800");
-
-	modioFreeMetadataKVP(&metadata_kvp);
+  // Ensure that the path to the filename exists before we try to download it
+  modio::createPath(downloadedImageFilenameUnicode);
+  modioDownloadImage(object, mod.logo.original, downloadedImageFilenameUnicode.c_str(), &onDownloadImage_TestDownloadImageUnicode);
 }
 
-TEST(SchemaIntialization, TestModioRatingInitialization)
+TEST_F(Modio, TestDownloadImageUnicode)
 {
-	ModioRating rating;
-	modioInitRating(&rating, rating_json);
+  modioInit(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", "");
 
-	EXPECT_EQ(rating.game_id, 2);
-	EXPECT_EQ(rating.mod_id, 3);
-	EXPECT_EQ(rating.rating, -1);
-	EXPECT_EQ(rating.date_added, 1492564103);
+  bool wait = true;
 
-	modioFreeRating(&rating);
+  modioGetMod(&wait, 865, &onGetMod_TestDownloadImageUnicode);
+
+  while (wait)
+  {
+    // @todo: A timeout would be great here
+    modioProcess();
+  }
+
+  modioShutdown();
 }
 
-TEST(SchemaIntialization, TestModioStatsInitialization)
+TEST_F(Modio, TestInstallMods)
 {
-	ModioStats stats;
-	modioInitStats(&stats, stats_json);
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 171, false, false, "2f5a33fc9c1786d231ff60e2227fad03", u8"огурец");
 
-	EXPECT_EQ(stats.mod_id, 2);
-	EXPECT_EQ(stats.popularity_rank_position, 13);
-	EXPECT_EQ(stats.popularity_rank_total_mods, 204);
-	EXPECT_EQ(stats.downloads_total, 27492);
-	EXPECT_EQ(stats.subscribers_total, 16394);
-	EXPECT_EQ(stats.ratings_total, 1230);
-	EXPECT_EQ(stats.ratings_positive, 1047);
-	EXPECT_EQ(stats.ratings_negative, 183);
-	EXPECT_EQ(stats.ratings_percentage_positive, 91);
-	EXPECT_EQ(stats.ratings_weighted_aggregate, 87.38);
-	EXPECT_STREQ(stats.ratings_display_text, "Very Positive");
-	EXPECT_EQ(stats.date_expires, 1492564103);
+  volatile static bool finished = false;
 
-	modioFreeStats(&stats);
+  auto wait = [&]() {
+    while (!finished)
+    {
+      modio_instance.sleep(10);
+      modio_instance.process();
+    }
+  };
+
+  auto finish = [&]() {
+    finished = true;
+  };
+
+  modio_instance.downloadMod(865);
+  modio_instance.setDownloadListener([&](u32 response_code, u32 mod_id) {
+    ASSERT_EQ(response_code, 200);
+
+    std::string zipLocation = modio::getModIODirectory() + "tmp/865_modfile.zip";
+
+    ASSERT_TRUE( modio::fileExists(zipLocation) );
+    EXPECT_EQ( calculateCRCOfFile(zipLocation), 4070914100 );
+
+    modio_instance.installDownloadedMods();
+
+    std::string modFolder = modio::getModIODirectory() + "/mods/865";
+    ASSERT_TRUE(modio::directoryExists(modFolder));
+    EXPECT_TRUE(modio::fileExists(modFolder + "/demo.txt"));
+    EXPECT_TRUE(modio::fileExists(modFolder + "/modio.json"));
+    EXPECT_TRUE(modio::fileExists(modFolder + "/__MACOSX/._demo.txt"));
+
+    EXPECT_EQ(calculateCRCOfFile(modFolder + "/demo.txt"), 1873862126);
+    EXPECT_EQ(calculateCRCOfFile(modFolder + "/__MACOSX/._demo.txt"), 2818760342);
+    // @todo: Verify values in modio.json file
+
+    finish();
+  });
+
+  wait();
 }
 
-TEST(SchemaIntialization, TestModioUserInitialization)
+// We can't test subscribing/unsubscribing without beeing part of the team for the game, so we would need to
+// provide a logged in user key
+#if 0
+TEST_F(Modio, TestSubscribeMod)
 {
-	ModioUser user;
-	modioInitUser(&user, user_json);
+  modio::Instance modio_instance(MODIO_ENVIRONMENT_TEST, 171, "2f5a33fc9c1786d231ff60e2227fad03");
 
-	EXPECT_EQ(user.id, 1);
-	EXPECT_STREQ(user.name_id, "xant");
-	EXPECT_STREQ(user.username, "XanT");
-	EXPECT_EQ(user.date_online, 1509922961);
-	EXPECT_STREQ(user.timezone, "America/Los_Angeles");
-	EXPECT_STREQ(user.language, "en");
-	EXPECT_STREQ(user.profile_url, "https://mod.io/members/xant");
+  volatile static bool finished = false;
 
-	modioFreeUser(&user);
+  auto wait = [&]() {
+    while (!finished)
+    {
+      modio_instance.sleep(10);
+      modio_instance.process();
+    }
+  };
+
+  auto finish = [&]() {
+    finished = true;
+  };
+
+  modio_instance.subscribeToMod(864, [&](const modio::Response& response, const modio::Mod& mod) {
+    EXPECT_EQ(response.code, 401);
+    EXPECT_EQ(response.result_cached, 0);
+    EXPECT_EQ(response.result_count, 0);
+    EXPECT_EQ(response.result_limit, 0);
+    EXPECT_EQ(response.result_offset, 0);
+    EXPECT_EQ(response.result_total, 0);
+
+    EXPECT_EQ(response.result_cached, 0);
+    EXPECT_EQ(response.result_count, 0);
+    EXPECT_EQ(response.result_limit, 0);
+    EXPECT_EQ(response.result_offset, 0);
+    EXPECT_EQ(response.result_total, 0);
+
+    EXPECT_EQ(mod.date_added, 1516086822);
+    EXPECT_EQ(mod.date_live, 1516086822);
+    EXPECT_EQ(mod.date_updated, 1568712676);
+    EXPECT_EQ(mod.description, "");
+    EXPECT_EQ(mod.description_plaintext, "");
+    EXPECT_EQ(mod.game_id, 171);
+    EXPECT_EQ(mod.homepage_url, "");
+    EXPECT_EQ(mod.id, 864);
+    EXPECT_EQ(mod.logo.filename, "mod7.2.png");
+    EXPECT_EQ(mod.logo.original, "https://image.test.modcdn.io/mods/1fc2/864/mod7.2.png");
+    EXPECT_EQ(mod.logo.thumb_320x180, "https://thumb.test.modcdn.io/mods/1fc2/864/crop_320x180/mod7.2.png");
+    EXPECT_EQ(mod.logo.thumb_640x360, "https://thumb.test.modcdn.io/mods/1fc2/864/crop_640x360/mod7.2.png");
+    EXPECT_EQ(mod.logo.thumb_1280x720, "https://thumb.test.modcdn.io/mods/1fc2/864/crop_1280x720/mod7.2.png");
+    EXPECT_EQ(mod.maturity_option, 0);
+    EXPECT_EQ(mod.media.images.size(), 0);
+    EXPECT_EQ(mod.media.sketchfab.size(), 0);
+    EXPECT_EQ(mod.media.youtube.size(), 0);
+    EXPECT_EQ(mod.metadata_blob, "");
+    EXPECT_EQ(mod.metadata_kvps.size(), 0);
+
+    EXPECT_EQ(mod.modfile.changelog.c_str(), "");
+    EXPECT_EQ(mod.modfile.date_added, 1516086834);
+    EXPECT_EQ(mod.modfile.date_scanned, 0);
+    EXPECT_EQ(mod.modfile.download.binary_url, "https://test.mod.io/mods/file/865");
+    EXPECT_EQ(mod.modfile.download.date_expires, 1662113157);
+    EXPECT_EQ(mod.modfile.filehash.md5, "07eff700ac20d9d0ce27f7b9de4ba494");
+    EXPECT_EQ(mod.modfile.filename, "demo.zip");
+    EXPECT_EQ(mod.modfile.filesize, 589);
+    EXPECT_EQ(mod.modfile.id, 865);
+    EXPECT_EQ(mod.modfile.metadata_blob.size(), 0);
+    EXPECT_EQ(mod.modfile.mod_id, 864);
+    EXPECT_EQ(mod.modfile.version, "6.7.1");
+    EXPECT_EQ(mod.modfile.virus_positive, 0);
+    EXPECT_EQ(mod.modfile.virus_status, 0);
+    EXPECT_EQ(mod.modfile.virustotal_hash.c_str(), "");
+
+    EXPECT_EQ(mod.name, "Mod #7");
+    EXPECT_EQ(mod.name_id, "mod7");
+    EXPECT_EQ(mod.profile_url, "https://example.test.mod.io/mod7");
+
+    // We don't verify the stats fields, as they might be updated
+    
+    EXPECT_EQ(mod.submitted_by.avatar.filename, "avatar.png");
+    EXPECT_EQ(mod.submitted_by.avatar.original, "https://static.test.mod.io/v1/images/default/avatar.png");
+    EXPECT_EQ(mod.submitted_by.avatar.thumb_100x100, "https://static.test.mod.io/v1/images/default/avatar_100x100.png");
+    EXPECT_EQ(mod.submitted_by.avatar.thumb_50x50, "https://static.test.mod.io/v1/images/default/avatar_50x50.png");
+    EXPECT_EQ(mod.submitted_by.date_online, 1596004914); // Potentially exclude this as someone might log into the account
+    EXPECT_EQ(mod.submitted_by.id, 31591);
+    EXPECT_EQ(mod.submitted_by.language, "");
+    EXPECT_EQ(mod.submitted_by.name_id, "testuser");
+    EXPECT_EQ(mod.submitted_by.profile_url, "https://test.mod.io/members/testuser");
+    EXPECT_EQ(mod.submitted_by.timezone, "");
+    EXPECT_EQ(mod.submitted_by.username, "testuser");
+    
+    EXPECT_EQ(mod.summary, "This is a demonstration mod profile, to show how mod.io looks and feels.");
+    EXPECT_EQ(mod.visible, 1);
+
+    ASSERT_EQ(mod.tags.size(), 5);
+   
+    std::list<modio::Tag> expectedTags = { 
+      { 1516086822, "Autumn" }, 
+      { 1516086822, "Player" },
+      { 1516186765, "Prop" },
+      { 1516186765, "Script" },
+      { 1516186765, "Singleplayer" }
+    };
+
+    EXPECT_TRUE( std::equal( mod.tags.begin(), mod.tags.end(), expectedTags.begin(), []( auto&& l, auto&& r )
+      { return l.date_added == r.date_added && l.name == r.name; } ) );
+
+    finish();
+    });
+
+  wait();
 }
+
+TEST_F(Modio, TestUnsubscribeMod)
+{
+}
+#endif

@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "c/ModioC.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(void)
 {
@@ -11,7 +12,7 @@ int main(void)
   if (installed_mods_count > 0)
   {
     // If that's the case, we retreive the information of all the mods installed
-    ModioInstalledMod installed_mods[installed_mods_count];
+    ModioInstalledMod* installed_mods = malloc(sizeof(ModioInstalledMod) * installed_mods_count);
     modioGetAllInstalledMods(installed_mods);
 
     // Now we delete the local mod folder by providing it's id
@@ -23,6 +24,7 @@ int main(void)
     {
       printf("Error uninstalling mod.\n");
     }
+    free(installed_mods);
   }
   else
   {

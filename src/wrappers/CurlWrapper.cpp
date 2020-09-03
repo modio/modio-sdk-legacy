@@ -19,6 +19,8 @@
 #include "wrappers/CurlUtility.h"
 #include "wrappers/CurlWriteFunctions.h"
 #include "wrappers/MinizipWrapper.h"
+#include "../Filesystem.h"
+#include "ghc/filesystem.hpp"
 
 
 namespace modio
@@ -420,7 +422,7 @@ void download(u32 call_number, std::vector<std::string> headers, std::string url
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, onGetFileData);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
-
+    
     g_ongoing_downloads[curl] = new OngoingDownload(call_number, url, slist, callback);
 
     curl_multi_add_handle(g_curl_multi_handle, curl);
@@ -463,11 +465,11 @@ static void onGetDownloadMod(u32 call_number, u32 response_code, nlohmann::json 
       if (progress != 0)
       {
         writeLogLine("Progress detected. Resuming download from " + toString((u32)progress), MODIO_DEBUGLEVEL_LOG);
-        file = fopen(g_current_mod_download->queued_mod_download->path.c_str(), "ab");
+        file = modio::platform::fopen(g_current_mod_download->queued_mod_download->path.c_str(), "ab");
       }
       else
       {
-        file = fopen(g_current_mod_download->queued_mod_download->path.c_str(), "wb");
+        file = modio::platform::fopen(g_current_mod_download->queued_mod_download->path.c_str(), "wb");
       }
 
       if(!file)
@@ -550,7 +552,7 @@ nlohmann::json getDownloadedModJson(u32 mod_id)
 
 void removeDownloadedMod(u32 mod_id)
 {
-  modio::writeLogLine("Removing mod: " + mod_id, MODIO_DEBUGLEVEL_ERROR);
+  modio::writeLogLine("Removing mod: " + std::to_string(mod_id), MODIO_DEBUGLEVEL_ERROR);
   nlohmann::json downloaded_mod = getDownloadedModJson(mod_id);
   if(!downloaded_mod.empty())
   {
@@ -658,7 +660,6 @@ bool isModInstalled(u32 mod_id, u32 modfile_id)
         installed_mod["mod_id"] == mod_id &&
         installed_mod["modfile_id"] == modfile_id)
     {
-      u32 modfile_id = installed_mod["modfile_id"];
       modio::writeLogLine("Mod is already installed.", MODIO_DEBUGLEVEL_LOG);
       return true;
     }
@@ -729,7 +730,8 @@ void uploadModfile(QueuedModfileUpload *queued_modfile_upload)
 
   writeLogLine("Uploading mod: " + toString(queued_modfile_upload->mod_id) + " located at path: " + queued_modfile_upload->path, MODIO_DEBUGLEVEL_LOG);
 
-  if (modio::isDirectory(modfile_path))
+  // Check if the path is a directory
+  if ( modio::isDirectory( modfile_path ) )
   {
     writeLogLine("Directory detected: " + modfile_path, MODIO_DEBUGLEVEL_LOG);
     modfile_zip_path = modio::getModIODirectory() + "tmp/upload_" + modio::toString(queued_modfile_upload->mod_id) + "_modfile.zip";

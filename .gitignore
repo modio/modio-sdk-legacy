@@ -31,8 +31,18 @@
 *.out
 *.app
 
+# Visual Studio
 .vs/
 .vscode/
+
+# KDevelop
+.kdev4/
+*.kdev4
+
+# Mac OS
+.DS_Store
+
+# 
 build/
 
 src/modio.so
