@@ -89,17 +89,17 @@ IF (MSVC)
     endforeach()
 
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/static/libcurl_a.lib)
+      target_link_libraries(modio ${CMAKE_CURRENT_SOURCE_DIR}/lib/MSVC/x64/static/libcurl_a.lib)
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/static/libcurl_a.lib)
+      target_link_libraries(modio ${CMAKE_CURRENT_SOURCE_DIR}/lib/MSVC/x86/static/libcurl_a.lib)
     endif()
 
   ELSE()
 
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x64/libcurl_a.lib)
+      target_link_libraries(modio ${CMAKE_CURRENT_SOURCE_DIR}/lib/MSVC/x64/libcurl_a.lib)
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-      target_link_libraries(modio ${CMAKE_SOURCE_DIR}/lib/MSVC/x86/libcurl_a.lib)
+      target_link_libraries(modio ${CMAKE_CURRENT_SOURCE_DIR}/lib/MSVC/x86/libcurl_a.lib)
     endif()
 
   ENDIF()
