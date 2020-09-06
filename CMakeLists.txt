@@ -141,3 +141,17 @@ if( INCLUDE_EXAMPLES )
     ENDIF()
   ENDIF()
 endif()
+
+if(BUILD_SHARED_LIBS)
+    set(PREFIX ${CMAKE_SHARED_MODULE_PREFIX})
+    set(POSTFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+else()
+    set(PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
+    set(POSTFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
+endif()
+
+# Set properties let projects that use this project as a subdirectory know how to play along with it
+set_target_properties(modio
+    PROPERTIES 
+    OUTPUT_NAME "${PREFIX}modio"
+    SUFFIX "${POSTFIX}")
