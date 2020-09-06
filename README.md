@@ -5,7 +5,7 @@
 [![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/modio/SDK/wiki)
 [![GitHub Action](https://github.com/modio/SDK/workflows/ci/badge.svg)](https://github.com/modio/SDK/actions)
 
-Welcome to the [mod.io SDK](https://apps.mod.io/sdk) repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
+Welcome to the mod.io SDK repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
 
 ## Features
 
