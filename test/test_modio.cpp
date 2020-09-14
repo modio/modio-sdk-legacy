@@ -7,6 +7,7 @@
 #include "c++/schemas/Response.h"
 #include "c++/schemas/Mod.h"
 #include <algorithm>
+#include "Globals.h"
 
 class Modio : public Fixture_CleanupFolders{};
 
@@ -43,6 +44,75 @@ TEST_F(Modio, TestInitStandard)
   expectDirectoryExists(".modio/mods");
   expectDirectoryExists(".modio/tmp");
   expectFileExists(u8".modio/log.txt");
+}
+
+void InitTestConfig( u32 environment, u32 game_id, bool retrieve_mods_from_other_games, bool polling_enabled, const std::string& api_key, const std::string& root_path, std::string expected_root_path = "", std::string expected_gamedir_path = "" )
+{
+  expected_root_path = expected_root_path.empty() ? root_path : expected_root_path;
+
+  modio::Instance modio_instance(environment, game_id, retrieve_mods_from_other_games, polling_enabled, api_key, root_path);
+  EXPECT_EQ(modio::MODIO_URL, environment == MODIO_ENVIRONMENT_TEST ? "https://api.test.mod.io/" : "https://api.mod.io/");
+  EXPECT_EQ(modio::API_KEY, api_key);
+  EXPECT_EQ(modio::GAME_ID, game_id);
+  EXPECT_EQ(modio::ROOT_PATH, expected_root_path);
+  EXPECT_EQ(modio::ADDITIONAL_GAMEDIR_PATH, expected_gamedir_path);
+  EXPECT_EQ(modio::RETRIEVE_MODS_FROM_OTHER_GAMES, retrieve_mods_from_other_games);
+  EXPECT_EQ(modio::POLLING_ENABLED, polling_enabled);
+}
+
+void InitTestConfigC(u32 environment, u32 game_id, bool retrieve_mods_from_other_games, bool polling_enabled, const char* api_key, const char* root_path, std::string expected_root_path = "", std::string expected_gamedir_path = "")
+{
+  // If we pass in nullptr here, we should ensure that desiredRootPath doesn't get assigned a nullptr
+  std::string desiredRootPath = root_path ? root_path : "";
+  expected_root_path = expected_root_path.empty() ? desiredRootPath : expected_root_path;
+
+  modioInit(environment, game_id, retrieve_mods_from_other_games, polling_enabled, api_key, root_path);
+  EXPECT_EQ(modio::MODIO_URL, environment == MODIO_ENVIRONMENT_TEST ? "https://api.test.mod.io/" : "https://api.mod.io/");
+  EXPECT_EQ(modio::API_KEY, api_key ? api_key : "");
+  EXPECT_EQ(modio::GAME_ID, game_id);
+  EXPECT_EQ(modio::ROOT_PATH, expected_root_path);
+  EXPECT_EQ(modio::ADDITIONAL_GAMEDIR_PATH, expected_gamedir_path);
+  EXPECT_EQ(modio::RETRIEVE_MODS_FROM_OTHER_GAMES, retrieve_mods_from_other_games);
+  EXPECT_EQ(modio::POLLING_ENABLED, polling_enabled);
+}
+
+TEST_F(Modio, TestInitAfterShutdown)
+{
+  u32 game_id_a = 7;
+  std::string apikey_a("e91c01b8882f4affeddd56c96111977b");
+  std::string root_a("");
+  bool retrive_mods_from_other_games_a = false;
+  bool polling_enabled_a = false;
+  
+  u32 game_id_b = 8;
+  std::string apikey_b("BadAPIKey");
+  std::string root_b("RootB/");
+  bool retrive_mods_from_other_games_b = true;
+  bool polling_enabled_b = true;
+
+  InitTestConfig(MODIO_ENVIRONMENT_TEST, game_id_a, retrive_mods_from_other_games_a, polling_enabled_a, apikey_a, root_a);
+  InitTestConfig(MODIO_ENVIRONMENT_LIVE, game_id_b, retrive_mods_from_other_games_b, polling_enabled_b, apikey_b, root_b);
+  // Do A again to ensure that flipping back also gives us correct results
+  InitTestConfig(MODIO_ENVIRONMENT_TEST, game_id_a, retrive_mods_from_other_games_a, polling_enabled_a, apikey_a, root_a);
+  // Ensure that we don't init in root_b
+  modio::removeDirectory(root_b);
+  modio::createPath(root_b);
+  setFilePermission(root_b, false);
+  InitTestConfig(MODIO_ENVIRONMENT_LIVE, game_id_b, retrive_mods_from_other_games_b, polling_enabled_b, apikey_b, root_b, modio::getMyDocumentsPath(), "game_" + std::to_string(game_id_b) );
+  // Ensure that root b is correctly setup if we init in it now
+  setFilePermission(root_b, true);
+  InitTestConfig(MODIO_ENVIRONMENT_LIVE, game_id_b, retrive_mods_from_other_games_b, polling_enabled_b, apikey_b, root_b);
+
+  // Ensure that we don't init in root_b
+  modio::removeDirectory(root_b);
+  modio::createPath(root_b);
+  setFilePermission(root_b, false);
+  InitTestConfig(MODIO_ENVIRONMENT_LIVE, game_id_b, retrive_mods_from_other_games_b, polling_enabled_b, apikey_b, root_b, modio::getMyDocumentsPath(), "game_" + std::to_string(game_id_b));
+  // Ensure that root b is correctly setup if we init in it now
+  setFilePermission(root_b, true);
+  InitTestConfigC(MODIO_ENVIRONMENT_LIVE, game_id_b, retrive_mods_from_other_games_b, polling_enabled_b, apikey_b.c_str(), nullptr);
+  // Test with nullptr on api-key
+  InitTestConfigC(MODIO_ENVIRONMENT_LIVE, game_id_b, retrive_mods_from_other_games_b, polling_enabled_b, nullptr, nullptr);
 }
 
 TEST_F(Modio, TestInitSubdirectory)
