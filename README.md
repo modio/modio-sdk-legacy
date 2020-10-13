@@ -1,11 +1,11 @@
 <a href="https://mod.io"><img src="https://static.mod.io/v1/images/branding/modio-color-dark.svg" alt="mod.io" width="360" align="right"/></a>
 # mod.io SDK
-[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/modio/SDK/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/modio/modio-SDK/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/389039439487434752.svg?label=Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.mod.io)
-[![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/modio/SDK/wiki)
-[![GitHub Action](https://github.com/modio/SDK/workflows/ci/badge.svg)](https://github.com/modio/SDK/actions)
+[![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/modio/modio-SDK/wiki)
+[![GitHub Action](https://github.com/modio/SDK/workflows/ci/badge.svg)](https://github.com/modio/modio-SDK/actions)
 
-Welcome to the mod.io SDK repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/SDK/wiki) can be viewed here.
+Welcome to the mod.io SDK repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/modio-SDK/wiki) can be viewed here.
 
 ## Features
 
@@ -213,12 +213,12 @@ modio_instance.setUploadListener([&](u32 response_code, u32 mod_id) {
 
 ### Feature rich integration
 
-Visit the [wiki](https://github.com/modio/SDK/wiki) to learn how to integrate dependencies, comments, stats, reports and more.
+Visit the [wiki](https://github.com/modio/modio-SDK/wiki) to learn how to integrate dependencies, comments, stats, reports and more.
 
 ## Getting started
 
-If you are a game developer, first step is to add mod support to your game. Once mod support is up and running, [create your games profile](https://mod.io/games/add) on mod.io, to get an API key and access to all [functionality mod.io offers](https://apps.mod.io/guides/getting-started).
-Next, download the latest [SDK release](https://github.com/modio/SDK/releases) and unpack it into your project, then head over to the [GitHub Wiki](https://github.com/modio/SDK/wiki/Getting-Started) and follow the guides corresponding to your setup.
+If you are a game developer, first step is to add mod support to your game. Once mod support is up and running, [create your games profile](https://mod.io/games/add) on mod.io, to get an API key and access to all [functionality mod.io offers](https://mod.io/blog/getting-started).
+Next, download the latest [SDK release](https://github.com/modio/modio-SDK/releases) and unpack it into your project, then head over to the [GitHub Wiki](https://github.com/modio/modio-SDK/wiki/Getting-Started) and follow the guides corresponding to your setup.
 
 ```c++
 #include "modio.h"
@@ -237,20 +237,20 @@ void myGameTick()
 
 
 ## Contributions Welcome
-Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://apps.mod.io) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.
+Our SDK is public and open source. Game developers are welcome to utilize it directly, to add support for mods in their games, or fork it to create plugins and wrappers for other engines and codebases. Many of these [contributions are shared](https://integrate.mod.io) here. Want to make changes to our SDK? Submit a pull request with your recommended changes to be reviewed.
 
 ## Wrappers
 
 mod.io SDK wrappers are available for the following languages and engines:
 
-* [Haxe wrapper](https://apps.mod.io/haxe-wrapper) for game engines such as OpenFL, Kha or awe5. Available on [Github](https://github.com/Turupawn/modioHaxe).
-* [Unreal Engine](https://apps.mod.io/unreal-engine-plugin) integration tutorial and plugin on the works.
+* [Haxe wrapper](https://github.com/modio-Haxe) for game engines such as OpenFL, Kha or awe5.
+* [Unreal Engine](https://github.com/modio-UE4) integration tutorial and plugin.
 
 Are you creating a wrapper? [Let us know](http://discord.mod.io)!
 
 ### Building instructions
 
-Learn how to build mod.io SDK in our [building instruction guide](https://github.com/modio/SDK/wiki/Building).
+Learn how to build mod.io SDK in our [building instruction guide](https://github.com/modio/modio-SDK/wiki/Building).
 
 ### Code contributions
 
@@ -265,7 +265,7 @@ git push origin my-new-feature
 
 ### Reporting a bug
 
-If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/modio/SDK/issues). Be sure to include a title and clear description, as much relevant information as possible, and a code sample or an executable test case demonstrating the expected behavior that is not occurring.
+If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/modio/modio-SDK/issues). Be sure to include a title and clear description, as much relevant information as possible, and a code sample or an executable test case demonstrating the expected behavior that is not occurring.
 
 ## Other Repositories
 Our aim with [mod.io](https://mod.io), is to provide an [open modding API](https://docs.mod.io). You are welcome to [view, fork and contribute to our other codebases](https://github.com/modio) in use.
