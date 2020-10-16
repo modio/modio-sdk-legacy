@@ -10,8 +10,8 @@ jobs:
       fail-fast: true
       matrix:
         name:
-          - Ubuntu 16.04 GCC
-          - Ubuntu 16.04 Clang
+          # - Ubuntu 16.04 GCC
+          # - Ubuntu 16.04 Clang
           - Ubuntu 18.04 GCC
           - Ubuntu 18.04 Clang
           - Windows 2019 MSVC
@@ -19,16 +19,16 @@ jobs:
           - macOS 10.15 GCC
           - macOS 10.15 Clang
         include:
-          - name: Ubuntu 16.04 GCC
-            os: ubuntu-16.04
-            compiler: gcc
-            cpp-compiler: g++
+          # - name: Ubuntu 16.04 GCC
+          #  os: ubuntu-16.04
+          #  compiler: gcc
+          #  cpp-compiler: g++
 
-          - name: Ubuntu 16.04 Clang
-            os: ubuntu-16.04
-            compiler: clang
-            cpp-compiler: clang++
-            packages: llvm-3.5
+          #- name: Ubuntu 16.04 Clang
+          #  os: ubuntu-16.04
+          #  compiler: clang
+          #  cpp-compiler: clang++
+          #  packages: llvm-3.5
 
           - name: Ubuntu 18.04 GCC
             os: ubuntu-18.04
