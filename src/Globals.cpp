@@ -3,7 +3,7 @@
 
 namespace modio
 {
-  std::string VERSION = "v0.12.16 DEV";
+  std::string VERSION = "v0.12.17 DEV";
   std::string API_KEY;
   std::string ACCESS_TOKEN = "";
   u32 GAME_ID;

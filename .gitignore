@@ -40,6 +40,10 @@ CMakeSettings.json
 .kdev4/
 *.kdev4
 
+# CLion
+.idea/
+cmake-build-debug/
+
 # Mac OS
 .DS_Store
 
