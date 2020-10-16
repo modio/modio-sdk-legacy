@@ -152,6 +152,7 @@ endif()
 
 # Set properties let projects that use this project as a subdirectory know how to play along with it
 set_target_properties(modio
-    PROPERTIES 
-    OUTPUT_NAME "${PREFIX}modio"
+    PROPERTIES
+    PREFIX "${PREFIX}"
+    OUTPUT_NAME modio
     SUFFIX "${POSTFIX}")
