@@ -4,6 +4,7 @@ namespace modio
 {
   std::map<std::string, std::string> fileToContent =
   {
+    { u8"Modell-höhlenspinne-s.obj", "Ö is a bad character" },
     { "modio.txt", "is awesome" },
     { "jackson.txt", "contains awesomeness" },
     { "extensionlessFile", "Extensionless files can be a problem" },

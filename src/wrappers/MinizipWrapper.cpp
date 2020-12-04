@@ -18,6 +18,8 @@
 #include "dependencies/minizip/zip.h"      // for ZIP_OK, zipClose
 #include "../Filesystem.h"
 
+static const std::uint32_t UTF8_FLAG = (1<<11);
+
 namespace modio
 {
 namespace minizipwrapper
@@ -52,30 +54,45 @@ void extract(std::string zip_path, std::string directory_path)
   for (i = 0; i < global_info.number_entry; ++i)
   {
     unz_file_info file_info;
-    char filename[MAX_FILENAME];
+
+    int err;
+    std::string utf8_encoded_filename;
     char final_filename[MAX_FILENAME];
-
-    int err = unzGetCurrentFileInfo(
-        zipfile,
-        &file_info,
-        filename,
-        MAX_FILENAME,
-        NULL, 0, NULL, 0);
-
-    if (err != UNZ_OK)
+    // Ensure that filename isn't used after this scope
     {
-      unzClose(zipfile);
-      writeLogLine("error " + toString(err) + " with zipfile in unzGetCurrentFileInfo", MODIO_DEBUGLEVEL_ERROR);
-      return;
+		char filename[MAX_FILENAME];
+
+		err = unzGetCurrentFileInfo(
+			zipfile,
+			&file_info,
+			filename,
+			MAX_FILENAME,
+			NULL, 0, NULL, 0);
+
+		if (err != UNZ_OK)
+		{
+			unzClose(zipfile);
+			writeLogLine("error " + toString(err) + " with zipfile in unzGetCurrentFileInfo", MODIO_DEBUGLEVEL_ERROR);
+			return;
+		}
+    
+        // Is the name encoded in UTF8 or CP437
+        if(file_info.flag & UTF8_FLAG)
+        {
+            utf8_encoded_filename = filename;
+        }
+        else
+        {
+            utf8_encoded_filename = modio::CP437ToUTF8(filename);
+        }
     }
 
     strcpy(final_filename, directory_path.c_str());
-    strcat(final_filename, filename);
+    strcat(final_filename, utf8_encoded_filename.c_str());
 
-    const size_t filename_length = strlen(filename);
-    modio::createPath(directory_path + filename);
+    modio::createPath(directory_path + utf8_encoded_filename);
     
-    if (filename[filename_length - 1] == dir_delimter)
+    if (utf8_encoded_filename[utf8_encoded_filename.size()-1] == dir_delimter)
     {
       modio::createDirectory(final_filename);
     }
@@ -85,17 +102,16 @@ void extract(std::string zip_path, std::string directory_path)
 
       if (err != UNZ_OK)
       {
-        writeLogLine(std::string("Cannot open ") + filename, MODIO_DEBUGLEVEL_ERROR);
+        writeLogLine(std::string("Cannot open ") + utf8_encoded_filename, MODIO_DEBUGLEVEL_ERROR);
         return;
       }
 
-      std::string new_file_path = filename;
       FILE *out;
       out = modio::platform::fopen(final_filename, "wb");
 
       if (!out)
       {
-        writeLogLine(std::string("error opening ") + final_filename, MODIO_DEBUGLEVEL_ERROR);
+        writeLogLine(std::string("error opening ") + utf8_encoded_filename, MODIO_DEBUGLEVEL_ERROR);
         return;
       }
 
@@ -123,7 +139,7 @@ void extract(std::string zip_path, std::string directory_path)
 
       err = unzCloseCurrentFile(zipfile);
       if (err != UNZ_OK)
-        writeLogLine("error " + toString(err) + " with " + filename + " in unzCloseCurrentFile", MODIO_DEBUGLEVEL_ERROR);
+        writeLogLine("error " + toString(err) + " with " + utf8_encoded_filename + " in unzCloseCurrentFile", MODIO_DEBUGLEVEL_ERROR);
     }
 
     if ((i + 1) < global_info.number_entry)
@@ -260,7 +276,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
         savefilenameinzip = lastslash + 1; /* base filename follows last slash. */
     }
 
-    // @MarkusR: Updated this call from zipOpenNewFileInZip3_64 for UTF-8 support, 36 and 1 << 11 comes from
+    // @MarkusR: Updated this call from zipOpenNewFileInZip3_64 for UTF-8 support, 36 and UTF8_FLAG (1<<11) comes from
     // https://stackoverflow.com/questions/14625784/how-to-convert-minizip-wrapper-to-unicode
     /* Add to zip file */
     err = zipOpenNewFileInZip4_64(zf, savefilenameinzip, &zi,
@@ -269,7 +285,7 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
                                   opt_compress_level, 0,
                                   /* -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, */
                                   -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-                                  password, crcFile, 36, 1<<11 ,zip64);
+                                  password, crcFile, 36, UTF8_FLAG,zip64);
 
     if (err != ZIP_OK)
       writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
