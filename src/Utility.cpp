@@ -16,6 +16,7 @@
 #include "ghc/filesystem.hpp"
 #include <iostream>
 #include "dependencies/nlohmann/json.hpp"
+#include "utf8.h"
 
 #include "Filesystem.h"                          // for Filesystem::...
 
@@ -48,8 +49,6 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #endif
-
-#include <codecvt>
 
 // This should be char32_t, but MSVS2017 don't support char32_t
 // Table from https://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/PC/CP437.TXT
@@ -539,15 +538,18 @@ std::string randomString(u32 length)
 
 std::string CP437ToUTF8(const std::string& string)
 {
-	std::unique_ptr<std::uint32_t[]> utf32_string = std::make_unique<std::uint32_t[]>(string.size() + 1);
-	utf32_string[string.size()] = 0;
+	std::vector<std::uint32_t> utf32_string;
+	utf32_string.resize(string.size());
 
 	for (std::size_t i = 0; i < string.size(); ++i)
 	{
 		utf32_string[i] = CP437UTF32Table[(unsigned char)string[i]];
 	}
 
-	return std::wstring_convert<std::codecvt_utf8<uint32_t>, uint32_t>().to_bytes(utf32_string.get());
+	std::string result;
+	utf8::utf32to8(utf32_string.begin(), utf32_string.end(), std::back_inserter(result));
+
+	return result;
 }
 
 
