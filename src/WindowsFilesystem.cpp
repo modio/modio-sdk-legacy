@@ -1,11 +1,9 @@
 #include "Filesystem.h"
 
 #if defined(MODIO_WINDOWS_DETECTED)
-#include <codecvt>
 #include "WindowsFilesystem.h"
-#endif
+#include "utf8.h"
 
-#if defined(MODIO_WINDOWS_DETECTED)
 namespace modio
 {
   namespace windows_platform
@@ -27,12 +25,16 @@ namespace modio
 
     std::wstring utf8ToWstr(const std::string& utf8_str)
     {
-      return std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(utf8_str);
+      std::wstring result;
+      utf8::utf8to16(utf8_str.begin(),utf8_str.end(),std::back_inserter(result));
+      return result;
     }
 
     std::string wstrToUtf8(const std::wstring& wide_string)
     {
-      return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(wide_string);
+	  std::string result;
+	  utf8::utf16to8(wide_string.begin(), wide_string.end(), std::back_inserter(result));
+	  return result;
     }
   }
 }

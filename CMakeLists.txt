@@ -28,7 +28,7 @@ ENDIF()
 # runtime statically. Requires libcurl to be built with /MT as well.
 # cmake -D crtmode=static .
 
-include_directories(include additional_dependencies include/dependencies/miniz include/dependencies/filesystem)
+include_directories(include additional_dependencies include/dependencies/miniz include/dependencies/filesystem include/dependencies/utf8)
 
 file(GLOB_RECURSE SOURCES
     "src/*.cpp"
