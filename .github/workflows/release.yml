@@ -83,20 +83,20 @@ jobs:
       - name: Compile source code
         run: |
           cd ${{ matrix.build-src-dir || '.' }}
-          cmake --build . --config ${{ matrix.build-config || 'Release' }}
+          cmake --build . --config ${{ matrix.build-config || 'RelWithDebInfo' }}
 
       - name: Prepare artifact
         if: runner.os == 'Linux' || runner.os == 'macOS'
         shell: bash
         run: |
-          mkdir Release
-          mv libmodio* Release
+          mkdir RelWithDebInfo
+          mv libmodio* RelWithDebInfo
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
           name: ${{ matrix.artifact-name }}
-          path: Release
+          path: RelWithDebInfo
 
   docs:
     name: Generate docs.zip
@@ -209,10 +209,12 @@ jobs:
           mkdir -p "$package"/{bin,lib,static}/msvc/{x86,x64}
 
           mv artifacts/i686-windows-msvc/modio.dll "$package/bin/msvc/x86"
+          mv artifacts/i686-windows-msvc/modio.pdb "$package/bin/msvc/x86"
           mv artifacts/i686-windows-msvc/modio.lib "$package/lib/msvc/x86"
           mv artifacts/i686-windows-msvc+static/modio.lib "$package/static/msvc/x86"
 
           mv artifacts/x86_64-windows-msvc/modio.dll "$package/bin/msvc/x64"
+          mv artifacts/x86_64-windows-msvc/modio.pdb "$package/bin/msvc/x64"
           mv artifacts/x86_64-windows-msvc/modio.lib "$package/lib/msvc/x64"
           mv artifacts/x86_64-windows-msvc+static/modio.lib "$package/static/msvc/x64"
 
