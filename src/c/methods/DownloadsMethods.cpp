@@ -64,8 +64,8 @@ void modioCancelModDownload(u32 mod_id)
       } else
       {
         modio::writeLogLine("Mod id: " + modio::toString(mod_id) + " was removed from the download queue.", MODIO_DEBUGLEVEL_LOG);
-        modio::curlwrapper::g_mod_download_queue.remove(queued_mod_download);
         delete queued_mod_download;
+        modio::curlwrapper::g_mod_download_queue.remove(queued_mod_download);
         mod_found = true;
         break;
       }
