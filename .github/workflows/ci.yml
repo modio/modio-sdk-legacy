@@ -23,28 +23,38 @@ jobs:
           #  os: ubuntu-16.04
           #  compiler: gcc
           #  cpp-compiler: g++
+          #  build-dir: build
+          #  build-src-dir: ..
 
           #- name: Ubuntu 16.04 Clang
           #  os: ubuntu-16.04
           #  compiler: clang
           #  cpp-compiler: clang++
           #  packages: llvm-3.5
+          #  build-dir: build
+          #  build-src-dir: ..
 
           - name: Ubuntu 18.04 GCC
             os: ubuntu-18.04
             compiler: gcc
             cpp-compiler: g++
+            build-dir: build
+            build-src-dir: ..
 
           - name: Ubuntu 18.04 Clang
             os: ubuntu-18.04
             compiler: clang
             cpp-compiler: clang++
             packages: llvm-3.9
+            build-dir: build
+            build-src-dir: ..
 
           - name: Windows 2019 MSVC
             os: windows-2019
             compiler: cl
             cmake-args: -DBUILD_SHARED_LIBS=OFF -Dgtest_force_shared_crt=on
+            build-dir: build
+            build-src-dir: ..
 
           # - name: Windows 2019 GCC
           #   os: windows-2019
@@ -56,11 +66,15 @@ jobs:
             os: macOS-latest
             compiler: gcc
             cpp-compiler: g++
+            build-dir: build
+            build-src-dir: ..
 
           - name: macOS 10.15 Clang
             os: macOS-latest
             compiler: clang
             cpp-compiler: clang++
+            build-dir: build
+            build-src-dir: ..
 
     runs-on: ${{ matrix.os }}
 
@@ -93,13 +107,39 @@ jobs:
 
       - name: Compile source code
         run: |
-          cd ${{ matrix.build-src-dir || '.' }}
+          cd ${{ matrix.build-dir || '.' }}
           cmake --build . --config ${{ matrix.build-config || 'Release' }}
 
       - name: Run test cases
         run: |
           cd ${{ matrix.build-dir || '.' }}
           ctest -C ${{ matrix.build-config || 'Release' }} --output-on-failure
+
+      - name: Compile C examples
+        if: runner.os == 'Linux' || runner.os == 'macOS'
+        run: |
+          cd examples/code-samples/c
+          cmake .
+          cmake --build .
+        env:
+          CC: ${{ matrix.compiler }}
+          CXX: ${{ matrix.cpp-compiler }}
+          CFLAGS: ${{ matrix.cflags || env.CFLAGS }}
+          CXXFLAGS: ${{ matrix.cxxflags || env.CXXFLAGS }}
+          LDFLAGS: ${{ matrix.ldflags || env.LDFLAGS }}
+
+      - name: Compile C++ examples
+        if: runner.os == 'Linux' || runner.os == 'macOS'
+        run: |
+          cd examples/code-samples/cpp
+          cmake .
+          cmake --build .
+        env:
+          CC: ${{ matrix.compiler }}
+          CXX: ${{ matrix.cpp-compiler }}
+          CFLAGS: ${{ matrix.cflags || env.CFLAGS }}
+          CXXFLAGS: ${{ matrix.cxxflags || env.CXXFLAGS }}
+          LDFLAGS: ${{ matrix.ldflags || env.LDFLAGS }}
 
   docs:
     name: Build docs

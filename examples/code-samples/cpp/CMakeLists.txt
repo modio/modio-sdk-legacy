@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+project(examples)
 include_directories(../../../include)
 include_directories(../../../additional_dependencies)
 set (CMAKE_CXX_STANDARD 11)
