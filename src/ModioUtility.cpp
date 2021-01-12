@@ -120,6 +120,9 @@ static void onAddModsToDownloadQueue(void *object, ModioResponse response, Modio
       {
         modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
       }
+	  // Include hidden mods that you have permission for in the list of mods to download
+	  modioAddFilterInField(&filter, "visible", "0,1");
+
       modioSetFilterOffset(&filter, response.result_offset + response.result_count);
       modioGetAllMods(ptr_mod_ids, filter, &modio::onAddModsToDownloadQueue);
       modioFreeFilter(&filter);
@@ -213,6 +216,8 @@ void addModsToDownloadQueue(std::vector<u32> mod_ids)
     modioAddFilterInField(&filter, "id", modio::toString(mod_id).c_str());
     ptr_mod_ids->push_back(mod_id);
   }
+  // Include hidden mods that you have permission for in the list of mods to download
+  modioAddFilterInField(&filter, "visible", "0,1");
 
   modioGetAllMods(ptr_mod_ids, filter, &modio::onAddModsToDownloadQueue);
   modioFreeFilter(&filter);
