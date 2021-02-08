@@ -6,6 +6,7 @@
 #include "wrappers/CurlWrapper.h"
 #include "Globals.h"
 #include "ModioUtility.h"
+#include "ModUtility.h"
 #include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
 #include "wrappers/CurlUtility.h"
 
@@ -118,9 +119,11 @@ extern "C"
     modio::curlwrapper::post(call_number, url, modio::getHeaders(), data, &modioOnLinkExternalAccount);
   }
 
-  void modioGetTerms(void* object, u32 service, void (*callback)(void* object, ModioResponse respons, ModioTerms terms))
+  void modioGetTerms(void* object, u32 service, void (*callback)(void* object, ModioResponse respons, ModioTerms* terms))
   {
     std::string serviceURL = "?service=";
+
+    // @todonow: Add parallel call prevention
 
     switch (service)
     {
@@ -138,13 +141,32 @@ extern "C"
         return;
     }
 
+    // API Key is appended after
+    const std::string url_without_api_key = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "authenticate/terms" + serviceURL;
+    const std::string url_with_api_key = url_without_api_key + "&api_key=" + modio::API_KEY;
+
     u32 call_number = modio::curlwrapper::getCallNumber();
 
-    get_terms_params[call_number] = new TermsParams;
-    get_terms_params[call_number]->callback = callback;
-    get_terms_params[call_number]->object = object;
+    TermsParams* terms_params = new TermsParams;
+    get_terms_params[call_number] = terms_params;
+    terms_params->url = url_without_api_key;
+    terms_params->callbacks.push_back(callback);
+    terms_params->objects.push_back(object);
+    terms_params->is_cache = false;
 
-    static const std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "authenticate/terms" + serviceURL + "&api_key=" + modio::API_KEY;
-    modio::curlwrapper::get(call_number, url, modio::getHeaders(), &modioOnGetTerms);
+    std::string cache_filename = modio::getCallFileFromCache(url_without_api_key, modio::MAX_CACHE_TIME_SECONDS);
+    if (cache_filename != "")
+    {
+      modio::writeLogLine("Cache file found: " + cache_filename, MODIO_DEBUGLEVEL_LOG);
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      if (!cache_file_json.empty())
+      {
+        terms_params->is_cache = true;
+        modioOnGetTerms(call_number, 200, cache_file_json);
+        return;
+      }
+    }
+
+    modio::curlwrapper::get(call_number, url_with_api_key, modio::getHeaders(), &modioOnGetTerms);
   }
 }

@@ -23,21 +23,21 @@ void printButton(const ModioButton* button, char keyChar)
   }
 }
 
-void onTerms(void* object, ModioResponse response, ModioTerms terms)
+void onTerms(void* object, ModioResponse response, ModioTerms* terms)
 {
   bool* wait = object;
   if (response.code == 200)
   {
     printf("--------- TERMS ---------\n");
-    printf("%s\n", terms.plaintext);
+    printf("%s\n", terms->plaintext);
     printf("--------- LINKS ---------\n");
-    printLink(&terms.privacy);
-    printLink(&terms.terms);
-    printLink(&terms.website);
-    printLink(&terms.manage);
+    printLink(&terms->privacy);
+    printLink(&terms->terms);
+    printLink(&terms->website);
+    printLink(&terms->manage);
     printf("--------------------------\n");
-    printButton(&terms.agree, 'Y');
-    printButton(&terms.disagree, 'N');
+    printButton(&terms->agree, 'Y');
+    printButton(&terms->disagree, 'N');
 
     while(true)
     {
@@ -57,22 +57,27 @@ void onTerms(void* object, ModioResponse response, ModioTerms terms)
   else
   {
     printf("Failed to get terms\n");
+    // @todo: Make a more graceful recovery here
+    exit(-1);
   }
 
-  wait = false;
+  *wait = false;
 }
 
 int main(void)
 {
   modioInit(MODIO_ENVIRONMENT_TEST, 7, false, false, "e91c01b8882f4affeddd56c96111977b", NULL);
 
-  bool wait = true;
-
-  modioGetTerms(&wait, MODIO_SERVICE_STEAM, onTerms);
-
-  while (wait)
+  while(true)
   {
-    modioProcess();
+    bool wait = true;
+
+    modioGetTerms(&wait, MODIO_SERVICE_STEAM, onTerms);
+
+    while (wait)
+    {
+      modioProcess();
+    }
   }
 
   modioShutdown();

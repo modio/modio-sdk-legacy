@@ -582,7 +582,7 @@ extern "C"
   void MODIO_DLL modioSteamAuthEncoded(void* object, char const* base64_ticket, void (*callback)(void* object, ModioResponse response));
   void MODIO_DLL modioLinkExternalAccount(void* object, u32 service, char const* service_id, char const* email, void (*callback)(void* object, ModioResponse response));
   // Valid values fpr service is MODIO_SERVICE_STEAM, MODIO_SERVICE_GALAXY, MODIO_SERVICE_OCULUS
-  void MODIO_DLL modioGetTerms(void* object, u32 service, void (*callback)(void* object, ModioResponse response, ModioTerms terms));
+  void MODIO_DLL modioGetTerms(void* object, u32 service, void (*callback)(void* object, ModioResponse response, ModioTerms* terms));
 
   //Image Methods
   void MODIO_DLL modioDownloadImage(void* object, char const* image_url, char const* path, void (*callback)(void* object, ModioResponse response));

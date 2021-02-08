@@ -1,4 +1,6 @@
 #include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
+
+#include "ModUtility.h"
 #include "Utility.h" // for hasKey
 #include "c/schemas/ModioTerms.h"
 
@@ -153,12 +155,33 @@ void modioOnGetTerms(u32 call_number, u32 response_code, nlohmann::json response
   response.code = response_code;
 
   ModioTerms terms;
-  modioInitTerms(&terms, response_json);
-  get_terms_params[call_number]->callback(get_terms_params[call_number]->object, response, terms);
-  delete get_terms_params[call_number];
+  ModioTerms* result = nullptr;
+
+  TermsParams* params = get_terms_params[call_number];
+
+  if(response_code == 200)
+  {
+    // Don't add the call to the cache if it came from the cache
+    if(!params->is_cache)
+    {
+      modio::addCallToCache(params->url, response_json);
+    }
+    result = &terms;
+    modioInitTerms(result, response_json);
+  }
+  
+  for(int i = 0; i < params->callbacks.size(); ++i)
+  {
+    params->callbacks[i](params->objects[i], response, &terms);
+  }
+
+  delete params;
   get_terms_params.erase(call_number);
 
-  modioFreeResponse(&response);
+  if(response_code == 200)
+  {
+    modioFreeResponse(&response);
+  }
 }
 
 void clearExternalAuthenticationCallbackParams()

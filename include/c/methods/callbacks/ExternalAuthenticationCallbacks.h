@@ -7,8 +7,10 @@
 
 struct TermsParams
 {
-  void* object;
-  void (*callback)(void* object, ModioResponse response, ModioTerms terms);
+  bool is_cache;
+  std::string url;
+  std::vector<void*> objects;
+  std::vector<void (*)(void* object, ModioResponse response, ModioTerms* terms)> callbacks;;
 };
 
 extern std::map< u32,GenericRequestParams* > galaxy_auth_params;
