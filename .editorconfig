@@ -1,0 +1,7 @@
+# Visual Studio generated .editorconfig file with C++ settings.
+root = true
+
+[*.{c++,c,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp}]
+indent_style=space
+indent_size=2
+tab_width=2
