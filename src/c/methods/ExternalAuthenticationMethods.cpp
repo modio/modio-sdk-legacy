@@ -123,8 +123,6 @@ extern "C"
   {
     std::string serviceURL = "?service=";
 
-    // @todonow: Add parallel call prevention
-
     switch (service)
     {
       case MODIO_SERVICE_STEAM:
@@ -144,6 +142,19 @@ extern "C"
     // API Key is appended after
     const std::string url_without_api_key = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "authenticate/terms" + serviceURL;
     const std::string url_with_api_key = url_without_api_key + "&api_key=" + modio::API_KEY;
+
+    for (auto get_terms_param_iterator : get_terms_params)
+    {
+      if (get_terms_param_iterator.second->url == url_without_api_key)
+      {
+        modio::writeLogLine("modioGetTerms: Avoiding paralel call...", MODIO_DEBUGLEVEL_LOG);
+        TermsParams* get_user_subscriptions_params = get_terms_param_iterator.second;
+        get_user_subscriptions_params->callbacks.push_back(callback);
+        get_user_subscriptions_params->objects.push_back(object);
+        return;
+      }
+    }
+
 
     u32 call_number = modio::curlwrapper::getCallNumber();
 
