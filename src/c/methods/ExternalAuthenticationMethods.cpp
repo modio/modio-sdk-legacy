@@ -10,9 +10,11 @@
 #include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
 #include "wrappers/CurlUtility.h"
 
+static bool deprecation_bypass_terms_agreed = false;
+
 extern "C"
 {
-  void modioGalaxyAuth(void* object, char const* appdata, void (*callback)(void* object, ModioResponse response))
+  void modioGalaxyAuth(void* object, char const* appdata, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -25,11 +27,13 @@ extern "C"
 
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(appdata));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnGalaxyAuth);
   }
 
-  void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, char const* device, u32 date_expires, void (*callback)(void* object, ModioResponse response))
+  void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, char const* device, u32 date_expires, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -49,11 +53,13 @@ extern "C"
     if(date_expires != 0)
       data["date_expires"] = modio::curlwrapper::dataURLEncode(modio::toString(date_expires));
     data["device"] = modio::curlwrapper::dataURLEncode(std::string(device));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnOculusAuth);
   }
 
-  void modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response))
+  void modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -66,11 +72,13 @@ extern "C"
 
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(modio::base64Encode(rgubTicket, cubTicket));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnSteamAuth);
   }
 
-  void modioSteamAuthEncoded(void* object, char const* base64_ticket, void (*callback)(void* object, ModioResponse response))
+  void modioSteamAuthEncoded(void* object, char const* base64_ticket, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -83,6 +91,8 @@ extern "C"
 
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(base64_ticket));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnSteamAuthEncoded);
   }

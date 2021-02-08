@@ -10,7 +10,8 @@ void Instance::galaxyAuth(const std::string &appdata, const std::function<void(c
   struct GenericCall *galaxy_auth_call = new GenericCall{callback};
   galaxy_auth_calls[current_call_id] = galaxy_auth_call;
 
-  modioGalaxyAuth((void*)((uintptr_t)current_call_id), appdata.c_str(), &onGalaxyAuth);
+  // @todonow: Update c++ interface
+  modioGalaxyAuth((void*)((uintptr_t)current_call_id), appdata.c_str(), false, &onGalaxyAuth);
 
   current_call_id++;
 }
@@ -24,7 +25,8 @@ void Instance::oculusAuth(const std::string &nonce, const std::string &oculus_us
   if(email != "")
     email_c = (char*)email.c_str();
 
-  modioOculusAuth((void*)((uintptr_t)current_call_id), nonce.c_str(), oculus_user_id.c_str(), access_token.c_str(), email_c, device.c_str(), date_expires, &onOculusAuth);
+  // @todonow: Update c++ interface
+  modioOculusAuth((void*)((uintptr_t)current_call_id), nonce.c_str(), oculus_user_id.c_str(), access_token.c_str(), email_c, device.c_str(), date_expires, false, &onOculusAuth);
 
   current_call_id++;
 }
@@ -34,7 +36,8 @@ void Instance::steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const s
   struct GenericCall *steam_auth_call = new GenericCall{callback};
   steam_auth_calls[current_call_id] = steam_auth_call;
 
-  modioSteamAuth((void*)((uintptr_t)current_call_id), rgubTicket, cubTicket, &onSteamAuth);
+  // @todonow: Update c++ interface
+  modioSteamAuth((void*)((uintptr_t)current_call_id), rgubTicket, cubTicket, false, &onSteamAuth);
 
   current_call_id++;
 }
@@ -44,7 +47,8 @@ void Instance::steamAuthEncoded(const std::string &base64_ticket, const std::fun
   struct GenericCall *steam_auth_encoded_call = new GenericCall{callback};
   steam_auth_encoded_calls[current_call_id] = steam_auth_encoded_call;
 
-  modioSteamAuthEncoded((void*)((uintptr_t)current_call_id), base64_ticket.c_str(), &onSteamAuthEncoded);
+  // @todonow: Update c++ interface
+  modioSteamAuthEncoded((void*)((uintptr_t)current_call_id), base64_ticket.c_str(), false, &onSteamAuthEncoded);
 
   current_call_id++;
 }

@@ -25,7 +25,8 @@ int main(void)
   // Auth works by providing the params given by the Steam SDK
   unsigned char* rgubTicket = "BINARY DATA HERE";
   u32 cubTicket = 0;
-  modioSteamAuth(&wait, rgubTicket, cubTicket, &onSteamAuth);
+  // @todonow: Update example
+  modioSteamAuth(&wait, rgubTicket, cubTicket, false, &onSteamAuth);
   
   while (wait)
   {

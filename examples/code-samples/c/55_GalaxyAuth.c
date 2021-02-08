@@ -24,7 +24,8 @@ int main(void)
 
   // Auth works by providing the Appdata param given by the Galaxy SDK
   char *appdata = "GALAXY APPDATA HERE";
-  modioGalaxyAuth(&wait, appdata, &onGalaxyAuth);
+  // @todonow: Update example
+  modioGalaxyAuth(&wait, appdata, false, &onGalaxyAuth);
   
   while (wait)
   {
