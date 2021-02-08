@@ -23,3 +23,4 @@ extern nlohmann::json team_member_json;
 extern nlohmann::json user_json;
 extern nlohmann::json game_json;
 extern nlohmann::json mod_json;
+extern nlohmann::json terms_json;

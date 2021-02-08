@@ -98,6 +98,10 @@ extern "C"
       case MODIO_SERVICE_GALAXY:
         data["service"] = "gog";
         break;
+
+      case MODIO_SERVICE_OCULUS:
+        data["service"] = "oculus";
+        break;
     }      
 
     data["service_id"] = service_id;
@@ -112,5 +116,32 @@ extern "C"
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/link";
 
     modio::curlwrapper::post(call_number, url, modio::getHeaders(), data, &modioOnLinkExternalAccount);
+  }
+
+  void modioGetTerms(void* object, u32 service, void (*callback)(void* object, ModioResponse respons, ModioTerms terms))
+  {
+    std::map<std::string, std::string> data;
+
+    switch (service)
+    {
+      case MODIO_SERVICE_STEAM:
+        data["service"] = "steam";
+        break;
+      case MODIO_SERVICE_GALAXY:
+        data["service"] = "gog";
+        break;
+      case MODIO_SERVICE_OCULUS:
+        data["service"] = "oculus";
+        break;
+    }
+
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
+    get_terms_params[call_number] = new TermsParams;
+    get_terms_params[call_number]->callback = callback;
+    get_terms_params[call_number]->object = object;
+
+    static const std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "authenticate/terms";
+    modio::curlwrapper::post(call_number, url, modio::getHeaders(), data, &modioOnGetTerms);
   }
 }
