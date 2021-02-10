@@ -5,3 +5,8 @@ root = true
 indent_style=space
 indent_size=2
 tab_width=2
+
+[CMakeLists.txt]
+indent_style=space
+indent_size=2
+tab_width=2
