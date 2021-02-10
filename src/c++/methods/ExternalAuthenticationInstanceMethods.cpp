@@ -37,7 +37,7 @@ void Instance::steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const s
   steam_auth_calls[current_call_id] = steam_auth_call;
 
   // @todonow: Update c++ interface
-  modioSteamAuth((void*)((uintptr_t)current_call_id), rgubTicket, cubTicket, false, &onSteamAuth);
+  modioSteamAuth((void*)((uintptr_t)current_call_id), rgubTicket, cubTicket, true, &onSteamAuth);
 
   current_call_id++;
 }
@@ -59,6 +59,16 @@ void Instance::linkExternalAccount(u32 service, const std::string &service_id, c
   link_external_account_calls[current_call_id] = link_external_account_call;
 
   modioLinkExternalAccount((void*)((uintptr_t)current_call_id), service, service_id.c_str(), email.c_str(), &onLinkExternalAccount);
+
+  current_call_id++;
+}
+
+void Instance::getTerms(u32 service, const std::function<void(const modio::Response&, const modio::Terms&)>& callback)
+{
+  struct GetTermsCall* get_terms_call = new GetTermsCall{callback};
+  get_terms_calls[current_call_id] = get_terms_call;
+
+  modioGetTerms((void*)((uintptr_t)current_call_id), service, &onGetTerms);
 
   current_call_id++;
 }

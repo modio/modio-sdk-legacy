@@ -1,5 +1,6 @@
 #include "c++/methods/callbacks/ExternalAuthenticationInstanceCallbacks.h"
 #include "c++/schemas/Response.h"
+#include "c++/schemas/Terms.h"
 
 namespace modio
 {
@@ -8,6 +9,7 @@ std::map<u32, GenericCall *> oculus_auth_calls;
 std::map<u32, GenericCall *> steam_auth_calls;
 std::map<u32, GenericCall *> steam_auth_encoded_calls;
 std::map<u32, GenericCall *> link_external_account_calls;
+std::map<u32, GetTermsCall *> get_terms_calls;
 
 void onGalaxyAuth(void *object, ModioResponse modio_response)
 {
@@ -79,6 +81,22 @@ void onLinkExternalAccount(void *object, ModioResponse modio_response)
   link_external_account_calls.erase(call_id);
 }
 
+void onGetTerms(void* object, ModioResponse modio_response, ModioTerms* modio_terms)
+{
+  u32 call_id = (u32)((uintptr_t)object);
+
+  modio::Response response;
+  modio::Terms terms;
+
+  response.initialize(modio_response);
+  terms.initialize(*modio_terms);
+
+  get_terms_calls[call_id]->callback(response, terms);
+
+  delete get_terms_calls[call_id];
+  get_terms_calls.erase(call_id);
+}
+
 void clearExternalAuthenticationRequestCalls()
 {
   for (auto galaxy_auth_call : galaxy_auth_calls)
@@ -100,5 +118,9 @@ void clearExternalAuthenticationRequestCalls()
   for (auto link_external_account_call : link_external_account_calls)
     delete link_external_account_call.second;
   link_external_account_calls.clear();
+
+  for (auto get_terms_call : get_terms_calls)
+    delete get_terms_call.second;
+  get_terms_calls.clear();
 }
 } // namespace modio

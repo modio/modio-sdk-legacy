@@ -31,6 +31,8 @@ namespace modio { class UserEvent; }
 
 namespace modio
 {
+class Terms;
+
 class MODIO_DLL Instance
 {
   u32 current_call_id;
@@ -70,6 +72,7 @@ public:
   void steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const std::function<void(const modio::Response &)> &callback);
   void steamAuthEncoded(const std::string &base64_token, const std::function<void(const modio::Response &)> &callback);
   void linkExternalAccount(u32 service, const std::string &service_id, const std::string &email, const std::function<void(const modio::Response &)> &callback);
+  void getTerms(u32 service, const std::function<void(const modio::Response&, const modio::Terms&)>& callback);
 
   // Game Methods
   void getGame(u32 game_id, const std::function<void(const modio::Response&, const modio::Game& game)>& callback);
