@@ -1,3 +1,4 @@
+// If you want a example of a complete flow how authentication should go, please check out 55_SteamAuth.cpp
 #include "modio.h"
 #include <iostream>
 
@@ -27,7 +28,7 @@ int main()
   std::string email = ""; // Optional email param, "" will be ignored
   std::string device = "rift"; // rift and quest supported
   u32 date_expires = 0; // Optional expiration date param, 0 will be ignored
-  modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, device, date_expires, [&](const modio::Response &response) {
+  modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, device, date_expires, false, [&](const modio::Response &response) {
     std::cout << "Response code: " << response.code << std::endl;
 
     if (response.code == 200)

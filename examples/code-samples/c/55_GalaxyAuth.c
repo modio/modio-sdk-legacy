@@ -1,3 +1,4 @@
+// If you want a example of a complete flow how authentication should go, please check out 55_SteamAuth.cpp
 #include <stdbool.h>
 #include "c/ModioC.h"
 #include <stdio.h>
@@ -24,7 +25,8 @@ int main(void)
 
   // Auth works by providing the Appdata param given by the Galaxy SDK
   char *appdata = "GALAXY APPDATA HERE";
-  modioGalaxyAuth(&wait, appdata, &onGalaxyAuth);
+  // @todonow: Update example
+  modioGalaxyAuth(&wait, appdata, false, &onGalaxyAuth);
   
   while (wait)
   {

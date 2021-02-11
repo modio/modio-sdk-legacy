@@ -1,3 +1,4 @@
+// If you want a working example of steam auth, check the C++ examples (55_SteamAuth.cpp). SteamAPI is C++, so it won't compile here
 #include <stdbool.h>
 #include "c/ModioC.h"
 #include <stdio.h>
@@ -25,7 +26,7 @@ int main(void)
   // Auth works by providing the params given by the Steam SDK
   unsigned char* rgubTicket = "BINARY DATA HERE";
   u32 cubTicket = 0;
-  modioSteamAuth(&wait, rgubTicket, cubTicket, &onSteamAuth);
+  modioSteamAuth(&wait, rgubTicket, cubTicket, false, &onSteamAuth);
   
   while (wait)
   {

@@ -425,3 +425,40 @@ nlohmann::json mod_json = R"(
 		}
 	}
 )"_json;
+
+nlohmann::json terms_json = R"(
+  {
+    "plaintext": "We use mod.io to support user-generated content in-game. By clicking \"I Agree\" you agree to the mod.io Terms of Use and a mod.io account will be created for you (using your Steam display name, avatar and ID). Please see the mod.io Privacy Policy on how mod.io processes your personal data.",
+    "html": "<p>We use <a href=\"https://mod.io\">mod.io</a> to support user-generated content in-game. By clicking \"I Agree\" you agree to the mod.io <a href=\"https://mod.io/terms\">Terms of Use</a> and a mod.io account will be created for you (using your Steam display name, avatar and ID). Please see the mod.io <a href=\"https://mod.io/privacy\">Privacy Policy</a> on how mod.io processes your personal data.</p>",
+    "buttons": {
+      "agree": {
+        "text": "I Agree"
+      },
+      "disagree": {
+        "text": "No, Thanks"
+      }
+    },
+    "links": {
+      "website": {
+        "text": "Website",
+        "url": "https://mod.io",
+        "required": false
+      },
+      "terms" : {
+        "text": "Terms of Use",
+        "url": "https://mod.io/terms",
+        "required": true
+      },
+      "privacy": {
+        "text": "Privacy Policy",
+        "url": "https://mod.io/privacy",
+        "required": true
+      },
+      "manage": {
+        "text": "Manage Account",
+        "url": "https://mod.io/members/settings",
+        "required": false
+      }
+    }
+  }
+)"_json;

@@ -19,6 +19,7 @@
 #include "c/schemas/ModioRating.h"
 #include "c/schemas/ModioStats.h"
 #include "c/schemas/ModioUser.h"
+#include "c/schemas/ModioTerms.h"
 #include "json_examples.h"
 
 TEST(SchemaIntialization, TestModioLogoInitialization)
@@ -323,4 +324,34 @@ TEST(SchemaIntialization, TestModioUserInitialization)
 	EXPECT_STREQ(user.profile_url, "https://mod.io/members/xant");
 
 	modioFreeUser(&user);
+}
+
+TEST(SchemaIntialization, TestModioTermsInitialization)
+{
+  ModioTerms terms;
+  modioInitTerms(&terms, terms_json);
+  
+  EXPECT_STREQ(terms.agree.text, "I Agree");
+  EXPECT_STREQ(terms.disagree.text, "No, Thanks");
+
+  EXPECT_STREQ(terms.html, "<p>We use <a href=\"https://mod.io\">mod.io</a> to support user-generated content in-game. By clicking \"I Agree\" you agree to the mod.io <a href=\"https://mod.io/terms\">Terms of Use</a> and a mod.io account will be created for you (using your Steam display name, avatar and ID). Please see the mod.io <a href=\"https://mod.io/privacy\">Privacy Policy</a> on how mod.io processes your personal data.</p>");
+  EXPECT_STREQ(terms.plaintext, "We use mod.io to support user-generated content in-game. By clicking \"I Agree\" you agree to the mod.io Terms of Use and a mod.io account will be created for you (using your Steam display name, avatar and ID). Please see the mod.io Privacy Policy on how mod.io processes your personal data.");
+
+  EXPECT_EQ(terms.manage.required, false);
+  EXPECT_STREQ(terms.manage.url, "https://mod.io/members/settings");
+  EXPECT_STREQ(terms.manage.text, "Manage Account");
+
+  EXPECT_EQ(terms.website.required, false);
+  EXPECT_STREQ(terms.website.url, "https://mod.io");
+  EXPECT_STREQ(terms.website.text, "Website");
+
+  EXPECT_EQ(terms.terms.required, true);
+  EXPECT_STREQ(terms.terms.url, "https://mod.io/terms");
+  EXPECT_STREQ(terms.terms.text, "Terms of Use");
+
+  EXPECT_EQ(terms.privacy.required, true);
+  EXPECT_STREQ(terms.privacy.url, "https://mod.io/privacy");
+  EXPECT_STREQ(terms.privacy.text, "Privacy Policy");
+
+  modioFreeTerms(&terms);
 }

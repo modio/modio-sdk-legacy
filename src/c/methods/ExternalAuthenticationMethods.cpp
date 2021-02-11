@@ -6,12 +6,15 @@
 #include "wrappers/CurlWrapper.h"
 #include "Globals.h"
 #include "ModioUtility.h"
+#include "ModUtility.h"
 #include "c/methods/callbacks/ExternalAuthenticationCallbacks.h"
 #include "wrappers/CurlUtility.h"
 
+static bool deprecation_bypass_terms_agreed = false;
+
 extern "C"
 {
-  void modioGalaxyAuth(void* object, char const* appdata, void (*callback)(void* object, ModioResponse response))
+  void modioGalaxyAuth(void* object, char const* appdata, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -24,11 +27,13 @@ extern "C"
 
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(appdata));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnGalaxyAuth);
   }
 
-  void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, char const* device, u32 date_expires, void (*callback)(void* object, ModioResponse response))
+  void modioOculusAuth(void* object, char const* nonce, char const* oculus_user_id, char const* access_token, char const* email, char const* device, u32 date_expires, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -48,11 +53,13 @@ extern "C"
     if(date_expires != 0)
       data["date_expires"] = modio::curlwrapper::dataURLEncode(modio::toString(date_expires));
     data["device"] = modio::curlwrapper::dataURLEncode(std::string(device));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnOculusAuth);
   }
 
-  void modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, void (*callback)(void* object, ModioResponse response))
+  void modioSteamAuth(void* object, unsigned char const* rgubTicket, u32 cubTicket, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -65,11 +72,13 @@ extern "C"
 
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(modio::base64Encode(rgubTicket, cubTicket));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnSteamAuth);
   }
 
-  void modioSteamAuthEncoded(void* object, char const* base64_ticket, void (*callback)(void* object, ModioResponse response))
+  void modioSteamAuthEncoded(void* object, char const* base64_ticket, bool terms_agreed, void (*callback)(void* object, ModioResponse response))
   {
     u32 call_number = modio::curlwrapper::getCallNumber();
 
@@ -82,6 +91,8 @@ extern "C"
 
     std::map<std::string, std::string> data;
     data["appdata"] = modio::curlwrapper::dataURLEncode(std::string(base64_ticket));
+    // @todonow: TEST
+    data["terms_agreed"] = modio::toString(terms_agreed);
 
     modio::curlwrapper::post(call_number, url, modio::getHeadersNoToken(), data, &modioOnSteamAuthEncoded);
   }
@@ -98,6 +109,10 @@ extern "C"
       case MODIO_SERVICE_GALAXY:
         data["service"] = "gog";
         break;
+
+      case MODIO_SERVICE_OCULUS:
+        data["service"] = "oculus";
+        break;
     }      
 
     data["service_id"] = service_id;
@@ -112,5 +127,67 @@ extern "C"
     std::string url = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "external/link";
 
     modio::curlwrapper::post(call_number, url, modio::getHeaders(), data, &modioOnLinkExternalAccount);
+  }
+
+  void modioGetTerms(void* object, u32 service, void (*callback)(void* object, ModioResponse respons, ModioTerms* terms))
+  {
+    std::string serviceURL = "?service=";
+
+    switch (service)
+    {
+      case MODIO_SERVICE_STEAM:
+        serviceURL += "steam";
+        break;
+      case MODIO_SERVICE_GALAXY:
+        serviceURL += "gog";
+        break;
+      case MODIO_SERVICE_OCULUS:
+        serviceURL += "oculus";
+        break;
+      default:
+        modio::writeLogLine("Unknown service (" + modio::toString(service) + ") provided to modioGetTerms", MODIO_DEBUGLEVEL_ERROR);
+        return;
+    }
+
+    // API Key is appended after
+    const std::string url_without_api_key = modio::MODIO_URL + modio::MODIO_VERSION_PATH + "authenticate/terms" + serviceURL;
+    const std::string url_with_api_key = url_without_api_key + "&api_key=" + modio::API_KEY;
+
+    for (auto get_terms_param_iterator : get_terms_params)
+    {
+      if (get_terms_param_iterator.second->url == url_without_api_key)
+      {
+        modio::writeLogLine("modioGetTerms: Avoiding paralel call...", MODIO_DEBUGLEVEL_LOG);
+        TermsParams* get_user_subscriptions_params = get_terms_param_iterator.second;
+        get_user_subscriptions_params->callbacks.push_back(callback);
+        get_user_subscriptions_params->objects.push_back(object);
+        return;
+      }
+    }
+
+
+    u32 call_number = modio::curlwrapper::getCallNumber();
+
+    TermsParams* terms_params = new TermsParams;
+    get_terms_params[call_number] = terms_params;
+    terms_params->url = url_without_api_key;
+    terms_params->callbacks.push_back(callback);
+    terms_params->objects.push_back(object);
+    terms_params->is_cache = false;
+
+    std::string cache_filename = modio::getCallFileFromCache(url_without_api_key, modio::MAX_CACHE_TIME_SECONDS);
+    if (cache_filename != "")
+    {
+      modio::writeLogLine("Cache file found: " + cache_filename, MODIO_DEBUGLEVEL_LOG);
+      nlohmann::json cache_file_json = modio::openJson(modio::getModIODirectory() + "cache/" + cache_filename);
+      if (!cache_file_json.empty())
+      {
+        terms_params->is_cache = true;
+        modioOnGetTerms(call_number, 200, cache_file_json);
+        return;
+      }
+    }
+
+    modio::curlwrapper::get(call_number, url_with_api_key, modio::getHeaders(), &modioOnGetTerms);
   }
 }

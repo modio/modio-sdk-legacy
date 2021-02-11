@@ -118,6 +118,11 @@ std::string toString(double number)
   return std::to_string(number);
 }
 
+std::string toString(bool boolean)
+{
+  return boolean ? "true" : "false";
+}
+
 std::string replaceSubstrings(const std::string &str, const std::string &from, const std::string &to)
 {
   std::string return_value = str;

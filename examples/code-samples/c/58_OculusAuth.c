@@ -1,3 +1,4 @@
+// If you want a example of a complete flow how authentication should go, please check out 55_SteamAuth.cpp
 #include <stdbool.h>
 #include "c/ModioC.h"
 #include <stdio.h>
@@ -29,7 +30,8 @@ int main(void)
   char *device = "rift"; // rift and quest supported
   char *email = NULL; // Optional email param
   u32 date_expires = 0; // Optional expiration date param, 0 will be ignored
-  modioOculusAuth(&wait, nonce, oculus_user_id, access_token, email, device, date_expires, &onOculusAuth);
+  // @todonow: Update example
+  modioOculusAuth(&wait, nonce, oculus_user_id, access_token, email, device, date_expires, false, &onOculusAuth);
   
   while (wait)
   {
