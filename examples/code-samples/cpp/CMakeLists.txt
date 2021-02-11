@@ -36,16 +36,21 @@ foreach(EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
 
   string(TOLOWER ${EXECUTABLE_NAME} EXECUTABLE_NAME_LOWER_CASE)
   string(FIND ${EXECUTABLE_NAME_LOWER_CASE} steam IS_STEAM_EXAMPLE)
-  if(EXISTS ${STEAMWORKS_SDK_PATH} AND NOT IS_STEAM_EXAMPLE EQUAL -1)
-    target_include_directories(${EXECUTABLE_NAME} PRIVATE "${STEAMWORKS_SDK_PATH}/public/steam")
-    target_link_directories(${EXECUTABLE_NAME} PRIVATE "${STEAMWORKS_SDK_PATH}/redistributable_bin/${STEAM_SUBFOLDER}")
-    target_link_libraries(${EXECUTABLE_NAME} PRIVATE "${STEAM_LIB_NAME}")
-    target_compile_definitions(${EXECUTABLE_NAME} PRIVATE "-DSTEAM_APP_ID=${STEAMWORKS_APP_ID}")
+  if(NOT "${STEAMWORKS_SDK_PATH}" STREQUAL "")
+    if("${STEAMWORKS_APP_ID}" STREQUAL "")
+      message(FATAL_ERROR "You haven't specified STEAMWORKS_APP_ID, steam example won't run")
+    endif()
+    if(EXISTS ${STEAMWORKS_SDK_PATH} AND NOT IS_STEAM_EXAMPLE EQUAL -1)
+      target_include_directories(${EXECUTABLE_NAME} PRIVATE "${STEAMWORKS_SDK_PATH}/public/steam")
+      target_link_directories(${EXECUTABLE_NAME} PRIVATE "${STEAMWORKS_SDK_PATH}/redistributable_bin/${STEAM_SUBFOLDER}")
+      target_link_libraries(${EXECUTABLE_NAME} PRIVATE "${STEAM_LIB_NAME}")
+      target_compile_definitions(${EXECUTABLE_NAME} PRIVATE "-DSTEAM_APP_ID=${STEAMWORKS_APP_ID}")
 
-    add_custom_command ( TARGET ${EXECUTABLE_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${STEAMWORKS_SDK_PATH}/redistributable_bin/${STEAM_SUBFOLDER}/steam_api64.dll" $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>
-)
+      add_custom_command ( TARGET ${EXECUTABLE_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E copy_if_different
+          "${STEAMWORKS_SDK_PATH}/redistributable_bin/${STEAM_SUBFOLDER}/steam_api64.dll" $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>
+      )
+     endif()
    endif()
 
 endforeach(EXAMPLE_SOURCE)
