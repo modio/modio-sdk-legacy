@@ -79,7 +79,7 @@ If your game is running inside a popular distribution platform such as Steam or 
 #### Galaxy Auth
 
 ```c++
-modio_instance.galaxyAuth(appdata, [&](const modio::Response &response)
+modio_instance.galaxyAuth(appdata, terms_agreed, [&](const modio::Response &response)
 {
   if (response.code == 200)
   {
@@ -91,7 +91,7 @@ modio_instance.galaxyAuth(appdata, [&](const modio::Response &response)
 #### Oculus Auth
 
 ```c++
-modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, date_expires, [&](const modio::Response &response)
+modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, date_expires, terms_agreed, [&](const modio::Response &response)
 {
   if (response.code == 200)
   {
@@ -103,7 +103,7 @@ modio_instance.oculusAuth(nonce, oculus_user_id, access_token, email, date_expir
 #### Steam Auth
 
 ```c++
-modio_instance.steamAuth(rgubTicket, cubTicket, [&](const modio::Response &response)
+modio_instance.steamAuth(rgubTicket, cubTicket, terms_agreed, [&](const modio::Response &response)
 {
   if (response.code == 200)
   {
