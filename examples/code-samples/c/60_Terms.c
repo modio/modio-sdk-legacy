@@ -35,7 +35,7 @@ void onTerms(void* object, ModioResponse response, ModioTerms terms)
     printLink(&terms.terms);
     printLink(&terms.website);
     printLink(&terms.manage);
-    printf("--------------------------");
+    printf("--------------------------\n");
     printButton(&terms.agree, 'Y');
     printButton(&terms.disagree, 'N');
 
@@ -64,7 +64,7 @@ void onTerms(void* object, ModioResponse response, ModioTerms terms)
 
 int main(void)
 {
-  modioInit(MODIO_ENVIRONMENT_TEST, 7, false, true, "e91c01b8882f4affeddd56c96111977b", NULL);
+  modioInit(MODIO_ENVIRONMENT_TEST, 7, false, false, "e91c01b8882f4affeddd56c96111977b", NULL);
 
   bool wait = true;
 
