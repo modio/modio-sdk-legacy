@@ -1,11 +1,11 @@
 <a href="https://mod.io"><img src="https://static.mod.io/v1/images/branding/modio-color-dark.svg" alt="mod.io" width="360" align="right"/></a>
-# mod.io SDK
+# Legacy mod.io SDK
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/modio/modio-sdk/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/389039439487434752.svg?label=Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.mod.io)
 [![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/modio/modio-sdk/wiki)
 [![GitHub Action](https://github.com/modio/modio-sdk/workflows/ci/badge.svg)](https://github.com/modio/modio-sdk/actions)
 
-Welcome to the mod.io SDK repository, built using C and C++. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/modio-sdk/wiki) can be viewed here.
+Welcome to the legacy mod.io SDK repository, built using C and C++. We are currently in the works of creating a new mod.io SDK that's going to be released soon, and this SDK will be deprecated. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/modio-sdk/wiki) can be viewed here.
 
 ## Features
 
