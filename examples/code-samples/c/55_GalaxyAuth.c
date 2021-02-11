@@ -1,3 +1,4 @@
+// If you want a example of a complete flow how authentication should go, please check out 55_SteamAuth.cpp
 #include <stdbool.h>
 #include "c/ModioC.h"
 #include <stdio.h>

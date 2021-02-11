@@ -1,3 +1,4 @@
+// If you want a example of a complete flow how authentication should go, please check out 55_SteamAuth.cpp
 #include "modio.h"
 #include <iostream>
 
@@ -21,7 +22,7 @@ int main()
 
   // Auth works by providing the Appdata param given by the Galaxy SDK
   std::string appdata = "";
-  modio_instance.galaxyAuth(appdata, [&](const modio::Response &response) {
+  modio_instance.galaxyAuth(appdata, false, [&](const modio::Response &response) {
     std::cout << "Response code: " << response.code << std::endl;
 
     if (response.code == 200)

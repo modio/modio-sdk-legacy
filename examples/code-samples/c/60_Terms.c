@@ -1,3 +1,4 @@
+// If you want a example of how to use the terms in authentication authentication should go, please check out 55_SteamAuth.cpp
 #include <stdbool.h>
 #include "c/ModioC.h"
 #include <stdio.h>
