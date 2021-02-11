@@ -5,18 +5,18 @@
 namespace modio
 {
 
-void Instance::galaxyAuth(const std::string &appdata, const std::function<void(const modio::Response &)> &callback)
+void Instance::galaxyAuth(const std::string &appdata, bool terms_agreed, const std::function<void(const modio::Response &)> &callback)
 {
   struct GenericCall *galaxy_auth_call = new GenericCall{callback};
   galaxy_auth_calls[current_call_id] = galaxy_auth_call;
 
   // @todonow: Update c++ interface
-  modioGalaxyAuth((void*)((uintptr_t)current_call_id), appdata.c_str(), false, &onGalaxyAuth);
+  modioGalaxyAuth((void*)((uintptr_t)current_call_id), appdata.c_str(), terms_agreed, &onGalaxyAuth);
 
   current_call_id++;
 }
 
-void Instance::oculusAuth(const std::string &nonce, const std::string &oculus_user_id, const std::string &access_token, const std::string &email, const std::string &device, u32 date_expires, const std::function<void(const modio::Response &)> &callback)
+void Instance::oculusAuth(const std::string &nonce, const std::string &oculus_user_id, const std::string &access_token, const std::string &email, const std::string &device, u32 date_expires, bool terms_agreed, const std::function<void(const modio::Response &)> &callback)
 {
   struct GenericCall *oculus_auth_call = new GenericCall{callback};
   oculus_auth_calls[current_call_id] = oculus_auth_call;
@@ -26,29 +26,29 @@ void Instance::oculusAuth(const std::string &nonce, const std::string &oculus_us
     email_c = (char*)email.c_str();
 
   // @todonow: Update c++ interface
-  modioOculusAuth((void*)((uintptr_t)current_call_id), nonce.c_str(), oculus_user_id.c_str(), access_token.c_str(), email_c, device.c_str(), date_expires, false, &onOculusAuth);
+  modioOculusAuth((void*)((uintptr_t)current_call_id), nonce.c_str(), oculus_user_id.c_str(), access_token.c_str(), email_c, device.c_str(), date_expires, terms_agreed, &onOculusAuth);
 
   current_call_id++;
 }
 
-void Instance::steamAuth(const unsigned char* rgubTicket, u32 cubTicket, const std::function<void(const modio::Response &)> &callback)
+void Instance::steamAuth(const unsigned char* rgubTicket, u32 cubTicket, bool terms_agreed, const std::function<void(const modio::Response &)> &callback)
 {
   struct GenericCall *steam_auth_call = new GenericCall{callback};
   steam_auth_calls[current_call_id] = steam_auth_call;
 
   // @todonow: Update c++ interface
-  modioSteamAuth((void*)((uintptr_t)current_call_id), rgubTicket, cubTicket, true, &onSteamAuth);
+  modioSteamAuth((void*)((uintptr_t)current_call_id), rgubTicket, cubTicket, terms_agreed, &onSteamAuth);
 
   current_call_id++;
 }
 
-void Instance::steamAuthEncoded(const std::string &base64_ticket, const std::function<void(const modio::Response &)> &callback)
+void Instance::steamAuthEncoded(const std::string &base64_ticket, bool terms_agreed, const std::function<void(const modio::Response &)> &callback)
 {
   struct GenericCall *steam_auth_encoded_call = new GenericCall{callback};
   steam_auth_encoded_calls[current_call_id] = steam_auth_encoded_call;
 
   // @todonow: Update c++ interface
-  modioSteamAuthEncoded((void*)((uintptr_t)current_call_id), base64_ticket.c_str(), false, &onSteamAuthEncoded);
+  modioSteamAuthEncoded((void*)((uintptr_t)current_call_id), base64_ticket.c_str(), terms_agreed, &onSteamAuthEncoded);
 
   current_call_id++;
 }
