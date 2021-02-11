@@ -5,7 +5,7 @@
 [![Master docs](https://img.shields.io/badge/docs-master-green.svg)](https://github.com/modio/modio-sdk/wiki)
 [![GitHub Action](https://github.com/modio/modio-sdk/workflows/ci/badge.svg)](https://github.com/modio/modio-sdk/actions)
 
-Welcome to the legacy mod.io SDK repository, built using C and C++. We are currently in the works of creating a new mod.io SDK that's going to be released soon, and this SDK will be deprecated. It allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/modio-sdk/wiki) can be viewed here.
+Welcome to the legacy mod.io SDK repository, built using C and C++. We are currently in the works of creating a new mod.io SDK that's going to be released soon, and this SDK will be deprecated. Therefore we have renamed this repository form modio-sdk to modio-sdk-legacy to give space for the new sdk to use modio-sdk. This SDK allows game developers to host and automatically install user-created mods in their games. It connects to the [mod.io API](https://docs.mod.io), and [documentation for its functions](https://github.com/modio/modio-sdk/wiki) can be viewed here.
 
 ## Features
 
