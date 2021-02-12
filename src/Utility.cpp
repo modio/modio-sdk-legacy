@@ -289,8 +289,8 @@ std::string getFileExtension(std::string path)
 bool isDirectory(const std::string& directory)
 {
   std::error_code ec;
-  ghc::filesystem::directory_entry directoryEntry(directory, ec);
-  if( directoryEntry.exists( ec ) && !ec )
+  const ghc::filesystem::directory_entry directoryEntry(directory, ec);
+  if( !ec && directoryEntry.exists( ec ) )
   {
       return directoryEntry.is_directory( ec ) && !ec;
   }
@@ -319,7 +319,23 @@ std::string getDirectoryPath(const std::string &filename)
 
 bool fileExists(const std::string &directory)
 {
-  return ghc::filesystem::is_regular_file(directory);
+  std::error_code ec;
+  bool result = ghc::filesystem::exists(directory, ec);
+  if(ec)
+  {
+    writeLogLine("Couldn't check if file '" + directory + "' existes with error code: " + std::to_string(ec.value()) + " and message\n" + ec.message(), MODIO_DEBUGLEVEL_ERROR);
+    return false;
+  }
+  if(result)
+  {
+    result = ghc::filesystem::is_regular_file(directory, ec);
+    if(ec)
+    {
+      writeLogLine("Couldn't check if '" + directory + "' is regular file  with error code: " + std::to_string(ec.value()) + " and message\n" + ec.message(), MODIO_DEBUGLEVEL_ERROR);
+      return false;
+    }
+  }
+  return result;
 }
 
 std::vector<std::string> getFilenames(const std::string &directory)
@@ -331,7 +347,16 @@ std::vector<std::string> getFilenames(const std::string &directory)
   {
     if( !p.is_directory() )
     {
-      files.push_back( ghc::filesystem::relative( p.path(), directoryPath ).generic_u8string() );
+      std::error_code ec;
+      ghc::filesystem::path file = ghc::filesystem::relative(p.path(), directoryPath, ec).generic_u8string();
+      if (!ec)
+      {
+        files.push_back(directory);
+      }
+      else
+      {
+        writeLogLine("Couldn't list file '" + directory + "/" + p.path().generic_u8string() + "' with error code: " + std::to_string(ec.value()) + " and message\n" + ec.message(), MODIO_DEBUGLEVEL_ERROR);
+      }
     }
   }
 
@@ -347,7 +372,16 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
   {
     if (p.is_directory())
     {
-      files.push_back(ghc::filesystem::relative(p.path(), rootDirectoryPath).generic_u8string());
+      std::error_code ec;
+      ghc::filesystem::path directory = ghc::filesystem::relative(p.path(), rootDirectoryPath, ec).generic_u8string();
+      if (!ec)
+      {
+        files.push_back(directory);
+      }
+      else
+      {
+        writeLogLine("Couldn't list directory '" + root_directory + "/" + p.path().generic_u8string() + "' with error code: " + std::to_string(ec.value()) + " and message\n" + ec.message(), MODIO_DEBUGLEVEL_ERROR);
+      }
     }
   }
 
