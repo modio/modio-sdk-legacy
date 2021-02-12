@@ -288,13 +288,13 @@ void compressFiles(std::string root_directory, std::vector<std::string> filename
                                   password, crcFile, 36, UTF8_FLAG,zip64);
 
     if (err != ZIP_OK)
-      writeLogLine(std::string("Could not open ") + filenameinzip + " in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
+      writeLogLine(std::string("Could not open '") + filenameinzip + "' in zipfile, zlib error: " + toString(err), MODIO_DEBUGLEVEL_ERROR);
     else
     {
       fin = modio::platform::fopen(complete_file_path.c_str(), "rb");
       if (fin == NULL)
       {
-        writeLogLine(std::string("Could not open ") + filenameinzip + " for reading", MODIO_DEBUGLEVEL_ERROR);
+        writeLogLine(std::string("Could not open '") + filenameinzip + "' for reading", MODIO_DEBUGLEVEL_ERROR);
       }
     }
 
