@@ -342,8 +342,11 @@ std::vector<std::string> getFilenames(const std::string &directory)
 {
   std::vector<std::string> files;
 
-  ghc::filesystem::path directoryPath( directory );
-  for( auto& p : ghc::filesystem::recursive_directory_iterator(directoryPath) )
+  const ghc::filesystem::path directoryPath( directory );
+
+  // @todo: This might throw. If we get crash reports, we need to convert this to a while loop and pass in a ec to the iterator to handle the exception
+  // See: https://stackoverflow.com/a/16101173
+  for( const auto& p : ghc::filesystem::recursive_directory_iterator(directoryPath) )
   {
     if( !p.is_directory() )
     {
@@ -367,8 +370,10 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
 {
   std::vector<std::string> files;
 
-  ghc::filesystem::path rootDirectoryPath(root_directory);
-  for (auto& p : ghc::filesystem::directory_iterator(rootDirectoryPath))
+  const ghc::filesystem::path rootDirectoryPath(root_directory);
+  // @todo: This might throw. If we get crash reports, we need to convert this to a while loop and pass in a ec to the iterator to handle the exception
+  // See: https://stackoverflow.com/a/16101173
+  for (const auto& p : ghc::filesystem::directory_iterator(rootDirectoryPath))
   {
     if (p.is_directory())
     {
