@@ -14,7 +14,7 @@ void Fixture_CleanupFolders::DeleteTransientDirectories()
   for (auto& it : ghc::filesystem::directory_iterator(ghc::filesystem::current_path()))
   {
     std::vector<ghc::filesystem::path> toDelete;
-    if (it.is_directory() && !isAllowedDirectory(it.path()))
+    if (it.is_directory() && !isPersistentDirectory(it.path()))
     {
       toDelete.push_back(it.path());
     }
