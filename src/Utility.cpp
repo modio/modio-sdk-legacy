@@ -354,7 +354,7 @@ std::vector<std::string> getFilenames(const std::string &directory)
       ghc::filesystem::path file = ghc::filesystem::relative(p.path(), directoryPath, ec).generic_u8string();
       if (!ec)
       {
-        files.push_back(directory);
+        files.push_back(file);
       }
       else
       {
