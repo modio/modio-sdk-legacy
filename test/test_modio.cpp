@@ -209,7 +209,7 @@ TEST_F(Modio, TestGetMod)
     modioShutdown();
 }
 
-static std::string downloadedImageFilename = u8"downloaded/logo_original.png";
+//static std::string downloadedImageFilename = u8"downloaded/logo_original.png";
 
 u32 calculateCRCOfFile( const std::string& file )
 {
@@ -246,7 +246,7 @@ u32 calculateCRCOfFile( const std::string& file )
   return crcValue;
 }
 
-void onDownloadImage_TestDownloadImage(void* object, ModioResponse response)
+/*void onDownloadImage_TestDownloadImage(void* object, ModioResponse response)
 {
   bool* wait = (bool*)object;
 
@@ -332,7 +332,7 @@ TEST_F(Modio, TestDownloadImageUnicode)
   }
 
   modioShutdown();
-}
+}*/
 
 TEST_F(Modio, TestInstallMods)
 {
