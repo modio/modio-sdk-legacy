@@ -3,6 +3,8 @@ project(examples)
 include_directories(../../../include)
 include_directories(../../../additional_dependencies)
 set (CMAKE_CXX_STANDARD 11)
+enable_language(C)
+enable_language(CXX)
 link_directories(../../../build)
 
 file( GLOB EXAMPLE_SOURCES *.cpp )
