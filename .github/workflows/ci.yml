@@ -9,6 +9,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
+        action: ['run-tests', 'compile-examples']
         name:
           # - Ubuntu 16.04 GCC
           # - Ubuntu 16.04 Clang
@@ -93,11 +94,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Compile for Tests
+        id: should-test
+        if: ${{matrix.action}} == 'run-tests'
+        run: echo "::set-output name=TEST-FLAGS::-DTEST=on"
+
       - name: Generate project files
         run: |
           mkdir ${{ matrix.build-dir || '.not-used' }}
           cd ${{ matrix.build-dir || '.' }}
-          cmake ${{ matrix.build-src-dir || '.' }} -DTEST=on ${{ matrix.cmake-args }}
+          cmake ${{ matrix.build-src-dir || '.' }} ${{ steps.should-test.TEST-FLAGS }} ${{ matrix.cmake-args }}
         env:
           CC: ${{ matrix.compiler }}
           CXX: ${{ matrix.cpp-compiler }}
@@ -111,12 +117,13 @@ jobs:
           cmake --build . --config ${{ matrix.build-config || 'Release' }}
 
       - name: Run test cases
+        if: ${{matrix.action}} == 'run-tests'
         run: |
           cd ${{ matrix.build-dir || '.' }}
           ctest -C ${{ matrix.build-config || 'Release' }} --output-on-failure
 
       - name: Compile C examples
-        if: runner.os == 'Linux' || runner.os == 'macOS'
+        if: runner.os == 'Linux' || runner.os == 'macOS' && ${{matrix.action}} == 'compile-examples'
         run: |
           cd examples/code-samples/c
           cmake .
@@ -129,7 +136,7 @@ jobs:
           LDFLAGS: ${{ matrix.ldflags || env.LDFLAGS }}
 
       - name: Compile C++ examples
-        if: runner.os == 'Linux' || runner.os == 'macOS'
+        if: runner.os == 'Linux' || runner.os == 'macOS' && ${{matrix.action}} == 'compile-examples'
         run: |
           cd examples/code-samples/cpp
           cmake .
