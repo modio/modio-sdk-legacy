@@ -98,6 +98,7 @@ jobs:
           mkdir ${{ matrix.build-dir || '.not-used' }}
           cd ${{ matrix.build-dir || '.' }}
           cmake ${{ matrix.build-src-dir || '.' }} -DTEST=on ${{ matrix.cmake-args }}
+          cat CMakeCache.txt
         env:
           CC: ${{ matrix.compiler }}
           CXX: ${{ matrix.cpp-compiler }}
