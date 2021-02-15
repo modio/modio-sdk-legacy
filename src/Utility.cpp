@@ -343,6 +343,13 @@ std::vector<std::string> getFilenames(const std::string &directory)
   std::vector<std::string> files;
 
   const ghc::filesystem::path directoryPath( directory );
+  if(!ghc::filesystem::exists(directoryPath))
+  {
+      writeLogLine("getFilenames: Directory '" + ghc::filesystem::absolute(directory).generic_u8string() + "' doesn't exist!", MODIO_DEBUGLEVEL_ERROR);
+      return files;
+  }
+
+  const ghc::filesystem::path abosolute = ghc::filesystem::absolute(directory);
 
   // @todo: This might throw. If we get crash reports, we need to convert this to a while loop and pass in a ec to the iterator to handle the exception
   // See: https://stackoverflow.com/a/16101173
@@ -371,6 +378,13 @@ std::vector<std::string> getDirectoryNames(const std::string &root_directory)
   std::vector<std::string> files;
 
   const ghc::filesystem::path rootDirectoryPath(root_directory);
+
+  if(!ghc::filesystem::exists(rootDirectoryPath))
+  {
+    writeLogLine("getFilenames: Directory '" + ghc::filesystem::absolute(rootDirectoryPath).generic_u8string() + "' doesn't exist!", MODIO_DEBUGLEVEL_ERROR);
+    return files;
+  }
+
   // @todo: This might throw. If we get crash reports, we need to convert this to a while loop and pass in a ec to the iterator to handle the exception
   // See: https://stackoverflow.com/a/16101173
   for (const auto& p : ghc::filesystem::directory_iterator(rootDirectoryPath))

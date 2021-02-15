@@ -207,6 +207,13 @@ TEST_F(FolderBase, getDirectoryNameBaseDirUTF8)
   EXPECT_NE(std::find(directories.begin(), directories.end(), cyrillicFolderName), directories.end());
 }
 
+TEST_F(FolderBase, getDirectoryNameBadFolder)
+{
+    std::vector<std::string> directories;
+    EXPECT_NO_THROW( directories = modio::getDirectoryNames("BOGUS"));
+    EXPECT_EQ(directories.size(), 0);
+}
+
 TEST_F(FolderBase, getFilenames)
 {
     // Create testing dataset
@@ -239,6 +246,12 @@ TEST_F(FolderBase, getFilenamesUTF8)
     EXPECT_NE(std::find(files.begin(), files.end(), cyrillicFileName), files.end());
 }
 
+TEST_F(FolderBase, getFilenamesBadFolder)
+{
+    std::vector<std::string> files;
+    EXPECT_NO_THROW( files = modio::getFilenames("BOGUS"));
+    EXPECT_EQ(files.size(), 0);
+}
 
 static void createRelativePathWithFilename(const std::string& relativePath, const std::string& parentFolder)
 {
