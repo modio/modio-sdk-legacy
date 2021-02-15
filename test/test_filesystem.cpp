@@ -174,6 +174,85 @@ TEST_F(FolderBase, CreateRelativePathSuccess)
   createRelativePathTest(u8"unicode/バックソン/");
 }
 
+TEST_F(FolderBase, getDirectoryName)
+{
+  // Create testing dataset
+  ghc::filesystem::create_directory("base_dir");
+  ghc::filesystem::create_directory("base_dir/subdir_1");
+  ghc::filesystem::create_directory("base_dir/subdir_2");
+  ghc::filesystem::create_directory(u8"base_dir/чизкейк");
+
+  std::vector<std::string> directories = modio::getDirectoryNames("base_dir");
+  EXPECT_EQ(directories.size(), 3);
+  EXPECT_NE(std::find(directories.begin(), directories.end(), "subdir_1"), directories.end());
+  EXPECT_NE(std::find(directories.begin(), directories.end(), "subdir_2"), directories.end());
+  const std::string cyrillicFolderName = u8"чизкейк";
+  EXPECT_NE(std::find(directories.begin(), directories.end(), cyrillicFolderName), directories.end());
+}
+
+
+TEST_F(FolderBase, getDirectoryNameBaseDirUTF8)
+{
+  // Create testing dataset
+  ghc::filesystem::create_directory(u8"чизкейк");
+  ghc::filesystem::create_directory(u8"чизкейк/subdir_1");
+  ghc::filesystem::create_directory(u8"чизкейк/subdir_2");
+  ghc::filesystem::create_directory(u8"чизкейк/чизкейк");
+
+  std::vector<std::string> directories = modio::getDirectoryNames(u8"чизкейк");
+  EXPECT_EQ(directories.size(), 3);
+  EXPECT_NE(std::find(directories.begin(), directories.end(), "subdir_1"), directories.end());
+  EXPECT_NE(std::find(directories.begin(), directories.end(), "subdir_2"), directories.end());
+  const std::string cyrillicFolderName = u8"чизкейк";
+  EXPECT_NE(std::find(directories.begin(), directories.end(), cyrillicFolderName), directories.end());
+}
+
+TEST_F(FolderBase, getDirectoryNameBadFolder)
+{
+    std::vector<std::string> directories;
+    EXPECT_NO_THROW( directories = modio::getDirectoryNames("BOGUS"));
+    EXPECT_EQ(directories.size(), 0);
+}
+
+TEST_F(FolderBase, getFilenames)
+{
+    // Create testing dataset
+    ghc::filesystem::create_directory("base_dir");
+    std::ofstream("base_dir/file1");
+    std::ofstream("base_dir/file2");
+    std::ofstream(u8"base_dir/чизкейк");
+
+    std::vector<std::string> files = modio::getFilenames("base_dir");
+    EXPECT_EQ(files.size(), 3);
+    EXPECT_NE(std::find(files.begin(), files.end(), "file1"), files.end());
+    EXPECT_NE(std::find(files.begin(), files.end(), "file2"), files.end());
+    const std::string cyrillicFileName = u8"чизкейк";
+    EXPECT_NE(std::find(files.begin(), files.end(), cyrillicFileName), files.end());
+}
+
+TEST_F(FolderBase, getFilenamesUTF8)
+{
+    // Create testing dataset
+    ghc::filesystem::create_directory(u8"чизкейк");
+    std::ofstream(u8"чизкейк/file1");
+    std::ofstream(u8"чизкейк/file2");
+    std::ofstream(u8"чизкейк/чизкейк");
+
+    std::vector<std::string> files = modio::getFilenames(u8"чизкейк");
+    EXPECT_EQ(files.size(), 3);
+    EXPECT_NE(std::find(files.begin(), files.end(), "file1"), files.end());
+    EXPECT_NE(std::find(files.begin(), files.end(), "file2"), files.end());
+    const std::string cyrillicFileName = u8"чизкейк";
+    EXPECT_NE(std::find(files.begin(), files.end(), cyrillicFileName), files.end());
+}
+
+TEST_F(FolderBase, getFilenamesBadFolder)
+{
+    std::vector<std::string> files;
+    EXPECT_NO_THROW( files = modio::getFilenames("BOGUS"));
+    EXPECT_EQ(files.size(), 0);
+}
+
 static void createRelativePathWithFilename(const std::string& relativePath, const std::string& parentFolder)
 {
   bool result = modio::createPath(relativePath);

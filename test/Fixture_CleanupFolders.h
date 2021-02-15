@@ -10,7 +10,7 @@ protected:
   void setFilePermission(std::string fileName, bool access);
 
   // Used for teardown to delete directories that we created
-  static bool isAllowedDirectory(const ghc::filesystem::path& path)
+  static bool isPersistentDirectory(const ghc::filesystem::path& path)
   {
     for (auto& allowedFolder : allowedFolders)
     {

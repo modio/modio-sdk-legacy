@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 project(examples)
 include_directories(../../../include)
 link_directories(../../../build)
+enable_language(C)
+enable_language(CXX)
 
 file( GLOB EXAMPLE_SOURCES *.c )
 
