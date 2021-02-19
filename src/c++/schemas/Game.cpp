@@ -41,10 +41,9 @@ void Game::initialize(ModioGame modio_game)
 
   game_tag_options.resize(modio_game.game_tag_option_array_size);
   u32 i = 0;
-  for(auto game_tag_option : game_tag_options)
+  for(auto& game_tag_option : game_tag_options)
   {
-    game_tag_option.initialize(modio_game.game_tag_option_array[i]);
-    i++;
+    game_tag_option.initialize(modio_game.game_tag_option_array[i++]);
   }
 }
 

@@ -37,15 +37,15 @@ void Mod::initialize(ModioMod modio_mod)
   stats.initialize(modio_mod.stats);
   tags.resize(modio_mod.tags_array_size);
   u32 i = 0;
-  for(auto tag : tags)
+  for(auto& tag : tags)
   {
-    tag.initialize(modio_mod.tags_array[i]);
+    tag.initialize(modio_mod.tags_array[i++]);
   }
   i = 0;
   metadata_kvps.resize(modio_mod.metadata_kvp_array_size);
-  for (auto metadata_kvp : metadata_kvps)
+  for (auto& metadata_kvp : metadata_kvps)
   {
-    metadata_kvp.initialize(modio_mod.metadata_kvp_array[i]);
+    metadata_kvp.initialize(modio_mod.metadata_kvp_array[i++]);
   }
 }
 
