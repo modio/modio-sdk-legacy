@@ -2,6 +2,7 @@
 #include "gtest/gtest.h"
 #include "ghc/filesystem.hpp"
 #include "Fixture_CleanupFolders.h"
+#include "../src/Filesystem.h"
 
 class FolderBase : public Fixture_CleanupFolders{};
 TEST_F(FolderBase, CreateRelativeSubfolderFailure)
@@ -218,9 +219,9 @@ TEST_F(FolderBase, getFilenames)
 {
     // Create testing dataset
     ghc::filesystem::create_directory("base_dir");
-    std::ofstream("base_dir/file1");
-    std::ofstream("base_dir/file2");
-    std::ofstream(u8"base_dir/чизкейк");
+    modio::platform::ofstream("base_dir/file1");
+    modio::platform::ofstream("base_dir/file2");
+    modio::platform::ofstream(u8"base_dir/чизкейк");
 
     std::vector<std::string> files = modio::getFilenames("base_dir");
     EXPECT_EQ(files.size(), 3);
@@ -234,9 +235,9 @@ TEST_F(FolderBase, getFilenamesUTF8)
 {
     // Create testing dataset
     ghc::filesystem::create_directory(u8"чизкейк");
-    std::ofstream(u8"чизкейк/file1");
-    std::ofstream(u8"чизкейк/file2");
-    std::ofstream(u8"чизкейк/чизкейк");
+    modio::platform::ofstream(u8"чизкейк/file1");
+    modio::platform::ofstream(u8"чизкейк/file2");
+    modio::platform::ofstream(u8"чизкейк/чизкейк");
 
     std::vector<std::string> files = modio::getFilenames(u8"чизкейк");
     EXPECT_EQ(files.size(), 3);
