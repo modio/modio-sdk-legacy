@@ -50,7 +50,7 @@ int main(void)
   if (!modioIsLoggedIn())
   {
     char email[50];
-    printf("Enter your email: \n");
+    printf("Enter your email:theonenamedd@gmail.com \n");
     fgets(email, 50, stdin);
     email[strcspn(email, "\n")] = 0;
     printf("Sending email to %s\n", email);
