@@ -103,7 +103,7 @@ jobs:
         run: |
           mkdir ${{ matrix.build-dir || '.not-used' }}
           cd ${{ matrix.build-dir || '.' }}
-          cmake ${{ matrix.build-src-dir || '.' }} ${{ steps.should-test.TEST-FLAGS }} ${{ matrix.cmake-args }}
+          cmake ${{ matrix.build-src-dir || '.' }} ${{ steps.should-test.outputs.TEST-FLAGS }} ${{ matrix.cmake-args }}
         env:
           CC: ${{ matrix.compiler }}
           CXX: ${{ matrix.cpp-compiler }}
