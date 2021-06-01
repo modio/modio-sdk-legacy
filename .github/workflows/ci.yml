@@ -56,6 +56,7 @@ jobs:
             cmake-args: -DBUILD_SHARED_LIBS=OFF -Dgtest_force_shared_crt=on
             build-dir: build
             build-src-dir: ..
+            executable-extension: .exe
 
           # - name: Windows 2019 GCC
           #   os: windows-2019
@@ -120,7 +121,7 @@ jobs:
         if: matrix.action == 'run-tests'
         run: |
           cd ${{ matrix.build-dir || '.' }}
-          ./Release/runUnitTests.exe
+          ./Release/runUnitTests${{ matrix.executable-extension || '' }}
         shell: bash
       - name: Compile C examples
         if: ( runner.os == 'Linux' || runner.os == 'macOS' ) && matrix.action == 'compile-examples'
