@@ -120,8 +120,8 @@ jobs:
         if: matrix.action == 'run-tests'
         run: |
           cd ${{ matrix.build-dir || '.' }}
-          ctest -C ${{ matrix.build-config || 'Release' }} --output-on-failure
-
+		  ./Release/runUnitTests.exe
+		shell: bash
       - name: Compile C examples
         if: ( runner.os == 'Linux' || runner.os == 'macOS' ) && matrix.action == 'compile-examples'
         run: |
