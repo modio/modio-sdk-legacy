@@ -134,7 +134,7 @@ jobs:
           CXX: ${{ matrix.cpp-compiler }}
           CFLAGS: ${{ matrix.cflags || env.CFLAGS }}
           CXXFLAGS: ${{ matrix.cxxflags || env.CXXFLAGS }}
-          LDFLAGS: ${{ matrix.ldflags || env.LDFLAGS }}
+          LDFLAGS: ${{ matrix.ldflags || env.LDFLAGS }} -lstdc++
 
       - name: Compile C++ examples
         if: ( runner.os == 'Linux' || runner.os == 'macOS' ) && matrix.action == 'compile-examples'
