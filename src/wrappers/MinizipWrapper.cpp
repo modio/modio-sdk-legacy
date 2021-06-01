@@ -24,6 +24,87 @@ namespace modio
 {
 namespace minizipwrapper
 {
+std::vector<std::string> getZipFilenames(const std::string& zip_path)
+{
+  std::vector<std::string> filenames;
+
+#ifdef USEWIN32IOAPI
+  zlib_filefunc64_def ffunc = { 0 };
+#endif
+
+#ifdef USEWIN32IOAPI
+  fill_win32_filefunc64W(&ffunc);
+  unzFile zipfile = unzOpen2_64(modio::platform::utf8ToWstr(zip_path).c_str(), &ffunc);
+#else
+  unzFile zipfile = unzOpen(zip_path.c_str());
+#endif
+
+  if (zipfile == NULL)
+  {
+    writeLogLine("Cannot open " + zip_path, MODIO_DEBUGLEVEL_ERROR);
+    return filenames;
+  }
+
+  unz_global_info global_info;
+  unzGetGlobalInfo(zipfile, &global_info);
+
+  uLong i;
+  for (i = 0; i < global_info.number_entry; ++i)
+  {
+    unz_file_info file_info;
+
+    int err;
+    std::string utf8_encoded_filename;
+    char final_filename[MAX_FILENAME];
+    // Ensure that filename isn't used after this scope
+    {
+      char filename[MAX_FILENAME];
+
+      err = unzGetCurrentFileInfo(
+        zipfile,
+        &file_info,
+        filename,
+        MAX_FILENAME,
+        NULL, 0, NULL, 0);
+
+      if (err != UNZ_OK)
+      {
+        unzClose(zipfile);
+        writeLogLine("error " + toString(err) + " with zipfile in unzGetCurrentFileInfo", MODIO_DEBUGLEVEL_ERROR);
+        return filenames;
+      }
+
+      // Is the name encoded in UTF8 or CP437
+      if (file_info.flag & UTF8_FLAG)
+      {
+        utf8_encoded_filename = filename;
+      }
+      else
+      {
+        utf8_encoded_filename = modio::CP437ToUTF8(filename);
+      }
+
+      filenames.push_back(utf8_encoded_filename);
+
+      if ((i + 1) < global_info.number_entry)
+      {
+        err = unzGoToNextFile(zipfile);
+
+        if (err != UNZ_OK)
+        {
+          writeLogLine("error " + toString(err) + " with zipfile in unzGoToNextFile", MODIO_DEBUGLEVEL_ERROR);
+          unzClose(zipfile);
+          return filenames;
+        }
+      }
+    }
+  }
+
+  unzClose(zipfile);
+  return filenames;
+}
+
+
 void extract(std::string zip_path, std::string directory_path)
 {
   directory_path = addSlashIfNeeded(directory_path);

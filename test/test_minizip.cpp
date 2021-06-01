@@ -34,6 +34,52 @@ protected:
     }
   }
 
+  void compareZipFilenamesWithDataset(
+      const std::map<std::string, std::string> &dataset,
+      const std::string &zipFile) {
+    std::vector<std::string> filenames =
+        modio::minizipwrapper::getZipFilenames(zipFile);
+
+    EXPECT_EQ(dataset.size(), filenames.size())
+        << "dataset contains different amount of files than the zipfile";
+
+    for (const auto &datasetIt : dataset) {
+      std::string datasetFilePath(datasetIt.first.size(), ' ');
+
+      // All files should have forward slashes in them according to 4.4.17.1
+      // in https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
+      std::replace_copy(datasetIt.first.begin(), datasetIt.first.end(),
+                        datasetFilePath.begin(), '\\', '/');
+      bool found = false;
+      for (const std::string &filename : filenames) {
+        if (filename == datasetFilePath) {
+          found = true;
+          break;
+        }
+      }
+
+      EXPECT_TRUE(found) << "Couldn't find the file " << datasetFilePath
+                         << " in the zipfile";
+    }
+
+    for (const auto &filename : filenames) {
+      bool found = false;
+      for (const auto &datasetIt : dataset) {
+        std::string datasetFilePath(datasetIt.first.size(), ' ');
+        std::replace_copy(datasetIt.first.begin(), datasetIt.first.end(),
+                          datasetFilePath.begin(), '\\', '/');
+
+        if (filename == datasetFilePath) {
+          found = true;
+          break;
+        }
+      }
+
+      EXPECT_TRUE(found) << "Found the filename " << filename
+                         << " in the zipfile but not in the dataset";
+    }
+  }
+
   void compareZipDataset(const std::map<std::string, std::string> &dataset,
                          const std::vector<std::string> &files,
                          std::string filesPath) {
@@ -41,7 +87,7 @@ protected:
 
     EXPECT_EQ(dataset.size(), files.size())
         << "Dataset and file size different";
-    compareFilenamesWithDataset(dataset, files);
+    compareDiscFilenamesWithDataset(dataset, files);
 
     for (const std::string &file : files) {
       std::string datasetContent;
@@ -66,9 +112,9 @@ protected:
     }
   }
 
-  bool
-  compareFilenamesWithDataset(const std::map<std::string, std::string> &dataset,
-                              const std::vector<std::string> &files) {
+  bool compareDiscFilenamesWithDataset(
+      const std::map<std::string, std::string> &dataset,
+      const std::vector<std::string> &files) {
     for (const auto &fileIt : files) {
       const std::string &filename = fileIt;
 
@@ -153,6 +199,9 @@ TEST_F(MinizipTests, TestCompressFiles) {
   createZipDataset(modio::fileToContent, "zip");
   modio::minizipwrapper::compressFiles("zip", modio::getFilenames("zip"),
                                        "zippity.zip");
+
+  compareZipFilenamesWithDataset(modio::fileToContent, "zippity.zip");
+
   modio::minizipwrapper::extract("zippity.zip", "unzip");
 
   std::vector<std::string> files;
