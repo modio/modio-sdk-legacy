@@ -69,13 +69,13 @@ protected:
 	{
 	  for (const auto& fileIt : files)
 	  {
-		std::string filename( fileIt.size(), ' ' );
-		// Convert all directory separators to /
-		std::replace_copy(fileIt.begin(), fileIt.end(), filename.begin(), '\\', '/');
+		const std::string& filename = fileIt;
+
 		bool found = false;
 		for (const auto& datasetIt : dataset)
 		{
 		  std::string datasetFilePath( datasetIt.first.size(), ' ' );
+      // All files should have forward slashes in them according to 4.4.17.1 in https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
 		  std::replace_copy(datasetIt.first.begin(), datasetIt.first.end(), datasetFilePath.begin(), '\\', '/');
 
 		  if( datasetFilePath == filename )
@@ -85,7 +85,7 @@ protected:
 		  }
 		}
 
-		EXPECT_TRUE(found) << "File " << filename << " has been created that wasn't suppoed to have been created";
+		EXPECT_TRUE(found) << "File " << filename << " has been created that wasn't supposed to have been created";
 		// If the file wasn't present in the file set
 		if( !found )
 		{
@@ -99,11 +99,9 @@ protected:
         std::replace_copy(datasetIt.first.begin(), datasetIt.first.end(), datasetFilePath.begin(), '\\', '/');
 
         bool found = false;
-		for (const auto& fileIt : files)
+		    for (const auto& fileIt : files)
         {
-          std::string filename( fileIt.size(), ' ' );
-          // Convert all directory separators to /
-          std::replace_copy(fileIt.begin(), fileIt.end(), filename.begin(), '\\', '/');
+          const std::string& filename = fileIt;
 
           if (datasetFilePath == filename)
           {
