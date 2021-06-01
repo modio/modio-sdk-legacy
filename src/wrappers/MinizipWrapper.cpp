@@ -51,7 +51,6 @@ std::vector<std::string> getZipFilenames(const std::string &zip_path) {
 
     int err;
     std::string utf8_encoded_filename;
-    char final_filename[MAX_FILENAME];
     // Ensure that filename isn't used after this scope
     {
       char filename[MAX_FILENAME];
@@ -314,6 +313,14 @@ void compressFiles(std::string root_directory,
     /* Get information about the file on disk so we can store it in zip */
     getFileTimeWrapper(complete_file_path, zi);
     zip64 = getIsLargeFile(complete_file_path);
+
+    // All files should have forward slashes in them according to 4.4.17.1
+    // in https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
+    for (int i = 0; i < filename.size(); ++i) {
+      if (filename[i] == '\\') {
+        filename[i] = '/';
+      }
+    }
 
     /* Construct the filename that our file will be stored in the zip as.
           The path name saved, should not include a leading slash.
