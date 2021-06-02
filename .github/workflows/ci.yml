@@ -10,7 +10,7 @@ jobs:
       fail-fast: true
       matrix:
         # action: ['run-tests', 'compile-examples']
-		action: ['compile-examples']
+        action: ['compile-examples']
         name:
           # - Ubuntu 16.04 GCC
           # - Ubuntu 16.04 Clang
