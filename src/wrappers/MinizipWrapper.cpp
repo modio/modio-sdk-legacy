@@ -147,10 +147,20 @@ void extract(std::string zip_path, std::string directory_path) {
         utf8_encoded_filename = modio::CP437ToUTF8(filename);
       }
     }
+     
+    // If someone has encoded directory delimiters with \ , then convert them to / to ensure
+    // that we manage to create the correct path on all platforms
+    for (int i = 0; i < utf8_encoded_filename.size(); ++i)
+    {
+        if (utf8_encoded_filename[i] == '\\')
+        {
+            utf8_encoded_filename[i] = dir_delimter;
+        }
+    }
 
     strcpy(final_filename, directory_path.c_str());
     strcat(final_filename, utf8_encoded_filename.c_str());
-
+      
     modio::createPath(directory_path + utf8_encoded_filename);
 
     if (utf8_encoded_filename[utf8_encoded_filename.size() - 1] ==
