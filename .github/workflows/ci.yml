@@ -9,7 +9,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        action: ['run-tests', 'compile-examples']
+        # action: ['run-tests', 'compile-examples']
+		action: ['compile-examples']
         name:
           # - Ubuntu 16.04 GCC
           # - Ubuntu 16.04 Clang
@@ -56,7 +57,7 @@ jobs:
             cmake-args: -DBUILD_SHARED_LIBS=OFF -Dgtest_force_shared_crt=on
             build-dir: build
             build-src-dir: ..
-            executable-extension: .exe
+            #executable-extension: .exe
 
           # - name: Windows 2019 GCC
           #   os: windows-2019
@@ -134,8 +135,7 @@ jobs:
           CXX: ${{ matrix.cpp-compiler }}
           CFLAGS: ${{ matrix.cflags || env.CFLAGS }}
           CXXFLAGS: ${{ matrix.cxxflags || env.CXXFLAGS }}
-          LDFLAGS: ${{ matrix.ldflags || env.LDFLAGS }} -lstdc++
-
+          LDFLAGS: ${{ matrix.ldflags || env.LDFLAGS }}
       - name: Compile C++ examples
         if: ( runner.os == 'Linux' || runner.os == 'macOS' ) && matrix.action == 'compile-examples'
         run: |
