@@ -1,4 +1,4 @@
-﻿#include "Utility.h"
+#include "Utility.h"
 #include "gtest/gtest.h"
 #include "ghc/filesystem.hpp"
 #include "Fixture_CleanupFolders.h"
@@ -82,6 +82,8 @@ TEST_F(FolderBase, CreateRelativeFolderFailure)
   createFolderFailureTest(u8"модио/shouldExist");
 }
 
+// MarkusR: These tests don't work on OS X. But I don't dare to touch them as I'm patching
+// unrelated code. The tests creates folders named "Debug\subfolder" instead of folders "Debug" / "subfolder".
 TEST_F(FolderBase, CreateAbsoluteFolderSuccess)
 {
   // Create directories with forwardslashes in their paths
