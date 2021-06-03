@@ -9,7 +9,6 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        # action: ['run-tests', 'compile-examples']
         action: ['compile-examples']
         name:
           # - Ubuntu 16.04 GCC
@@ -105,7 +104,7 @@ jobs:
         run: |
           mkdir ${{ matrix.build-dir || '.not-used' }}
           cd ${{ matrix.build-dir || '.' }}
-          cmake ${{ matrix.build-src-dir || '.' }} ${{ steps.should-test.outputs.TEST-FLAGS }} ${{ matrix.cmake-args }}
+          cmake ${{ matrix.build-src-dir || '.' }} ${{ matrix.cmake-args }}
         env:
           CC: ${{ matrix.compiler }}
           CXX: ${{ matrix.cpp-compiler }}
