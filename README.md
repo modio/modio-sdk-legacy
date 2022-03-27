@@ -1,5 +1,5 @@
 ## NOTE: This codebase is now deprecated.
-The latest version of the mod.io SDK can be found at <https://github.com/modio/modio-sdk-internal>.
+The latest version of the mod.io SDK can be found at <https://github.com/modio/modio-sdk>.
 
 <a href="https://mod.io"><img src="https://static.mod.io/v1/images/branding/modio-color-dark.svg" alt="mod.io" width="360" align="right"/></a>
 # Legacy mod.io SDK
